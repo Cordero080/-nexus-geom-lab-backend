@@ -4,23 +4,53 @@ import Controls from './Controls'
 
 function App() {
   // React state - data that can change and triggers re-renders
-  const [shininess, setShininess] = useState(100) // Changed from 1000 to 100
-  const [specularColor, setSpecularColor] = useState('#00ff00') // Valid 6-character hex color
+  const [shininess, setShininess] = useState(100)
+  const [specularColor, setSpecularColor] = useState('#00ff00')
+  const [specularIntensity, setSpecularIntensity] = useState(1.0) // New: controls strength of specular highlights
+  const [baseColor, setBaseColor] = useState('#222222')
+  const [wireframeIntensity, setWireframeIntensity] = useState(0)
+  
+  // New dynamic controls
+  const [cameraView, setCameraView] = useState('free') // 'free', 'orbit', 'top', 'side', 'cinematic'
+  const [environment, setEnvironment] = useState('purple') // 'purple', 'space', 'sunset', 'matrix'
+  const [objectCount, setObjectCount] = useState(1) // Number of objects (1-10)
+  const [animationStyle, setAnimationStyle] = useState('rotate') // 'rotate', 'float', 'spiral', 'chaos'
 
   return (
     <>
-      {/* Pass BOTH values down to ThreeScene */}
+      {/* Pass ALL values down to ThreeScene */}
       <ThreeScene 
         shininess={shininess} 
         specularColor={specularColor} 
+        specularIntensity={specularIntensity}
+        baseColor={baseColor}
+        wireframeIntensity={wireframeIntensity}
+        cameraView={cameraView}
+        environment={environment}
+        objectCount={objectCount}
+        animationStyle={animationStyle}
       />
       
-      {/* Pass BOTH setter functions down to Controls */}
+      {/* Pass ALL setter functions down to Controls */}
       <Controls 
         shininess={shininess} 
         onShininessChange={setShininess}
         specularColor={specularColor}
         onSpecularColorChange={setSpecularColor}
+        specularIntensity={specularIntensity}
+        onSpecularIntensityChange={setSpecularIntensity}
+        baseColor={baseColor}
+        onBaseColorChange={setBaseColor}
+        wireframeIntensity={wireframeIntensity}
+        onWireframeIntensityChange={setWireframeIntensity}
+        cameraView={cameraView}
+        onCameraViewChange={setCameraView}
+        environment={environment}
+        onEnvironmentChange={setEnvironment}
+        objectCount={objectCount}
+        onObjectCountChange={setObjectCount}
+        animationStyle={animationStyle}
+        onAnimationStyleChange={setAnimationStyle}
       />
     </>
   )
