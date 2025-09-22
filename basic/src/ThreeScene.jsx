@@ -4,7 +4,8 @@ import * as THREE from 'three'
 // This component receives all props from App.jsx
 function ThreeScene({ 
   shininess, specularColor, specularIntensity, baseColor, wireframeIntensity,
-  cameraView, environment, objectCount, animationStyle
+  cameraView, environment, objectCount, animationStyle,
+  objectType // NEW: Added objectType prop for geometry selection
 }) {
   const mountRef = useRef(null)
   const sceneRef = useRef(null)
@@ -77,6 +78,26 @@ function ThreeScene({
       renderer.dispose()
     }
   }, [])
+
+  // NEW: Function to create geometry based on objectType prop
+  const createGeometryByType = (type) => {
+    switch(type) {
+      case 'icosahedron':
+        return new THREE.IcosahedronGeometry()
+      case 'sphere':
+        return new THREE.SphereGeometry(1, 16, 16)
+      case 'box':
+        return new THREE.BoxGeometry(1.5, 1.5, 1.5)
+      case 'octahedron':
+        return new THREE.OctahedronGeometry()
+      case 'tetrahedron':
+        return new THREE.TetrahedronGeometry(1.2)
+      case 'torusknot':
+        return new THREE.TorusKnotGeometry(1, .2, 150, 16)
+      default:
+        return new THREE.IcosahedronGeometry() // Fallback to icosahedron
+    }
+  }
 
   // Environment useEffect - Dynamic backgrounds and lighting
   useEffect(() => {
@@ -219,18 +240,23 @@ function ThreeScene({
 
     // Create new objects
     for (let i = 0; i < objectCount; i++) {
-      const geometryTypes = [
-        () => new THREE.IcosahedronGeometry(),
-        () => new THREE.SphereGeometry(1, 16, 16),
-        () => new THREE.BoxGeometry(1.5, 1.5, 1.5),
-        () => new THREE.OctahedronGeometry(),
-        () => new THREE.TetrahedronGeometry(1.2),
-        () => new THREE.OctahedronGeometry(),
-        () => new THREE.TorusKnotGeometry(1, .2, 150, 16),
-        
-      ]
-      
-      const geometry = geometryTypes[i % geometryTypes.length]()
+      // MODIFIED: Use selected objectType for single object, or cycle through types for multiple objects
+      let geometry
+      if (objectCount === 1) {
+        // For single object, use the selected objectType
+        geometry = createGeometryByType(objectType)
+      } else {
+        // For multiple objects, cycle through different types for variety
+        const geometryTypes = [
+          () => new THREE.IcosahedronGeometry(),
+          () => new THREE.SphereGeometry(1, 16, 16),
+          () => new THREE.BoxGeometry(1.5, 1.5, 1.5),
+          () => new THREE.OctahedronGeometry(),
+          () => new THREE.TetrahedronGeometry(1.2),
+          () => new THREE.TorusKnotGeometry(1, .2, 150, 16),
+        ]
+        geometry = geometryTypes[i % geometryTypes.length]()
+      }
       
       // Store original vertex positions for morphing effects
       const originalPositions = geometry.attributes.position.array.slice()
@@ -295,7 +321,7 @@ function ThreeScene({
     }
     
     console.log(`Created ${objectsRef.current.length} objects with current React state values`)
-  }, [objectCount, baseColor, specularColor, specularIntensity, shininess, wireframeIntensity])
+  }, [objectCount, baseColor, specularColor, specularIntensity, shininess, wireframeIntensity, objectType]) // NEW: Added objectType to dependency array
 
   // Camera view useEffect - Different camera angles and behaviors
   useEffect(() => {

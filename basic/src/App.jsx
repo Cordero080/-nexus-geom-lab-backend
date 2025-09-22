@@ -15,6 +15,7 @@ function App() {
   const [environment, setEnvironment] = useState('purple') // 'purple', 'space', 'sunset', 'matrix'
   const [objectCount, setObjectCount] = useState(1) // Number of objects (1-10)
   const [animationStyle, setAnimationStyle] = useState('rotate') // 'rotate', 'float', 'spiral', 'chaos'
+  const [objectType, setObjectType] = useState('icosahedron') // NEW: Object type selection
 
   return (
     <>
@@ -29,6 +30,7 @@ function App() {
         environment={environment}
         objectCount={objectCount}
         animationStyle={animationStyle}
+        objectType={objectType} // NEW: Pass object type to ThreeScene
       />
       
       {/* Pass ALL setter functions down to Controls */}
@@ -51,6 +53,8 @@ function App() {
         onObjectCountChange={setObjectCount}
         animationStyle={animationStyle}
         onAnimationStyleChange={setAnimationStyle}
+        objectType={objectType} // NEW: Pass object type to Controls
+        onObjectTypeChange={setObjectType} // NEW: Pass object type setter to Controls
       />
     </>
   )

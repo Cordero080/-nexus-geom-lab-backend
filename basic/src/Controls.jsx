@@ -8,7 +8,8 @@ function Controls({
   cameraView, onCameraViewChange,
   environment, onEnvironmentChange,
   objectCount, onObjectCountChange,
-  animationStyle, onAnimationStyleChange
+  animationStyle, onAnimationStyleChange,
+  objectType, onObjectTypeChange // NEW: Added objectType props
 }) {
   
   // Event handler for shininess slider
@@ -72,6 +73,13 @@ function Controls({
     onAnimationStyleChange(newStyle)
   }
 
+  // NEW: Event handler for object type
+  const handleObjectTypeChange = (event) => {
+    const newType = event.target.value
+    console.log('Object type changed to:', newType)
+    onObjectTypeChange(newType)
+  }
+
   return (
     <div className="controls">
       {/* Debug info */}
@@ -82,6 +90,7 @@ function Controls({
       <p>Current wireframe intensity: {wireframeIntensity}%</p>
       <p>Camera: {cameraView} | Environment: {environment}</p>
       <p>Objects: {objectCount} | Animation: {animationStyle}</p>
+      <p>Object Type: {objectType}</p> {/* NEW: Added debug info for object type */}
       
       {/* Wireframe intensity slider */}
       <label>
@@ -183,6 +192,21 @@ function Controls({
         value={objectCount}
         onChange={handleObjectCountChange}
       />
+
+      {/* NEW: Object Type Control */}
+      <label>
+        Object Type:
+      </label>
+      <select value={objectType} onChange={handleObjectTypeChange} style={{
+        width: '200px', padding: '5px', background: '#20263951', color: 'white', border: '1px solid #666666ff'
+      }}>
+        <option value="icosahedron">💎 Icosahedron</option>
+        <option value="sphere">⚪ Sphere</option>
+        <option value="box">📦 Box</option>
+        <option value="octahedron">🔷 Octahedron</option>
+        <option value="tetrahedron">🔺 Tetrahedron</option>
+        <option value="torusknot">🌀 Torus Knot</option>
+      </select>
 
       {/* Animation Style Control */}
       <label>
