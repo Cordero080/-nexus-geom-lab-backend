@@ -659,7 +659,7 @@ function ThreeScene({
     }
   }, [directionalLightColor, directionalLightIntensity, directionalLightX, directionalLightY, directionalLightZ])
 
-  return <div ref={mountRef} style={{ width: '100vw', height: '100vh' }} />
+  return <div ref={mountRef} className="three-scene-container" />
 }
 
 export default ThreeScene

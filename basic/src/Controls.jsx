@@ -25,7 +25,7 @@ function Controls({
   // NEW: State for collapsible sections
   const [materialOpen, setMaterialOpen] = useState(true)
   const [sceneOpen, setSceneOpen] = useState(true) 
-  const [lightingOpen, setLightingOpen] = useState(false)
+  const [lightingOpen, setLightingOpen] = useState(true) // Changed to true so lighting controls are visible by default
 
   // Event handler for shininess slider
   const handleShininessChange = (event) => {
@@ -138,27 +138,6 @@ function Controls({
     onDirectionalLightZChange(newZ)
   }
 
-  // NEW: Styles for collapsible sections
-  const sectionHeaderStyle = {
-    padding: '10px 15px',
-    margin: '10px 0 5px 0',
-    fontSize: '14px',
-    fontWeight: 'bold',
-    cursor: 'pointer',
-    borderRadius: '5px',
-    userSelect: 'none',
-    transition: 'background-color 0.2s ease',
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center'
-  }
-
-  const sectionContentStyle = {
-    overflow: 'hidden',
-    transition: 'max-height 0.3s ease, opacity 0.3s ease',
-    paddingLeft: '10px'
-  }
-
   return (
     <div className="controls">
       {/* Debug info */}
@@ -175,26 +154,18 @@ function Controls({
       <p>Directional: {directionalLightColor} @ {directionalLightIntensity}</p>
       <p>Dir Position: ({directionalLightX}, {directionalLightY}, {directionalLightZ})</p>
       
-      <hr style={{margin: '15px 0', border: '1px solid rgba(255,255,255,0.2)'}} />
+      <hr />
 
       {/* NEW: MATERIAL PROPERTIES SECTION */}
       <div 
-        style={{
-          ...sectionHeaderStyle, 
-          backgroundColor: materialOpen ? '#4a5568' : '#2d3748',
-          color: '#e2e8f0'
-        }}
+        className={`section-header ${materialOpen ? 'material-open' : 'material-closed'}`}
         onClick={() => setMaterialOpen(!materialOpen)}
       >
         <span>🎨 MATERIAL PROPERTIES</span>
         <span>{materialOpen ? '▼' : '▶'}</span>
       </div>
       
-      <div style={{
-        ...sectionContentStyle,
-        maxHeight: materialOpen ? '500px' : '0px',
-        opacity: materialOpen ? 1 : 0
-      }}>
+      <div className={`section-content ${materialOpen ? 'material-open open' : 'closed'}`}>
         {/* Base Color control */}
         <label>
           Base Color:
@@ -255,29 +226,19 @@ function Controls({
 
       {/* NEW: SCENE CONTROLS SECTION */}
       <div 
-        style={{
-          ...sectionHeaderStyle, 
-          backgroundColor: sceneOpen ? '#2b6cb0' : '#2c5282',
-          color: '#bee3f8'
-        }}
+        className={`section-header ${sceneOpen ? 'scene-open' : 'scene-closed'}`}
         onClick={() => setSceneOpen(!sceneOpen)}
       >
         <span>🎬 CAMERA & SCENE</span>
         <span>{sceneOpen ? '▼' : '▶'}</span>
       </div>
       
-      <div style={{
-        ...sectionContentStyle,
-        maxHeight: sceneOpen ? '600px' : '0px',
-        opacity: sceneOpen ? 1 : 0
-      }}>
+      <div className={`section-content ${sceneOpen ? 'scene-open open' : 'closed'}`}>
         {/* Camera View Control */}
         <label>
           Camera View:
         </label>
-        <select value={cameraView} onChange={handleCameraViewChange} style={{
-          width: '200px', padding: '5px', background: '#20263951', color: 'white', border: '1px solid #666'
-        }}>
+        <select value={cameraView} onChange={handleCameraViewChange}>
           <option value="free">Free Camera</option>
           <option value="orbit">Orbit View</option>
           <option value="top">Top Down</option>
@@ -289,9 +250,7 @@ function Controls({
         <label>
           Environment:
         </label>
-        <select value={environment} onChange={handleEnvironmentChange} style={{
-          width: '200px', padding: '5px', background: '#20263951', color: 'white', border: '1px solid #666666ff'
-        }}>
+        <select value={environment} onChange={handleEnvironmentChange}>
           <option value="purple">Purple Gradient</option>
           <option value="space">Space Scene</option>
           <option value="sunset">Sunset Sky</option>
@@ -314,9 +273,7 @@ function Controls({
         <label>
           Object Type:
         </label>
-        <select value={objectType} onChange={handleObjectTypeChange} style={{
-          width: '200px', padding: '5px', background: '#20263951', color: 'white', border: '1px solid #666666ff'
-        }}>
+        <select value={objectType} onChange={handleObjectTypeChange}>
           <option value="icosahedron">💎 Icosahedron</option>
           <option value="sphere">⚪ Sphere</option>
           <option value="box">📦 Box</option>
@@ -329,9 +286,7 @@ function Controls({
         <label>
           Animation Style:
         </label>
-        <select value={animationStyle} onChange={handleAnimationStyleChange} style={{
-          width: '200px', padding: '5px', background: '#20263951', color: 'white', border: '1px solid #666666ff'
-        }}>
+        <select value={animationStyle} onChange={handleAnimationStyleChange}>
           <option value="rotate">Simple Rotation</option>
           <option value="float">Floating Dance</option>
           <option value="spiral">Spiral Motion</option>
@@ -344,22 +299,14 @@ function Controls({
 
       {/* NEW: LIGHTING CONTROLS SECTION */}
       <div 
-        style={{
-          ...sectionHeaderStyle, 
-          backgroundColor: lightingOpen ? '#d69e2e' : '#b7791f',
-          color: '#fef5e7'
-        }}
+        className={`section-header ${lightingOpen ? 'lighting-open' : 'lighting-closed'}`}
         onClick={() => setLightingOpen(!lightingOpen)}
       >
         <span>💡 LIGHTING CONTROLS</span>
         <span>{lightingOpen ? '▼' : '▶'}</span>
       </div>
       
-      <div style={{
-        ...sectionContentStyle,
-        maxHeight: lightingOpen ? '600px' : '0px',
-        opacity: lightingOpen ? 1 : 0
-      }}>
+      <div className={`section-content ${lightingOpen ? 'lighting-open open' : 'closed'}`}>
         {/* Ambient Light Controls */}
         <label>
           Ambient Light Color:
