@@ -4,7 +4,7 @@ import * as THREE from 'three'
 // This component receives all props from App.jsx
 function ThreeScene({ 
   shininess, specularColor, specularIntensity, baseColor, wireframeIntensity,
-  cameraView, environment, objectCount, animationStyle 
+  cameraView, environment, objectCount, animationStyle
 }) {
   const mountRef = useRef(null)
   const sceneRef = useRef(null)
@@ -41,7 +41,7 @@ function ThreeScene({
     // 4. Lighting setup
     const ambientLight = new THREE.AmbientLight(0x202020, 0.1)
     const directionalLight = new THREE.DirectionalLight(0xffffff, 5)
-    directionalLight.position.set(1, 1, 3)
+    directionalLight.position.set(9, 1, 3)
     directionalLight.castShadow = true
     scene.add(ambientLight)
     scene.add(directionalLight)
@@ -226,11 +226,14 @@ function ThreeScene({
         () => new THREE.OctahedronGeometry(),
         () => new THREE.TetrahedronGeometry(1.2),
         () => new THREE.OctahedronGeometry(),
-        () => new THREE.TorusKnotGeometry(0.7, 0.2, 100, 16),
+        () => new THREE.TorusKnotGeometry(1, .2, 150, 16),
         
       ]
       
       const geometry = geometryTypes[i % geometryTypes.length]()
+      
+      // Store original vertex positions for morphing effects
+      const originalPositions = geometry.attributes.position.array.slice()
       
       // Convert current React state colors to Three.js format
       // Create a material with current React state
@@ -272,8 +275,16 @@ function ThreeScene({
       objectsRef.current.push({
         mesh,
         material,
+        geometry,
+        originalPositions, // Store original positions for vertex morphing
         originalPosition: mesh.position.clone(),
         phase: Math.random() * Math.PI * 2,
+        // Add magnetic points for magnetic field effect
+        magneticPoints: [
+          { x: Math.random() * 4 - 2, y: Math.random() * 4 - 2, z: Math.random() * 4 - 2, strength: Math.random() + 0.5 },
+          { x: Math.random() * 4 - 2, y: Math.random() * 4 - 2, z: Math.random() * 4 - 2, strength: Math.random() + 0.5 },
+          { x: Math.random() * 4 - 2, y: Math.random() * 4 - 2, z: Math.random() * 4 - 2, strength: Math.random() + 0.5 }
+        ]
       })
     }
 
@@ -298,7 +309,7 @@ function ThreeScene({
         camera.position.set(0, 0, 6)
         break
       case 'orbit':
-        camera.position.set(8, 3, 8)
+        camera.position.set(0, 3, 6)
         camera.lookAt(0, 0, 0)
         break
       case 'top':
@@ -331,7 +342,7 @@ function ThreeScene({
       const t = time * 0.001
 
       objectsRef.current.forEach((objData, index) => {
-        const { mesh, originalPosition, phase } = objData
+        const { mesh, originalPosition, phase, geometry, originalPositions, magneticPoints } = objData
 
         switch(animationStyle) {
           case 'rotate':
@@ -366,6 +377,112 @@ function ThreeScene({
             mesh.rotation.x = t * 2 + phase
             mesh.rotation.y = t * 1.5 + phase
             mesh.rotation.z = t * 2.5 + phase
+            break
+
+          case 'dna':
+            // DNA Helix: Vertices spiral around the mesh center + whole mesh rotates
+            if (geometry && originalPositions) {
+              const positions = geometry.attributes.position.array
+              for (let i = 0; i < positions.length; i += 3) {
+                const x = originalPositions[i]
+                const y = originalPositions[i + 1]
+                const z = originalPositions[i + 2]
+                
+                // Calculate distance from center for spiral effect
+                const radius = Math.sqrt(x * x + z * z)
+                const angle = Math.atan2(z, x) + t * 0.5 + y * 0.3 // Spiral based on Y position
+                
+                // Create double helix effect
+                const helixRadius = radius + Math.sin(t * 2 + y * 2 + phase) * 0.2
+                positions[i] = Math.cos(angle) * helixRadius
+                positions[i + 1] = y + Math.sin(t * 1.5 + angle + phase) * 0.1
+                positions[i + 2] = Math.sin(angle) * helixRadius
+              }
+              geometry.attributes.position.needsUpdate = true
+            }
+            
+            // Rotate the entire mesh slowly
+            mesh.rotation.y = t * 0.3 + phase
+            mesh.rotation.x = Math.sin(t * 0.2) * 0.2
+            mesh.position.copy(originalPosition)
+            break
+
+          case 'liquid':
+            // Liquid Metal: Smooth flowing waves across the surface
+            if (geometry && originalPositions) {
+              const positions = geometry.attributes.position.array
+              for (let i = 0; i < positions.length; i += 3) {
+                const x = originalPositions[i]
+                const y = originalPositions[i + 1]
+                const z = originalPositions[i + 2]
+                
+                // Create multiple wave layers for liquid effect
+                const wave1 = Math.sin(t * 2 + x * 3 + phase) * 0.15
+                const wave2 = Math.cos(t * 1.5 + y * 4 + phase) * 0.1
+                const wave3 = Math.sin(t * 3 + z * 2 + phase) * 0.08
+                
+                // Apply waves in all directions for mercury-like flow
+                positions[i] = x + wave1 + Math.sin(t + y * 2) * 0.05
+                positions[i + 1] = y + wave2 + Math.cos(t * 1.2 + x * 2) * 0.05
+                positions[i + 2] = z + wave3 + Math.sin(t * 0.8 + z * 3) * 0.05
+              }
+              geometry.attributes.position.needsUpdate = true
+            }
+            
+            // Scale pulsing and gentle rotation
+            mesh.scale.setScalar(1 + 0.2 * Math.sin(t * 1.5 + phase))
+            mesh.rotation.x += Math.sin(t * 0.3) * 0.01
+            mesh.rotation.y += Math.cos(t * 0.4) * 0.01
+            mesh.position.copy(originalPosition)
+            break
+
+          case 'magnetic':
+            // Magnetic Field: Vertices attracted/repelled by moving magnetic points
+            if (geometry && originalPositions && magneticPoints) {
+              const positions = geometry.attributes.position.array
+              
+              // Move magnetic points around
+              magneticPoints.forEach((point, pIndex) => {
+                point.x = Math.sin(t * 0.5 + pIndex * 2) * 3
+                point.y = Math.cos(t * 0.7 + pIndex * 2) * 2
+                point.z = Math.sin(t * 0.3 + pIndex * 3) * 3
+              })
+              
+              for (let i = 0; i < positions.length; i += 3) {
+                const x = originalPositions[i]
+                const y = originalPositions[i + 1]
+                const z = originalPositions[i + 2]
+                
+                let totalForceX = 0, totalForceY = 0, totalForceZ = 0
+                
+                // Calculate magnetic forces from each magnetic point
+                magneticPoints.forEach(point => {
+                  const dx = x - point.x
+                  const dy = y - point.y
+                  const dz = z - point.z
+                  const distance = Math.sqrt(dx * dx + dy * dy + dz * dz) + 0.1
+                  const force = point.strength / (distance * distance)
+                  
+                  // Alternate between attraction and repulsion
+                  const direction = Math.sin(t + point.x + point.y) > 0 ? -1 : 1
+                  
+                  totalForceX += (dx / distance) * force * direction
+                  totalForceY += (dy / distance) * force * direction
+                  totalForceZ += (dz / distance) * force * direction
+                })
+                
+                // Apply magnetic forces with dampening
+                positions[i] = x + totalForceX * 0.3
+                positions[i + 1] = y + totalForceY * 0.3
+                positions[i + 2] = z + totalForceZ * 0.3
+              }
+              geometry.attributes.position.needsUpdate = true
+            }
+            
+            // Gentle rotation and position
+            mesh.rotation.x += 0.005
+            mesh.rotation.y += 0.007
+            mesh.position.copy(originalPosition)
             break
         }
       })

@@ -47,7 +47,7 @@ function Controls({
     onWireframeIntensityChange(newIntensity) // Call the function passed from parent
   }
 
-  // New event handlers for dynamic controls
+  // Event handlers for dynamic controls
   const handleCameraViewChange = (event) => {
     const newView = event.target.value
     console.log('Camera view changed to:', newView)
@@ -142,7 +142,7 @@ function Controls({
 
       <hr style={{margin: '15px 0', border: '1px solid rgba(255,255,255,0.2)'}} />
       
-      {/* NEW DYNAMIC CONTROLS */}
+      {/* CAMERA & SCENE CONTROLS */}
       <h3 style={{margin: '10px 0 5px 0', fontSize: '14px', color: '#4ecdc4'}}>🎬 CAMERA & SCENE</h3>
       
       {/* Camera View Control */}
@@ -195,6 +195,9 @@ function Controls({
         <option value="float">Floating Dance</option>
         <option value="spiral">Spiral Motion</option>
         <option value="chaos">Chaotic Movement</option>
+        <option value="dna">🧬 DNA Helix</option>
+        <option value="liquid">🌊 Liquid Metal</option>
+        <option value="magnetic">🧲 Magnetic Field</option>
       </select>
 
     </div>

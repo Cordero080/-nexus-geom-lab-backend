@@ -10,7 +10,7 @@ function App() {
   const [baseColor, setBaseColor] = useState('#222222')
   const [wireframeIntensity, setWireframeIntensity] = useState(0)
   
-  // New dynamic controls
+  // Dynamic scene controls
   const [cameraView, setCameraView] = useState('free') // 'free', 'orbit', 'top', 'side', 'cinematic'
   const [environment, setEnvironment] = useState('purple') // 'purple', 'space', 'sunset', 'matrix'
   const [objectCount, setObjectCount] = useState(1) // Number of objects (1-10)
