@@ -187,18 +187,109 @@ function ThreeScene({
           break
 
         case 'sunset':
-          // Sunset gradient
+          // Animated Spectral Sunset/Moonbow Background
           const sunsetCanvas = document.createElement('canvas')
           const sunsetCtx = sunsetCanvas.getContext('2d')
-          sunsetCanvas.width = 512
-          sunsetCanvas.height = 512
-          const sunsetGrad = sunsetCtx.createLinearGradient(0, 0, 0, sunsetCanvas.height)
-          sunsetGrad.addColorStop(0, '#362aa3ff')
-          sunsetGrad.addColorStop(0.3, '#f7931e')
-          sunsetGrad.addColorStop(0.7, '#d1a907ff')
-          sunsetGrad.addColorStop(1, '#62445eff')
-          sunsetCtx.fillStyle = sunsetGrad
+          sunsetCanvas.width = 1024
+          sunsetCanvas.height = 1024
+          
+          // Time-based animation for color shifting
+          const time = performance.now() * 0.0005 // Slower for smooth transitions
+          
+          // Spectral color palette that shifts between sunset and moonbow
+          const spectralColors = [
+            // Sunset spectrum
+            { r: 255, g: 107, b: 53 },   // Bright orange
+            { r: 247, g: 147, b: 30 },   // Golden orange  
+            { r: 255, g: 204, b: 2 },    // Golden yellow
+            { r: 255, g: 133, b: 0 },    // Deep orange
+            { r: 200, g: 50, b: 120 },   // Pink-purple
+            { r: 45, g: 27, b: 105 },    // Deep purple
+            // Moonbow spectrum (subtle lunar rainbow)
+            { r: 255, g: 113, b: 170 },  // Pale lavender
+            { r: 100, g: 200, b: 255 },  // Soft blue
+            { r: 120, g: 220, b: 200 },  // Pale cyan
+            { r: 140, g: 200, b: 140 },  // Soft green
+            { r: 200, g: 200, b: 120 },  // Pale yellow
+            { r: 220, g: 180, b: 150 }   // Soft peach
+          ]
+          
+          // Create animated moving gradient
+          const gradientHeight = sunsetCanvas.height * 5.5 // Make it larger for movement
+          const gradientOffset = Math.sin(time) * sunsetCanvas.height * 3.3 // Vertical movement
+          
+          const animatedGrad = sunsetCtx.createLinearGradient(0, -gradientHeight/2 + gradientOffset, 0, gradientHeight + gradientOffset)
+          
+          // Animate through spectral colors
+          for(let i = 0; i < 8; i++) {
+            const colorIndex = Math.floor(time * 2 + i * 1.5) % spectralColors.length
+            const nextColorIndex = (colorIndex + 1) % spectralColors.length
+            
+            // Smooth color interpolation
+            const colorPhase = (time * 2 + i * .5) % 1
+            const currentColor = spectralColors[colorIndex]
+            const nextColor = spectralColors[nextColorIndex]
+            
+            const r = Math.floor(currentColor.r + (nextColor.r - currentColor.r) * colorPhase)
+            const g = Math.floor(currentColor.g + (nextColor.g - currentColor.g) * colorPhase)
+            const b = Math.floor(currentColor.b + (nextColor.b - currentColor.b) * colorPhase)
+            
+            // Add color stops with varying opacity for depth
+            const opacity = 0.7 + Math.sin(time * 3 + i) * 0.3
+            const position = i / 7
+            
+            animatedGrad.addColorStop(position, `rgba(${r}, ${g}, ${b}, ${opacity})`)
+          }
+          
+          sunsetCtx.fillStyle = animatedGrad
           sunsetCtx.fillRect(0, 0, sunsetCanvas.width, sunsetCanvas.height)
+          
+          // Add moving spectral waves for extra animation
+          for(let wave = 0; wave < 3; wave++) {
+            const waveOffset = time * 0.5 + wave * Math.PI * 0.7
+            const waveGrad = sunsetCtx.createLinearGradient(
+              0, 
+              sunsetCanvas.height * 0.3 + Math.sin(waveOffset) * 200,
+              0, 
+              sunsetCanvas.height * 0.7 + Math.sin(waveOffset) * 200
+            )
+            
+            // Spectral wave colors
+            const waveColorIndex = Math.floor(time * 3 + wave * 2) % spectralColors.length
+            const waveColor = spectralColors[waveColorIndex]
+            
+            waveGrad.addColorStop(0, 'transparent')
+            waveGrad.addColorStop(0.3, `rgba(${waveColor.r}, ${waveColor.g}, ${waveColor.b}, 0.2)`)
+            waveGrad.addColorStop(0.7, `rgba(${waveColor.r}, ${waveColor.g}, ${waveColor.b}, 0.3)`)
+            waveGrad.addColorStop(1, 'transparent')
+            
+            sunsetCtx.fillStyle = waveGrad
+            sunsetCtx.fillRect(0, 0, sunsetCanvas.width, sunsetCanvas.height)
+          }
+          
+          // Add shimmering spectral particles
+          for(let i = 0; i < 50; i++) {
+            const particleTime = time * 4 + i * 0.2
+            const x = (Math.sin(particleTime) * 0.5 + 0.5) * sunsetCanvas.width
+            const y = (Math.cos(particleTime * 0.7) * 0.5 + 0.5) * sunsetCanvas.height
+            const size = 2 + Math.sin(particleTime * 2) * 2
+            const opacity = 0.3 + Math.sin(particleTime * 3) * 0.2
+            
+            const particleColorIndex = Math.floor(particleTime * 2) % spectralColors.length
+            const particleColor = spectralColors[particleColorIndex]
+            
+            // Create glowing particle
+            const particleGrad = sunsetCtx.createRadialGradient(x, y, 0, x, y, size * 3)
+            particleGrad.addColorStop(0, `rgba(${particleColor.r}, ${particleColor.g}, ${particleColor.b}, ${opacity})`)
+            particleGrad.addColorStop(0.5, `rgba(${particleColor.r}, ${particleColor.g}, ${particleColor.b}, ${opacity * 0.5})`)
+            particleGrad.addColorStop(1, 'transparent')
+            
+            sunsetCtx.fillStyle = particleGrad
+            sunsetCtx.beginPath()
+            sunsetCtx.arc(x, y, size * 3, 0, Math.PI * 2)
+            sunsetCtx.fill()
+          }
+          
           scene.background = new THREE.CanvasTexture(sunsetCanvas)
           break
 
@@ -415,14 +506,14 @@ function ThreeScene({
                 const z = originalPositions[i + 2]
                 
                 // Calculate distance from center for spiral effect
-                const radius = Math.sqrt(x * x + z * z)
-                const angle = Math.atan2(z, x) + t * 0.5 + y * 0.3 // Spiral based on Y position
+                const radius = Math.sqrt(x * x  + z * z )
+                const angle = Math.atan2(z, x) + t * 0.5 + y * 1.3 // Spiral based on Y position
                 
                 // Create double helix effect
-                const helixRadius = radius + Math.sin(t * 2 + y * 2 + phase) * 0.2
+                const helixRadius = radius + Math.sin(t * 2 + y * 4 + phase) * 0.2
                 positions[i] = Math.cos(angle) * helixRadius
                 positions[i + 1] = y + Math.sin(t * 1.5 + angle + phase) * 0.1
-                positions[i + 2] = Math.sin(angle) * helixRadius
+                positions[i + 6] = Math.sin(angle) * helixRadius
               }
               geometry.attributes.position.needsUpdate = true
             }
@@ -444,12 +535,12 @@ function ThreeScene({
                 
                 // Create multiple wave layers for liquid effect
                 const wave1 = Math.sin(t * 2 + x * 3 + phase) * 0.15
-                const wave2 = Math.cos(t * 1.5 + y * 4 + phase) * 0.1
+                const wave2 = Math.cos(t * 2.5 + y * 4 + phase) * 0.1
                 const wave3 = Math.sin(t * 3 + z * 2 + phase) * 0.08
                 
                 // Apply waves in all directions for mercury-like flow
                 positions[i] = x + wave1 + Math.sin(t + y * 2) * 0.05
-                positions[i + 1] = y + wave2 + Math.cos(t * 1.2 + x * 2) * 0.05
+                positions[i + 1] = y + wave2 + Math.cos(t * 1.2 + x * 2) * .05
                 positions[i + 2] = z + wave3 + Math.sin(t * 0.8 + z * 3) * 0.05
               }
               geometry.attributes.position.needsUpdate = true
@@ -471,7 +562,7 @@ function ThreeScene({
               magneticPoints.forEach((point, pIndex) => {
                 point.x = Math.sin(t * 0.5 + pIndex * 2) * 3
                 point.y = Math.cos(t * 0.7 + pIndex * 2) * 2
-                point.z = Math.sin(t * 0.3 + pIndex * 3) * 3
+                point.z = Math.sin(t * 1.3 + pIndex * 3) * 3
               })
               
               for (let i = 0; i < positions.length; i += 3) {
@@ -513,6 +604,119 @@ function ThreeScene({
         }
       })
 
+      // Update animated background for sunset environment
+      if (environment === 'sunset' && sceneRef.current) {
+        // Create animated spectral background canvas
+        const sunsetCanvas = document.createElement('canvas')
+        const sunsetCtx = sunsetCanvas.getContext('2d')
+        sunsetCanvas.width = 1024
+        sunsetCanvas.height = 1024
+        
+        // Start with a dark base background
+        sunsetCtx.fillStyle = '#151515' // Dark gray base (lighter than before)
+        sunsetCtx.fillRect(0, 0, sunsetCanvas.width, sunsetCanvas.height)
+        
+        // Time-based animation for color shifting
+        const time = performance.now() * 0.0005 // Slower for smooth transitions
+        
+        // Spectral color palette - balanced with more saturation
+        const spectralColors = [
+          // Sunset spectrum (more saturated)
+          { r: 110, g: 45, b: 25 },    // More saturated warm dark orange
+          { r: 120, g: 65, b: 20 },    // More saturated dark golden orange  
+          { r: 130, g: 85, b: 15 },    // More saturated dark golden yellow
+          { r: 115, g: 50, b: 8 },     // More saturated dark deep orange
+          { r: 95, g: 25, b: 60 },     // More saturated dark pink-purple
+          { r: 55, g: 30, b: 85 },     // More saturated dark deep purple
+          // Moonbow spectrum (more saturated)
+          { r: 65, g: 65, b: 110 },    // More saturated dark pale lavender
+          { r: 60, g: 80, b: 120 },    // More saturated dark soft blue
+          { r: 50, g: 100, b: 85 },    // More saturated dark pale cyan
+          { r: 65, g: 95, b: 65 },     // More saturated dark soft green
+          { r: 100, g: 100, b: 60 },   // More saturated dark pale yellow
+          { r: 115, g: 80, b: 70 }     // More saturated dark soft peach
+        ]
+        
+        // Create animated moving gradient
+        const gradientHeight = sunsetCanvas.height * 1.5 // Make it larger for movement
+        const gradientOffset = Math.sin(time) * sunsetCanvas.height * 0.3 // Vertical movement
+        
+        const animatedGrad = sunsetCtx.createLinearGradient(0, -gradientHeight/2 + gradientOffset, 0, gradientHeight + gradientOffset)
+        
+        // Animate through spectral colors
+        for(let i = 0; i < 8; i++) {
+          const colorIndex = Math.floor(time * 2 + i * 1.5) % spectralColors.length
+          const nextColorIndex = (colorIndex + 1) % spectralColors.length
+          
+          // Smooth color interpolation
+          const colorPhase = (time * 2 + i * 1.5) % 1
+          const currentColor = spectralColors[colorIndex]
+          const nextColor = spectralColors[nextColorIndex]
+          
+          const r = Math.floor(currentColor.r + (nextColor.r - currentColor.r) * colorPhase)
+          const g = Math.floor(currentColor.g + (nextColor.g - currentColor.g) * colorPhase)
+          const b = Math.floor(currentColor.b + (nextColor.b - currentColor.b) * colorPhase)
+          
+          // Add color stops with balanced opacity
+          const opacity = 0.25 + Math.sin(time * 3 + i) * 0.15
+          const position = i / 7
+          
+          animatedGrad.addColorStop(position, `rgba(${r}, ${g}, ${b}, ${opacity})`)
+        }
+        
+        sunsetCtx.fillStyle = animatedGrad
+        sunsetCtx.fillRect(0, 0, sunsetCanvas.width, sunsetCanvas.height)
+        
+        // Add moving spectral waves for extra animation (much reduced opacity)
+        for(let wave = 0; wave < 3; wave++) {
+          const waveOffset = time * 0.5 + wave * Math.PI * 0.7
+          const waveGrad = sunsetCtx.createLinearGradient(
+            0, 
+            sunsetCanvas.height * 0.3 + Math.sin(waveOffset) * 200,
+            0, 
+            sunsetCanvas.height * 0.7 + Math.sin(waveOffset) * 200
+          )
+          
+          // Spectral wave colors
+          const waveColorIndex = Math.floor(time * 3 + wave * 2) % spectralColors.length
+          const waveColor = spectralColors[waveColorIndex]
+          
+          waveGrad.addColorStop(0, 'transparent')
+          waveGrad.addColorStop(0.3, `rgba(${waveColor.r}, ${waveColor.g}, ${waveColor.b}, 0.08)`)
+          waveGrad.addColorStop(0.7, `rgba(${waveColor.r}, ${waveColor.g}, ${waveColor.b}, 0.12)`)
+          waveGrad.addColorStop(1, 'transparent')
+          
+          sunsetCtx.fillStyle = waveGrad
+          sunsetCtx.fillRect(0, 0, sunsetCanvas.width, sunsetCanvas.height)
+        }
+        
+        // Add shimmering spectral particles (balanced opacity)
+        for(let i = 0; i < 50; i++) {
+          const particleTime = time * 4 + i * 0.2
+          const x = (Math.sin(particleTime) * 0.5 + 0.5) * sunsetCanvas.width
+          const y = (Math.cos(particleTime * 0.7) * 0.5 + 0.5) * sunsetCanvas.height
+          const size = 2 + Math.sin(particleTime * 2) * 2
+          const opacity = 0.12 + Math.sin(particleTime * 3) * 0.08
+          
+          const particleColorIndex = Math.floor(particleTime * 2) % spectralColors.length
+          const particleColor = spectralColors[particleColorIndex]
+          
+          // Create glowing particle
+          const particleGrad = sunsetCtx.createRadialGradient(x, y, 0, x, y, size * 3)
+          particleGrad.addColorStop(0, `rgba(${particleColor.r}, ${particleColor.g}, ${particleColor.b}, ${opacity})`)
+          particleGrad.addColorStop(0.5, `rgba(${particleColor.r}, ${particleColor.g}, ${particleColor.b}, ${opacity * 0.5})`)
+          particleGrad.addColorStop(1, 'transparent')
+          
+          sunsetCtx.fillStyle = particleGrad
+          sunsetCtx.beginPath()
+          sunsetCtx.arc(x, y, size * 3, 0, Math.PI * 2)
+          sunsetCtx.fill()
+        }
+        
+        // Update the scene background
+        sceneRef.current.background = new THREE.CanvasTexture(sunsetCanvas)
+      }
+
       // Dynamic camera movement for certain views
       if (cameraView === 'orbit') {
         const orbitRadius = 8
@@ -535,7 +739,7 @@ function ThreeScene({
         cancelAnimationFrame(animationIdRef.current)
       }
     }
-  }, [animationStyle, cameraView])
+  }, [animationStyle, cameraView, environment])
 
   // Update shininess when prop changes
   useEffect(() => {
