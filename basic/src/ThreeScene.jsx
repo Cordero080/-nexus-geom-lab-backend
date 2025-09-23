@@ -435,6 +435,63 @@ function ThreeScene({
         wireframeMesh = cubeWireframeGroup
         console.log('Created thick wireframe for cube with', cubeEdges.length, 'cylinder edges')
         
+      } else if (geometry.type === 'OctahedronGeometry') {
+        // CUSTOM THICK WIREFRAME for OctahedronGeometry
+        wireframeMaterial = new THREE.MeshPhongMaterial({
+          color: currentBaseColor,
+          specular: currentSpecularColor,
+          shininess: shininess,
+          transparent: true,
+          opacity: wireframeIntensity / 100,
+          flatShading: false,
+          reflectivity: specularIntensity,
+        })
+        
+        // Create thick wireframe using cylinders for octahedron edges
+        const octahedronWireframeGroup = new THREE.Group()
+        
+        // Get the 6 vertices of the octahedron
+        const size = 1.0
+        const octaVertices = [
+          [0, size, 0],    // 0: Top vertex
+          [0, -size, 0],   // 1: Bottom vertex
+          [size, 0, 0],    // 2: Right vertex
+          [-size, 0, 0],   // 3: Left vertex
+          [0, 0, size],    // 4: Front vertex
+          [0, 0, -size]    // 5: Back vertex
+        ]
+        
+        // Define the 12 edges of the octahedron
+        const octahedronMainEdges = [
+          // Top pyramid edges
+          [0, 2], [0, 3], [0, 4], [0, 5],
+          // Bottom pyramid edges
+          [1, 2], [1, 3], [1, 4], [1, 5],
+          // Middle ring edges
+          [2, 4], [4, 3], [3, 5], [5, 2]
+        ]
+        
+        // Create cylinder for each octahedron edge
+        octahedronMainEdges.forEach(([i, j]) => {
+          const start = new THREE.Vector3(...octaVertices[i])
+          const end = new THREE.Vector3(...octaVertices[j])
+          const distance = start.distanceTo(end)
+          
+          // Create thick cylinder for octahedron edge - ADJUST 0.012 TO CHANGE MAIN WIREFRAME THICKNESS
+          const cylinderGeom = new THREE.CylinderGeometry(0.012, 0.012, distance, 8)
+          const cylinderMesh = new THREE.Mesh(cylinderGeom, wireframeMaterial)
+          
+          // Position cylinder between start and end points
+          cylinderMesh.position.copy(start.clone().add(end).multiplyScalar(0.5))
+          cylinderMesh.lookAt(end)
+          cylinderMesh.rotateX(Math.PI / 2)
+          
+          octahedronWireframeGroup.add(cylinderMesh)
+        })
+        
+        wireframeMesh = octahedronWireframeGroup
+        console.log('Created thick wireframe for octahedron with', octahedronMainEdges.length, 'cylinder edges')
+        
       } else {
         // Standard thin wireframe for other geometries
         wireframeMaterial = new THREE.MeshPhongMaterial({
@@ -592,6 +649,100 @@ function ThreeScene({
         
         curvedLines = connectionGroup
         console.log(`Created hypercube connections: 8 thick cylinder connections`)
+        
+      } else if (geometry.type === 'OctahedronGeometry') {
+        // OCTAHEDRON: Create hyper-octahedron with inner octahedron and connections
+        console.log('Creating hyper-octahedron wireframe for OctahedronGeometry')
+        
+        // Get the 6 vertices of the octahedron (top, bottom, and 4 around the middle)
+        const size = 1.0 // Octahedron radius
+        const outerVertices = [
+          [0, size, 0],    // 0: Top vertex
+          [0, -size, 0],   // 1: Bottom vertex
+          [size, 0, 0],    // 2: Right vertex
+          [-size, 0, 0],   // 3: Left vertex
+          [0, 0, size],    // 4: Front vertex
+          [0, 0, -size]    // 5: Back vertex
+        ]
+        
+        // Create inner octahedron (scaled down)
+        const innerScale = 0.5
+        const innerVertices = outerVertices.map(vertex => [
+          vertex[0] * innerScale,
+          vertex[1] * innerScale,
+          vertex[2] * innerScale
+        ])
+        
+        // 1. Create inner octahedron wireframe using thick cylinders
+        centerLinesMaterial = new THREE.MeshBasicMaterial({
+          color: new THREE.Color('#ff0000'), // Bright red for inner octahedron
+          transparent: false,
+          opacity: 1.0,
+        })
+        
+        const innerOctahedronGroup = new THREE.Group()
+        
+        // Define the 12 edges of the octahedron
+        const octahedronEdges = [
+          // Top pyramid edges (from top vertex to middle ring)
+          [0, 2], [0, 3], [0, 4], [0, 5],
+          // Bottom pyramid edges (from bottom vertex to middle ring)
+          [1, 2], [1, 3], [1, 4], [1, 5],
+          // Middle ring edges (connecting the 4 middle vertices)
+          [2, 4], [4, 3], [3, 5], [5, 2]
+        ]
+        
+        // Create cylinder for each inner octahedron edge
+        octahedronEdges.forEach(([i, j]) => {
+          const start = new THREE.Vector3(...innerVertices[i])
+          const end = new THREE.Vector3(...innerVertices[j])
+          const distance = start.distanceTo(end)
+          
+          // Create thick cylinder for inner octahedron edge - ADJUST 0.004 TO CHANGE THICKNESS
+          const cylinderGeom = new THREE.CylinderGeometry(0.004, 0.004, distance, 8)
+          const cylinderMesh = new THREE.Mesh(cylinderGeom, centerLinesMaterial)
+          
+          // Position cylinder between start and end points
+          cylinderMesh.position.copy(start.clone().add(end).multiplyScalar(0.5))
+          cylinderMesh.lookAt(end)
+          cylinderMesh.rotateX(Math.PI / 2)
+          
+          innerOctahedronGroup.add(cylinderMesh)
+        })
+        
+        centerLines = innerOctahedronGroup
+        console.log(`Created hyper-octahedron inner wireframe with ${octahedronEdges.length} cylinder edges`)
+        
+        // 2. Create hyper-octahedron connections (vertex to vertex) using thick cylinders
+        curvedLinesMaterial = new THREE.MeshBasicMaterial({
+          color: new THREE.Color('#00ff00'), // Bright green for connections
+          transparent: false,
+          opacity: 1.0,
+        })
+        
+        // Create thick connection lines using cylinder geometry
+        const octahedronConnectionGroup = new THREE.Group()
+        
+        // Connect each inner vertex to corresponding outer vertex
+        for (let i = 0; i < 6; i++) {
+          const start = new THREE.Vector3(...innerVertices[i])
+          const end = new THREE.Vector3(...outerVertices[i])
+          const distance = start.distanceTo(end)
+          
+          // Create cylinder for each connection line - ADJUST 0.003 TO CHANGE THICKNESS
+          const cylinderGeom = new THREE.CylinderGeometry(0.003, 0.003, distance, 6)
+          const cylinderMesh = new THREE.Mesh(cylinderGeom, curvedLinesMaterial)
+          
+          // Position cylinder between start and end points
+          cylinderMesh.position.copy(start.clone().add(end).multiplyScalar(0.5))
+          cylinderMesh.lookAt(end)
+          cylinderMesh.rotateX(Math.PI / 2)
+          
+          octahedronConnectionGroup.add(cylinderMesh)
+        }
+        
+        curvedLines = octahedronConnectionGroup
+        console.log(`Created hyper-octahedron connections: 6 vertex-to-vertex connections`)
         
       } else {
         // OTHER GEOMETRIES: Use existing complex wireframe logic
