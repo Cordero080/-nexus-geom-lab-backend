@@ -158,15 +158,23 @@ function ThreeScene({
   // and updates the scene background accordingly
   
   // Scale updater - responds to scale prop changes
-    useEffect (() =>{
-      objectsRef.current.forEach(({mesh}) => {
-        if (mesh) {
-          mesh.scale.setScalar(scale)
-        }
-      })
-    }, [scale])
+  useEffect(() => {
+    objectsRef.current.forEach(({ solidMesh, wireframeMesh, mesh }) => {
+      // Handle dual-mesh objects
+      if (solidMesh) {
+        solidMesh.scale.setScalar(scale)
+      }
+      if (wireframeMesh) {
+        wireframeMesh.scale.setScalar(scale)
+      }
+      // Handle legacy single mesh objects
+      if (mesh) {
+        mesh.scale.setScalar(scale)
+      }
+    })
+  }, [scale])
 
-    
+
   useEffect(() => {
     if (!sceneRef.current) return // Safety check: make sure scene exists
 
@@ -305,7 +313,11 @@ function ThreeScene({
     
     // REMOVE OLD OBJECTS from scene and clear our reference array
     objectsRef.current.forEach(obj => {
-      scene.remove(obj.mesh)
+      // Remove both solid and wireframe meshes
+      if (obj.solidMesh) scene.remove(obj.solidMesh)
+      if (obj.wireframeMesh) scene.remove(obj.wireframeMesh)
+      // Also handle legacy single mesh objects
+      if (obj.mesh) scene.remove(obj.mesh)
     })
     objectsRef.current = []
 
@@ -333,7 +345,7 @@ function ThreeScene({
       // Store original vertex positions for advanced animations
       const originalPositions = geometry.attributes.position.array.slice()
       
-      // CREATE MATERIAL using current App.jsx prop values
+      // CREATE SOLID MATERIAL using current App.jsx prop values
       const currentBaseColor = new THREE.Color(baseColor)           // Convert App.jsx baseColor prop
       const currentSpecularColor = new THREE.Color(specularColor)   // Convert App.jsx specularColor prop
       
@@ -341,44 +353,67 @@ function ThreeScene({
         color: currentBaseColor,                    // Use baseColor prop from App.jsx
         specular: currentSpecularColor,             // Use specularColor prop from App.jsx
         shininess: shininess,                       // Use shininess prop from App.jsx
-        wireframe: wireframeIntensity > 0,          // Use wireframeIntensity prop from App.jsx
-        transparent: wireframeIntensity > 0,
-        opacity: wireframeIntensity > 0 ? wireframeIntensity / 100 : 1,
+        wireframe: false,                           // Solid material is NEVER wireframe
+        transparent: true,                          // Always transparent for blending
+        opacity: 1 - (wireframeIntensity / 100),   // Start with inverse of wireframe intensity
         flatShading: false,
         reflectivity: specularIntensity,            // Use specularIntensity prop from App.jsx
       })
 
       console.log(`Created object ${i} with specular color:`, currentSpecularColor, 'from state:', specularColor)
 
-      // CREATE MESH (geometry + material = visible object)
-      const mesh = new THREE.Mesh(geometry, material)
+      // CREATE TWO MESHES - One solid, one wireframe for blending
+      const solidMesh = new THREE.Mesh(geometry, material)
       
-      // POSITION OBJECTS in scene
+      // Create wireframe material (same colors, but wireframe mode)
+      const wireframeMaterial = new THREE.MeshPhongMaterial({
+        color: currentBaseColor,
+        specular: currentSpecularColor,
+        shininess: shininess,
+        wireframe: true,           // This one is always wireframe
+        transparent: true,
+        opacity: wireframeIntensity / 100, // Start with current wireframe intensity
+        flatShading: false,
+        reflectivity: specularIntensity,
+      })
+      
+      const wireframeMesh = new THREE.Mesh(geometry, wireframeMaterial)
+      
+      // POSITION BOTH OBJECTS in same location
       if (objectCount === 1) {
-        mesh.position.set(0, 0, 0) // Single object at center
+        solidMesh.position.set(0, 0, 0) // Single object at center
+        wireframeMesh.position.set(0, 0, 0) // Same position
       } else {
         // Multiple objects arranged in a circle
         const angle = (i / objectCount) * Math.PI * 2
         const radius = 3
-        mesh.position.set(
-          Math.cos(angle) * radius,
-          (Math.random() - 0.9) * 1, // Random Y position for variety
-          Math.sin(angle) * radius
-        )
+        const x = Math.cos(angle) * radius
+        const y = (Math.random() - 0.9) * 1 // Random Y position for variety
+        const z = Math.sin(angle) * radius
+        
+        solidMesh.position.set(x, y, z)
+        wireframeMesh.position.set(x, y, z) // Same position
       }
       
-      // Enable shadows
-      mesh.castShadow = true
-      mesh.receiveShadow = true
-      scene.add(mesh) // Add to Three.js scene
+      // Enable shadows for both meshes
+      solidMesh.castShadow = true
+      solidMesh.receiveShadow = true
+      wireframeMesh.castShadow = true
+      wireframeMesh.receiveShadow = true
+      
+      // Add both meshes to the scene
+      scene.add(solidMesh)
+      scene.add(wireframeMesh)
 
       // STORE OBJECT DATA for later updates and animations
       objectsRef.current.push({
-        mesh,                       // The visible Three.js object
-        material,                   // The material (for updating properties)
+        solidMesh,                  // The solid Three.js object
+        wireframeMesh,              // The wireframe Three.js object
+        material,                   // The solid material (for updating properties)
+        wireframeMaterial,          // The wireframe material (for updating properties)
         geometry,                   // The geometry (for vertex animations)
         originalPositions,          // Original vertex positions (for morphing effects)
-        originalPosition: mesh.position.clone(), // Original object position
+        originalPosition: solidMesh.position.clone(), // Original object position
         phase: Math.random() * Math.PI * 2,      // Random phase for varied animations
         // Magnetic points for magnetic field animation effect
         magneticPoints: [
@@ -396,8 +431,8 @@ function ThreeScene({
     }
     
     console.log(`Created ${objectsRef.current.length} objects with current React state values`)
-  }, [objectCount, baseColor, specularColor, specularIntensity, shininess, wireframeIntensity, objectType]) 
-  // ↑ This effect runs when ANY of these App.jsx props change
+  }, [objectCount, baseColor, specularColor, objectType]) 
+  // ↑ This effect runs when ANY of these App.jsx props change (removed wireframeIntensity, specularIntensity, and shininess)
 
   // ===============================================
   // CAMERA CONTROLLER - RESPONDS TO cameraView PROP
@@ -453,146 +488,151 @@ function ThreeScene({
 
       // ANIMATE EACH OBJECT based on animationStyle prop from App.jsx
       objectsRef.current.forEach((objData, index) => {
-        const { mesh, originalPosition, phase, geometry, originalPositions, magneticPoints } = objData
+        const { solidMesh, wireframeMesh, mesh, originalPosition, phase, geometry, originalPositions, magneticPoints } = objData
+        
+        // Use either the new dual-mesh system or legacy single mesh
+        const meshesToAnimate = solidMesh && wireframeMesh ? [solidMesh, wireframeMesh] : (mesh ? [mesh] : [])
+        
+        meshesToAnimate.forEach(currentMesh => {
+          switch(animationStyle) { // Use animationStyle prop from App.jsx
+            case 'rotate':
+              // Simple rotation animation
+              currentMesh.rotation.x += 0.01
+              currentMesh.rotation.y += 0.01
+              currentMesh.rotation.z += 0.01
+              currentMesh.position.copy(originalPosition)
+              break
 
-        switch(animationStyle) { // Use animationStyle prop from App.jsx
-          case 'rotate':
-            // Simple rotation animation
-            mesh.rotation.x += 0.01
-            mesh.rotation.y += 0.01
-            mesh.rotation.z += 0.01
-            mesh.position.copy(originalPosition)
-            break
+            case 'float':
+              // Floating/bobbing animation
+              currentMesh.rotation.x = t + phase
+              currentMesh.rotation.y = t * 0.7 + phase
+              currentMesh.position.x = originalPosition.x + Math.sin(t + phase) * 0.5
+              currentMesh.position.y = originalPosition.y + Math.cos(t + phase) * 0.5
+              currentMesh.position.z = originalPosition.z + Math.sin(t * 0.5 + phase) * 0.3
+              break
 
-          case 'float':
-            // Floating/bobbing animation
-            mesh.rotation.x = t + phase
-            mesh.rotation.y = t * 0.7 + phase
-            mesh.position.x = originalPosition.x + Math.sin(t + phase) * 0.5
-            mesh.position.y = originalPosition.y + Math.cos(t + phase) * 0.5
-            mesh.position.z = originalPosition.z + Math.sin(t * 0.5 + phase) * 0.3
-            break
+            case 'spiral':
+              // Spiral motion animation
+              const spiralRadius = 2 + Math.sin(t + phase) * 1
+              const spiralAngle = t + phase + index * 0.5
+              currentMesh.position.x = Math.cos(spiralAngle) * spiralRadius
+              currentMesh.position.y = Math.sin(t * 2 + phase) * 2
+              currentMesh.position.z = Math.sin(spiralAngle) * spiralRadius
+              currentMesh.rotation.x = spiralAngle
+              currentMesh.rotation.y = spiralAngle * 0.7
+              break
 
-          case 'spiral':
-            // Spiral motion animation
-            const spiralRadius = 2 + Math.sin(t + phase) * 1
-            const spiralAngle = t + phase + index * 0.5
-            mesh.position.x = Math.cos(spiralAngle) * spiralRadius
-            mesh.position.y = Math.sin(t * 2 + phase) * 2
-            mesh.position.z = Math.sin(spiralAngle) * spiralRadius
-            mesh.rotation.x = spiralAngle
-            mesh.rotation.y = spiralAngle * 0.7
-            break
+            case 'chaos':
+              // Chaotic random movement
+              currentMesh.position.x = originalPosition.x + Math.sin(t * 3 + phase) * 2
+              currentMesh.position.y = originalPosition.y + Math.cos(t * 2 + phase) * 2
+              currentMesh.position.z = originalPosition.z + Math.sin(t * 1.5 + phase) * 2
+              currentMesh.rotation.x = t * 2 + phase
+              currentMesh.rotation.y = t * 1.5 + phase
+              currentMesh.rotation.z = t * 2.5 + phase
+              break
 
-          case 'chaos':
-            // Chaotic random movement
-            mesh.position.x = originalPosition.x + Math.sin(t * 3 + phase) * 2
-            mesh.position.y = originalPosition.y + Math.cos(t * 2 + phase) * 2
-            mesh.position.z = originalPosition.z + Math.sin(t * 1.5 + phase) * 2
-            mesh.rotation.x = t * 2 + phase
-            mesh.rotation.y = t * 1.5 + phase
-            mesh.rotation.z = t * 2.5 + phase
-            break
-
-          case 'dna':
-            // DNA Helix: Complex vertex morphing + rotation
-            if (geometry && originalPositions) {
-              const positions = geometry.attributes.position.array
-              for (let i = 0; i < positions.length; i += 3) {
-                const x = originalPositions[i]
-                const y = originalPositions[i + 1]
-                const z = originalPositions[i + 2]
-                
-                const radius = Math.sqrt(x * x + z * z)
-                const angle = Math.atan2(z, x) + t * 0.5 + y * 0.3
-                
-                const helixRadius = radius + Math.sin(t * 2 + y * 2 + phase) * 0.2
-                positions[i] = Math.cos(angle) * helixRadius
-                positions[i + 1] = y + Math.sin(t * 1.5 + angle + phase) * 0.1
-                positions[i + 2] = Math.sin(angle) * helixRadius
-              }
-              geometry.attributes.position.needsUpdate = true // Tell Three.js to update vertices
-            }
-            
-            mesh.rotation.y = t * 0.3 + phase
-            mesh.rotation.x = Math.sin(t * 0.2) * 0.2
-            mesh.position.copy(originalPosition)
-            break
-
-          case 'liquid':
-            // Liquid Metal: Flowing waves across surface
-            if (geometry && originalPositions) {
-              const positions = geometry.attributes.position.array
-              for (let i = 0; i < positions.length; i += 3) {
-                const x = originalPositions[i]
-                const y = originalPositions[i + 1]
-                const z = originalPositions[i + 2]
-                
-                // Multiple wave layers for liquid effect
-                const wave1 = Math.sin(t * 2 + x * 3 + phase) * 0.15
-                const wave2 = Math.cos(t * 1.5 + y * 4 + phase) * 0.1
-                const wave3 = Math.sin(t * 3 + z * 2 + phase) * 0.08
-                
-                positions[i] = x + wave1 + Math.sin(t + y * 2) * 0.05
-                positions[i + 1] = y + wave2 + Math.cos(t * 1.2 + x * 2) * 0.05
-                positions[i + 2] = z + wave3 + Math.sin(t * 0.8 + z * 3) * 0.05
-              }
-              geometry.attributes.position.needsUpdate = true
-            }
-            
-            mesh.scale.setScalar(1 + 0.2 * Math.sin(t * 1.5 + phase))
-            mesh.rotation.x += Math.sin(t * 0.3) * 0.01
-            mesh.rotation.y += Math.cos(t * 0.4) * 0.01
-            mesh.position.copy(originalPosition)
-            break
-
-          case 'magnetic':
-            // Magnetic Field: Vertices attracted/repelled by moving magnetic points
-            if (geometry && originalPositions && magneticPoints) {
-              const positions = geometry.attributes.position.array
-              
-              // Move magnetic points around
-              magneticPoints.forEach((point, pIndex) => {
-                point.x = Math.sin(t * 0.5 + pIndex * 2) * 3
-                point.y = Math.cos(t * 0.7 + pIndex * 2) * 2
-                point.z = Math.sin(t * 0.3 + pIndex * 3) * 3
-              })
-              
-              for (let i = 0; i < positions.length; i += 3) {
-                const x = originalPositions[i]
-                const y = originalPositions[i + 1]
-                const z = originalPositions[i + 2]
-                
-                let totalForceX = 0, totalForceY = 0, totalForceZ = 0
-                
-                // Calculate magnetic forces from each point
-                magneticPoints.forEach(point => {
-                  const dx = x - point.x
-                  const dy = y - point.y
-                  const dz = z - point.z
-                  const distance = Math.sqrt(dx * dx + dy * dy + dz * dz) + 0.1
-                  const force = point.strength / (distance * distance)
+            case 'dna':
+              // DNA Helix: Complex vertex morphing + rotation
+              if (geometry && originalPositions) {
+                const positions = geometry.attributes.position.array
+                for (let i = 0; i < positions.length; i += 3) {
+                  const x = originalPositions[i]
+                  const y = originalPositions[i + 1]
+                  const z = originalPositions[i + 2]
                   
-                  const direction = Math.sin(t + point.x + point.y) > 0 ? -1 : 1
+                  const radius = Math.sqrt(x * x + z * z)
+                  const angle = Math.atan2(z, x) + t * 0.5 + y * 0.3
                   
-                  totalForceX += (dx / distance) * force * direction
-                  totalForceY += (dy / distance) * force * direction
-                  totalForceZ += (dz / distance) * force * direction
+                  const helixRadius = radius + Math.sin(t * 2 + y * 2 + phase) * 0.2
+                  positions[i] = Math.cos(angle) * helixRadius
+                  positions[i + 1] = y + Math.sin(t * 1.5 + angle + phase) * 0.1
+                  positions[i + 2] = Math.sin(angle) * helixRadius
+                }
+                geometry.attributes.position.needsUpdate = true // Tell Three.js to update vertices
+              }
+              
+              currentMesh.rotation.y = t * 0.3 + phase
+              currentMesh.rotation.x = Math.sin(t * 0.2) * 0.2
+              currentMesh.position.copy(originalPosition)
+              break
+
+            case 'liquid':
+              // Liquid Metal: Flowing waves across surface
+              if (geometry && originalPositions) {
+                const positions = geometry.attributes.position.array
+                for (let i = 0; i < positions.length; i += 3) {
+                  const x = originalPositions[i]
+                  const y = originalPositions[i + 1]
+                  const z = originalPositions[i + 2]
+                  
+                  // Multiple wave layers for liquid effect
+                  const wave1 = Math.sin(t * 2 + x * 3 + phase) * 0.15
+                  const wave2 = Math.cos(t * 1.5 + y * 4 + phase) * 0.1
+                  const wave3 = Math.sin(t * 3 + z * 2 + phase) * 0.08
+                  
+                  positions[i] = x + wave1 + Math.sin(t + y * 2) * 0.05
+                  positions[i + 1] = y + wave2 + Math.cos(t * 1.2 + x * 2) * 0.05
+                  positions[i + 2] = z + wave3 + Math.sin(t * 0.8 + z * 3) * 0.05
+                }
+                geometry.attributes.position.needsUpdate = true
+              }
+              
+              currentMesh.scale.setScalar(1 + 0.2 * Math.sin(t * 1.5 + phase))
+              currentMesh.rotation.x += Math.sin(t * 0.3) * 0.01
+              currentMesh.rotation.y += Math.cos(t * 0.4) * 0.01
+              currentMesh.position.copy(originalPosition)
+              break
+
+            case 'magnetic':
+              // Magnetic Field: Vertices attracted/repelled by moving magnetic points
+              if (geometry && originalPositions && magneticPoints) {
+                const positions = geometry.attributes.position.array
+                
+                // Move magnetic points around
+                magneticPoints.forEach((point, pIndex) => {
+                  point.x = Math.sin(t * 0.5 + pIndex * 2) * 3
+                  point.y = Math.cos(t * 0.7 + pIndex * 2) * 2
+                  point.z = Math.sin(t * 0.3 + pIndex * 3) * 3
                 })
                 
-                positions[i] = x + totalForceX * 0.3
-                positions[i + 1] = y + totalForceY * 0.3
-                positions[i + 2] = z + totalForceZ * 0.3
+                for (let i = 0; i < positions.length; i += 3) {
+                  const x = originalPositions[i]
+                  const y = originalPositions[i + 1]
+                  const z = originalPositions[i + 2]
+                  
+                  let totalForceX = 0, totalForceY = 0, totalForceZ = 0
+                  
+                  // Calculate magnetic forces from each point
+                  magneticPoints.forEach(point => {
+                    const dx = x - point.x
+                    const dy = y - point.y
+                    const dz = z - point.z
+                    const distance = Math.sqrt(dx * dx + dy * dy + dz * dz) + 0.1
+                    const force = point.strength / (distance * distance)
+                    
+                    const direction = Math.sin(t + point.x + point.y) > 0 ? -1 : 1
+                    
+                    totalForceX += (dx / distance) * force * direction
+                    totalForceY += (dy / distance) * force * direction
+                    totalForceZ += (dz / distance) * force * direction
+                  })
+                  
+                  positions[i] = x + totalForceX * 0.3
+                  positions[i + 1] = y + totalForceY * 0.3
+                  positions[i + 2] = z + totalForceZ * 0.3
+                }
+                geometry.attributes.position.needsUpdate = true
               }
-              geometry.attributes.position.needsUpdate = true
-            }
-            
-            mesh.rotation.x += 0.005
-            mesh.rotation.y += 0.007
-            mesh.position.copy(originalPosition)
-            break
-        }
-      })
+              
+              currentMesh.rotation.x += 0.005
+              currentMesh.rotation.y += 0.007
+              currentMesh.position.copy(originalPosition)
+              break
+          }
+        }) // Close meshesToAnimate.forEach
+      }) // Close objectsRef.current.forEach
 
       // DYNAMIC CAMERA MOVEMENT for certain views
       if (cameraView === 'orbit') {
@@ -629,11 +669,18 @@ function ThreeScene({
   // SHININESS UPDATER - Responds to shininess prop changes
   useEffect(() => {
     console.log('Updating shininess to:', shininess) // Debug: shows when App.jsx changes shininess
-    objectsRef.current.forEach(({ material }, index) => {
+    objectsRef.current.forEach(({ material, wireframeMaterial }, index) => {
+      // Update solid material
       if (material) {
         material.shininess = shininess          // Apply new shininess value from App.jsx
         material.needsUpdate = true             // Tell Three.js to re-render material
         console.log(`Updated material ${index} shininess to:`, shininess)
+      }
+      // Update wireframe material
+      if (wireframeMaterial) {
+        wireframeMaterial.shininess = shininess // Apply to wireframe material too
+        wireframeMaterial.needsUpdate = true
+        console.log(`Updated wireframe material ${index} shininess to:`, shininess)
       }
     })
   }, [shininess]) // Run when shininess prop from App.jsx changes
@@ -652,13 +699,20 @@ function ThreeScene({
     const convertedColor = parseInt(specularColor.replace('#', ''), 16)
     console.log('Converted color value:', convertedColor)
     
-    objectsRef.current.forEach(({ material }, index) => {
+    objectsRef.current.forEach(({ material, wireframeMaterial }, index) => {
+      // Update solid material
       if (material) {
         console.log(`Updating material ${index} specular color`)
         material.specular.setHex(convertedColor) // Apply new specular color from App.jsx
         material.needsUpdate = true              // Tell Three.js to re-render material
       } else {
         console.log(`Material ${index} is null`)
+      }
+      // Update wireframe material
+      if (wireframeMaterial) {
+        console.log(`Updating wireframe material ${index} specular color`)
+        wireframeMaterial.specular.setHex(convertedColor) // Apply to wireframe material too
+        wireframeMaterial.needsUpdate = true
       }
     })
   }, [specularColor]) // Run when specularColor prop from App.jsx changes
@@ -667,13 +721,20 @@ function ThreeScene({
   useEffect(() => {
     console.log('Updating specular intensity to:', specularIntensity)
     
-    objectsRef.current.forEach(({ material }, index) => {
+    objectsRef.current.forEach(({ material, wireframeMaterial }, index) => {
+      // Update solid material
       if (material) {
         material.reflectivity = specularIntensity // Apply new intensity from App.jsx
         material.needsUpdate = true               // Tell Three.js to re-render material
         console.log(`Updated material ${index} specular intensity to:`, specularIntensity)
       } else {
         console.log(`Material ${index} is null`)
+      }
+      // Update wireframe material
+      if (wireframeMaterial) {
+        wireframeMaterial.reflectivity = specularIntensity // Apply to wireframe material too
+        wireframeMaterial.needsUpdate = true
+        console.log(`Updated wireframe material ${index} specular intensity to:`, specularIntensity)
       }
     })
   }, [specularIntensity]) // Run when specularIntensity prop from App.jsx changes
@@ -685,11 +746,18 @@ function ThreeScene({
     const convertedColor = parseInt(baseColor.replace('#', ''), 16)
     console.log('Converted base color value:', convertedColor)
     
-    objectsRef.current.forEach(({ material }, index) => {
+    objectsRef.current.forEach(({ material, wireframeMaterial }, index) => {
+      // Update solid material
       if (material) {
         material.color.setHex(convertedColor) // Apply new base color from App.jsx
         material.needsUpdate = true           // Tell Three.js to re-render material
         console.log(`Updated material ${index} base color`)
+      }
+      // Update wireframe material
+      if (wireframeMaterial) {
+        wireframeMaterial.color.setHex(convertedColor) // Apply to wireframe material too
+        wireframeMaterial.needsUpdate = true
+        console.log(`Updated wireframe material ${index} base color`)
       }
     })
   }, [baseColor]) // Run when baseColor prop from App.jsx changes
@@ -698,20 +766,45 @@ function ThreeScene({
   useEffect(() => {
     const intensity = wireframeIntensity / 100 // Convert 0-100 range to 0-1 range
     
-    objectsRef.current.forEach(({ material }) => {
-      if (material) {
+    objectsRef.current.forEach(({ material, wireframeMaterial }) => {
+      if (material && wireframeMaterial) {
+        // DUAL-MESH BLENDING: Smooth transition between solid and wireframe
         if (intensity === 0) {
-          // No wireframe: solid object
+          // Full solid: solid mesh visible, wireframe mesh invisible
+          material.transparent = false
+          material.opacity = 1
+          wireframeMaterial.transparent = true
+          wireframeMaterial.opacity = 0
+        } else if (intensity === 1) {
+          // Full wireframe: solid mesh invisible, wireframe mesh visible
+          material.transparent = true
+          material.opacity = 0
+          wireframeMaterial.transparent = true
+          wireframeMaterial.opacity = 1
+        } else {
+          // Blended: both meshes partially visible
+          material.transparent = true
+          material.opacity = 1 - intensity  // Solid fades out as wireframe increases
+          wireframeMaterial.transparent = true
+          wireframeMaterial.opacity = intensity  // Wireframe fades in as intensity increases
+        }
+        
+        material.needsUpdate = true
+        wireframeMaterial.needsUpdate = true
+        
+        console.log(`Wireframe intensity ${wireframeIntensity}%: solid opacity = ${material.opacity}, wireframe opacity = ${wireframeMaterial.opacity}`)
+      } else if (material) {
+        // Legacy single-mesh fallback (old wireframe behavior)
+        if (intensity === 0) {
           material.wireframe = false
           material.transparent = false
           material.opacity = 1
         } else {
-          // Wireframe mode: show object structure
           material.wireframe = true
           material.transparent = true
-          material.opacity = 0.3 + (intensity * 0.7) // Blend opacity based on intensity
+          material.opacity = 0.3 + (intensity * 0.7)
         }
-        material.needsUpdate = true // Tell Three.js to re-render material
+        material.needsUpdate = true
       }
     })
   }, [wireframeIntensity]) // Run when wireframeIntensity prop from App.jsx changes
