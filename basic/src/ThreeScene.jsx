@@ -379,19 +379,77 @@ function ThreeScene({
       // CREATE TWO MESHES - One solid, one wireframe for blending
       const solidMesh = new THREE.Mesh(geometry, material)
       
-      // Create wireframe material (same colors, but wireframe mode)
-      const wireframeMaterial = new THREE.MeshPhongMaterial({
-        color: currentBaseColor,
-        specular: currentSpecularColor,
-        shininess: shininess,
-        wireframe: true,           // This one is always wireframe
-        transparent: true,
-        opacity: wireframeIntensity / 100, // Start with current wireframe intensity
-        flatShading: false,
-        reflectivity: specularIntensity,
-      })
+      let wireframeMesh
+      let wireframeMaterial // Make sure this is available for all geometry types
       
-      const wireframeMesh = new THREE.Mesh(geometry, wireframeMaterial)
+      if (geometry.type === 'BoxGeometry') {
+        // CUSTOM THICK WIREFRAME for BoxGeometry
+        wireframeMaterial = new THREE.MeshPhongMaterial({
+          color: currentBaseColor,
+          specular: currentSpecularColor,
+          shininess: shininess,
+          transparent: true,
+          opacity: wireframeIntensity / 100,
+          flatShading: false,
+          reflectivity: specularIntensity,
+        })
+        
+        // Create thick wireframe using cylinders for cube edges
+        const cubeWireframeGroup = new THREE.Group()
+        
+        // Get the 8 corners of the cube
+        const size = 0.75 // Half of 1.5
+        const cubeCorners = [
+          [-size, -size, -size], [size, -size, -size], [size, size, -size], [-size, size, -size], // Back face
+          [-size, -size, size], [size, -size, size], [size, size, size], [-size, size, size]   // Front face
+        ]
+        
+        // Define the 12 edges of the cube
+        const cubeEdges = [
+          // Back face edges
+          [0, 1], [1, 2], [2, 3], [3, 0],
+          // Front face edges  
+          [4, 5], [5, 6], [6, 7], [7, 4],
+          // Connecting edges between front and back
+          [0, 4], [1, 5], [2, 6], [3, 7]
+        ]
+        
+        // Create cylinder for each cube edge
+        cubeEdges.forEach(([i, j]) => {
+          const start = new THREE.Vector3(...cubeCorners[i])
+          const end = new THREE.Vector3(...cubeCorners[j])
+          const distance = start.distanceTo(end)
+          
+          // Create thick cylinder for cube edge - ADJUST 0.012 TO CHANGE MAIN WIREFRAME THICKNESS
+          const cylinderGeom = new THREE.CylinderGeometry(0.012, 0.012, distance, 8)
+          const cylinderMesh = new THREE.Mesh(cylinderGeom, wireframeMaterial)
+          
+          // Position cylinder between start and end points
+          cylinderMesh.position.copy(start.clone().add(end).multiplyScalar(0.5))
+          cylinderMesh.lookAt(end)
+          cylinderMesh.rotateX(Math.PI / 2)
+          
+          cubeWireframeGroup.add(cylinderMesh)
+        })
+        
+        wireframeMesh = cubeWireframeGroup
+        console.log('Created thick wireframe for cube with', cubeEdges.length, 'cylinder edges')
+        
+      } else {
+        // Standard thin wireframe for other geometries
+        wireframeMaterial = new THREE.MeshPhongMaterial({
+          color: currentBaseColor,
+          specular: currentSpecularColor,
+          shininess: shininess,
+          wireframe: true,           // This one is always wireframe
+          transparent: true,
+          opacity: wireframeIntensity / 100, // Start with current wireframe intensity
+          flatShading: false,
+          reflectivity: specularIntensity,
+        })
+        
+        wireframeMesh = new THREE.Mesh(geometry, wireframeMaterial)
+      }
       
       // CREATE INTRICATE WIREFRAME DETAILS
       console.log(`Creating intricate wireframe for object ${i}, geometry type:`, geometry.type)
@@ -436,6 +494,104 @@ function ThreeScene({
         // No curved lines for tetrahedron - keep it simple
         curvedLines = new THREE.Object3D()
         curvedLinesMaterial = null
+        
+      } else if (geometry.type === 'BoxGeometry') {
+        // CUBE/BOX: Create hypercube-style inner cube with corner-to-corner connections
+        console.log('Creating hypercube wireframe for BoxGeometry')
+        
+        // Get the 8 corners of the outer cube (BoxGeometry 1.5x1.5x1.5)
+        const size = 0.75 // Half of 1.5
+        const outerCorners = [
+          [-size, -size, -size], // 0: bottom-back-left
+          [size, -size, -size],  // 1: bottom-back-right  
+          [size, size, -size],   // 2: top-back-right
+          [-size, size, -size],  // 3: top-back-left
+          [-size, -size, size],  // 4: bottom-front-left
+          [size, -size, size],   // 5: bottom-front-right
+          [size, size, size],    // 6: top-front-right
+          [-size, size, size]    // 7: top-front-left
+        ]
+        
+        // Create inner cube (scaled down to be INSIDE the outer cube)
+        const innerScale = 0.5
+        const innerCorners = outerCorners.map(corner => [
+          corner[0] * innerScale,
+          corner[1] * innerScale, 
+          corner[2] * innerScale
+        ])
+        
+        // 1. Create inner cube wireframe using thick cylinders
+        const centerLinesGeometry = new THREE.BufferGeometry() // Keep for compatibility
+        
+        // Inner cube edges - proper cube wireframe structure
+        const innerEdges = [
+          // Back face (z = -size)
+          [0, 1], [1, 2], [2, 3], [3, 0],
+          // Front face (z = +size)  
+          [4, 5], [5, 6], [6, 7], [7, 4],
+          // Connecting edges between front and back
+          [0, 4], [1, 5], [2, 6], [3, 7]
+        ]
+        
+        centerLinesMaterial = new THREE.MeshBasicMaterial({
+          color: new THREE.Color('#ff0000'), // Bright red for inner cube
+          transparent: false,
+          opacity: 1.0,
+        })
+        
+        // Create thick visible lines using cylinder geometry
+        const innerCubeGroup = new THREE.Group()
+        
+        innerEdges.forEach(([i, j]) => {
+          const start = new THREE.Vector3(...innerCorners[i])
+          const end = new THREE.Vector3(...innerCorners[j])
+          const distance = start.distanceTo(end)
+          
+          // Create cylinder for each edge
+          const cylinderGeom = new THREE.CylinderGeometry(0.003, 0.008, distance, 8)
+          const cylinderMesh = new THREE.Mesh(cylinderGeom, centerLinesMaterial)
+          
+          // Position cylinder between start and end points
+          cylinderMesh.position.copy(start.clone().add(end).multiplyScalar(0.5))
+          cylinderMesh.lookAt(end)
+          cylinderMesh.rotateX(Math.PI / 2)
+          
+          innerCubeGroup.add(cylinderMesh)
+        })
+        
+        centerLines = innerCubeGroup
+        console.log(`Created hypercube inner cube with ${innerEdges.length} cylinder edges`)
+        
+        // 2. Create hypercube connections (corner to corner) using thick cylinders
+        curvedLinesMaterial = new THREE.MeshBasicMaterial({
+          color: new THREE.Color('#00ff00'), // Bright green for connections
+          transparent: false,
+          opacity: 1.0,
+        })
+        
+        // Create thick connection lines using cylinder geometry
+        const connectionGroup = new THREE.Group()
+        
+        // Connect each inner corner to corresponding outer corner
+        for (let i = 0; i < 8; i++) {
+          const start = new THREE.Vector3(...innerCorners[i])
+          const end = new THREE.Vector3(...outerCorners[i])
+          const distance = start.distanceTo(end)
+          
+          // Create cylinder for each connection line - ADJUST 0.005 TO CHANGE THICKNESS
+          const cylinderGeom = new THREE.CylinderGeometry(0.003, 0.005, distance, 6)
+          const cylinderMesh = new THREE.Mesh(cylinderGeom, curvedLinesMaterial)
+          
+          // Position cylinder between start and end points
+          cylinderMesh.position.copy(start.clone().add(end).multiplyScalar(0.5))
+          cylinderMesh.lookAt(end)
+          cylinderMesh.rotateX(Math.PI / 2)
+          
+          connectionGroup.add(cylinderMesh)
+        }
+        
+        curvedLines = connectionGroup
+        console.log(`Created hypercube connections: 8 thick cylinder connections`)
         
       } else {
         // OTHER GEOMETRIES: Use existing complex wireframe logic
@@ -755,7 +911,57 @@ function ThreeScene({
               break
 
             case 'float':
-              // Floating/bobbing animation
+              // Floating/bobbing animation - reset vertices to original positions first
+              if (geometry && originalPositions && currentMesh === solidMesh) {
+                const positions = geometry.attributes.position.array
+                for (let i = 0; i < positions.length; i++) {
+                  positions[i] = originalPositions[i]
+                }
+                geometry.attributes.position.needsUpdate = true
+                
+                // Also reset wireframe geometry to match original positions
+                if (centerLines && centerLines.geometry && geometry.type !== 'TetrahedronGeometry') {
+                  // Rebuild spiral wireframe for non-tetrahedron geometries
+                  const edgesGeometry = new THREE.EdgesGeometry(geometry)
+                  const edgeVertices = edgesGeometry.attributes.position.array
+                  
+                  const centerLinesGeometry = centerLines.geometry
+                  const centerLinesPositions = []
+                  
+                  // Recreate spiral paths from center to original edge points
+                  for (let j = 0; j < edgeVertices.length; j += 12) {
+                    const endX = edgeVertices[j + 3]
+                    const endY = edgeVertices[j + 4]
+                    const endZ = edgeVertices[j + 5]
+                    
+                    const steps = 8
+                    for (let step = 0; step < steps; step++) {
+                      const t1 = step / steps
+                      const t2 = (step + 1) / steps
+                      
+                      const radius1 = t1 * 0.8
+                      const radius2 = t2 * 0.8
+                      const angle1 = t1 * Math.PI * 2
+                      const angle2 = t2 * Math.PI * 2
+                      
+                      const x1 = Math.cos(angle1) * radius1 * (endX / Math.sqrt(endX*endX + endY*endY + endZ*endZ))
+                      const y1 = Math.sin(angle1) * radius1 * (endY / Math.sqrt(endX*endX + endY*endY + endZ*endZ)) + t1 * endY
+                      const z1 = t1 * endZ
+                      
+                      const x2 = Math.cos(angle2) * radius2 * (endX / Math.sqrt(endX*endX + endY*endY + endZ*endZ))
+                      const y2 = Math.sin(angle2) * radius2 * (endY / Math.sqrt(endX*endX + endY*endY + endZ*endZ)) + t2 * endY
+                      const z2 = t2 * endZ
+                      
+                      centerLinesPositions.push(x1, y1, z1, x2, y2, z2)
+                    }
+                  }
+                  
+                  if (centerLinesPositions.length > 0) {
+                    centerLinesGeometry.setAttribute('position', new THREE.Float32BufferAttribute(centerLinesPositions, 3))
+                  }
+                }
+              }
+              
               currentMesh.rotation.x = t + phase
               currentMesh.rotation.y = t * 0.7 + phase
               currentMesh.position.x = originalPosition.x + Math.sin(t + phase) * 0.5
@@ -764,7 +970,57 @@ function ThreeScene({
               break
 
             case 'spiral':
-              // Spiral motion animation
+              // Spiral motion animation - reset vertices to original positions first
+              if (geometry && originalPositions && currentMesh === solidMesh) {
+                const positions = geometry.attributes.position.array
+                for (let i = 0; i < positions.length; i++) {
+                  positions[i] = originalPositions[i]
+                }
+                geometry.attributes.position.needsUpdate = true
+                
+                // Also reset wireframe geometry to match original positions
+                if (centerLines && centerLines.geometry && geometry.type !== 'TetrahedronGeometry') {
+                  // Rebuild spiral wireframe for non-tetrahedron geometries
+                  const edgesGeometry = new THREE.EdgesGeometry(geometry)
+                  const edgeVertices = edgesGeometry.attributes.position.array
+                  
+                  const centerLinesGeometry = centerLines.geometry
+                  const centerLinesPositions = []
+                  
+                  // Recreate spiral paths from center to original edge points
+                  for (let j = 0; j < edgeVertices.length; j += 12) {
+                    const endX = edgeVertices[j + 3]
+                    const endY = edgeVertices[j + 4]
+                    const endZ = edgeVertices[j + 5]
+                    
+                    const steps = 8
+                    for (let step = 0; step < steps; step++) {
+                      const t1 = step / steps
+                      const t2 = (step + 1) / steps
+                      
+                      const radius1 = t1 * 0.8
+                      const radius2 = t2 * 0.8
+                      const angle1 = t1 * Math.PI * 2
+                      const angle2 = t2 * Math.PI * 2
+                      
+                      const x1 = Math.cos(angle1) * radius1 * (endX / Math.sqrt(endX*endX + endY*endY + endZ*endZ))
+                      const y1 = Math.sin(angle1) * radius1 * (endY / Math.sqrt(endX*endX + endY*endY + endZ*endZ)) + t1 * endY
+                      const z1 = t1 * endZ
+                      
+                      const x2 = Math.cos(angle2) * radius2 * (endX / Math.sqrt(endX*endX + endY*endY + endZ*endZ))
+                      const y2 = Math.sin(angle2) * radius2 * (endY / Math.sqrt(endX*endX + endY*endY + endZ*endZ)) + t2 * endY
+                      const z2 = t2 * endZ
+                      
+                      centerLinesPositions.push(x1, y1, z1, x2, y2, z2)
+                    }
+                  }
+                  
+                  if (centerLinesPositions.length > 0) {
+                    centerLinesGeometry.setAttribute('position', new THREE.Float32BufferAttribute(centerLinesPositions, 3))
+                  }
+                }
+              }
+              
               const spiralRadius = 2 + Math.sin(t + phase) * 1
               const spiralAngle = t + phase + index * 0.5
               currentMesh.position.x = Math.cos(spiralAngle) * spiralRadius
@@ -775,7 +1031,57 @@ function ThreeScene({
               break
 
             case 'chaos':
-              // Chaotic random movement
+              // Chaotic random movement - reset vertices to original positions first
+              if (geometry && originalPositions && currentMesh === solidMesh) {
+                const positions = geometry.attributes.position.array
+                for (let i = 0; i < positions.length; i++) {
+                  positions[i] = originalPositions[i]
+                }
+                geometry.attributes.position.needsUpdate = true
+                
+                // Also reset wireframe geometry to match original positions
+                if (centerLines && centerLines.geometry && geometry.type !== 'TetrahedronGeometry') {
+                  // Rebuild spiral wireframe for non-tetrahedron geometries
+                  const edgesGeometry = new THREE.EdgesGeometry(geometry)
+                  const edgeVertices = edgesGeometry.attributes.position.array
+                  
+                  const centerLinesGeometry = centerLines.geometry
+                  const centerLinesPositions = []
+                  
+                  // Recreate spiral paths from center to original edge points
+                  for (let j = 0; j < edgeVertices.length; j += 12) {
+                    const endX = edgeVertices[j + 3]
+                    const endY = edgeVertices[j + 4]
+                    const endZ = edgeVertices[j + 5]
+                    
+                    const steps = 8
+                    for (let step = 0; step < steps; step++) {
+                      const t1 = step / steps
+                      const t2 = (step + 1) / steps
+                      
+                      const radius1 = t1 * 0.8
+                      const radius2 = t2 * 0.8
+                      const angle1 = t1 * Math.PI * 2
+                      const angle2 = t2 * Math.PI * 2
+                      
+                      const x1 = Math.cos(angle1) * radius1 * (endX / Math.sqrt(endX*endX + endY*endY + endZ*endZ))
+                      const y1 = Math.sin(angle1) * radius1 * (endY / Math.sqrt(endX*endX + endY*endY + endZ*endZ)) + t1 * endY
+                      const z1 = t1 * endZ
+                      
+                      const x2 = Math.cos(angle2) * radius2 * (endX / Math.sqrt(endX*endX + endY*endY + endZ*endZ))
+                      const y2 = Math.sin(angle2) * radius2 * (endY / Math.sqrt(endX*endX + endY*endY + endZ*endZ)) + t2 * endY
+                      const z2 = t2 * endZ
+                      
+                      centerLinesPositions.push(x1, y1, z1, x2, y2, z2)
+                    }
+                  }
+                  
+                  if (centerLinesPositions.length > 0) {
+                    centerLinesGeometry.setAttribute('position', new THREE.Float32BufferAttribute(centerLinesPositions, 3))
+                  }
+                }
+              }
+              
               currentMesh.position.x = originalPosition.x + Math.sin(t * 3 + phase) * 2
               currentMesh.position.y = originalPosition.y + Math.cos(t * 2 + phase) * 2
               currentMesh.position.z = originalPosition.z + Math.sin(t * 1.5 + phase) * 2

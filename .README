@@ -1,0 +1,11 @@
+## React + Three.js Data Flow
+
+- **index.html** → provides `<div id="root">` (mount point)  
+- **main.jsx** → renders `<App />` into `#root`  
+- **App.jsx** → holds state + handlers; passes props to children  
+- **Controls.jsx** → inputs only; registers what the user clicks and tells App what's going on  
+- **ThreeScene.jsx** → reads props and renders 3D with Three.js  
+
+**Flow:** Controls → App (state change) → ThreeScene (visual update)
+
+![React + Three.js Data Flow](react-three-flow-neon-vite.png)
