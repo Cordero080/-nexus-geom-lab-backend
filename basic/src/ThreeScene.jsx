@@ -1,87 +1,120 @@
-import { useEffect, useRef } from 'react'
+import { use, useEffect, useRef } from 'react'
 import * as THREE from 'three'
 
-// This component receives all props from App.jsx
-function ThreeScene({ 
-  shininess, specularColor, specularIntensity, baseColor, wireframeIntensity,
-  cameraView, environment, objectCount, animationStyle,
-  objectType, // Added objectType prop for geometry selection
-  // NEW: Added lighting control props
-  ambientLightColor, ambientLightIntensity,
-  directionalLightColor, directionalLightIntensity,
-  directionalLightX, directionalLightY, directionalLightZ
-}) {
-  const mountRef = useRef(null)
-  const sceneRef = useRef(null)
-  const materialRef = useRef(null)
-  const cameraRef = useRef(null)
-  const rendererRef = useRef(null)
-  const objectsRef = useRef([])
-  const animationIdRef = useRef(null)
-  // NEW: Add refs for lights so we can update them
-  const ambientLightRef = useRef(null)
-  const directionalLightRef = useRef(null)
+// ========================================================================
+// THREESCENE.JSX - THE 3D RENDERER (RECEIVES PROPS FROM APP.JSX)
+// ========================================================================
+// This component ONLY receives data - it doesn't manage any state itself.
+// All the values come from App.jsx as props, and when App.jsx changes them,
+// this component automatically re-renders the 3D scene with new values.
 
+function ThreeScene({ 
+  // MATERIAL PROPS - How the 3D objects should look (FROM App.jsx state)
+  scale,                 // Current scale value → will update Three.js object scale
+  shininess,           // Current shininess value → will update Three.js material.shininess
+  specularColor,       // Current specular color → will update Three.js material.specular
+  specularIntensity,   // Current specular intensity → will update Three.js material.reflectivity
+  baseColor,           // Current base color → will update Three.js material.color
+  wireframeIntensity,  // Current wireframe intensity → will update Three.js material.wireframe
+  
+  // SCENE BEHAVIOR PROPS - How the scene should behave (FROM App.jsx state)
+  cameraView,          // Current camera view → will position/animate camera
+  environment,         // Current environment → will change background/lighting
+  objectCount,         // Current object count → will create this many objects
+  animationStyle,      // Current animation → will control how objects move
+  objectType,          // Current object type → will determine which 3D shape to show
+  
+  // LIGHTING PROPS - How the scene should be lit (FROM App.jsx state)
+  ambientLightColor,       // Current ambient light color → will update ambient light
+  ambientLightIntensity,   // Current ambient light intensity → will update ambient light
+  directionalLightColor,   // Current directional light color → will update directional light
+  directionalLightIntensity, // Current directional light intensity → will update directional light
+  directionalLightX,       // Current light X position → will position directional light
+  directionalLightY,       // Current light Y position → will position directional light
+  directionalLightZ        // Current light Z position → will position directional light
+}) {
+  // ========================================
+  // REFS - STORING THREE.JS OBJECTS
+  // ========================================
+  // useRef lets us store Three.js objects that persist between re-renders
+  // These are NOT React state - they're just containers for Three.js objects
+  
+  const mountRef = useRef(null)              // Where to attach the 3D canvas to the DOM
+  const sceneRef = useRef(null)              // The Three.js scene object
+  const materialRef = useRef(null)           // Reference to main material for debugging
+  const cameraRef = useRef(null)             // The Three.js camera object
+  const rendererRef = useRef(null)           // The Three.js renderer object
+  const objectsRef = useRef([])              // Array of all 3D objects in the scene
+  const animationIdRef = useRef(null)        // ID for the animation loop (so we can cancel it)
+  const ambientLightRef = useRef(null)       // Reference to ambient light (so we can update it)
+  const directionalLightRef = useRef(null)   // Reference to directional light (so we can update it)
+
+  // =============================================
+  // INITIAL SETUP - RUNS ONCE WHEN COMPONENT MOUNTS
+  // =============================================
+  // This useEffect has an empty dependency array [], so it only runs once
+  // It sets up the basic Three.js scene structure that won't change
+  
   useEffect(() => {
-    // 1. Create a scene
+    // 1. CREATE SCENE - The 3D world container
     const scene = new THREE.Scene()
     sceneRef.current = scene
 
-    // 2. Set up camera with ref
+    // 2. CREATE CAMERA - The viewpoint into the 3D world
     const camera = new THREE.PerspectiveCamera(
-      40,
-      window.innerWidth / window.innerHeight,
-      0.1,
-      1000
+      40,                                    // Field of view (how wide the view is)
+      window.innerWidth / window.innerHeight, // Aspect ratio (screen shape)
+      0.1,                                   // Near clipping plane (closest visible distance)
+      1000                                   // Far clipping plane (farthest visible distance)
     )
-    camera.position.set(0, 0, 6)
+    camera.position.set(0, 0, 6)             // Start camera position
     cameraRef.current = camera
 
-    // 3. Set up renderer with enhanced settings
-    const renderer = new THREE.WebGLRenderer({ antialias: true })
-    renderer.setSize(window.innerWidth, window.innerHeight)
-    renderer.shadowMap.enabled = true
-    renderer.shadowMap.type = THREE.PCFSoftShadowMap
-    renderer.setClearColor(0x000000, 1)
+    // 3. CREATE RENDERER - Converts 3D scene to 2D pixels on screen
+    const renderer = new THREE.WebGLRenderer({ antialias: true }) // Smooth edges
+    renderer.setSize(window.innerWidth, window.innerHeight)       // Match screen size
+    renderer.shadowMap.enabled = true                             // Enable shadows
+    renderer.shadowMap.type = THREE.PCFSoftShadowMap             // Soft shadow type
+    renderer.setClearColor(0x000000, 1)                          // Black background
     rendererRef.current = renderer
-    mountRef.current.appendChild(renderer.domElement)
+    mountRef.current.appendChild(renderer.domElement)             // Add canvas to DOM
 
-    // 4. Lighting setup with control props
+    // 4. CREATE LIGHTS - Using current prop values from App.jsx
+    // Convert hex color strings (like "#ff0000") to Three.js color numbers
     const ambientLightColorHex = parseInt(ambientLightColor.replace('#', ''), 16)
     const directionalLightColorHex = parseInt(directionalLightColor.replace('#', ''), 16)
     
+    // Create lights with current App.jsx values
     const ambientLight = new THREE.AmbientLight(ambientLightColorHex, ambientLightIntensity)
     const directionalLight = new THREE.DirectionalLight(directionalLightColorHex, directionalLightIntensity)
     directionalLight.position.set(directionalLightX, directionalLightY, directionalLightZ)
     directionalLight.castShadow = true
     
-    // Store lights in refs for later updates
+    // Store lights in refs so we can update them later when App.jsx props change
     ambientLightRef.current = ambientLight
     directionalLightRef.current = directionalLight
     
+    // Add lights to the scene
     scene.add(ambientLight)
     scene.add(directionalLight)
 
-    // 5. Animation loop
+    // 5. START ANIMATION LOOP - Continuously render the scene
     function animate() {
-      animationIdRef.current = requestAnimationFrame(animate)
-      
-      // This will be updated by other useEffects
-      renderer.render(scene, camera)
+      animationIdRef.current = requestAnimationFrame(animate) // Schedule next frame
+      renderer.render(scene, camera)                          // Draw the current frame
     }
+    animate() // Start the loop
 
-    animate()
-
-    // Handle window resize
+    // 6. HANDLE WINDOW RESIZE - Keep canvas matching screen size
     const handleResize = () => {
       camera.aspect = window.innerWidth / window.innerHeight
       camera.updateProjectionMatrix()
       renderer.setSize(window.innerWidth, window.innerHeight)
     }
-
     window.addEventListener('resize', handleResize)
 
-    // Cleanup function
+    // 7. CLEANUP FUNCTION - Runs when component unmounts
+    // Important: Clean up Three.js objects to prevent memory leaks
     return () => {
       window.removeEventListener('resize', handleResize)
       if (animationIdRef.current) {
@@ -92,39 +125,58 @@ function ThreeScene({
       }
       renderer.dispose()
     }
-  }, [])
+  }, []) // Empty dependency array = run once on mount
 
-  // NEW: Function to create geometry based on objectType prop
+  // ===============================================
+  // GEOMETRY CREATION HELPER FUNCTION
+  // ===============================================
+  // This function converts the objectType prop from App.jsx into actual Three.js geometry
+  
   const createGeometryByType = (type) => {
     switch(type) {
       case 'icosahedron':
-        return new THREE.IcosahedronGeometry()
+        return new THREE.IcosahedronGeometry()           // 20-sided polyhedron
       case 'sphere':
-        return new THREE.SphereGeometry(1, 16, 16)
+        return new THREE.SphereGeometry(1, 16, 16)       // Round ball
       case 'box':
-        return new THREE.BoxGeometry(1.5, 1.5, 1.5)
+        return new THREE.BoxGeometry(1.5, 1.5, 1.5)     // Cube
       case 'octahedron':
-        return new THREE.OctahedronGeometry()
+        return new THREE.OctahedronGeometry()            // 8-sided polyhedron
       case 'tetrahedron':
-        return new THREE.TetrahedronGeometry(1.2)
+        return new THREE.TetrahedronGeometry(1.2)        // 4-sided pyramid
       case 'torusknot':
-        return new THREE.TorusKnotGeometry(1, .2, 150, 16)
+        return new THREE.TorusKnotGeometry(1, .2, 150, 16) // Twisted donut shape
       default:
-        return new THREE.IcosahedronGeometry() // Fallback to icosahedron
+        return new THREE.IcosahedronGeometry()           // Default fallback
     }
   }
 
-  // Environment useEffect - Dynamic backgrounds and lighting
+  // ===============================================
+  // ENVIRONMENT UPDATER - RESPONDS TO environment PROP
+  // ===============================================
+  // When App.jsx changes the environment prop, this useEffect runs
+  // and updates the scene background accordingly
+  
+  // Scale updater - responds to scale prop changes
+    useEffect (() =>{
+      objectsRef.current.forEach(({mesh}) => {
+        if (mesh) {
+          mesh.scale.setScalar(scale)
+        }
+      })
+    }, [scale])
+
+    
   useEffect(() => {
-    if (!sceneRef.current) return
+    if (!sceneRef.current) return // Safety check: make sure scene exists
 
     const scene = sceneRef.current
 
-    // Function to create different environments
+    // CREATE DIFFERENT BACKGROUNDS based on environment prop from App.jsx
     const createEnvironment = (envType) => {
       switch(envType) {
         case 'purple':
-          // Original purple gradient
+          // Create purple gradient background using HTML5 canvas
           const canvas = document.createElement('canvas')
           const context = canvas.getContext('2d')
           canvas.width = 512
@@ -136,17 +188,17 @@ function ThreeScene({
           gradient.addColorStop(1, '#0f0520')
           context.fillStyle = gradient
           context.fillRect(0, 0, canvas.width, canvas.height)
-          scene.background = new THREE.CanvasTexture(canvas)
+          scene.background = new THREE.CanvasTexture(canvas) // Convert canvas to Three.js texture
           break
 
         case 'space':
-          // Northern Lights Aurora Gradient
+          // Create northern lights aurora effect
           const spaceCanvas = document.createElement('canvas')
           const spaceCtx = spaceCanvas.getContext('2d')
           spaceCanvas.width = 1024
           spaceCanvas.height = 1024
           
-          // Base dark night sky
+          // Base dark night sky gradient
           const baseGrad = spaceCtx.createLinearGradient(0, 0, 0, spaceCanvas.height)
           baseGrad.addColorStop(0, '#0a0f1c')    // Dark blue top
           baseGrad.addColorStop(0.3, '#1a1a2e')  // Deeper blue
@@ -155,39 +207,38 @@ function ThreeScene({
           spaceCtx.fillStyle = baseGrad
           spaceCtx.fillRect(0, 0, spaceCanvas.width, spaceCanvas.height)
           
-          // Aurora curtain 1 - Green-Blue (more vibrant)
+          // Aurora curtain layers with different colors
           const aurora1 = spaceCtx.createLinearGradient(0, 200, 0, 600)
           aurora1.addColorStop(0, 'transparent')
-          aurora1.addColorStop(0.2, '#00ff8880')  // Brighter green
-          aurora1.addColorStop(0.4, '#00e6ff90')  // Brighter cyan
-          aurora1.addColorStop(0.6, '#0080ff70')  // Brighter blue
-          aurora1.addColorStop(0.8, '#00408050')  // Visible dark blue
+          aurora1.addColorStop(0.2, '#00ff8880')  // Bright green
+          aurora1.addColorStop(0.4, '#00e6ff90')  // Bright cyan
+          aurora1.addColorStop(0.6, '#0080ff70')  // Bright blue
+          aurora1.addColorStop(0.8, '#00408050')  // Dark blue
           aurora1.addColorStop(1, 'transparent')
           spaceCtx.fillStyle = aurora1
           spaceCtx.fillRect(0, 200, spaceCanvas.width, 400)
           
-          // Aurora curtain 2 - Purple-Pink (more vibrant)
+          // Additional aurora layers for complex effect...
           const aurora2 = spaceCtx.createLinearGradient(0, 100, 0, 700)
           aurora2.addColorStop(0, 'transparent')
-          aurora2.addColorStop(0.15, '#8000ff60') // Brighter purple
-          aurora2.addColorStop(0.35, '#ff00ff80') // Brighter magenta
-          aurora2.addColorStop(0.55, '#ff006070') // Brighter pink
-          aurora2.addColorStop(0.75, '#80004050') // Visible dark purple
+          aurora2.addColorStop(0.15, '#8000ff60') // Bright purple
+          aurora2.addColorStop(0.35, '#ff00ff80') // Bright magenta
+          aurora2.addColorStop(0.55, '#ff006070') // Bright pink
+          aurora2.addColorStop(0.75, '#80004050') // Dark purple
           aurora2.addColorStop(1, 'transparent')
           spaceCtx.fillStyle = aurora2
           spaceCtx.fillRect(0, 100, spaceCanvas.width, 600)
           
-          // Aurora curtain 3 - Yellow-Green (more vibrant)
           const aurora3 = spaceCtx.createLinearGradient(0, 150, 0, 450)
           aurora3.addColorStop(0, 'transparent')
-          aurora3.addColorStop(0.25, '#80ff0060') // Brighter yellow-green
-          aurora3.addColorStop(0.45, '#00ff4080') // Brighter green
-          aurora3.addColorStop(0.65, '#00804060') // Visible dark green
+          aurora3.addColorStop(0.25, '#80ff0060') // Yellow-green
+          aurora3.addColorStop(0.45, '#00ff4080') // Bright green
+          aurora3.addColorStop(0.65, '#00804060') // Dark green
           aurora3.addColorStop(1, 'transparent')
           spaceCtx.fillStyle = aurora3
           spaceCtx.fillRect(0, 150, spaceCanvas.width, 300)
           
-          // Add subtle stars
+          // Add stars scattered across the sky
           for(let i = 0; i < 150; i++) {
             const x = Math.random() * spaceCanvas.width
             const y = Math.random() * spaceCanvas.height
@@ -202,7 +253,7 @@ function ThreeScene({
           break
 
         case 'sunset':
-          // Sunset gradient
+          // Create sunset gradient
           const sunsetCanvas = document.createElement('canvas')
           const sunsetCtx = sunsetCanvas.getContext('2d')
           sunsetCanvas.width = 512
@@ -218,7 +269,7 @@ function ThreeScene({
           break
 
         case 'matrix':
-          // Matrix-style green gradient
+          // Create matrix-style blue gradient
           const matrixCanvas = document.createElement('canvas')
           const matrixCtx = matrixCanvas.getContext('2d')
           matrixCanvas.width = 512
@@ -234,34 +285,40 @@ function ThreeScene({
           break
 
         default:
-          scene.background = new THREE.Color(0x000000)
+          scene.background = new THREE.Color(0x000000) // Plain black
       }
     }
 
-    createEnvironment(environment)
-  }, [environment])
+    createEnvironment(environment) // Use current environment prop from App.jsx
+  }, [environment]) // Run this effect when environment prop changes
 
-  // Objects useEffect - Create and manage multiple objects
+  // ===============================================
+  // OBJECTS CREATOR - RESPONDS TO MULTIPLE PROPS
+  // ===============================================
+  // When App.jsx changes objectCount, baseColor, specularColor, etc., this useEffect runs
+  // and recreates all the 3D objects with the new values
+  
   useEffect(() => {
-    if (!sceneRef.current) return
+    if (!sceneRef.current) return // Safety check
 
     const scene = sceneRef.current
     
-    // Clear existing objects
+    // REMOVE OLD OBJECTS from scene and clear our reference array
     objectsRef.current.forEach(obj => {
       scene.remove(obj.mesh)
     })
     objectsRef.current = []
 
-    // Create new objects
-    for (let i = 0; i < objectCount; i++) {
-      // MODIFIED: Use selected objectType for single object, or cycle through types for multiple objects
+    // CREATE NEW OBJECTS using current App.jsx prop values
+    for (let i = 0; i < objectCount; i++) { // Use objectCount prop from App.jsx
+      
+      // CHOOSE GEOMETRY based on objectType prop from App.jsx
       let geometry
       if (objectCount === 1) {
-        // For single object, use the selected objectType
+        // Single object: use the selected objectType from App.jsx
         geometry = createGeometryByType(objectType)
       } else {
-        // For multiple objects, cycle through different types for variety
+        // Multiple objects: cycle through different types for variety
         const geometryTypes = [
           () => new THREE.IcosahedronGeometry(),
           () => new THREE.SphereGeometry(1, 16, 16),
@@ -273,54 +330,57 @@ function ThreeScene({
         geometry = geometryTypes[i % geometryTypes.length]()
       }
       
-      // Store original vertex positions for morphing effects
+      // Store original vertex positions for advanced animations
       const originalPositions = geometry.attributes.position.array.slice()
       
-      // Convert current React state colors to Three.js format
-      // Create a material with current React state
-      const currentBaseColor = new THREE.Color(baseColor)
-      const currentSpecularColor = new THREE.Color(specularColor)
+      // CREATE MATERIAL using current App.jsx prop values
+      const currentBaseColor = new THREE.Color(baseColor)           // Convert App.jsx baseColor prop
+      const currentSpecularColor = new THREE.Color(specularColor)   // Convert App.jsx specularColor prop
       
       const material = new THREE.MeshPhongMaterial({
-        color: currentBaseColor,
-        specular: currentSpecularColor,
-        shininess: shininess,
-        wireframe: wireframeIntensity > 0,
+        color: currentBaseColor,                    // Use baseColor prop from App.jsx
+        specular: currentSpecularColor,             // Use specularColor prop from App.jsx
+        shininess: shininess,                       // Use shininess prop from App.jsx
+        wireframe: wireframeIntensity > 0,          // Use wireframeIntensity prop from App.jsx
         transparent: wireframeIntensity > 0,
         opacity: wireframeIntensity > 0 ? wireframeIntensity / 100 : 1,
         flatShading: false,
-        reflectivity: specularIntensity, // Use specular intensity for reflectivity
+        reflectivity: specularIntensity,            // Use specularIntensity prop from App.jsx
       })
 
       console.log(`Created object ${i} with specular color:`, currentSpecularColor, 'from state:', specularColor)
 
+      // CREATE MESH (geometry + material = visible object)
       const mesh = new THREE.Mesh(geometry, material)
       
-      // Position objects in a circle or grid
+      // POSITION OBJECTS in scene
       if (objectCount === 1) {
-        mesh.position.set(0, 0, 0)
+        mesh.position.set(0, 0, 0) // Single object at center
       } else {
+        // Multiple objects arranged in a circle
         const angle = (i / objectCount) * Math.PI * 2
         const radius = 3
         mesh.position.set(
           Math.cos(angle) * radius,
-          (Math.random() - 0.9) * 1, // Random Y position for more dynamic layout
+          (Math.random() - 0.9) * 1, // Random Y position for variety
           Math.sin(angle) * radius
         )
       }
       
+      // Enable shadows
       mesh.castShadow = true
       mesh.receiveShadow = true
-      scene.add(mesh)
+      scene.add(mesh) // Add to Three.js scene
 
+      // STORE OBJECT DATA for later updates and animations
       objectsRef.current.push({
-        mesh,
-        material,
-        geometry,
-        originalPositions, // Store original positions for vertex morphing
-        originalPosition: mesh.position.clone(),
-        phase: Math.random() * Math.PI * 2,
-        // Add magnetic points for magnetic field effect
+        mesh,                       // The visible Three.js object
+        material,                   // The material (for updating properties)
+        geometry,                   // The geometry (for vertex animations)
+        originalPositions,          // Original vertex positions (for morphing effects)
+        originalPosition: mesh.position.clone(), // Original object position
+        phase: Math.random() * Math.PI * 2,      // Random phase for varied animations
+        // Magnetic points for magnetic field animation effect
         magneticPoints: [
           { x: Math.random() * 4 - 2, y: Math.random() * 4 - 2, z: Math.random() * 4 - 2, strength: Math.random() + 0.5 },
           { x: Math.random() * 4 - 2, y: Math.random() * 4 - 2, z: Math.random() * 4 - 2, strength: Math.random() + 0.5 },
@@ -329,64 +389,75 @@ function ThreeScene({
       })
     }
 
-    // Store first material as the main one for controls
+    // Store first material as main reference for debugging
     if (objectsRef.current.length > 0) {
       materialRef.current = objectsRef.current[0].material
       console.log('Set main material reference, specular color:', objectsRef.current[0].material.specular.getHex())
     }
     
     console.log(`Created ${objectsRef.current.length} objects with current React state values`)
-  }, [objectCount, baseColor, specularColor, specularIntensity, shininess, wireframeIntensity, objectType]) // NEW: Added objectType to dependency array
+  }, [objectCount, baseColor, specularColor, specularIntensity, shininess, wireframeIntensity, objectType]) 
+  // ↑ This effect runs when ANY of these App.jsx props change
 
-  // Camera view useEffect - Different camera angles and behaviors
+  // ===============================================
+  // CAMERA CONTROLLER - RESPONDS TO cameraView PROP
+  // ===============================================
+  // When App.jsx changes cameraView prop, this useEffect runs and repositions the camera
+  
   useEffect(() => {
-    if (!cameraRef.current) return
+    if (!cameraRef.current) return // Safety check
 
     const camera = cameraRef.current
 
-    // Set camera position based on view type
+    // POSITION CAMERA based on cameraView prop from App.jsx
     switch(cameraView) {
       case 'free':
-        camera.position.set(0, 0, 6)
+        camera.position.set(0, 0, 6)     // Standard front view
         break
       case 'orbit':
-        camera.position.set(0, 3, 6)
-        camera.lookAt(0, 0, 0)
+        camera.position.set(0, 3, 6)     // Elevated view for orbiting
+        camera.lookAt(0, 0, 0)           // Look at center
         break
       case 'top':
-        camera.position.set(0, 10, 0)
-        camera.lookAt(0, 0, 0)
+        camera.position.set(0, 10, 0)    // Directly above
+        camera.lookAt(0, 0, 0)           // Look down at center
         break
       case 'side':
-        camera.position.set(10, 0, 0)
-        camera.lookAt(0, 0, 0)
+        camera.position.set(10, 0, 0)    // Far to the right side
+        camera.lookAt(0, 0, 0)           // Look at center
         break
       case 'cinematic':
-        camera.position.set(-3, 2, 5)
-        camera.lookAt(0, 0, 0)
+        camera.position.set(-3, 2, 5)    // Dramatic angle
+        camera.lookAt(0, 0, 0)           // Look at center
         break
     }
-  }, [cameraView])
+  }, [cameraView]) // Run when cameraView prop from App.jsx changes
 
-  // Animation useEffect - Different animation styles
+  // ===============================================
+  // ANIMATION CONTROLLER - RESPONDS TO animationStyle PROP
+  // ===============================================
+  // When App.jsx changes animationStyle prop, this useEffect runs and starts a new animation loop
+  
   useEffect(() => {
-    if (!sceneRef.current || !cameraRef.current) return
+    if (!sceneRef.current || !cameraRef.current) return // Safety checks
 
     const scene = sceneRef.current
     const camera = cameraRef.current
 
-    // Animation loop with different styles
+    // MAIN ANIMATION LOOP - Different styles based on animationStyle prop from App.jsx
     function animate() {
-      animationIdRef.current = requestAnimationFrame(animate)
+      animationIdRef.current = requestAnimationFrame(animate) // Schedule next frame
       
-      const time = performance.now()
-      const t = time * 0.001
+      const time = performance.now() // Get current time for smooth animations
+      const t = time * 0.001         // Convert to seconds
 
+      // ANIMATE EACH OBJECT based on animationStyle prop from App.jsx
       objectsRef.current.forEach((objData, index) => {
         const { mesh, originalPosition, phase, geometry, originalPositions, magneticPoints } = objData
 
-        switch(animationStyle) {
+        switch(animationStyle) { // Use animationStyle prop from App.jsx
           case 'rotate':
+            // Simple rotation animation
             mesh.rotation.x += 0.01
             mesh.rotation.y += 0.01
             mesh.rotation.z += 0.01
@@ -394,6 +465,7 @@ function ThreeScene({
             break
 
           case 'float':
+            // Floating/bobbing animation
             mesh.rotation.x = t + phase
             mesh.rotation.y = t * 0.7 + phase
             mesh.position.x = originalPosition.x + Math.sin(t + phase) * 0.5
@@ -402,6 +474,7 @@ function ThreeScene({
             break
 
           case 'spiral':
+            // Spiral motion animation
             const spiralRadius = 2 + Math.sin(t + phase) * 1
             const spiralAngle = t + phase + index * 0.5
             mesh.position.x = Math.cos(spiralAngle) * spiralRadius
@@ -412,6 +485,7 @@ function ThreeScene({
             break
 
           case 'chaos':
+            // Chaotic random movement
             mesh.position.x = originalPosition.x + Math.sin(t * 3 + phase) * 2
             mesh.position.y = originalPosition.y + Math.cos(t * 2 + phase) * 2
             mesh.position.z = originalPosition.z + Math.sin(t * 1.5 + phase) * 2
@@ -421,7 +495,7 @@ function ThreeScene({
             break
 
           case 'dna':
-            // DNA Helix: Vertices spiral around the mesh center + whole mesh rotates
+            // DNA Helix: Complex vertex morphing + rotation
             if (geometry && originalPositions) {
               const positions = geometry.attributes.position.array
               for (let i = 0; i < positions.length; i += 3) {
@@ -429,27 +503,24 @@ function ThreeScene({
                 const y = originalPositions[i + 1]
                 const z = originalPositions[i + 2]
                 
-                // Calculate distance from center for spiral effect
                 const radius = Math.sqrt(x * x + z * z)
-                const angle = Math.atan2(z, x) + t * 0.5 + y * 0.3 // Spiral based on Y position
+                const angle = Math.atan2(z, x) + t * 0.5 + y * 0.3
                 
-                // Create double helix effect
                 const helixRadius = radius + Math.sin(t * 2 + y * 2 + phase) * 0.2
                 positions[i] = Math.cos(angle) * helixRadius
                 positions[i + 1] = y + Math.sin(t * 1.5 + angle + phase) * 0.1
                 positions[i + 2] = Math.sin(angle) * helixRadius
               }
-              geometry.attributes.position.needsUpdate = true
+              geometry.attributes.position.needsUpdate = true // Tell Three.js to update vertices
             }
             
-            // Rotate the entire mesh slowly
             mesh.rotation.y = t * 0.3 + phase
             mesh.rotation.x = Math.sin(t * 0.2) * 0.2
             mesh.position.copy(originalPosition)
             break
 
           case 'liquid':
-            // Liquid Metal: Smooth flowing waves across the surface
+            // Liquid Metal: Flowing waves across surface
             if (geometry && originalPositions) {
               const positions = geometry.attributes.position.array
               for (let i = 0; i < positions.length; i += 3) {
@@ -457,12 +528,11 @@ function ThreeScene({
                 const y = originalPositions[i + 1]
                 const z = originalPositions[i + 2]
                 
-                // Create multiple wave layers for liquid effect
+                // Multiple wave layers for liquid effect
                 const wave1 = Math.sin(t * 2 + x * 3 + phase) * 0.15
                 const wave2 = Math.cos(t * 1.5 + y * 4 + phase) * 0.1
                 const wave3 = Math.sin(t * 3 + z * 2 + phase) * 0.08
                 
-                // Apply waves in all directions for mercury-like flow
                 positions[i] = x + wave1 + Math.sin(t + y * 2) * 0.05
                 positions[i + 1] = y + wave2 + Math.cos(t * 1.2 + x * 2) * 0.05
                 positions[i + 2] = z + wave3 + Math.sin(t * 0.8 + z * 3) * 0.05
@@ -470,7 +540,6 @@ function ThreeScene({
               geometry.attributes.position.needsUpdate = true
             }
             
-            // Scale pulsing and gentle rotation
             mesh.scale.setScalar(1 + 0.2 * Math.sin(t * 1.5 + phase))
             mesh.rotation.x += Math.sin(t * 0.3) * 0.01
             mesh.rotation.y += Math.cos(t * 0.4) * 0.01
@@ -496,7 +565,7 @@ function ThreeScene({
                 
                 let totalForceX = 0, totalForceY = 0, totalForceZ = 0
                 
-                // Calculate magnetic forces from each magnetic point
+                // Calculate magnetic forces from each point
                 magneticPoints.forEach(point => {
                   const dx = x - point.x
                   const dy = y - point.y
@@ -504,7 +573,6 @@ function ThreeScene({
                   const distance = Math.sqrt(dx * dx + dy * dy + dz * dz) + 0.1
                   const force = point.strength / (distance * distance)
                   
-                  // Alternate between attraction and repulsion
                   const direction = Math.sin(t + point.x + point.y) > 0 ? -1 : 1
                   
                   totalForceX += (dx / distance) * force * direction
@@ -512,7 +580,6 @@ function ThreeScene({
                   totalForceZ += (dz / distance) * force * direction
                 })
                 
-                // Apply magnetic forces with dampening
                 positions[i] = x + totalForceX * 0.3
                 positions[i + 1] = y + totalForceY * 0.3
                 positions[i + 2] = z + totalForceZ * 0.3
@@ -520,7 +587,6 @@ function ThreeScene({
               geometry.attributes.position.needsUpdate = true
             }
             
-            // Gentle rotation and position
             mesh.rotation.x += 0.005
             mesh.rotation.y += 0.007
             mesh.position.copy(originalPosition)
@@ -528,7 +594,7 @@ function ThreeScene({
         }
       })
 
-      // Dynamic camera movement for certain views
+      // DYNAMIC CAMERA MOVEMENT for certain views
       if (cameraView === 'orbit') {
         const orbitRadius = 8
         camera.position.x = Math.cos(t * 0.3) * orbitRadius
@@ -540,33 +606,41 @@ function ThreeScene({
         camera.lookAt(0, 0, 0)
       }
 
+      // RENDER THE FRAME
       rendererRef.current.render(scene, camera)
     }
 
-    animate()
+    animate() // Start the animation loop
 
+    // CLEANUP - Cancel animation when effect re-runs or component unmounts
     return () => {
       if (animationIdRef.current) {
         cancelAnimationFrame(animationIdRef.current)
       }
     }
-  }, [animationStyle, cameraView])
+  }, [animationStyle, cameraView]) // Run when animationStyle or cameraView props from App.jsx change
 
-  // Update shininess when prop changes
+  // ===============================================
+  // MATERIAL PROPERTY UPDATERS - RESPOND TO MATERIAL PROPS
+  // ===============================================
+  // These useEffects listen for changes to specific material properties from App.jsx
+  // and update the existing 3D objects without recreating them entirely
+
+  // SHININESS UPDATER - Responds to shininess prop changes
   useEffect(() => {
-    console.log('Updating shininess to:', shininess)
+    console.log('Updating shininess to:', shininess) // Debug: shows when App.jsx changes shininess
     objectsRef.current.forEach(({ material }, index) => {
       if (material) {
-        material.shininess = shininess
-        material.needsUpdate = true
+        material.shininess = shininess          // Apply new shininess value from App.jsx
+        material.needsUpdate = true             // Tell Three.js to re-render material
         console.log(`Updated material ${index} shininess to:`, shininess)
       }
     })
-  }, [shininess])
+  }, [shininess]) // Run when shininess prop from App.jsx changes
 
-  // Update specular color when prop changes
+  // SPECULAR COLOR UPDATER - Responds to specularColor prop changes
   useEffect(() => {
-    console.log('Updating specular color to:', specularColor)
+    console.log('Updating specular color to:', specularColor) // Debug: shows color changes
     console.log('Number of objects:', objectsRef.current.length)
     
     if (objectsRef.current.length === 0) {
@@ -574,92 +648,142 @@ function ThreeScene({
       return
     }
     
+    // Convert hex color string from App.jsx (like "#ff0000") to Three.js color number
     const convertedColor = parseInt(specularColor.replace('#', ''), 16)
     console.log('Converted color value:', convertedColor)
     
     objectsRef.current.forEach(({ material }, index) => {
       if (material) {
         console.log(`Updating material ${index} specular color`)
-        material.specular.setHex(convertedColor)
-        material.needsUpdate = true // Force material update
+        material.specular.setHex(convertedColor) // Apply new specular color from App.jsx
+        material.needsUpdate = true              // Tell Three.js to re-render material
       } else {
         console.log(`Material ${index} is null`)
       }
     })
-  }, [specularColor])
+  }, [specularColor]) // Run when specularColor prop from App.jsx changes
 
-  // Update specular intensity when prop changes
+  // SPECULAR INTENSITY UPDATER - Responds to specularIntensity prop changes
   useEffect(() => {
     console.log('Updating specular intensity to:', specularIntensity)
     
     objectsRef.current.forEach(({ material }, index) => {
       if (material) {
-        material.reflectivity = specularIntensity
-        material.needsUpdate = true
+        material.reflectivity = specularIntensity // Apply new intensity from App.jsx
+        material.needsUpdate = true               // Tell Three.js to re-render material
         console.log(`Updated material ${index} specular intensity to:`, specularIntensity)
       } else {
         console.log(`Material ${index} is null`)
       }
     })
-  }, [specularIntensity])
+  }, [specularIntensity]) // Run when specularIntensity prop from App.jsx changes
 
-  // Update base color when prop changes
+  // BASE COLOR UPDATER - Responds to baseColor prop changes
   useEffect(() => {
     console.log('Updating base color to:', baseColor)
+    // Convert hex color string from App.jsx to Three.js color number
     const convertedColor = parseInt(baseColor.replace('#', ''), 16)
     console.log('Converted base color value:', convertedColor)
     
     objectsRef.current.forEach(({ material }, index) => {
       if (material) {
-        material.color.setHex(convertedColor)
-        material.needsUpdate = true
+        material.color.setHex(convertedColor) // Apply new base color from App.jsx
+        material.needsUpdate = true           // Tell Three.js to re-render material
         console.log(`Updated material ${index} base color`)
       }
     })
-  }, [baseColor])
+  }, [baseColor]) // Run when baseColor prop from App.jsx changes
 
-  // Update wireframe intensity when prop changes
+  // WIREFRAME INTENSITY UPDATER - Responds to wireframeIntensity prop changes
   useEffect(() => {
-    const intensity = wireframeIntensity / 100
+    const intensity = wireframeIntensity / 100 // Convert 0-100 range to 0-1 range
     
     objectsRef.current.forEach(({ material }) => {
       if (material) {
         if (intensity === 0) {
+          // No wireframe: solid object
           material.wireframe = false
           material.transparent = false
           material.opacity = 1
         } else {
+          // Wireframe mode: show object structure
           material.wireframe = true
           material.transparent = true
-          material.opacity = 0.3 + (intensity * 0.7)
+          material.opacity = 0.3 + (intensity * 0.7) // Blend opacity based on intensity
         }
-        material.needsUpdate = true
+        material.needsUpdate = true // Tell Three.js to re-render material
       }
     })
-  }, [wireframeIntensity])
+  }, [wireframeIntensity]) // Run when wireframeIntensity prop from App.jsx changes
 
-  // NEW: Update ambient light when props change
+  // ===============================================
+  // LIGHTING UPDATERS - RESPOND TO LIGHTING PROPS
+  // ===============================================
+  // These useEffects update the lights when App.jsx changes lighting properties
+
+  // AMBIENT LIGHT UPDATER - Responds to ambient light prop changes
   useEffect(() => {
     if (ambientLightRef.current) {
+      // Convert hex color from App.jsx to Three.js color number
       const convertedColor = parseInt(ambientLightColor.replace('#', ''), 16)
-      ambientLightRef.current.color.setHex(convertedColor)
-      ambientLightRef.current.intensity = ambientLightIntensity
+      ambientLightRef.current.color.setHex(convertedColor)     // Apply new color from App.jsx
+      ambientLightRef.current.intensity = ambientLightIntensity // Apply new intensity from App.jsx
       console.log('Updated ambient light:', ambientLightColor, ambientLightIntensity)
     }
-  }, [ambientLightColor, ambientLightIntensity])
+  }, [ambientLightColor, ambientLightIntensity]) // Run when ambient light props from App.jsx change
 
-  // NEW: Update directional light when props change
+  // DIRECTIONAL LIGHT UPDATER - Responds to directional light prop changes
   useEffect(() => {
     if (directionalLightRef.current) {
+      // Convert hex color from App.jsx to Three.js color number
       const convertedColor = parseInt(directionalLightColor.replace('#', ''), 16)
-      directionalLightRef.current.color.setHex(convertedColor)
-      directionalLightRef.current.intensity = directionalLightIntensity
+      directionalLightRef.current.color.setHex(convertedColor)        // Apply new color from App.jsx
+      directionalLightRef.current.intensity = directionalLightIntensity // Apply new intensity from App.jsx
+      // Position the light using X, Y, Z coordinates from App.jsx
       directionalLightRef.current.position.set(directionalLightX, directionalLightY, directionalLightZ)
       console.log('Updated directional light:', directionalLightColor, directionalLightIntensity, 'position:', directionalLightX, directionalLightY, directionalLightZ)
     }
-  }, [directionalLightColor, directionalLightIntensity, directionalLightX, directionalLightY, directionalLightZ])
+  }, [directionalLightColor, directionalLightIntensity, directionalLightX, directionalLightY, directionalLightZ]) 
+  // ↑ Run when any directional light props from App.jsx change
 
+  // ===============================================
+  // RENDER METHOD - WHAT GETS DISPLAYED IN THE DOM
+  // ===============================================
+  // This component renders a simple div that Three.js will attach its canvas to
   return <div ref={mountRef} className="three-scene-container" />
 }
 
 export default ThreeScene
+
+/*
+=================================================================
+SUMMARY: HOW THREESCENE.JSX RECEIVES AND USES PROPS FROM APP.JSX
+=================================================================
+
+1. PROPS FLOW IN FROM APP.JSX
+   - All the values (shininess, colors, counts, etc.) come from App.jsx state
+   - When App.jsx state changes, this component automatically re-renders
+
+2. USEEFFECTS LISTEN FOR SPECIFIC PROP CHANGES
+   - Each useEffect has a dependency array that lists which props it cares about
+   - When those specific props change, only that useEffect runs (not the whole component)
+
+3. PROPS GET CONVERTED TO THREE.JS ACTIONS
+   - shininess prop → material.shininess property
+   - specularColor prop → material.specular.setHex() call
+   - objectCount prop → creates that many 3D objects
+   - animationStyle prop → determines which animation code runs
+
+4. THE REACT → THREE.JS BRIDGE
+   - React handles the UI state and prop flow
+   - Three.js handles the 3D rendering and animation
+   - useRef stores Three.js objects that persist between React re-renders
+   - useEffect bridges React prop changes to Three.js object updates
+
+5. KEY INSIGHT: SEPARATION OF CONCERNS
+   - App.jsx = Data management (what the values should be)
+   - Controls.jsx = User interface (how users change the values)  
+   - ThreeScene.jsx = Visual rendering (how the values look in 3D)
+
+FLOW: User interacts with Controls.jsx → Controls.jsx calls App.jsx setters → App.jsx updates state → ThreeScene.jsx receives new props → useEffects update Three.js objects → 3D scene re-renders
+*/

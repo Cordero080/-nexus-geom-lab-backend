@@ -1,208 +1,346 @@
-import { useState } from 'react' // NEW: Import useState for collapsible sections
+/*
+ * CONTROLS.JSX - DETAILED DATA FLOW EXPLANATION
+ * 
+ * PURPOSE: This component creates the user interface that allows users to control the 3D scene
+ * 
+ * COMPLETE DATA FLOW TRACE:
+ * 1. USER INTERACTION: User moves slider, clicks color picker, selects dropdown option
+ * 2. BROWSER EVENT: Browser creates 'change' event with event.target.value containing new value
+ * 3. REACT HANDLER: onChange attribute calls our handler function (e.g., handleShininessChange)
+ * 4. VALUE EXTRACTION: Handler extracts value from event.target.value (usually a string)
+ * 5. TYPE CONVERSION: Handler converts string to appropriate type (parseFloat, parseInt, or keep as string)
+ * 6. PARENT CALLBACK: Handler calls the setter function passed from App.jsx (e.g., onShininessChange)
+ * 7. STATE UPDATE: App.jsx updates its state using the setter function (e.g., setShininess)
+ * 8. RE-RENDER CASCADE: App.jsx re-renders and passes new values to both Controls and ThreeScene
+ * 9. UI SYNC: Controls displays updated value, ThreeScene updates 3D scene
+ * 
+ * KEY CONCEPTS:
+ * - VALUES FLOW DOWN: App.jsx → Controls (as props like 'shininess')
+ * - FUNCTIONS FLOW DOWN: App.jsx → Controls (as props like 'onShininessChange')
+ * - UPDATES FLOW UP: Controls → App.jsx (via function calls)
+ * - parseFloat() converts "1.5" → 1.5 (decimal numbers)
+ * - parseInt() converts "5" → 5 (whole numbers)
+ * - Color values stay as strings like "#ff0000"
+ * 
+ * EXAMPLE TRACE: User moves shininess slider
+ * 1. User drags slider → Browser fires onChange event
+ * 2. onChange={handleShininessChange} calls our function
+ * 3. handleShininessChange gets event, extracts event.target.value
+ * 4. parseFloat(event.target.value) converts "100" → 100
+ * 5. onShininessChange(100) calls App.jsx's setShininess function
+ * 6. App.jsx state updates, re-renders, passes new shininess value back down
+ * 7. ThreeScene receives new shininess and updates 3D material
+ */
 
-// This function receives props from the parent (App.jsx)
+import { useState } from 'react' // Import React's useState hook for managing collapsible section state
+
+/*
+ * CONTROLS COMPONENT - User Interface for Three.js Scene
+ * 
+ * DATA FLOW OVERVIEW:
+ * 1. App.jsx creates state variables (like shininess, specularColor, etc.)
+ * 2. App.jsx passes these VALUES and their SETTER FUNCTIONS as props to Controls
+ * 3. Controls receives: current values + functions to update those values
+ * 4. User interacts with Controls UI (sliders, color pickers, dropdowns)
+ * 5. Controls calls the setter functions, which update App.jsx state
+ * 6. Updated state flows back down to ThreeScene.jsx to update the 3D scene
+ * 
+ * NAMING PATTERN:
+ * - Values: shininess, specularColor, etc. (FROM App.jsx)
+ * - Setters: onShininessChange, onSpecularColorChange, etc. (FROM App.jsx)
+ * - Handlers: handleShininessChange, handleSpecularColorChange, etc. (CREATED in Controls)
+ */
+
+// PROPS RECEIVED FROM App.jsx - These are the data connections
 function Controls({ 
-  shininess, onShininessChange, 
-  specularColor, onSpecularColorChange, 
-  specularIntensity, onSpecularIntensityChange,
-  baseColor, onBaseColorChange, 
-  wireframeIntensity, onWireframeIntensityChange,
-  cameraView, onCameraViewChange,
-  environment, onEnvironmentChange,
-  objectCount, onObjectCountChange,
-  animationStyle, onAnimationStyleChange,
-  objectType, onObjectTypeChange,
-  // Added lighting control props
-  ambientLightColor, onAmbientLightColorChange,
-  ambientLightIntensity, onAmbientLightIntensityChange,
-  directionalLightColor, onDirectionalLightColorChange,
-  directionalLightIntensity, onDirectionalLightIntensityChange,
-  directionalLightX, onDirectionalLightXChange,
-  directionalLightY, onDirectionalLightYChange,
-  directionalLightZ, onDirectionalLightZChange
+  // MATERIAL PROPERTIES (current values FROM App.jsx + setter functions FROM App.jsx)
+  scale, onScaleChange,                            // Current scale value + function to update it
+  shininess, onShininessChange,                    // Current shininess value + function to update it
+  specularColor, onSpecularColorChange,            // Current specular color + function to update it
+  specularIntensity, onSpecularIntensityChange,    // Current specular intensity + function to update it
+  baseColor, onBaseColorChange,                    // Current base color + function to update it
+  wireframeIntensity, onWireframeIntensityChange,  // Current wireframe intensity + function to update it
+  
+  // SCENE PROPERTIES (current values FROM App.jsx + setter functions FROM App.jsx)
+  cameraView, onCameraViewChange,                  // Current camera view mode + function to update it
+  environment, onEnvironmentChange,                // Current environment setting + function to update it
+  objectCount, onObjectCountChange,                // Current object count + function to update it
+  animationStyle, onAnimationStyleChange,          // Current animation style + function to update it
+  objectType, onObjectTypeChange,                  // Current object type + function to update it
+  
+  // LIGHTING PROPERTIES (current values FROM App.jsx + setter functions FROM App.jsx)
+  ambientLightColor, onAmbientLightColorChange,           // Current ambient light color + function to update it
+  ambientLightIntensity, onAmbientLightIntensityChange,   // Current ambient light intensity + function to update it
+  directionalLightColor, onDirectionalLightColorChange,   // Current directional light color + function to update it
+  directionalLightIntensity, onDirectionalLightIntensityChange, // Current directional light intensity + function to update it
+  directionalLightX, onDirectionalLightXChange,           // Current directional light X position + function to update it
+  directionalLightY, onDirectionalLightYChange,           // Current directional light Y position + function to update it
+  directionalLightZ, onDirectionalLightZChange            // Current directional light Z position + function to update it
 }) {
   
-  // NEW: State for collapsible sections
-  const [materialOpen, setMaterialOpen] = useState(true)
-  const [sceneOpen, setSceneOpen] = useState(true) 
-  const [lightingOpen, setLightingOpen] = useState(true) // Changed to true so lighting controls are visible by default
+  // LOCAL STATE - These are managed by Controls component itself (NOT from App.jsx)
+  // These control whether each section is expanded or collapsed in the UI
+  const [materialOpen, setMaterialOpen] = useState(true)   // Material Properties section expanded by default
+  const [sceneOpen, setSceneOpen] = useState(true)         // Scene Controls section expanded by default
+  const [lightingOpen, setLightingOpen] = useState(true)   // Lighting Controls section expanded by default
 
-  // Event handler for shininess slider
+  /*
+   * EVENT HANDLER FUNCTIONS
+   * These functions bridge between user interactions and App.jsx state updates
+   * 
+   * PATTERN FOR EACH HANDLER:
+   * 1. USER INTERACTION triggers onChange event on UI element
+   * 2. onChange calls our handler function with 'event' parameter
+   * 3. Handler extracts new value from event.target.value
+   * 4. Handler calls the setter function passed from App.jsx
+   * 5. Setter function updates App.jsx state
+   * 6. Updated state flows to ThreeScene.jsx
+   */
+
+  // TRIGGERED BY: User dragging the shininess slider
+  // DATA FLOW: slider onChange → handleShininessChange → onShininessChange(newValue) → App.jsx setState
   const handleShininessChange = (event) => {
-    const newShininess = parseFloat(event.target.value)
+    // Extract slider value as string, convert to number using parseFloat
+    // parseFloat converts "100" → 100, "50.5" → 50.5
+    const newShininess = parseFloat(event.target.value)  // STRING → NUMBER conversion
     console.log('Shininess changed to:', newShininess)
-    onShininessChange(newShininess) // Call the function passed from parent
+    onShininessChange(newShininess) // CALL App.jsx setter function → updates App.jsx state
   }
 
-  // Event handler for specular color picker
+  // TRIGGERED BY: User clicking/changing the specular color picker
+  // DATA FLOW: color input onChange → handleSpecularColorChange → onSpecularColorChange(newColor) → App.jsx setState
   const handleSpecularColorChange = (event) => {
-    const newColor = event.target.value  // Gets the hex color (like "#ff0000")
-    console.log('Color picker changed to:', newColor) // NEW DEBUG LINE
+    // Color picker value is already a string like "#ff0000", no conversion needed
+    const newColor = event.target.value  // Gets hex color string like "#ff0000"
     console.log('Specular color changed to:', newColor)
-    onSpecularColorChange(newColor) // Call the function passed from parent
+    onSpecularColorChange(newColor) // CALL App.jsx setter function → updates App.jsx state
   }
-
-  // Event handler for specular intensity slider
+const handleScaleChange = (event) => {
+  onScaleChange(parseFloat(event.target.value))
+}
+  // TRIGGERED BY: User dragging the specular intensity slider
+  // DATA FLOW: slider onChange → handleSpecularIntensityChange → onSpecularIntensityChange(newValue) → App.jsx setState
   const handleSpecularIntensityChange = (event) => {
-    const newIntensity = parseFloat(event.target.value)
+    // Extract slider value as string, convert to number using parseFloat
+    const newIntensity = parseFloat(event.target.value)  // STRING → NUMBER conversion
     console.log('Specular intensity changed to:', newIntensity)
-    onSpecularIntensityChange(newIntensity) // Call the function passed from parent
+    onSpecularIntensityChange(newIntensity) // CALL App.jsx setter function → updates App.jsx state
   }
 
-  // Event handler for base color picker
+  // TRIGGERED BY: User clicking/changing the base color picker
+  // DATA FLOW: color input onChange → handleBaseColorChange → onBaseColorChange(newColor) → App.jsx setState
   const handleBaseColorChange = (event) => {
-    const newColor = event.target.value
+    // Color picker value is already a string like "#222222", no conversion needed
+    const newColor = event.target.value  // Gets hex color string
     console.log('Base color changed to:', newColor)
-    onBaseColorChange(newColor) // Call the function passed from parent
+    onBaseColorChange(newColor) // CALL App.jsx setter function → updates App.jsx state
   }
 
-  // Event handler for wireframe intensity slider
+  // TRIGGERED BY: User dragging the wireframe intensity slider
+  // DATA FLOW: slider onChange → handleWireframeIntensityChange → onWireframeIntensityChange(newValue) → App.jsx setState
   const handleWireframeIntensityChange = (event) => {
-    const newIntensity = parseFloat(event.target.value)
+    // Extract slider value as string, convert to number using parseFloat
+    const newIntensity = parseFloat(event.target.value)  // STRING → NUMBER conversion
     console.log('Wireframe intensity changed to:', newIntensity)
-    onWireframeIntensityChange(newIntensity) // Call the function passed from parent
+    onWireframeIntensityChange(newIntensity) // CALL App.jsx setter function → updates App.jsx state
   }
 
-  // Event handlers for dynamic controls
+  // TRIGGERED BY: User selecting from camera view dropdown
+  // DATA FLOW: select onChange → handleCameraViewChange → onCameraViewChange(newView) → App.jsx setState
   const handleCameraViewChange = (event) => {
-    const newView = event.target.value
+    // Dropdown value is already a string like "free", "orbit", etc. - no conversion needed
+    const newView = event.target.value  // Gets selected option value as string
     console.log('Camera view changed to:', newView)
-    onCameraViewChange(newView)
+    onCameraViewChange(newView) // CALL App.jsx setter function → updates App.jsx state
   }
 
+  // TRIGGERED BY: User selecting from environment dropdown
+  // DATA FLOW: select onChange → handleEnvironmentChange → onEnvironmentChange(newEnv) → App.jsx setState
   const handleEnvironmentChange = (event) => {
-    const newEnv = event.target.value
+    // Dropdown value is already a string like "purple", "space", etc. - no conversion needed
+    const newEnv = event.target.value  // Gets selected option value as string
     console.log('Environment changed to:', newEnv)
-    onEnvironmentChange(newEnv)
+    onEnvironmentChange(newEnv) // CALL App.jsx setter function → updates App.jsx state
   }
 
+  // TRIGGERED BY: User dragging the object count slider
+  // DATA FLOW: slider onChange → handleObjectCountChange → onObjectCountChange(newCount) → App.jsx setState
   const handleObjectCountChange = (event) => {
-    const newCount = parseInt(event.target.value)
+    // Extract slider value as string, convert to integer using parseInt
+    // parseInt converts "5" → 5, "10" → 10 (whole numbers only)
+    const newCount = parseInt(event.target.value)  // STRING → INTEGER conversion
     console.log('Object count changed to:', newCount)
-    onObjectCountChange(newCount)
+    onObjectCountChange(newCount) // CALL App.jsx setter function → updates App.jsx state
   }
 
+  // TRIGGERED BY: User selecting from animation style dropdown
+  // DATA FLOW: select onChange → handleAnimationStyleChange → onAnimationStyleChange(newStyle) → App.jsx setState
   const handleAnimationStyleChange = (event) => {
-    const newStyle = event.target.value
+    // Dropdown value is already a string like "rotate", "float", etc. - no conversion needed
+    const newStyle = event.target.value  // Gets selected option value as string
     console.log('Animation style changed to:', newStyle)
-    onAnimationStyleChange(newStyle)
+    onAnimationStyleChange(newStyle) // CALL App.jsx setter function → updates App.jsx state
   }
 
-  // Event handler for object type
+  // TRIGGERED BY: User selecting from object type dropdown
+  // DATA FLOW: select onChange → handleObjectTypeChange → onObjectTypeChange(newType) → App.jsx setState
   const handleObjectTypeChange = (event) => {
-    const newType = event.target.value
+    // Dropdown value is already a string like "icosahedron", "sphere", etc. - no conversion needed
+    const newType = event.target.value  // Gets selected option value as string
     console.log('Object type changed to:', newType)
-    onObjectTypeChange(newType)
+    onObjectTypeChange(newType) // CALL App.jsx setter function → updates App.jsx state
   }
 
-  // Event handlers for lighting controls
+  /* 
+   * LIGHTING CONTROL EVENT HANDLERS
+   * These handle all lighting-related user interactions
+   */
+
+  // TRIGGERED BY: User clicking/changing the ambient light color picker
+  // DATA FLOW: color input onChange → handleAmbientLightColorChange → onAmbientLightColorChange(newColor) → App.jsx setState
   const handleAmbientLightColorChange = (event) => {
-    const newColor = event.target.value
+    // Color picker value is already a string like "#ffffff", no conversion needed
+    const newColor = event.target.value  // Gets hex color string
     console.log('Ambient light color changed to:', newColor)
-    onAmbientLightColorChange(newColor)
+    onAmbientLightColorChange(newColor) // CALL App.jsx setter function → updates App.jsx state
   }
 
+  // TRIGGERED BY: User dragging the ambient light intensity slider
+  // DATA FLOW: slider onChange → handleAmbientLightIntensityChange → onAmbientLightIntensityChange(newIntensity) → App.jsx setState
   const handleAmbientLightIntensityChange = (event) => {
-    const newIntensity = parseFloat(event.target.value)
+    // Extract slider value as string, convert to decimal number using parseFloat
+    const newIntensity = parseFloat(event.target.value)  // STRING → NUMBER conversion
     console.log('Ambient light intensity changed to:', newIntensity)
-    onAmbientLightIntensityChange(newIntensity)
+    onAmbientLightIntensityChange(newIntensity) // CALL App.jsx setter function → updates App.jsx state
   }
 
+  // TRIGGERED BY: User clicking/changing the directional light color picker
+  // DATA FLOW: color input onChange → handleDirectionalLightColorChange → onDirectionalLightColorChange(newColor) → App.jsx setState
   const handleDirectionalLightColorChange = (event) => {
-    const newColor = event.target.value
+    // Color picker value is already a string like "#ffffff", no conversion needed
+    const newColor = event.target.value  // Gets hex color string
     console.log('Directional light color changed to:', newColor)
-    onDirectionalLightColorChange(newColor)
+    onDirectionalLightColorChange(newColor) // CALL App.jsx setter function → updates App.jsx state
   }
 
+  // TRIGGERED BY: User dragging the directional light intensity slider
+  // DATA FLOW: slider onChange → handleDirectionalLightIntensityChange → onDirectionalLightIntensityChange(newIntensity) → App.jsx setState
   const handleDirectionalLightIntensityChange = (event) => {
-    const newIntensity = parseFloat(event.target.value)
+    // Extract slider value as string, convert to decimal number using parseFloat
+    const newIntensity = parseFloat(event.target.value)  // STRING → NUMBER conversion
     console.log('Directional light intensity changed to:', newIntensity)
-    onDirectionalLightIntensityChange(newIntensity)
+    onDirectionalLightIntensityChange(newIntensity) // CALL App.jsx setter function → updates App.jsx state
   }
 
+  // TRIGGERED BY: User dragging the directional light X position slider
+  // DATA FLOW: slider onChange → handleDirectionalLightXChange → onDirectionalLightXChange(newX) → App.jsx setState
   const handleDirectionalLightXChange = (event) => {
-    const newX = parseFloat(event.target.value)
+    // Extract slider value as string, convert to decimal number using parseFloat
+    const newX = parseFloat(event.target.value)  // STRING → NUMBER conversion
     console.log('Directional light X changed to:', newX)
-    onDirectionalLightXChange(newX)
+    onDirectionalLightXChange(newX) // CALL App.jsx setter function → updates App.jsx state
   }
 
+  // TRIGGERED BY: User dragging the directional light Y position slider
+  // DATA FLOW: slider onChange → handleDirectionalLightYChange → onDirectionalLightYChange(newY) → App.jsx setState
   const handleDirectionalLightYChange = (event) => {
-    const newY = parseFloat(event.target.value)
+    // Extract slider value as string, convert to decimal number using parseFloat
+    const newY = parseFloat(event.target.value)  // STRING → NUMBER conversion
     console.log('Directional light Y changed to:', newY)
-    onDirectionalLightYChange(newY)
+    onDirectionalLightYChange(newY) // CALL App.jsx setter function → updates App.jsx state
   }
 
+  // TRIGGERED BY: User dragging the directional light Z position slider
+  // DATA FLOW: slider onChange → handleDirectionalLightZChange → onDirectionalLightZChange(newZ) → App.jsx setState
   const handleDirectionalLightZChange = (event) => {
-    const newZ = parseFloat(event.target.value)
+    // Extract slider value as string, convert to decimal number using parseFloat
+    const newZ = parseFloat(event.target.value)  // STRING → NUMBER conversion
     console.log('Directional light Z changed to:', newZ)
-    onDirectionalLightZChange(newZ)
+    onDirectionalLightZChange(newZ) // CALL App.jsx setter function → updates App.jsx state
   }
 
+  /*
+   * JSX RETURN - THE USER INTERFACE
+   * This section connects UI elements to handler functions
+   * Look for onChange attributes to see which elements trigger which handlers
+   */
   return (
     <div className="controls">
-      {/* Debug info */}
-      <p>Current shininess: {shininess}</p>
-      <p>Current specular: {specularColor}</p>
-      <p>Current specular intensity: {specularIntensity}</p>
-      <p>Current base: {baseColor}</p>
-      <p>Current wireframe intensity: {wireframeIntensity}%</p>
-      <p>Camera: {cameraView} | Environment: {environment}</p>
-      <p>Objects: {objectCount} | Animation: {animationStyle}</p>
-      <p>Object Type: {objectType}</p>
-      {/* Added lighting debug info */}
-      <p>Ambient: {ambientLightColor} @ {ambientLightIntensity}</p>
-      <p>Directional: {directionalLightColor} @ {directionalLightIntensity}</p>
-      <p>Dir Position: ({directionalLightX}, {directionalLightY}, {directionalLightZ})</p>
+      {/* 
+       * DEBUG DISPLAY SECTION
+       * Shows current values FROM App.jsx - these update automatically when state changes
+       * These are NOT interactive - they just display the current values
+       */}
+      <p>Current shininess: {shininess}</p>                                    {/* Displays current shininess value from App.jsx */}
+      <p>Current specular: {specularColor}</p>                                {/* Displays current specular color from App.jsx */}
+      <p>Current specular intensity: {specularIntensity}</p>                  {/* Displays current specular intensity from App.jsx */}
+      <p>Current base: {baseColor}</p>                                        {/* Displays current base color from App.jsx */}
+      <p>Current wireframe intensity: {wireframeIntensity}%</p>               {/* Displays current wireframe intensity from App.jsx */}
+      <p>Camera: {cameraView} | Environment: {environment}</p>                {/* Displays current camera view and environment from App.jsx */}
+      <p>Objects: {objectCount} | Animation: {animationStyle}</p>             {/* Displays current object count and animation style from App.jsx */}
+      <p>Object Type: {objectType}</p>                                        {/* Displays current object type from App.jsx */}
+      <p>Ambient: {ambientLightColor} @ {ambientLightIntensity}</p>           {/* Displays current ambient light values from App.jsx */}
+      <p>Directional: {directionalLightColor} @ {directionalLightIntensity}</p> {/* Displays current directional light values from App.jsx */}
+      <p>Dir Position: ({directionalLightX}, {directionalLightY}, {directionalLightZ})</p> {/* Displays current directional light position from App.jsx */}
       
       <hr />
 
-      {/* NEW: MATERIAL PROPERTIES SECTION */}
+      {/* COLLAPSIBLE SECTION: MATERIAL PROPERTIES */}
       <div 
         className={`section-header ${materialOpen ? 'material-open' : 'material-closed'}`}
-        onClick={() => setMaterialOpen(!materialOpen)}
+        onClick={() => setMaterialOpen(!materialOpen)} // CLICK HANDLER: Toggles section open/closed - updates LOCAL state
       >
         <span>🎨 MATERIAL PROPERTIES</span>
         <span>{materialOpen ? '▼' : '▶'}</span>
       </div>
       
       <div className={`section-content ${materialOpen ? 'material-open open' : 'closed'}`}>
-        {/* Base Color control */}
+        {/* 
+         * MATERIAL PROPERTY CONTROLS
+         * Each input element has an onChange attribute that connects to a handler function
+         */}
+        
+        {/* BASE COLOR PICKER: User clicks/changes → handleBaseColorChange → App.jsx setState */}
         <label>
-          Base Color:
+          Base Color: {/* Label shows current value from App.jsx: {baseColor} */}
         </label>
+        {/* This color input DISPLAYS current value FROM App.jsx and TRIGGERS handler WHEN user changes color */}
         <input 
           type="color" 
-          value={baseColor}
-          onChange={handleBaseColorChange}
+          value={baseColor}                      
+          onChange={handleBaseColorChange}       
         />
         
-        {/* Specular color control */}
+        {/* SPECULAR COLOR PICKER: User clicks/changes → handleSpecularColorChange → App.jsx setState */}
         <label>
-          Specular Color:
+          Specular Color: {/* Label shows current value from App.jsx: {specularColor} */}
         </label>
+        {/* This color input DISPLAYS current value FROM App.jsx and TRIGGERS handler WHEN user changes color */}
         <input 
           type="color" 
-          value={specularColor}
-          onChange={handleSpecularColorChange}
+          value={specularColor}                  
+          onChange={handleSpecularColorChange}   
         />
 
-        {/* Specular intensity control */}
+        {/* SPECULAR INTENSITY SLIDER: User drags → handleSpecularIntensityChange → App.jsx setState */}
         <label>
-          Specular Intensity: <span className="value-display">{specularIntensity}</span>
+          Specular Intensity: <span className="value-display">{specularIntensity}</span> {/* Shows current value FROM App.jsx */}
         </label>
+        {/* This range slider DISPLAYS current value FROM App.jsx and TRIGGERS handler WHEN user drags slider */}
         <input 
           type="range" 
           min="0" 
           max="2" 
           step="0.1"
-          value={specularIntensity}
-          onChange={handleSpecularIntensityChange}
+          value={specularIntensity}                   
+          onChange={handleSpecularIntensityChange}    
         />
         
-        {/* Shininess control */}
+        {/* SHININESS SLIDER: User drags → handleShininessChange → App.jsx setState */}
         <label>
-          Shininess: <span className="value-display">{shininess}</span>
+          Shininess: <span className="value-display">{shininess}</span> {/* Shows current value FROM App.jsx */}
         </label>
+        {/* This range slider DISPLAYS current value FROM App.jsx and TRIGGERS handler WHEN user drags slider */}
         <input 
           type="range" 
           min="1" 
@@ -223,7 +361,18 @@ function Controls({
           onChange={handleWireframeIntensityChange}
         />
       </div>
-
+{/* Scale Control */}
+        <label>
+          Scale: <span className="value-display">{scale.toFixed(1)}</span>
+        </label>
+        <input
+        type="range"
+        min="0.1"
+        max="3"
+        step="0.1"
+        value={scale}
+        onChange={handleScaleChange}
+        />
       {/* NEW: SCENE CONTROLS SECTION */}
       <div 
         className={`section-header ${sceneOpen ? 'scene-open' : 'scene-closed'}`}
@@ -281,6 +430,7 @@ function Controls({
           <option value="tetrahedron">🔺 Tetrahedron</option>
           <option value="torusknot">🌀 Torus Knot</option>
         </select>
+
 
         {/* Animation Style Control */}
         <label>
