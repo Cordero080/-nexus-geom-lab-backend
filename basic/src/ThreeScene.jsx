@@ -396,129 +396,170 @@ function ThreeScene({
       // CREATE INTRICATE WIREFRAME DETAILS
       console.log(`Creating intricate wireframe for object ${i}, geometry type:`, geometry.type)
       
-      // Get the actual wireframe edges from the geometry
-      const edgesGeometry = new THREE.EdgesGeometry(geometry)
-      const edgeVertices = edgesGeometry.attributes.position.array
+      // Create simple center-to-vertex wireframes for tetrahedron only
+      let centerLines, centerLinesMaterial, curvedLines, curvedLinesMaterial
       
-      console.log(`Object ${i} has ${edgeVertices.length / 6} wireframe edges`)
-      
-      // 1. Spiral connections to wireframe vertices
-      const centerLinesGeometry = new THREE.BufferGeometry()
-      const centerLinesPositions = []
-      
-      // Create spiral paths from center to actual wireframe edge points
-      let createCenterLines = true
-      if (geometry.type === 'TorusKnotGeometry') {
-        createCenterLines = false // No center lines for torus
-      }
-      
-      if (createCenterLines) {
-        // Use actual wireframe edge endpoints for connections
-        for (let j = 0; j < edgeVertices.length; j += 12) { // Every other edge
-          const endX = edgeVertices[j + 3] // End point of edge
-          const endY = edgeVertices[j + 4]
-          const endZ = edgeVertices[j + 5]
+      if (geometry.type === 'TetrahedronGeometry') {
+        // TETRAHEDRON: Simple center-to-vertex lines
+        console.log('Creating simple tetrahedron center-to-vertex wireframe')
+        
+        const centerLinesGeometry = new THREE.BufferGeometry()
+        const centerLinesPositions = []
+        
+        // A tetrahedron has 4 vertices, get their positions directly
+        const vertices = geometry.attributes.position.array
+        
+        // Create lines from center (0,0,0) to each of the 4 vertices
+        for (let v = 0; v < 4; v++) {
+          const vx = vertices[v * 3]
+          const vy = vertices[v * 3 + 1]
+          const vz = vertices[v * 3 + 2]
           
-          // Create spiral path from center to edge endpoint
-          const steps = 8 // Number of spiral steps
-          for (let step = 0; step < steps; step++) {
-            const t1 = step / steps
-            const t2 = (step + 1) / steps
-            
-            // Spiral parameters
-            const radius1 = t1 * 0.8 // Gradually increase radius
-            const radius2 = t2 * 0.8
-            const angle1 = t1 * Math.PI * 2 // One full rotation
-            const angle2 = t2 * Math.PI * 2
-            
-            // Interpolate toward the actual edge point
-            const x1 = Math.cos(angle1) * radius1 * (endX / Math.sqrt(endX*endX + endY*endY + endZ*endZ))
-            const y1 = Math.sin(angle1) * radius1 * (endY / Math.sqrt(endX*endX + endY*endY + endZ*endZ)) + t1 * endY
-            const z1 = t1 * endZ
-            
-            const x2 = Math.cos(angle2) * radius2 * (endX / Math.sqrt(endX*endX + endY*endY + endZ*endZ))
-            const y2 = Math.sin(angle2) * radius2 * (endY / Math.sqrt(endX*endX + endY*endY + endZ*endZ)) + t2 * endY
-            const z2 = t2 * endZ
-            
-            centerLinesPositions.push(x1, y1, z1, x2, y2, z2)
-          }
+          // Line from center to vertex
+          centerLinesPositions.push(
+            0, 0, 0,    // Center point
+            vx, vy, vz  // Vertex point
+          )
         }
-      }
-      
-      // Only create center lines if we have valid positions
-      let centerLines, centerLinesMaterial
-      if (centerLinesPositions.length > 0) {
+        
         centerLinesGeometry.setAttribute('position', new THREE.Float32BufferAttribute(centerLinesPositions, 3))
         
         centerLinesMaterial = new THREE.LineBasicMaterial({
-          color: new THREE.Color(intricateWireframeSpiralColor), // Use the new spiral color control
+          color: new THREE.Color(intricateWireframeSpiralColor),
           transparent: true,
-          opacity: 0.6,
+          opacity: 0.8,
         })
         
         centerLines = new THREE.LineSegments(centerLinesGeometry, centerLinesMaterial)
-        console.log(`Created spiral center lines for object ${i} with ${centerLinesPositions.length / 6} segments`)
-      } else {
-        centerLines = new THREE.Object3D()
-        centerLinesMaterial = null
-        console.log(`No center lines created for object ${i}`)
-      }
-      
-      // 2. Enhanced wireframe edge connections
-      const curvedLinesGeometry = new THREE.BufferGeometry()
-      const curvedLinesPositions = []
-      
-      // Connect wireframe edges to create enhanced patterns
-      for (let j = 0; j < edgeVertices.length; j += 6) {
-        const edge1Start = [edgeVertices[j], edgeVertices[j + 1], edgeVertices[j + 2]]
-        const edge1End = [edgeVertices[j + 3], edgeVertices[j + 4], edgeVertices[j + 5]]
+        console.log(`Created tetrahedron center-to-vertex lines: 4 lines`)
         
-        // Find nearby edges to connect to
-        for (let k = j + 6; k < edgeVertices.length && k < j + 36; k += 6) {
-          const edge2Start = [edgeVertices[k], edgeVertices[k + 1], edgeVertices[k + 2]]
-          const edge2End = [edgeVertices[k + 3], edgeVertices[k + 4], edgeVertices[k + 5]]
-          
-          // Calculate distance between edge endpoints
-          const dist1 = Math.sqrt(
-            (edge1End[0] - edge2Start[0])**2 + 
-            (edge1End[1] - edge2Start[1])**2 + 
-            (edge1End[2] - edge2Start[2])**2
-          )
-          
-          const dist2 = Math.sqrt(
-            (edge1End[0] - edge2End[0])**2 + 
-            (edge1End[1] - edge2End[1])**2 + 
-            (edge1End[2] - edge2End[2])**2
-          )
-          
-          // Connect to nearby edge points
-          const maxDist = geometry.type === 'TorusKnotGeometry' ? 0.6 : 1.2
-          
-          if (dist1 < maxDist) {
-            curvedLinesPositions.push(...edge1End, ...edge2Start)
-          } else if (dist2 < maxDist) {
-            curvedLinesPositions.push(...edge1End, ...edge2End)
-          }
-        }
-      }
-      
-      // Only create curved lines if we have valid positions
-      let curvedLines, curvedLinesMaterial
-      if (curvedLinesPositions.length > 0) {
-        curvedLinesGeometry.setAttribute('position', new THREE.Float32BufferAttribute(curvedLinesPositions, 3))
-        
-        curvedLinesMaterial = new THREE.LineBasicMaterial({
-          color: new THREE.Color(intricateWireframeEdgeColor), // Use the new edge color control
-          transparent: true,
-          opacity: 0.4,
-        })
-        
-        curvedLines = new THREE.LineSegments(curvedLinesGeometry, curvedLinesMaterial)
-        console.log(`Created edge connections for object ${i} with ${curvedLinesPositions.length / 6} segments`)
-      } else {
+        // No curved lines for tetrahedron - keep it simple
         curvedLines = new THREE.Object3D()
         curvedLinesMaterial = null
-        console.log(`No edge connections created for object ${i}`)
+        
+      } else {
+        // OTHER GEOMETRIES: Use existing complex wireframe logic
+        const edgesGeometry = new THREE.EdgesGeometry(geometry)
+        const edgeVertices = edgesGeometry.attributes.position.array
+        
+        console.log(`Object ${i} has ${edgeVertices.length / 6} wireframe edges`)
+        
+        // 1. Spiral connections to wireframe vertices
+        const centerLinesGeometry = new THREE.BufferGeometry()
+        const centerLinesPositions = []
+        
+        // Create spiral paths from center to actual wireframe edge points
+        let createCenterLines = true
+        if (geometry.type === 'TorusKnotGeometry') {
+          createCenterLines = false // No center lines for torus
+        }
+        
+        if (createCenterLines) {
+          // Use actual wireframe edge endpoints for connections
+          for (let j = 0; j < edgeVertices.length; j += 12) { // Every other edge
+            const endX = edgeVertices[j + 3] // End point of edge
+            const endY = edgeVertices[j + 4]
+            const endZ = edgeVertices[j + 5]
+            
+            // Create spiral path from center to edge endpoint
+            const steps = 8 // Number of spiral steps
+            for (let step = 0; step < steps; step++) {
+              const t1 = step / steps
+              const t2 = (step + 1) / steps
+              
+              // Spiral parameters
+              const radius1 = t1 * 0.8 // Gradually increase radius
+              const radius2 = t2 * 0.8
+              const angle1 = t1 * Math.PI * 2 // One full rotation
+              const angle2 = t2 * Math.PI * 2
+              
+              // Interpolate toward the actual edge point
+              const x1 = Math.cos(angle1) * radius1 * (endX / Math.sqrt(endX*endX + endY*endY + endZ*endZ))
+              const y1 = Math.sin(angle1) * radius1 * (endY / Math.sqrt(endX*endX + endY*endY + endZ*endZ)) + t1 * endY
+              const z1 = t1 * endZ
+              
+              const x2 = Math.cos(angle2) * radius2 * (endX / Math.sqrt(endX*endX + endY*endY + endZ*endZ))
+              const y2 = Math.sin(angle2) * radius2 * (endY / Math.sqrt(endX*endX + endY*endY + endZ*endZ)) + t2 * endY
+              const z2 = t2 * endZ
+              
+              centerLinesPositions.push(x1, y1, z1, x2, y2, z2)
+            }
+          }
+        }
+        
+        // Only create center lines if we have valid positions
+        if (centerLinesPositions.length > 0) {
+          centerLinesGeometry.setAttribute('position', new THREE.Float32BufferAttribute(centerLinesPositions, 3))
+          
+          centerLinesMaterial = new THREE.LineBasicMaterial({
+            color: new THREE.Color(intricateWireframeSpiralColor), // Use the new spiral color control
+            transparent: true,
+            opacity: 0.6,
+          })
+          
+          centerLines = new THREE.LineSegments(centerLinesGeometry, centerLinesMaterial)
+          console.log(`Created spiral center lines for object ${i} with ${centerLinesPositions.length / 6} segments`)
+        } else {
+          centerLines = new THREE.Object3D()
+          centerLinesMaterial = null
+          console.log(`No center lines created for object ${i}`)
+        }
+        
+        // 2. Enhanced wireframe edge connections
+        const curvedLinesGeometry = new THREE.BufferGeometry()
+        const curvedLinesPositions = []
+        
+        // Connect wireframe edges to create enhanced patterns
+        for (let j = 0; j < edgeVertices.length; j += 6) {
+          const edge1Start = [edgeVertices[j], edgeVertices[j + 1], edgeVertices[j + 2]]
+          const edge1End = [edgeVertices[j + 3], edgeVertices[j + 4], edgeVertices[j + 5]]
+          
+          // Find nearby edges to connect to
+          for (let k = j + 6; k < edgeVertices.length && k < j + 36; k += 6) {
+            const edge2Start = [edgeVertices[k], edgeVertices[k + 1], edgeVertices[k + 2]]
+            const edge2End = [edgeVertices[k + 3], edgeVertices[k + 4], edgeVertices[k + 5]]
+            
+            // Calculate distance between edge endpoints
+            const dist1 = Math.sqrt(
+              (edge1End[0] - edge2Start[0])**2 + 
+              (edge1End[1] - edge2Start[1])**2 + 
+              (edge1End[2] - edge2Start[2])**2
+            )
+            
+            const dist2 = Math.sqrt(
+              (edge1End[0] - edge2End[0])**2 + 
+              (edge1End[1] - edge2End[1])**2 + 
+              (edge1End[2] - edge2End[2])**2
+            )
+            
+            // Connect to nearby edge points
+            const maxDist = geometry.type === 'TorusKnotGeometry' ? 0.6 : 1.2
+            
+            if (dist1 < maxDist) {
+              curvedLinesPositions.push(...edge1End, ...edge2Start)
+            } else if (dist2 < maxDist) {
+              curvedLinesPositions.push(...edge1End, ...edge2End)
+            }
+          }
+        }
+        
+        // Only create curved lines if we have valid positions
+        if (curvedLinesPositions.length > 0) {
+          curvedLinesGeometry.setAttribute('position', new THREE.Float32BufferAttribute(curvedLinesPositions, 3))
+          
+          curvedLinesMaterial = new THREE.LineBasicMaterial({
+            color: new THREE.Color(intricateWireframeEdgeColor), // Use the new edge color control
+            transparent: true,
+            opacity: 0.4,
+          })
+          
+          curvedLines = new THREE.LineSegments(curvedLinesGeometry, curvedLinesMaterial)
+          console.log(`Created edge connections for object ${i} with ${curvedLinesPositions.length / 6} segments`)
+        } else {
+          curvedLines = new THREE.Object3D()
+          curvedLinesMaterial = null
+          console.log(`No edge connections created for object ${i}`)
+        }
       }
       
       // POSITION ALL OBJECTS in same location
@@ -656,7 +697,57 @@ function ThreeScene({
         meshesToAnimate.forEach(currentMesh => {
           switch(animationStyle) { // Use animationStyle prop from App.jsx
             case 'rotate':
-              // Simple rotation animation
+              // Simple rotation animation - reset vertices to original positions first
+              if (geometry && originalPositions && currentMesh === solidMesh) {
+                const positions = geometry.attributes.position.array
+                for (let i = 0; i < positions.length; i++) {
+                  positions[i] = originalPositions[i]
+                }
+                geometry.attributes.position.needsUpdate = true
+                
+                // Also reset wireframe geometry to match original positions
+                if (centerLines && centerLines.geometry && geometry.type !== 'TetrahedronGeometry') {
+                  // Rebuild spiral wireframe for non-tetrahedron geometries
+                  const edgesGeometry = new THREE.EdgesGeometry(geometry)
+                  const edgeVertices = edgesGeometry.attributes.position.array
+                  
+                  const centerLinesGeometry = centerLines.geometry
+                  const centerLinesPositions = []
+                  
+                  // Recreate spiral paths from center to original edge points
+                  for (let j = 0; j < edgeVertices.length; j += 12) {
+                    const endX = edgeVertices[j + 3]
+                    const endY = edgeVertices[j + 4]
+                    const endZ = edgeVertices[j + 5]
+                    
+                    const steps = 8
+                    for (let step = 0; step < steps; step++) {
+                      const t1 = step / steps
+                      const t2 = (step + 1) / steps
+                      
+                      const radius1 = t1 * 0.8
+                      const radius2 = t2 * 0.8
+                      const angle1 = t1 * Math.PI * 2
+                      const angle2 = t2 * Math.PI * 2
+                      
+                      const x1 = Math.cos(angle1) * radius1 * (endX / Math.sqrt(endX*endX + endY*endY + endZ*endZ))
+                      const y1 = Math.sin(angle1) * radius1 * (endY / Math.sqrt(endX*endX + endY*endY + endZ*endZ)) + t1 * endY
+                      const z1 = t1 * endZ
+                      
+                      const x2 = Math.cos(angle2) * radius2 * (endX / Math.sqrt(endX*endX + endY*endY + endZ*endZ))
+                      const y2 = Math.sin(angle2) * radius2 * (endY / Math.sqrt(endX*endX + endY*endY + endZ*endZ)) + t2 * endY
+                      const z2 = t2 * endZ
+                      
+                      centerLinesPositions.push(x1, y1, z1, x2, y2, z2)
+                    }
+                  }
+                  
+                  if (centerLinesPositions.length > 0) {
+                    centerLinesGeometry.setAttribute('position', new THREE.Float32BufferAttribute(centerLinesPositions, 3))
+                  }
+                }
+              }
+              
               currentMesh.rotation.x += 0.01
               currentMesh.rotation.y += 0.01
               currentMesh.rotation.z += 0.01
@@ -740,13 +831,39 @@ function ThreeScene({
                 
                 // UPDATE INTRICATE WIREFRAME TO FOLLOW MORPHED SURFACE
                 if (currentMesh === solidMesh && centerLines && curvedLines) {
-                  // Update center lines to follow morphed vertices
-                  const centerLinesGeom = centerLines.geometry
-                  if (centerLinesGeom && centerLinesGeom.attributes.position) {
-                    const centerLinesPos = centerLinesGeom.attributes.position.array
-                    let lineIndex = 0
-                    
-                    // Update every other point (the vertex endpoints) to match morphed surface
+                  if (geometry.type === 'TetrahedronGeometry') {
+                    // TETRAHEDRON: Update simple center-to-vertex lines
+                    const centerLinesGeom = centerLines.geometry
+                    if (centerLinesGeom && centerLinesGeom.attributes.position) {
+                      const centerLinesPos = centerLinesGeom.attributes.position.array
+                      
+                      // Update each center-to-vertex line (4 lines total)
+                      for (let v = 0; v < 4; v++) {
+                        const vx = positions[v * 3]
+                        const vy = positions[v * 3 + 1]
+                        const vz = positions[v * 3 + 2]
+                        
+                        // Update line from center (0,0,0) to deformed vertex
+                        centerLinesPos[v * 6] = 0      // Center X
+                        centerLinesPos[v * 6 + 1] = 0  // Center Y
+                        centerLinesPos[v * 6 + 2] = 0  // Center Z
+                        centerLinesPos[v * 6 + 3] = vx // Vertex X
+                        centerLinesPos[v * 6 + 4] = vy // Vertex Y
+                        centerLinesPos[v * 6 + 5] = vz // Vertex Z
+                      }
+                      
+                      centerLinesGeom.attributes.position.needsUpdate = true
+                    }
+                    // No curved lines for tetrahedron - skip curved line updates
+                  } else {
+                    // OTHER GEOMETRIES: Use existing update logic
+                    // Update center lines to follow morphed vertices
+                    const centerLinesGeom = centerLines.geometry
+                    if (centerLinesGeom && centerLinesGeom.attributes.position) {
+                      const centerLinesPos = centerLinesGeom.attributes.position.array
+                      let lineIndex = 0
+                      
+                      // Update every other point (the vertex endpoints) to match morphed surface
                     for (let i = 1; i < centerLinesPos.length; i += 6) { // Every second point (vertex endpoints)
                       const vertexIndex = lineIndex * 9 // Match the original vertex stepping
                       if (vertexIndex < positions.length) {
@@ -812,8 +929,9 @@ function ThreeScene({
                     }
                     curvedLinesGeom.attributes.position.needsUpdate = true
                   }
-                }
-              }
+                  } // Close the else block for non-tetrahedron geometries
+                } // Close the wireframe update conditional
+              } // Close the liquid animation conditional
               
               currentMesh.scale.setScalar(1 + 0.2 * Math.sin(t * 1.5 + phase))
               currentMesh.rotation.x += Math.sin(t * 0.3) * 0.01
