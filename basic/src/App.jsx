@@ -15,7 +15,12 @@ function App() {
   const [specularColor, setSpecularColor] = useState('#00ff00')      // Controlled by: specular color picker in Controls.jsx
   const [specularIntensity, setSpecularIntensity] = useState(1.0)    // Controlled by: specular intensity slider in Controls.jsx
   const [baseColor, setBaseColor] = useState('#222222')              // Controlled by: base color picker in Controls.jsx
-  const [wireframeIntensity, setWireframeIntensity] = useState(0)    // Controlled by: wireframe slider in Controls.jsx
+  const [wireframeIntensity, setWireframeIntensity] = useState(50)    // Controlled by: wireframe slider in Controls.jsx (TESTING: set to 50% for visibility)
+  
+  // INTRICATE WIREFRAME STATE
+  // These control the colors of the intricate wireframe details
+  const [intricateWireframeSpiralColor, setIntricateWireframeSpiralColor] = useState('#ff4444') // Controlled by: intricate wireframe spiral color picker in Controls.jsx
+  const [intricateWireframeEdgeColor, setIntricateWireframeEdgeColor] = useState('#44ff44')     // Controlled by: intricate wireframe edge color picker in Controls.jsx
   
   // SCENE BEHAVIOR STATE
   // These control how the scene behaves and looks
@@ -56,6 +61,10 @@ function App() {
         specularIntensity={specularIntensity}             // Current specular intensity → used by 3D materials
         baseColor={baseColor}                             // Current base color → used by 3D materials
         wireframeIntensity={wireframeIntensity}           // Current wireframe intensity → used by 3D materials
+        
+        // INTRICATE WIREFRAME PROPS - How intricate wireframe looks
+        intricateWireframeSpiralColor={intricateWireframeSpiralColor}   // Current spiral color → used by intricate wireframe spiral lines
+        intricateWireframeEdgeColor={intricateWireframeEdgeColor}       // Current edge color → used by intricate wireframe edge connections
         
         // SCENE BEHAVIOR PROPS - How scene behaves
         cameraView={cameraView}                           // Current camera view → controls camera position/movement
@@ -106,6 +115,13 @@ function App() {
         
         wireframeIntensity={wireframeIntensity}                   // Current value → shows in Controls.jsx slider position
         onWireframeIntensityChange={setWireframeIntensity}        // Change handler → Controls.jsx calls this to update wireframe
+        
+        // INTRICATE WIREFRAME CONTROLS - Pairs of current value + change handler
+        intricateWireframeSpiralColor={intricateWireframeSpiralColor}         // Current value → shows in Controls.jsx color picker
+        onIntricateWireframeSpiralColorChange={setIntricateWireframeSpiralColor} // Change handler → Controls.jsx calls this to change spiral color
+        
+        intricateWireframeEdgeColor={intricateWireframeEdgeColor}             // Current value → shows in Controls.jsx color picker
+        onIntricateWireframeEdgeColorChange={setIntricateWireframeEdgeColor}   // Change handler → Controls.jsx calls this to change edge color
         
         // SCENE BEHAVIOR CONTROLS - Pairs of current value + change handler
         cameraView={cameraView}                                   // Current value → shows in Controls.jsx dropdown selection

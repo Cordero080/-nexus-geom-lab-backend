@@ -17,6 +17,10 @@ function ThreeScene({
   baseColor,           // Current base color → will update Three.js material.color
   wireframeIntensity,  // Current wireframe intensity → will update Three.js material.wireframe
   
+  // INTRICATE WIREFRAME PROPS - How the intricate wireframe should look (FROM App.jsx state)
+  intricateWireframeSpiralColor,  // Current spiral color → will update intricate wireframe spiral lines
+  intricateWireframeEdgeColor,    // Current edge color → will update intricate wireframe edge connections
+  
   // SCENE BEHAVIOR PROPS - How the scene should behave (FROM App.jsx state)
   cameraView,          // Current camera view → will position/animate camera
   environment,         // Current environment → will change background/lighting
@@ -159,13 +163,20 @@ function ThreeScene({
   
   // Scale updater - responds to scale prop changes
   useEffect(() => {
-    objectsRef.current.forEach(({ solidMesh, wireframeMesh, mesh }) => {
+    objectsRef.current.forEach(({ solidMesh, wireframeMesh, centerLines, curvedLines, mesh }) => {
       // Handle dual-mesh objects
       if (solidMesh) {
         solidMesh.scale.setScalar(scale)
       }
       if (wireframeMesh) {
         wireframeMesh.scale.setScalar(scale)
+      }
+      // Handle intricate wireframe elements
+      if (centerLines) {
+        centerLines.scale.setScalar(scale)
+      }
+      if (curvedLines) {
+        curvedLines.scale.setScalar(scale)
       }
       // Handle legacy single mesh objects
       if (mesh) {
@@ -313,9 +324,12 @@ function ThreeScene({
     
     // REMOVE OLD OBJECTS from scene and clear our reference array
     objectsRef.current.forEach(obj => {
-      // Remove both solid and wireframe meshes
+      // Remove solid and wireframe meshes
       if (obj.solidMesh) scene.remove(obj.solidMesh)
       if (obj.wireframeMesh) scene.remove(obj.wireframeMesh)
+      // Remove intricate wireframe elements
+      if (obj.centerLines) scene.remove(obj.centerLines)
+      if (obj.curvedLines) scene.remove(obj.curvedLines)
       // Also handle legacy single mesh objects
       if (obj.mesh) scene.remove(obj.mesh)
     })
@@ -379,10 +393,140 @@ function ThreeScene({
       
       const wireframeMesh = new THREE.Mesh(geometry, wireframeMaterial)
       
-      // POSITION BOTH OBJECTS in same location
+      // CREATE INTRICATE WIREFRAME DETAILS
+      console.log(`Creating intricate wireframe for object ${i}, geometry type:`, geometry.type)
+      
+      // Get the actual wireframe edges from the geometry
+      const edgesGeometry = new THREE.EdgesGeometry(geometry)
+      const edgeVertices = edgesGeometry.attributes.position.array
+      
+      console.log(`Object ${i} has ${edgeVertices.length / 6} wireframe edges`)
+      
+      // 1. Spiral connections to wireframe vertices
+      const centerLinesGeometry = new THREE.BufferGeometry()
+      const centerLinesPositions = []
+      
+      // Create spiral paths from center to actual wireframe edge points
+      let createCenterLines = true
+      if (geometry.type === 'TorusKnotGeometry') {
+        createCenterLines = false // No center lines for torus
+      }
+      
+      if (createCenterLines) {
+        // Use actual wireframe edge endpoints for connections
+        for (let j = 0; j < edgeVertices.length; j += 12) { // Every other edge
+          const endX = edgeVertices[j + 3] // End point of edge
+          const endY = edgeVertices[j + 4]
+          const endZ = edgeVertices[j + 5]
+          
+          // Create spiral path from center to edge endpoint
+          const steps = 8 // Number of spiral steps
+          for (let step = 0; step < steps; step++) {
+            const t1 = step / steps
+            const t2 = (step + 1) / steps
+            
+            // Spiral parameters
+            const radius1 = t1 * 0.8 // Gradually increase radius
+            const radius2 = t2 * 0.8
+            const angle1 = t1 * Math.PI * 2 // One full rotation
+            const angle2 = t2 * Math.PI * 2
+            
+            // Interpolate toward the actual edge point
+            const x1 = Math.cos(angle1) * radius1 * (endX / Math.sqrt(endX*endX + endY*endY + endZ*endZ))
+            const y1 = Math.sin(angle1) * radius1 * (endY / Math.sqrt(endX*endX + endY*endY + endZ*endZ)) + t1 * endY
+            const z1 = t1 * endZ
+            
+            const x2 = Math.cos(angle2) * radius2 * (endX / Math.sqrt(endX*endX + endY*endY + endZ*endZ))
+            const y2 = Math.sin(angle2) * radius2 * (endY / Math.sqrt(endX*endX + endY*endY + endZ*endZ)) + t2 * endY
+            const z2 = t2 * endZ
+            
+            centerLinesPositions.push(x1, y1, z1, x2, y2, z2)
+          }
+        }
+      }
+      
+      // Only create center lines if we have valid positions
+      let centerLines, centerLinesMaterial
+      if (centerLinesPositions.length > 0) {
+        centerLinesGeometry.setAttribute('position', new THREE.Float32BufferAttribute(centerLinesPositions, 3))
+        
+        centerLinesMaterial = new THREE.LineBasicMaterial({
+          color: new THREE.Color(intricateWireframeSpiralColor), // Use the new spiral color control
+          transparent: true,
+          opacity: 0.6,
+        })
+        
+        centerLines = new THREE.LineSegments(centerLinesGeometry, centerLinesMaterial)
+        console.log(`Created spiral center lines for object ${i} with ${centerLinesPositions.length / 6} segments`)
+      } else {
+        centerLines = new THREE.Object3D()
+        centerLinesMaterial = null
+        console.log(`No center lines created for object ${i}`)
+      }
+      
+      // 2. Enhanced wireframe edge connections
+      const curvedLinesGeometry = new THREE.BufferGeometry()
+      const curvedLinesPositions = []
+      
+      // Connect wireframe edges to create enhanced patterns
+      for (let j = 0; j < edgeVertices.length; j += 6) {
+        const edge1Start = [edgeVertices[j], edgeVertices[j + 1], edgeVertices[j + 2]]
+        const edge1End = [edgeVertices[j + 3], edgeVertices[j + 4], edgeVertices[j + 5]]
+        
+        // Find nearby edges to connect to
+        for (let k = j + 6; k < edgeVertices.length && k < j + 36; k += 6) {
+          const edge2Start = [edgeVertices[k], edgeVertices[k + 1], edgeVertices[k + 2]]
+          const edge2End = [edgeVertices[k + 3], edgeVertices[k + 4], edgeVertices[k + 5]]
+          
+          // Calculate distance between edge endpoints
+          const dist1 = Math.sqrt(
+            (edge1End[0] - edge2Start[0])**2 + 
+            (edge1End[1] - edge2Start[1])**2 + 
+            (edge1End[2] - edge2Start[2])**2
+          )
+          
+          const dist2 = Math.sqrt(
+            (edge1End[0] - edge2End[0])**2 + 
+            (edge1End[1] - edge2End[1])**2 + 
+            (edge1End[2] - edge2End[2])**2
+          )
+          
+          // Connect to nearby edge points
+          const maxDist = geometry.type === 'TorusKnotGeometry' ? 0.6 : 1.2
+          
+          if (dist1 < maxDist) {
+            curvedLinesPositions.push(...edge1End, ...edge2Start)
+          } else if (dist2 < maxDist) {
+            curvedLinesPositions.push(...edge1End, ...edge2End)
+          }
+        }
+      }
+      
+      // Only create curved lines if we have valid positions
+      let curvedLines, curvedLinesMaterial
+      if (curvedLinesPositions.length > 0) {
+        curvedLinesGeometry.setAttribute('position', new THREE.Float32BufferAttribute(curvedLinesPositions, 3))
+        
+        curvedLinesMaterial = new THREE.LineBasicMaterial({
+          color: new THREE.Color(intricateWireframeEdgeColor), // Use the new edge color control
+          transparent: true,
+          opacity: 0.4,
+        })
+        
+        curvedLines = new THREE.LineSegments(curvedLinesGeometry, curvedLinesMaterial)
+        console.log(`Created edge connections for object ${i} with ${curvedLinesPositions.length / 6} segments`)
+      } else {
+        curvedLines = new THREE.Object3D()
+        curvedLinesMaterial = null
+        console.log(`No edge connections created for object ${i}`)
+      }
+      
+      // POSITION ALL OBJECTS in same location
       if (objectCount === 1) {
         solidMesh.position.set(0, 0, 0) // Single object at center
         wireframeMesh.position.set(0, 0, 0) // Same position
+        centerLines.position.set(0, 0, 0) // Same position
+        curvedLines.position.set(0, 0, 0) // Same position
       } else {
         // Multiple objects arranged in a circle
         const angle = (i / objectCount) * Math.PI * 2
@@ -393,6 +537,8 @@ function ThreeScene({
         
         solidMesh.position.set(x, y, z)
         wireframeMesh.position.set(x, y, z) // Same position
+        centerLines.position.set(x, y, z) // Same position
+        curvedLines.position.set(x, y, z) // Same position
       }
       
       // Enable shadows for both meshes
@@ -401,16 +547,30 @@ function ThreeScene({
       wireframeMesh.castShadow = true
       wireframeMesh.receiveShadow = true
       
-      // Add both meshes to the scene
+      // Add all meshes to the scene
       scene.add(solidMesh)
       scene.add(wireframeMesh)
+      scene.add(centerLines)
+      scene.add(curvedLines)
+      
+      console.log(`Added object ${i} to scene:`, {
+        solidMesh: solidMesh.type,
+        wireframeMesh: wireframeMesh.type,
+        centerLines: centerLines.type,
+        curvedLines: curvedLines.type,
+        position: solidMesh.position
+      })
 
       // STORE OBJECT DATA for later updates and animations
       objectsRef.current.push({
         solidMesh,                  // The solid Three.js object
         wireframeMesh,              // The wireframe Three.js object
+        centerLines,                // The center-to-vertex lines
+        curvedLines,                // The vertex-to-vertex connections
         material,                   // The solid material (for updating properties)
         wireframeMaterial,          // The wireframe material (for updating properties)
+        centerLinesMaterial,        // The center lines material (for updating properties)
+        curvedLinesMaterial,        // The curved lines material (for updating properties)
         geometry,                   // The geometry (for vertex animations)
         originalPositions,          // Original vertex positions (for morphing effects)
         originalPosition: solidMesh.position.clone(), // Original object position
@@ -488,10 +648,10 @@ function ThreeScene({
 
       // ANIMATE EACH OBJECT based on animationStyle prop from App.jsx
       objectsRef.current.forEach((objData, index) => {
-        const { solidMesh, wireframeMesh, mesh, originalPosition, phase, geometry, originalPositions, magneticPoints } = objData
+        const { solidMesh, wireframeMesh, centerLines, curvedLines, mesh, originalPosition, phase, geometry, originalPositions, magneticPoints } = objData
         
         // Use either the new dual-mesh system or legacy single mesh
-        const meshesToAnimate = solidMesh && wireframeMesh ? [solidMesh, wireframeMesh] : (mesh ? [mesh] : [])
+        const meshesToAnimate = solidMesh && wireframeMesh ? [solidMesh, wireframeMesh, centerLines, curvedLines] : (mesh ? [mesh] : [])
         
         meshesToAnimate.forEach(currentMesh => {
           switch(animationStyle) { // Use animationStyle prop from App.jsx
@@ -577,6 +737,82 @@ function ThreeScene({
                   positions[i + 2] = z + wave3 + Math.sin(t * 0.8 + z * 3) * 0.05
                 }
                 geometry.attributes.position.needsUpdate = true
+                
+                // UPDATE INTRICATE WIREFRAME TO FOLLOW MORPHED SURFACE
+                if (currentMesh === solidMesh && centerLines && curvedLines) {
+                  // Update center lines to follow morphed vertices
+                  const centerLinesGeom = centerLines.geometry
+                  if (centerLinesGeom && centerLinesGeom.attributes.position) {
+                    const centerLinesPos = centerLinesGeom.attributes.position.array
+                    let lineIndex = 0
+                    
+                    // Update every other point (the vertex endpoints) to match morphed surface
+                    for (let i = 1; i < centerLinesPos.length; i += 6) { // Every second point (vertex endpoints)
+                      const vertexIndex = lineIndex * 9 // Match the original vertex stepping
+                      if (vertexIndex < positions.length) {
+                        centerLinesPos[i] = positions[vertexIndex]     // X
+                        centerLinesPos[i + 1] = positions[vertexIndex + 1] // Y  
+                        centerLinesPos[i + 2] = positions[vertexIndex + 2] // Z
+                      }
+                      lineIndex++
+                    }
+                    centerLinesGeom.attributes.position.needsUpdate = true
+                  }
+                  
+                  // Update curved lines to follow morphed vertices
+                  const curvedLinesGeom = curvedLines.geometry
+                  if (curvedLinesGeom && curvedLinesGeom.attributes.position) {
+                    // Update existing curved line endpoints smoothly every frame with validation
+                    const curvedLinesPos = curvedLinesGeom.attributes.position.array
+                    
+                    // Update each line segment, but validate the connection is still appropriate
+                    for (let i = 0; i < curvedLinesPos.length; i += 6) {
+                      // Get the vertex indices for this line
+                      const vertex1Index = Math.floor((i / 6) * 30)
+                      const vertex2Index = vertex1Index + 30
+                      
+                      if (vertex1Index < positions.length && vertex2Index < positions.length) {
+                        const x1 = positions[vertex1Index]
+                        const y1 = positions[vertex1Index + 1]
+                        const z1 = positions[vertex1Index + 2]
+                        const x2 = positions[vertex2Index]
+                        const y2 = positions[vertex2Index + 1]
+                        const z2 = positions[vertex2Index + 2]
+                        
+                        // Check if this connection is still valid
+                        const distance = Math.sqrt((x2-x1)*(x2-x1) + (y2-y1)*(y2-y1) + (z2-z1)*(z2-z1))
+                        let shouldShow = distance < 0.8 && distance > 0.1
+                        
+                        // For torus, check center distance to avoid cross-hole connections
+                        if (geometry.type === 'TorusKnotGeometry' && shouldShow) {
+                          const centerDistance1 = Math.sqrt(x1*x1 + z1*z1)
+                          const centerDistance2 = Math.sqrt(x2*x2 + z2*z2)
+                          const centerDistanceDiff = Math.abs(centerDistance1 - centerDistance2)
+                          shouldShow = centerDistanceDiff < 0.5
+                        }
+                        
+                        if (shouldShow) {
+                          // Update the line endpoints
+                          curvedLinesPos[i] = x1
+                          curvedLinesPos[i + 1] = y1
+                          curvedLinesPos[i + 2] = z1
+                          curvedLinesPos[i + 3] = x2
+                          curvedLinesPos[i + 4] = y2
+                          curvedLinesPos[i + 5] = z2
+                        } else {
+                          // Hide invalid connections by collapsing them to a single point
+                          curvedLinesPos[i] = 0
+                          curvedLinesPos[i + 1] = 0
+                          curvedLinesPos[i + 2] = 0
+                          curvedLinesPos[i + 3] = 0
+                          curvedLinesPos[i + 4] = 0
+                          curvedLinesPos[i + 5] = 0
+                        }
+                      }
+                    }
+                    curvedLinesGeom.attributes.position.needsUpdate = true
+                  }
+                }
               }
               
               currentMesh.scale.setScalar(1 + 0.2 * Math.sin(t * 1.5 + phase))
@@ -766,7 +1002,16 @@ function ThreeScene({
   useEffect(() => {
     const intensity = wireframeIntensity / 100 // Convert 0-100 range to 0-1 range
     
-    objectsRef.current.forEach(({ material, wireframeMaterial }) => {
+    console.log(`Updating wireframe intensity to ${wireframeIntensity}% (${intensity}) for ${objectsRef.current.length} objects`)
+    
+    objectsRef.current.forEach(({ material, wireframeMaterial, centerLinesMaterial, curvedLinesMaterial }, index) => {
+      console.log(`Updating object ${index}:`, {
+        hasMaterial: !!material,
+        hasWireframeMaterial: !!wireframeMaterial,
+        hasCenterLinesMaterial: !!centerLinesMaterial,
+        hasCurvedLinesMaterial: !!curvedLinesMaterial
+      })
+      
       if (material && wireframeMaterial) {
         // DUAL-MESH BLENDING: Smooth transition between solid and wireframe
         if (intensity === 0) {
@@ -789,6 +1034,17 @@ function ThreeScene({
           wireframeMaterial.opacity = intensity  // Wireframe fades in as intensity increases
         }
         
+        // UPDATE INTRICATE WIREFRAME ELEMENTS
+        if (centerLinesMaterial) {
+          centerLinesMaterial.opacity = 0.8 // Keep bright red lines visible
+          centerLinesMaterial.needsUpdate = true
+        }
+        
+        if (curvedLinesMaterial) {
+          curvedLinesMaterial.opacity = 0.8 // Keep bright green lines visible
+          curvedLinesMaterial.needsUpdate = true
+        }
+        
         material.needsUpdate = true
         wireframeMaterial.needsUpdate = true
         
@@ -808,6 +1064,39 @@ function ThreeScene({
       }
     })
   }, [wireframeIntensity]) // Run when wireframeIntensity prop from App.jsx changes
+
+  // ===============================================
+  // INTRICATE WIREFRAME COLOR UPDATERS - RESPOND TO INTRICATE WIREFRAME PROPS
+  // ===============================================
+  // These useEffects update intricate wireframe colors when App.jsx changes the color controls
+
+  // INTRICATE WIREFRAME SPIRAL COLOR UPDATER - Responds to spiral color prop changes
+  useEffect(() => {
+    console.log('Updating intricate wireframe spiral color to:', intricateWireframeSpiralColor)
+    const convertedColor = new THREE.Color(intricateWireframeSpiralColor)
+    
+    objectsRef.current.forEach(({ centerLinesMaterial }, index) => {
+      if (centerLinesMaterial) {
+        centerLinesMaterial.color.copy(convertedColor)
+        centerLinesMaterial.needsUpdate = true
+        console.log(`Updated center lines material ${index} color`)
+      }
+    })
+  }, [intricateWireframeSpiralColor]) // Run when spiral color prop from App.jsx changes
+
+  // INTRICATE WIREFRAME EDGE COLOR UPDATER - Responds to edge color prop changes
+  useEffect(() => {
+    console.log('Updating intricate wireframe edge color to:', intricateWireframeEdgeColor)
+    const convertedColor = new THREE.Color(intricateWireframeEdgeColor)
+    
+    objectsRef.current.forEach(({ curvedLinesMaterial }, index) => {
+      if (curvedLinesMaterial) {
+        curvedLinesMaterial.color.copy(convertedColor)
+        curvedLinesMaterial.needsUpdate = true
+        console.log(`Updated curved lines material ${index} color`)
+      }
+    })
+  }, [intricateWireframeEdgeColor]) // Run when edge color prop from App.jsx changes
 
   // ===============================================
   // LIGHTING UPDATERS - RESPOND TO LIGHTING PROPS

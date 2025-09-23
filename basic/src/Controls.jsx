@@ -61,6 +61,10 @@ function Controls({
   baseColor, onBaseColorChange,                    // Current base color + function to update it
   wireframeIntensity, onWireframeIntensityChange,  // Current wireframe intensity + function to update it
   
+  // INTRICATE WIREFRAME PROPERTIES (current values FROM App.jsx + setter functions FROM App.jsx)
+  intricateWireframeSpiralColor, onIntricateWireframeSpiralColorChange,    // Current spiral color + function to update it
+  intricateWireframeEdgeColor, onIntricateWireframeEdgeColorChange,        // Current edge color + function to update it
+  
   // SCENE PROPERTIES (current values FROM App.jsx + setter functions FROM App.jsx)
   cameraView, onCameraViewChange,                  // Current camera view mode + function to update it
   environment, onEnvironmentChange,                // Current environment setting + function to update it
@@ -143,6 +147,22 @@ const handleScaleChange = (event) => {
     const newIntensity = parseFloat(event.target.value)  // STRING → NUMBER conversion
     console.log('Wireframe intensity changed to:', newIntensity)
     onWireframeIntensityChange(newIntensity) // CALL App.jsx setter function → updates App.jsx state
+  }
+
+  // TRIGGERED BY: User changing the intricate wireframe spiral color picker
+  // DATA FLOW: color picker onChange → handleIntricateWireframeSpiralColorChange → onIntricateWireframeSpiralColorChange(newColor) → App.jsx setState
+  const handleIntricateWireframeSpiralColorChange = (event) => {
+    const newColor = event.target.value // Get color value as hex string (like "#ff0000")
+    console.log('Intricate wireframe spiral color changed to:', newColor)
+    onIntricateWireframeSpiralColorChange(newColor) // CALL App.jsx setter function → updates App.jsx state
+  }
+
+  // TRIGGERED BY: User changing the intricate wireframe edge color picker
+  // DATA FLOW: color picker onChange → handleIntricateWireframeEdgeColorChange → onIntricateWireframeEdgeColorChange(newColor) → App.jsx setState
+  const handleIntricateWireframeEdgeColorChange = (event) => {
+    const newColor = event.target.value // Get color value as hex string (like "#00ff00")
+    console.log('Intricate wireframe edge color changed to:', newColor)
+    onIntricateWireframeEdgeColorChange(newColor) // CALL App.jsx setter function → updates App.jsx state
   }
 
   // TRIGGERED BY: User selecting from camera view dropdown
@@ -360,8 +380,66 @@ const handleScaleChange = (event) => {
           value={wireframeIntensity}
           onChange={handleWireframeIntensityChange}
         />
+
+        {/* Inner wireframe spiral color picker */}
+        <label>
+          Inner Wireframe Spiral Color:
+        </label>
+        <input 
+          type="color" 
+          value={intricateWireframeSpiralColor}
+          onChange={handleIntricateWireframeSpiralColorChange}
+        />
+
+        {/* Inner wireframe edge color picker */}
+        <label>
+          Inner Wireframe Edge Color:
+        </label>
+        <input 
+          type="color" 
+          value={intricateWireframeEdgeColor}
+          onChange={handleIntricateWireframeEdgeColorChange}
+        />
+
+        {/* Object Type Control */}
+        <label>
+          Object Type:
+        </label>
+        <select value={objectType} onChange={handleObjectTypeChange}>
+          <option value="icosahedron">💎 Icosahedron</option>
+          <option value="sphere">⚪ Sphere</option>
+          <option value="box">📦 Box</option>
+          <option value="octahedron">🔷 Octahedron</option>
+          <option value="tetrahedron">🔺 Tetrahedron</option>
+          <option value="torusknot">🌀 Torus Knot</option>
+        </select>
+
+        {/* Animation Style Control */}
+        <label>
+          Animation Style:
+        </label>
+        <select value={animationStyle} onChange={handleAnimationStyleChange}>
+          <option value="rotate">Simple Rotation</option>
+          <option value="float">Floating Dance</option>
+          <option value="spiral">Spiral Motion</option>
+          <option value="chaos">Chaotic Movement</option>
+          <option value="dna">🧬 DNA Helix</option>
+          <option value="liquid">🌊 Liquid Metal</option>
+          <option value="magnetic">🧲 Magnetic Field</option>
+        </select>
       </div>
-{/* Scale Control */}
+
+      {/* NEW: SCENE CONTROLS SECTION */}
+      <div 
+        className={`section-header ${sceneOpen ? 'scene-open' : 'scene-closed'}`}
+        onClick={() => setSceneOpen(!sceneOpen)}
+      >
+        <span>🎬 CAMERA & SCENE</span>
+        <span>{sceneOpen ? '▼' : '▶'}</span>
+      </div>
+      
+      <div className={`section-content ${sceneOpen ? 'scene-open open' : 'closed'}`}>
+        {/* Scale Control */}
         <label>
           Scale: <span className="value-display">{scale.toFixed(1)}</span>
         </label>
@@ -373,16 +451,7 @@ const handleScaleChange = (event) => {
         value={scale}
         onChange={handleScaleChange}
         />
-      {/* NEW: SCENE CONTROLS SECTION */}
-      <div 
-        className={`section-header ${sceneOpen ? 'scene-open' : 'scene-closed'}`}
-        onClick={() => setSceneOpen(!sceneOpen)}
-      >
-        <span>🎬 CAMERA & SCENE</span>
-        <span>{sceneOpen ? '▼' : '▶'}</span>
-      </div>
-      
-      <div className={`section-content ${sceneOpen ? 'scene-open open' : 'closed'}`}>
+
         {/* Camera View Control */}
         <label>
           Camera View:
@@ -417,34 +486,6 @@ const handleScaleChange = (event) => {
           value={objectCount}
           onChange={handleObjectCountChange}
         />
-
-        {/* Object Type Control */}
-        <label>
-          Object Type:
-        </label>
-        <select value={objectType} onChange={handleObjectTypeChange}>
-          <option value="icosahedron">💎 Icosahedron</option>
-          <option value="sphere">⚪ Sphere</option>
-          <option value="box">📦 Box</option>
-          <option value="octahedron">🔷 Octahedron</option>
-          <option value="tetrahedron">🔺 Tetrahedron</option>
-          <option value="torusknot">🌀 Torus Knot</option>
-        </select>
-
-
-        {/* Animation Style Control */}
-        <label>
-          Animation Style:
-        </label>
-        <select value={animationStyle} onChange={handleAnimationStyleChange}>
-          <option value="rotate">Simple Rotation</option>
-          <option value="float">Floating Dance</option>
-          <option value="spiral">Spiral Motion</option>
-          <option value="chaos">Chaotic Movement</option>
-          <option value="dna">🧬 DNA Helix</option>
-          <option value="liquid">🌊 Liquid Metal</option>
-          <option value="magnetic">🧲 Magnetic Field</option>
-        </select>
       </div>
 
       {/* NEW: LIGHTING CONTROLS SECTION */}
