@@ -492,6 +492,60 @@ function ThreeScene({
         wireframeMesh = octahedronWireframeGroup
         console.log('Created thick wireframe for octahedron with', octahedronMainEdges.length, 'cylinder edges')
         
+      } else if (geometry.type === 'TetrahedronGeometry') {
+        // CUSTOM THICK WIREFRAME for TetrahedronGeometry
+        wireframeMaterial = new THREE.MeshPhongMaterial({
+          color: currentBaseColor,
+          specular: currentSpecularColor,
+          shininess: shininess,
+          transparent: true,
+          opacity: wireframeIntensity / 100,
+          flatShading: false,
+          reflectivity: specularIntensity,
+        })
+        
+        // Create thick wireframe using cylinders for tetrahedron edges
+        const tetrahedronWireframeGroup = new THREE.Group()
+        
+        // Get the 4 vertices from the tetrahedron geometry
+        const vertices = geometry.attributes.position.array
+        const tetraVertices = []
+        for (let v = 0; v < 4; v++) {
+          tetraVertices.push([
+            vertices[v * 3],
+            vertices[v * 3 + 1], 
+            vertices[v * 3 + 2]
+          ])
+        }
+        
+        // Define the 6 edges of the tetrahedron
+        const tetrahedronMainEdges = [
+          [0, 1], [0, 2], [0, 3],  // From vertex 0 to others
+          [1, 2], [1, 3],          // From vertex 1 to remaining 
+          [2, 3]                   // From vertex 2 to 3
+        ]
+        
+        // Create cylinder for each main tetrahedron edge
+        tetrahedronMainEdges.forEach(([i, j]) => {
+          const start = new THREE.Vector3(...tetraVertices[i])
+          const end = new THREE.Vector3(...tetraVertices[j])
+          const distance = start.distanceTo(end)
+          
+          // Create thick cylinder for main tetrahedron edge
+          const cylinderGeom = new THREE.CylinderGeometry(0.006, 0.006, distance, 8)
+          const cylinderMesh = new THREE.Mesh(cylinderGeom, wireframeMaterial)
+          
+          // Position cylinder between start and end points
+          cylinderMesh.position.copy(start.clone().add(end).multiplyScalar(0.5))
+          cylinderMesh.lookAt(end)
+          cylinderMesh.rotateX(Math.PI / 2)
+          
+          tetrahedronWireframeGroup.add(cylinderMesh)
+        })
+        
+        wireframeMesh = tetrahedronWireframeGroup
+        console.log('Created thick wireframe for tetrahedron with', tetrahedronMainEdges.length, 'cylinder edges')
+        
       } else {
         // Standard thin wireframe for other geometries
         wireframeMaterial = new THREE.MeshPhongMaterial({
@@ -510,47 +564,107 @@ function ThreeScene({
       
       // CREATE INTRICATE WIREFRAME DETAILS
       console.log(`Creating intricate wireframe for object ${i}, geometry type:`, geometry.type)
+      console.log('Available geometry types check:', geometry.type === 'TetrahedronGeometry')
+      console.log('Geometry constructor:', geometry.constructor.name)
+      console.log('All geometry properties:', Object.getOwnPropertyNames(geometry))
       
       // Create simple center-to-vertex wireframes for tetrahedron only
       let centerLines, centerLinesMaterial, curvedLines, curvedLinesMaterial
       
-      if (geometry.type === 'TetrahedronGeometry') {
-        // TETRAHEDRON: Simple center-to-vertex lines
-        console.log('Creating simple tetrahedron center-to-vertex wireframe')
+      if (geometry.type === 'TetrahedronGeometry' || geometry.constructor.name === 'TetrahedronGeometry') {
+        // TETRAHEDRON: Create hyper-tetrahedron like hypercube but with LineSegments
+        console.log('*** ENTERING TETRAHEDRON SECTION ***')
+        console.log('Creating hyper-tetrahedron with inner tetrahedron and vertex connections')
         
-        const centerLinesGeometry = new THREE.BufferGeometry()
-        const centerLinesPositions = []
-        
-        // A tetrahedron has 4 vertices, get their positions directly
+        // Get the 4 vertices from the tetrahedron geometry
         const vertices = geometry.attributes.position.array
-        
-        // Create lines from center (0,0,0) to each of the 4 vertices
+        const outerVertices = []
         for (let v = 0; v < 4; v++) {
-          const vx = vertices[v * 3]
-          const vy = vertices[v * 3 + 1]
-          const vz = vertices[v * 3 + 2]
-          
-          // Line from center to vertex
-          centerLinesPositions.push(
-            0, 0, 0,    // Center point
-            vx, vy, vz  // Vertex point
-          )
+          outerVertices.push([
+            vertices[v * 3],     // x
+            vertices[v * 3 + 1], // y  
+            vertices[v * 3 + 2]  // z
+          ])
         }
         
-        centerLinesGeometry.setAttribute('position', new THREE.Float32BufferAttribute(centerLinesPositions, 3))
+        console.log('Outer tetrahedron vertices:', outerVertices)
         
-        centerLinesMaterial = new THREE.LineBasicMaterial({
-          color: new THREE.Color(intricateWireframeSpiralColor),
-          transparent: true,
-          opacity: 0.8,
+        // Create inner tetrahedron vertices (scaled down by 0.5 from center)
+        const innerVertices = outerVertices.map(vertex => [
+          vertex[0] * 0.5,
+          vertex[1] * 0.5,
+          vertex[2] * 0.5
+        ])
+        
+        console.log('Inner tetrahedron vertices:', innerVertices)
+        
+        // 1. Create inner tetrahedron wireframe using thick cylinders
+        centerLinesMaterial = new THREE.MeshBasicMaterial({
+          color: new THREE.Color(intricateWireframeSpiralColor), // USE SPIRAL COLOR CONTROL!
+          transparent: false,
+          opacity: 1.0,
         })
         
-        centerLines = new THREE.LineSegments(centerLinesGeometry, centerLinesMaterial)
-        console.log(`Created tetrahedron center-to-vertex lines: 4 lines`)
+        const innerTetrahedronGroup = new THREE.Group()
         
-        // No curved lines for tetrahedron - keep it simple
-        curvedLines = new THREE.Object3D()
-        curvedLinesMaterial = null
+        // Tetrahedron edges: connect every vertex to every other vertex (6 edges total)
+        const edges = [
+          [0, 1], [0, 2], [0, 3],  // From vertex 0 to others
+          [1, 2], [1, 3],          // From vertex 1 to remaining 
+          [2, 3]                   // From vertex 2 to 3
+        ]
+        
+        // Create cylinder for each inner tetrahedron edge
+        edges.forEach(([i, j]) => {
+          const start = new THREE.Vector3(...innerVertices[i])
+          const end = new THREE.Vector3(...innerVertices[j])
+          const distance = start.distanceTo(end)
+          
+          // Create thick cylinder for inner tetrahedron edge - ADJUST 0.004 TO CHANGE THICKNESS
+          const cylinderGeom = new THREE.CylinderGeometry(0.004, 0.004, distance, 8)
+          const cylinderMesh = new THREE.Mesh(cylinderGeom, centerLinesMaterial)
+          
+          // Position cylinder between start and end points
+          cylinderMesh.position.copy(start.clone().add(end).multiplyScalar(0.5))
+          cylinderMesh.lookAt(end)
+          cylinderMesh.rotateX(Math.PI / 2)
+          
+          innerTetrahedronGroup.add(cylinderMesh)
+        })
+        
+        centerLines = innerTetrahedronGroup
+        console.log(`Created inner tetrahedron: 6 thick cylinder edges`)
+        
+        // 2. Create hyper-tetrahedron connections (vertex to vertex) using thick cylinders
+        curvedLinesMaterial = new THREE.MeshBasicMaterial({
+          color: new THREE.Color(intricateWireframeEdgeColor), // USE EDGE COLOR CONTROL!
+          transparent: false,
+          opacity: 1.0,
+        })
+        
+        // Create thick connection lines using cylinder geometry
+        const tetrahedronConnectionGroup = new THREE.Group()
+        
+        // Connect each outer vertex to corresponding inner vertex (4 connections going INWARD)
+        for (let v = 0; v < 4; v++) {
+          const start = new THREE.Vector3(...outerVertices[v])
+          const end = new THREE.Vector3(...innerVertices[v])
+          const distance = start.distanceTo(end)
+          
+          // Create cylinder for each connection line - ADJUST 0.003 TO CHANGE THICKNESS
+          const cylinderGeom = new THREE.CylinderGeometry(0.003, 0.003, distance, 6)
+          const cylinderMesh = new THREE.Mesh(cylinderGeom, curvedLinesMaterial)
+          
+          // Position cylinder between start and end points
+          cylinderMesh.position.copy(start.clone().add(end).multiplyScalar(0.5))
+          cylinderMesh.lookAt(end)
+          cylinderMesh.rotateX(Math.PI / 2)
+          
+          tetrahedronConnectionGroup.add(cylinderMesh)
+        }
+        
+        curvedLines = tetrahedronConnectionGroup
+        console.log(`Created hyper-tetrahedron connections: 4 thick vertex-to-vertex connections`)
         
       } else if (geometry.type === 'BoxGeometry') {
         // CUBE/BOX: Create hypercube-style inner cube with corner-to-corner connections
@@ -904,8 +1018,10 @@ function ThreeScene({
       console.log(`Added object ${i} to scene:`, {
         solidMesh: solidMesh.type,
         wireframeMesh: wireframeMesh.type,
-        centerLines: centerLines.type,
-        curvedLines: curvedLines.type,
+        centerLines: centerLines ? centerLines.type : 'NULL',
+        curvedLines: curvedLines ? curvedLines.type : 'NULL',
+        centerLinesChildren: centerLines ? centerLines.children?.length : 'N/A',
+        curvedLinesChildren: curvedLines ? curvedLines.children?.length : 'N/A',
         position: solidMesh.position
       })
 
@@ -1289,29 +1405,68 @@ function ThreeScene({
                 // UPDATE INTRICATE WIREFRAME TO FOLLOW MORPHED SURFACE
                 if (currentMesh === solidMesh && centerLines && curvedLines) {
                   if (geometry.type === 'TetrahedronGeometry') {
-                    // TETRAHEDRON: Update simple center-to-vertex lines
+                    // TETRAHEDRON: Update hyper-tetrahedron wireframes during morphing
+                    
+                    // Update inner tetrahedron edges (red lines)
                     const centerLinesGeom = centerLines.geometry
                     if (centerLinesGeom && centerLinesGeom.attributes.position) {
                       const centerLinesPos = centerLinesGeom.attributes.position.array
                       
-                      // Update each center-to-vertex line (4 lines total)
+                      // Get current morphed vertices
+                      const vertices = []
                       for (let v = 0; v < 4; v++) {
-                        const vx = positions[v * 3]
-                        const vy = positions[v * 3 + 1]
-                        const vz = positions[v * 3 + 2]
-                        
-                        // Update line from center (0,0,0) to deformed vertex
-                        centerLinesPos[v * 6] = 0      // Center X
-                        centerLinesPos[v * 6 + 1] = 0  // Center Y
-                        centerLinesPos[v * 6 + 2] = 0  // Center Z
-                        centerLinesPos[v * 6 + 3] = vx // Vertex X
-                        centerLinesPos[v * 6 + 4] = vy // Vertex Y
-                        centerLinesPos[v * 6 + 5] = vz // Vertex Z
+                        vertices.push([
+                          positions[v * 3],
+                          positions[v * 3 + 1], 
+                          positions[v * 3 + 2]
+                        ])
                       }
+                      
+                      // Update inner tetrahedron vertices (scaled 0.5x)
+                      const innerVertices = vertices.map(vertex => [
+                        vertex[0] * 0.5,
+                        vertex[1] * 0.5,
+                        vertex[2] * 0.5
+                      ])
+                      
+                      // Update the 6 inner tetrahedron edges
+                      const edges = [[0,1],[0,2],[0,3],[1,2],[1,3],[2,3]]
+                      edges.forEach(([i, j], edgeIndex) => {
+                        const baseIndex = edgeIndex * 6
+                        centerLinesPos[baseIndex] = innerVertices[i][0]
+                        centerLinesPos[baseIndex + 1] = innerVertices[i][1]
+                        centerLinesPos[baseIndex + 2] = innerVertices[i][2]
+                        centerLinesPos[baseIndex + 3] = innerVertices[j][0]
+                        centerLinesPos[baseIndex + 4] = innerVertices[j][1]
+                        centerLinesPos[baseIndex + 5] = innerVertices[j][2]
+                      })
                       
                       centerLinesGeom.attributes.position.needsUpdate = true
                     }
-                    // No curved lines for tetrahedron - skip curved line updates
+                    
+                    // Update vertex connections (green lines)
+                    const curvedLinesGeom = curvedLines.geometry
+                    if (curvedLinesGeom && curvedLinesGeom.attributes.position) {
+                      const curvedLinesPos = curvedLinesGeom.attributes.position.array
+                      
+                      // Update the 4 vertex-to-vertex connections
+                      for (let v = 0; v < 4; v++) {
+                        const baseIndex = v * 6
+                        const innerScale = 0.5
+                        
+                        // Inner vertex
+                        curvedLinesPos[baseIndex] = positions[v * 3] * innerScale
+                        curvedLinesPos[baseIndex + 1] = positions[v * 3 + 1] * innerScale
+                        curvedLinesPos[baseIndex + 2] = positions[v * 3 + 2] * innerScale
+                        
+                        // Outer vertex
+                        curvedLinesPos[baseIndex + 3] = positions[v * 3]
+                        curvedLinesPos[baseIndex + 4] = positions[v * 3 + 1]
+                        curvedLinesPos[baseIndex + 5] = positions[v * 3 + 2]
+                      }
+                      
+                      curvedLinesGeom.attributes.position.needsUpdate = true
+                    }
                   } else {
                     // OTHER GEOMETRIES: Use existing update logic
                     // Update center lines to follow morphed vertices
