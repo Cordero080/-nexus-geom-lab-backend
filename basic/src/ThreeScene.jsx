@@ -546,6 +546,54 @@ function ThreeScene({
         wireframeMesh = tetrahedronWireframeGroup
         console.log('Created thick wireframe for tetrahedron with', tetrahedronMainEdges.length, 'cylinder edges')
         
+      } else if (geometry.type === 'IcosahedronGeometry') {
+        // CUSTOM THICK WIREFRAME for IcosahedronGeometry
+        wireframeMaterial = new THREE.MeshPhongMaterial({
+          color: currentBaseColor,
+          specular: currentSpecularColor,
+          shininess: shininess,
+          transparent: true,
+          opacity: wireframeIntensity / 100,
+          flatShading: false,
+          reflectivity: specularIntensity,
+        })
+        
+        // Create thick wireframe using cylinders for icosahedron edges
+        const icosahedronWireframeGroup = new THREE.Group()
+        
+        // Get icosahedron edges from the geometry
+        const edgesGeometry = new THREE.EdgesGeometry(geometry)
+        const edgeVertices = edgesGeometry.attributes.position.array
+        
+        // Create cylinder for each icosahedron edge
+        for (let i = 0; i < edgeVertices.length; i += 6) {
+          const start = new THREE.Vector3(
+            edgeVertices[i], 
+            edgeVertices[i + 1], 
+            edgeVertices[i + 2]
+          )
+          const end = new THREE.Vector3(
+            edgeVertices[i + 3], 
+            edgeVertices[i + 4], 
+            edgeVertices[i + 5]
+          )
+          const distance = start.distanceTo(end)
+          
+          // Create thick cylinder for main icosahedron edge
+          const cylinderGeom = new THREE.CylinderGeometry(0.006, 0.006, distance, 8)
+          const cylinderMesh = new THREE.Mesh(cylinderGeom, wireframeMaterial)
+          
+          // Position cylinder between start and end points
+          cylinderMesh.position.copy(start.clone().add(end).multiplyScalar(0.5))
+          cylinderMesh.lookAt(end)
+          cylinderMesh.rotateX(Math.PI / 2)
+          
+          icosahedronWireframeGroup.add(cylinderMesh)
+        }
+        
+        wireframeMesh = icosahedronWireframeGroup
+        console.log('Created thick wireframe for icosahedron with', edgeVertices.length / 6, 'cylinder edges')
+        
       } else {
         // Standard thin wireframe for other geometries
         wireframeMaterial = new THREE.MeshPhongMaterial({
@@ -665,6 +713,110 @@ function ThreeScene({
         
         curvedLines = tetrahedronConnectionGroup
         console.log(`Created hyper-tetrahedron connections: 4 thick vertex-to-vertex connections`)
+        
+      } else if (geometry.type === 'IcosahedronGeometry') {
+        // ICOSAHEDRON: Create hyper-icosahedron with inner icosahedron + vertex connections
+        console.log('Creating hyper-icosahedron wireframe for IcosahedronGeometry')
+        
+        // Extract vertices from the icosahedron geometry (12 vertices)
+        const positionAttribute = geometry.attributes.position
+        const vertices = []
+        for (let i = 0; i < positionAttribute.count; i++) {
+          const x = positionAttribute.getX(i)
+          const y = positionAttribute.getY(i)
+          const z = positionAttribute.getZ(i)
+          
+          // Check if this vertex already exists (avoid duplicates)
+          const existingVertex = vertices.find(v => 
+            Math.abs(v[0] - x) < 0.001 && 
+            Math.abs(v[1] - y) < 0.001 && 
+            Math.abs(v[2] - z) < 0.001
+          )
+          
+          if (!existingVertex) {
+            vertices.push([x, y, z])
+          }
+        }
+        
+        console.log(`Extracted ${vertices.length} unique icosahedron vertices`)
+        
+        // 1. Create inner icosahedron using thick cylinders
+        centerLinesMaterial = new THREE.MeshBasicMaterial({
+          color: new THREE.Color(intricateWireframeSpiralColor), // USE SPIRAL COLOR CONTROL!
+          transparent: false,
+          opacity: 1.0,
+        })
+        
+        // Create inner icosahedron (scaled down to 50% size)
+        const innerScale = 0.5
+        const innerVertices = vertices.map(vertex => [
+          vertex[0] * innerScale,
+          vertex[1] * innerScale,
+          vertex[2] * innerScale
+        ])
+        
+        // Extract edges from the original outer icosahedron geometry and scale them down
+        const outerEdgesGeometry = new THREE.EdgesGeometry(geometry)
+        const outerEdges = outerEdgesGeometry.attributes.position.array
+        
+        const innerIcosahedronGroup = new THREE.Group()
+        
+        // Create thick cylinders for each edge by scaling the outer edges
+        for (let i = 0; i < outerEdges.length; i += 6) {
+          // Get outer edge endpoints
+          const outerStart = new THREE.Vector3(outerEdges[i], outerEdges[i + 1], outerEdges[i + 2])
+          const outerEnd = new THREE.Vector3(outerEdges[i + 3], outerEdges[i + 4], outerEdges[i + 5])
+          
+          // Scale down to create inner edge endpoints
+          const innerStart = outerStart.clone().multiplyScalar(innerScale)
+          const innerEnd = outerEnd.clone().multiplyScalar(innerScale)
+          const distance = innerStart.distanceTo(innerEnd)
+          
+          // Create thick cylinder for inner icosahedron edge - ADJUST 0.004 TO CHANGE THICKNESS
+          const cylinderGeom = new THREE.CylinderGeometry(0.004, 0.004, distance, 8)
+          const cylinderMesh = new THREE.Mesh(cylinderGeom, centerLinesMaterial)
+          
+          // Position cylinder between start and end points
+          cylinderMesh.position.copy(innerStart.clone().add(innerEnd).multiplyScalar(0.5))
+          cylinderMesh.lookAt(innerEnd)
+          cylinderMesh.rotateX(Math.PI / 2)
+          
+          innerIcosahedronGroup.add(cylinderMesh)
+        }
+        
+        centerLines = innerIcosahedronGroup
+        console.log(`Created inner icosahedron: 30 thick cylinder edges`)
+        
+        // 2. Create hyper-icosahedron connections (vertex to vertex) using thick cylinders
+        curvedLinesMaterial = new THREE.MeshBasicMaterial({
+          color: new THREE.Color(intricateWireframeEdgeColor), // USE EDGE COLOR CONTROL!
+          transparent: false,
+          opacity: 1.0,
+        })
+        
+        // Create thick connection lines using cylinder geometry
+        const icosahedronConnectionGroup = new THREE.Group()
+        
+        // Connect each outer vertex to corresponding inner vertex (12 connections going INWARD)
+        for (let v = 0; v < vertices.length; v++) {
+          const start = new THREE.Vector3(...vertices[v])
+          const end = new THREE.Vector3(...innerVertices[v])
+          const distance = start.distanceTo(end)
+          
+          // Create cylinder for each connection line - ADJUST 0.003 TO CHANGE THICKNESS
+          const cylinderGeom = new THREE.CylinderGeometry(0.003, 0.003, distance, 6)
+          const cylinderMesh = new THREE.Mesh(cylinderGeom, curvedLinesMaterial)
+          
+          // Position cylinder between start and end points
+          cylinderMesh.position.copy(start.clone().add(end).multiplyScalar(0.5))
+          cylinderMesh.lookAt(end)
+          cylinderMesh.rotateX(Math.PI / 2)
+          
+          icosahedronConnectionGroup.add(cylinderMesh)
+        }
+        
+        curvedLines = icosahedronConnectionGroup
+        console.log(`Created hyper-icosahedron connections: ${vertices.length} thick vertex-to-vertex connections`)
         
       } else if (geometry.type === 'BoxGeometry') {
         // CUBE/BOX: Create hypercube-style inner cube with corner-to-corner connections
@@ -1466,6 +1618,81 @@ function ThreeScene({
                       }
                       
                       curvedLinesGeom.attributes.position.needsUpdate = true
+                    }
+                  } else if (geometry.type === 'IcosahedronGeometry') {
+                    // ICOSAHEDRON: Update hyper-icosahedron wireframes during morphing
+                    
+                    // Extract current morphed vertices (12 unique vertices for icosahedron)
+                    const vertices = []
+                    for (let i = 0; i < positions.length; i += 3) {
+                      const x = positions[i]
+                      const y = positions[i + 1]
+                      const z = positions[i + 2]
+                      
+                      // Check if this vertex already exists (avoid duplicates)
+                      const existingVertex = vertices.find(v => 
+                        Math.abs(v[0] - x) < 0.001 && 
+                        Math.abs(v[1] - y) < 0.001 && 
+                        Math.abs(v[2] - z) < 0.001
+                      )
+                      
+                      if (!existingVertex) {
+                        vertices.push([x, y, z])
+                      }
+                    }
+                    
+                    // Update inner icosahedron (group of cylinders - need to update each cylinder position)
+                    if (centerLines && centerLines.children) {
+                      // Create inner vertices (scaled 50%)
+                      const innerScale = 0.5
+                      const innerVertices = vertices.map(vertex => [
+                        vertex[0] * innerScale,
+                        vertex[1] * innerScale,
+                        vertex[2] * innerScale
+                      ])
+                      
+                      // Extract edges from current morphed geometry and scale them down
+                      const currentEdgesGeometry = new THREE.EdgesGeometry(geometry)
+                      const currentEdges = currentEdgesGeometry.attributes.position.array
+                      
+                      let cylinderIndex = 0
+                      for (let i = 0; i < currentEdges.length && cylinderIndex < centerLines.children.length; i += 6) {
+                        // Get current morphed edge endpoints
+                        const outerStart = new THREE.Vector3(currentEdges[i], currentEdges[i + 1], currentEdges[i + 2])
+                        const outerEnd = new THREE.Vector3(currentEdges[i + 3], currentEdges[i + 4], currentEdges[i + 5])
+                        
+                        // Scale down to create inner edge endpoints  
+                        const innerStart = outerStart.clone().multiplyScalar(innerScale)
+                        const innerEnd = outerEnd.clone().multiplyScalar(innerScale)
+                        
+                        // Update the cylinder position and orientation
+                        const cylinder = centerLines.children[cylinderIndex]
+                        cylinder.position.copy(innerStart.clone().add(innerEnd).multiplyScalar(0.5))
+                        cylinder.lookAt(innerEnd)
+                        cylinder.rotateX(Math.PI / 2)
+                        
+                        cylinderIndex++
+                      }
+                    }
+                    
+                    // Update vertex connections (group of cylinders)
+                    if (curvedLines && curvedLines.children) {
+                      const innerScale = 0.5
+                      
+                      // Update each connection cylinder
+                      for (let v = 0; v < Math.min(vertices.length, curvedLines.children.length); v++) {
+                        const outerVertex = new THREE.Vector3(...vertices[v])
+                        const innerVertex = new THREE.Vector3(
+                          vertices[v][0] * innerScale,
+                          vertices[v][1] * innerScale,
+                          vertices[v][2] * innerScale
+                        )
+                        
+                        const cylinder = curvedLines.children[v]
+                        cylinder.position.copy(outerVertex.clone().add(innerVertex).multiplyScalar(0.5))
+                        cylinder.lookAt(innerVertex)
+                        cylinder.rotateX(Math.PI / 2)
+                      }
                     }
                   } else {
                     // OTHER GEOMETRIES: Use existing update logic
