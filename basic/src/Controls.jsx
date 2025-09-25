@@ -291,17 +291,8 @@ const handleScaleChange = (event) => {
        * Shows current values FROM App.jsx - these update automatically when state changes
        * These are NOT interactive - they just display the current values
        */}
-      <p>Current shininess: {shininess}</p>                                    {/* Displays current shininess value from App.jsx */}
-      <p>Current specular: {specularColor}</p>                                {/* Displays current specular color from App.jsx */}
-      <p>Current specular intensity: {specularIntensity}</p>                  {/* Displays current specular intensity from App.jsx */}
-      <p>Current base: {baseColor}</p>                                        {/* Displays current base color from App.jsx */}
-      <p>Current wireframe intensity: {wireframeIntensity}%</p>               {/* Displays current wireframe intensity from App.jsx */}
-      <p>Camera: {cameraView} | Environment: {environment}</p>                {/* Displays current camera view and environment from App.jsx */}
-      <p>Objects: {objectCount} | Animation: {animationStyle}</p>             {/* Displays current object count and animation style from App.jsx */}
-      <p>Object Type: {objectType}</p>                                        {/* Displays current object type from App.jsx */}
-      <p>Ambient: {ambientLightColor} @ {ambientLightIntensity}</p>           {/* Displays current ambient light values from App.jsx */}
-      <p>Directional: {directionalLightColor} @ {directionalLightIntensity}</p> {/* Displays current directional light values from App.jsx */}
-      <p>Dir Position: ({directionalLightX}, {directionalLightY}, {directionalLightZ})</p> {/* Displays current directional light position from App.jsx */}
+      
+   
       
       <hr />
 
@@ -369,6 +360,17 @@ const handleScaleChange = (event) => {
           onChange={handleShininessChange}
         />
 
+        {/* Wireframe visibility toggle */}
+        <label className="futuristic-checkbox-label">
+          <input
+            type="checkbox"
+            checked={wireframeIntensity > 0}
+            onChange={e => onWireframeIntensityChange(e.target.checked ? 100 : 0)}
+            className="futuristic-checkbox"
+          />
+          <span className="futuristic-custom-checkbox"></span>
+          <span className="futuristic-checkbox-text">Wireframe</span>
+        </label>
         {/* Wireframe intensity slider */}
         <label>
           Wireframe Intensity: <span className="value-display">{wireframeIntensity}%</span>
@@ -579,7 +581,6 @@ const handleScaleChange = (event) => {
           onChange={handleDirectionalLightZChange}
         />
       </div>
-
     </div>
   )
 }
