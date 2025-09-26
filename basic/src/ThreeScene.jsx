@@ -532,7 +532,7 @@ function ThreeScene({
           const distance = start.distanceTo(end)
           
           // Create thick cylinder for main tetrahedron edge
-          const cylinderGeom = new THREE.CylinderGeometry(0.006, 0.006, distance, 8)
+          const cylinderGeom = new THREE.CylinderGeometry(0.012, 0.012, distance, 8)
           const cylinderMesh = new THREE.Mesh(cylinderGeom, wireframeMaterial)
           
           // Position cylinder between start and end points
@@ -861,10 +861,31 @@ function ThreeScene({
         ]
         
         // Create cylinder for each inner octahedron edge
-       
-        
-        
-        
+        centerLinesMaterial = new THREE.MeshBasicMaterial({
+          color: new THREE.Color(intricateWireframeSpiralColor),
+          transparent: false,
+          opacity: 1.0,
+        });
+        octahedronEdges.forEach(([i, j]) => {
+          const start = new THREE.Vector3(...innerVertices[i]);
+          const end = new THREE.Vector3(...innerVertices[j]);
+          const distance = start.distanceTo(end);
+          // Create thick cylinder for inner octahedron edge
+          const cylinderGeom = new THREE.CylinderGeometry(0.004, 0.004, distance, 8);
+          const cylinderMesh = new THREE.Mesh(cylinderGeom, centerLinesMaterial);
+          // Position cylinder between start and end points
+          cylinderMesh.position.copy(start.clone().add(end).multiplyScalar(0.5));
+          cylinderMesh.lookAt(end);
+          cylinderMesh.rotateX(Math.PI / 2);
+          innerOctahedronGroup.add(cylinderMesh);
+        });
+        centerLines = innerOctahedronGroup;
+        console.log(`Created hyper-octahedron inner wireframe with ${octahedronEdges.length} cylinder edges`);
+        curvedLinesMaterial = new THREE.LineBasicMaterial({
+          color: new THREE.Color(intricateWireframeEdgeColor),
+          transparent: true,
+          opacity: 0.7,
+        });
         // Create thick connection lines using cylinder geometry
         const octahedronConnectionGroup = new THREE.Group()
         
