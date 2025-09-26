@@ -420,8 +420,8 @@ function ThreeScene({
           const end = new THREE.Vector3(...cubeCorners[j])
           const distance = start.distanceTo(end)
           
-          // Create thick cylinder for cube edge - ADJUST 0.012 TO CHANGE MAIN WIREFRAME THICKNESS
-          const cylinderGeom = new THREE.CylinderGeometry(0.012, 0.012, distance, 8)
+            // Create thick cylinder for cube edge - ADJUST 0.018 TO CHANGE MAIN WIREFRAME THICKNESS
+            const cylinderGeom = new THREE.CylinderGeometry(0.018, 0.018, distance, 8)
           const cylinderMesh = new THREE.Mesh(cylinderGeom, wireframeMaterial)
           
           // Position cylinder between start and end points
@@ -477,8 +477,8 @@ function ThreeScene({
           const end = new THREE.Vector3(...octaVertices[j])
           const distance = start.distanceTo(end)
           
-          // Create thick cylinder for octahedron edge - ADJUST 0.012 TO CHANGE MAIN WIREFRAME THICKNESS
-          const cylinderGeom = new THREE.CylinderGeometry(0.012, 0.012, distance, 8)
+            // Create thick cylinder for octahedron edge - ADJUST 0.018 TO CHANGE MAIN WIREFRAME THICKNESS
+            const cylinderGeom = new THREE.CylinderGeometry(0.012, 0.012, distance, 8)
           const cylinderMesh = new THREE.Mesh(cylinderGeom, wireframeMaterial)
           
           // Position cylinder between start and end points
@@ -531,8 +531,8 @@ function ThreeScene({
           const end = new THREE.Vector3(...tetraVertices[j])
           const distance = start.distanceTo(end)
           
-          // Create thick cylinder for main tetrahedron edge
-          const cylinderGeom = new THREE.CylinderGeometry(0.012, 0.012, distance, 8)
+            // Create thick cylinder for main tetrahedron edge
+            const cylinderGeom = new THREE.CylinderGeometry(0.011, 0.011, distance, 8)
           const cylinderMesh = new THREE.Mesh(cylinderGeom, wireframeMaterial)
           
           // Position cylinder between start and end points
