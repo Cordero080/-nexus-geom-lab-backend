@@ -201,10 +201,10 @@ function ThreeScene({
           canvas.width = 512
           canvas.height = 512
           const gradient = context.createLinearGradient(0, 0, 0, canvas.height)
-          gradient.addColorStop(0, '#1a0033')
-          gradient.addColorStop(0.3, '#320059')
-          gradient.addColorStop(0.7, '#4a0e6b')
-          gradient.addColorStop(1, '#0f0520')
+          gradient.addColorStop(0, '#090033ff')
+          gradient.addColorStop(0.3, '#45146bff')
+          gradient.addColorStop(0.7, '#980ae4cd')
+          gradient.addColorStop(1, '#033867ff')
           context.fillStyle = gradient
           context.fillRect(0, 0, canvas.width, canvas.height)
           scene.background = new THREE.CanvasTexture(canvas) // Convert canvas to Three.js texture
@@ -221,7 +221,7 @@ function ThreeScene({
           const baseGrad = spaceCtx.createLinearGradient(0, 0, 0, spaceCanvas.height)
           baseGrad.addColorStop(0, '#0a0f1c')    // Dark blue top
           baseGrad.addColorStop(0.3, '#1a1a2e')  // Deeper blue
-          baseGrad.addColorStop(0.7, '#16213e')  // Navy blue
+          baseGrad.addColorStop(0.7, '#16213ed9')  // Navy blue
           baseGrad.addColorStop(1, '#0f0f23')    // Almost black bottom
           spaceCtx.fillStyle = baseGrad
           spaceCtx.fillRect(0, 0, spaceCanvas.width, spaceCanvas.height)
@@ -240,25 +240,26 @@ function ThreeScene({
           // Additional aurora layers for complex effect...
           const aurora2 = spaceCtx.createLinearGradient(0, 100, 0, 700)
           aurora2.addColorStop(0, 'transparent')
-          aurora2.addColorStop(0.15, '#8000ff60') // Bright purple
+          aurora2.addColorStop(0.15, '#520e958d') // Bright purple
           aurora2.addColorStop(0.35, '#ff00ff80') // Bright magenta
-          aurora2.addColorStop(0.55, '#ff006070') // Bright pink
-          aurora2.addColorStop(0.75, '#80004050') // Dark purple
+          aurora2.addColorStop(0.55, '#ff0062ae') // Bright pink
+          aurora2.addColorStop(0.75, '#003380d9') // Dark purple
           aurora2.addColorStop(1, 'transparent')
           spaceCtx.fillStyle = aurora2
           spaceCtx.fillRect(0, 100, spaceCanvas.width, 600)
           
           const aurora3 = spaceCtx.createLinearGradient(0, 150, 0, 450)
           aurora3.addColorStop(0, 'transparent')
-          aurora3.addColorStop(0.25, '#80ff0060') // Yellow-green
-          aurora3.addColorStop(0.45, '#00ff4080') // Bright green
+          aurora3.addColorStop(0.25, '#70be229c') // Yellow-green
+          aurora3.addColorStop(0.45, '#14dc4680') // Bright green
           aurora3.addColorStop(0.65, '#00804060') // Dark green
+           
           aurora3.addColorStop(1, 'transparent')
           spaceCtx.fillStyle = aurora3
           spaceCtx.fillRect(0, 150, spaceCanvas.width, 300)
           
           // Add stars scattered across the sky
-          for(let i = 0; i < 150; i++) {
+          for(let i = 0; i < 250; i++) {
             const x = Math.random() * spaceCanvas.width
             const y = Math.random() * spaceCanvas.height
             const brightness = Math.random() * 0.6 + 0.2
@@ -279,8 +280,8 @@ function ThreeScene({
           sunsetCanvas.height = 512
           const sunsetGrad = sunsetCtx.createLinearGradient(0, 0, 0, sunsetCanvas.height)
           sunsetGrad.addColorStop(0, '#362aa3ff')
-          sunsetGrad.addColorStop(0.3, '#f7931e')
-          sunsetGrad.addColorStop(0.7, '#d1a907ff')
+          sunsetGrad.addColorStop(0.3, '#92530bff')
+          sunsetGrad.addColorStop(0.7, '#8d730cff')
           sunsetGrad.addColorStop(1, '#62445eff')
           sunsetCtx.fillStyle = sunsetGrad
           sunsetCtx.fillRect(0, 0, sunsetCanvas.width, sunsetCanvas.height)
@@ -295,8 +296,8 @@ function ThreeScene({
           matrixCanvas.height = 512
           const matrixGrad = matrixCtx.createLinearGradient(0, 0, 0, matrixCanvas.height)
           matrixGrad.addColorStop(1, '#3d1642ff')
-          matrixGrad.addColorStop(.3, '#572a95ff')
-          matrixGrad.addColorStop(0.5, '#083cd6ff')
+          matrixGrad.addColorStop(.3, '#3b1e65ff')
+          matrixGrad.addColorStop(0.5, '#0630affa')
           matrixGrad.addColorStop(1, '#120101ff')
           matrixCtx.fillStyle = matrixGrad
           matrixCtx.fillRect(0, 0, matrixCanvas.width, matrixCanvas.height)
@@ -381,8 +382,37 @@ function ThreeScene({
       
       let wireframeMesh
       let wireframeMaterial // Make sure this is available for all geometry types
-      
-      if (geometry.type === 'BoxGeometry') {
+
+      if (geometry.type === 'SphereGeometry') {
+        // CUSTOM THICK WIREFRAME for SphereGeometry
+        wireframeMaterial = new THREE.MeshPhongMaterial({
+          color: currentBaseColor,
+          specular: currentSpecularColor,
+          shininess: shininess,
+          transparent: true,
+          opacity: wireframeIntensity / 100,
+          flatShading: false,
+          reflectivity: specularIntensity,
+        })
+        // Create thick wireframe using cylinders for sphere edges
+        const edgesGeometry = new THREE.EdgesGeometry(geometry)
+        const edgeVertices = edgesGeometry.attributes.position.array
+        const sphereWireframeGroup = new THREE.Group()
+        for (let j = 0; j < edgeVertices.length; j += 6) {
+          const start = new THREE.Vector3(edgeVertices[j], edgeVertices[j+1], edgeVertices[j+2])
+          const end = new THREE.Vector3(edgeVertices[j+3], edgeVertices[j+4], edgeVertices[j+5])
+          const distance = start.distanceTo(end)
+          // Create thick cylinder for sphere edge - ADJUST 0.012 TO CHANGE THICKNESS
+          const cylinderGeom = new THREE.CylinderGeometry(0.005, 0.005, distance, 8)
+          const cylinderMesh = new THREE.Mesh(cylinderGeom, wireframeMaterial)
+          cylinderMesh.position.copy(start.clone().add(end).multiplyScalar(0.5))
+          cylinderMesh.lookAt(end)
+          cylinderMesh.rotateX(Math.PI / 2)
+          sphereWireframeGroup.add(cylinderMesh)
+        }
+        wireframeMesh = sphereWireframeGroup
+        console.log('Created thick wireframe for sphere with', edgeVertices.length / 6, 'cylinder edges')
+      } else if (geometry.type === 'BoxGeometry') {
         // CUSTOM THICK WIREFRAME for BoxGeometry
         wireframeMaterial = new THREE.MeshPhongMaterial({
           color: currentBaseColor,
@@ -401,7 +431,8 @@ function ThreeScene({
         const size = 0.75 // Half of 1.5
         const cubeCorners = [
           [-size, -size, -size], [size, -size, -size], [size, size, -size], [-size, size, -size], // Back face
-          [-size, -size, size], [size, -size, size], [size, size, size], [-size, size, size]   // Front face
+          [-size, -size, size], [size, -size, size], [size, size, size], [-size, size, size] 
+            // Front face
         ]
         
         // Define the 12 edges of the cube
@@ -421,7 +452,7 @@ function ThreeScene({
           const distance = start.distanceTo(end)
           
             // Create thick cylinder for cube edge - ADJUST 0.018 TO CHANGE MAIN WIREFRAME THICKNESS
-            const cylinderGeom = new THREE.CylinderGeometry(0.018, 0.018, distance, 8)
+            const cylinderGeom = new THREE.CylinderGeometry(0.015, 0.015, distance, 8)
           const cylinderMesh = new THREE.Mesh(cylinderGeom, wireframeMaterial)
           
           // Position cylinder between start and end points
@@ -759,7 +790,7 @@ function ThreeScene({
         ]
         
         centerLinesMaterial = new THREE.MeshBasicMaterial({
-          color: new THREE.Color('#ff0000'), // Bright red for inner cube
+          color: new THREE.Color('#5900ffff'), // Bright red for inner cube
           transparent: false,
           opacity: 1.0,
         })
