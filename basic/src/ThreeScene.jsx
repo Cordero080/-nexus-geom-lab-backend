@@ -1,6 +1,66 @@
 import { use, useEffect, useRef } from 'react'
 import * as THREE from 'three'
 
+
+
+
+
+// === Wireframe conformance helpers (auto-mapping + space-correct) ===
+const __UP = new THREE.Vector3(0, 1, 0);
+const __Q = new THREE.Quaternion();
+const __TMP = new THREE.Vector3();
+const __A = new THREE.Vector3();
+const __B = new THREE.Vector3();
+const __M = new THREE.Matrix4();
+const __Inv = new THREE.Matrix4();
+
+function nearestVertexIndex(geometry, v) {
+  const pos = geometry.attributes.position;
+  let best = -1, bestD = Infinity;
+  for (let i = 0; i < pos.count; i++) {
+    __TMP.fromBufferAttribute(pos, i);
+    const d = __TMP.distanceTo(v);
+    if (d < bestD) { bestD = d; best = i; }
+  }
+  return best;
+}
+
+function updateThickWireframeCylinders(objData) {
+  const { solidMesh, wireframeMesh, edgePairs } = objData;
+  if (!solidMesh || !wireframeMesh || !edgePairs) return;
+  if (!wireframeMesh.isGroup) return;
+
+  const cylinders = wireframeMesh.children?.filter(c => c.isMesh) || [];
+  const pos = solidMesh.geometry.attributes.position;
+
+  // solid world -> wireframe parent local
+  __M.copy(solidMesh.matrixWorld);
+  const wfParent = wireframeMesh.parent;
+  if (wfParent) __Inv.copy(wfParent.matrixWorld).invert(); else __Inv.identity();
+
+  const n = Math.min(edgePairs.length, cylinders.length);
+  for (let k = 0; k < n; k++) {
+    const cyl = cylinders[k];
+    const [iA, iB] = edgePairs[k];
+    __A.fromBufferAttribute(pos, iA).applyMatrix4(__M).applyMatrix4(__Inv);
+    __B.fromBufferAttribute(pos, iB).applyMatrix4(__M).applyMatrix4(__Inv);
+
+    // midpoint
+    cyl.position.copy(__A).add(__B).multiplyScalar(0.5);
+
+    // orientation
+    const dir = __B.clone().sub(__A);
+    const len = dir.length() || 1e-6;
+    __Q.setFromUnitVectors(__UP, dir.normalize());
+    cyl.quaternion.copy(__Q);
+
+    // scale Y to length
+    const base = cyl.userData.baseLength ?? (cyl.geometry?.parameters?.height || len);
+    cyl.userData.baseLength = base;
+    cyl.scale.set(1, len / base, 1);
+  }
+}
+
 // ========================================================================
 // THREESCENE.JSX - THE 3D RENDERER (RECEIVES PROPS FROM APP.JSX)
 // ========================================================================
@@ -398,6 +458,7 @@ function ThreeScene({
         const edgesGeometry = new THREE.EdgesGeometry(geometry)
         const edgeVertices = edgesGeometry.attributes.position.array
         const sphereWireframeGroup = new THREE.Group()
+        const sphereEdgePairs = []
         for (let j = 0; j < edgeVertices.length; j += 6) {
           const start = new THREE.Vector3(edgeVertices[j], edgeVertices[j+1], edgeVertices[j+2])
           const end = new THREE.Vector3(edgeVertices[j+3], edgeVertices[j+4], edgeVertices[j+5])
@@ -408,8 +469,13 @@ function ThreeScene({
           cylinderMesh.position.copy(start.clone().add(end).multiplyScalar(0.5))
           cylinderMesh.lookAt(end)
           cylinderMesh.rotateX(Math.PI / 2)
+          cylinderMesh.userData.baseLength = distance;
+          const iA_s = nearestVertexIndex(geometry, start);
+          const iB_s = nearestVertexIndex(geometry, end);
+          sphereEdgePairs.push([iA_s, iB_s]);
           sphereWireframeGroup.add(cylinderMesh)
         }
+        sphereWireframeGroup.userData.edgePairs = sphereEdgePairs;
         wireframeMesh = sphereWireframeGroup
         console.log('Created thick wireframe for sphere with', edgeVertices.length / 6, 'cylinder edges')
       } else if (geometry.type === 'BoxGeometry') {
@@ -426,6 +492,7 @@ function ThreeScene({
         
         // Create thick wireframe using cylinders for cube edges
         const cubeWireframeGroup = new THREE.Group()
+        const cubeEdgePairs = []
         
         // Get the 8 corners of the cube
         const size = 0.75 // Half of 1.5
@@ -460,9 +527,14 @@ function ThreeScene({
           cylinderMesh.lookAt(end)
           cylinderMesh.rotateX(Math.PI / 2)
           
+          cylinderMesh.userData.baseLength = distance;
+          const iA_c = nearestVertexIndex(geometry, start);
+          const iB_c = nearestVertexIndex(geometry, end);
+          cubeEdgePairs.push([iA_c, iB_c]);
           cubeWireframeGroup.add(cylinderMesh)
         })
         
+        cubeWireframeGroup.userData.edgePairs = cubeEdgePairs;
         wireframeMesh = cubeWireframeGroup
         console.log('Created thick wireframe for cube with', cubeEdges.length, 'cylinder edges')
         
@@ -480,6 +552,7 @@ function ThreeScene({
         
         // Create thick wireframe using cylinders for octahedron edges
         const octahedronWireframeGroup = new THREE.Group()
+        const octaEdgePairs = []
         
         // Get the 6 vertices from the octahedron geometry (like tetrahedron does)
         // Use canonical octahedron vertices for consistent wireframe
@@ -517,9 +590,14 @@ function ThreeScene({
           cylinderMesh.lookAt(end)
           cylinderMesh.rotateX(Math.PI / 2)
           
-          octahedronWireframeGroup.add(cylinderMesh)
+          cylinderMesh.userData.baseLength = distance;
+        const iA_o = nearestVertexIndex(geometry, start);
+        const iB_o = nearestVertexIndex(geometry, end);
+        octaEdgePairs.push([iA_o, iB_o]);
+        octahedronWireframeGroup.add(cylinderMesh)
         })
         
+        octahedronWireframeGroup.userData.edgePairs = octaEdgePairs;
         wireframeMesh = octahedronWireframeGroup
         console.log('Created thick wireframe for octahedron with', octahedronMainEdges.length, 'cylinder edges')
         
@@ -537,6 +615,7 @@ function ThreeScene({
         
         // Create thick wireframe using cylinders for tetrahedron edges
         const tetrahedronWireframeGroup = new THREE.Group()
+        const tetraEdgePairs = []
         
         // Get the 4 vertices from the tetrahedron geometry
         const vertices = geometry.attributes.position.array
@@ -571,66 +650,61 @@ function ThreeScene({
           cylinderMesh.lookAt(end)
           cylinderMesh.rotateX(Math.PI / 2)
           
+          cylinderMesh.userData.baseLength = distance;
+          const iA_t = nearestVertexIndex(geometry, start);
+          const iB_t = nearestVertexIndex(geometry, end);
+          tetraEdgePairs.push([iA_t, iB_t]);
           tetrahedronWireframeGroup.add(cylinderMesh)
         })
         
+        tetrahedronWireframeGroup.userData.edgePairs = tetraEdgePairs;
         wireframeMesh = tetrahedronWireframeGroup
         console.log('Created thick wireframe for tetrahedron with', tetrahedronMainEdges.length, 'cylinder edges')
         } else if (geometry.type === 'IcosahedronGeometry') {
-  // === ICOSAHEDRON MAIN WIREFRAME ===
-  // This block creates the thick wireframe for the icosahedron using cylinders for each edge.
-  // To control the wireframe thickness, adjust the value below:
-  //   const cylinderGeom = new THREE.CylinderGeometry(0.012, 0.012, distance, 8)
-  // Change 0.012 to your desired radius (e.g. 0.008 for thinner, 0.02 for thicker)
-          // CUSTOM THICK WIREFRAME for IcosahedronGeometry
+          // CUSTOM THICK WIREFRAME for IcosahedronGeometry (20-sided)
           wireframeMaterial = new THREE.MeshPhongMaterial({
-            color: currentBaseColor,
-            specular: currentSpecularColor,
-            shininess: shininess,
-            transparent: true,
-            opacity: wireframeIntensity / 100,
-            flatShading: false,
-            reflectivity: specularIntensity,
-          })
-          // Canonical icosahedron vertices
-          const phi = (1 + Math.sqrt(5)) / 2;
-          const rawVertices = [
-            [-1, phi, 0], [1, phi, 0], [-1, -phi, 0], [1, -phi, 0],
-            [0, -1, phi], [0, 1, phi], [0, -1, -phi], [0, 1, -phi],
-            [phi, 0, -1], [phi, 0, 1], [-phi, 0, -1], [-phi, 0, 1]
-          ];
-          const vertices = rawVertices.map(v => {
-            const vec = new THREE.Vector3(...v);
-            return vec.normalize().toArray();
+              color: currentBaseColor,
+              specular: currentSpecularColor,
+              shininess: shininess,
+              transparent: true,
+              opacity: wireframeIntensity / 100,
+              flatShading: false,
+              reflectivity: specularIntensity,
           });
-          // Find all edges: connect vertices that are distance ≈ 2.0 apart
-          const edgeThreshold = 2.1;
-          let icosahedronEdges = [];
-          for (let i = 0; i < vertices.length; i++) {
-            for (let j = i + 1; j < vertices.length; j++) {
-              const v1 = new THREE.Vector3(...vertices[i]);
-              const v2 = new THREE.Vector3(...vertices[j]);
-              if (v1.distanceTo(v2) < edgeThreshold) {
-                icosahedronEdges.push([i, j]);
-              }
-            }
-          }
+
+          // Use EdgesGeometry to reliably get all 30 edges
+          const edgesGeometry = new THREE.EdgesGeometry(geometry);
+          const edgeVertices = edgesGeometry.attributes.position.array;
           const icosahedronWireframeGroup = new THREE.Group();
-          icosahedronEdges.forEach(([i, j]) => {
-            const start = new THREE.Vector3(...vertices[i]);
-            const end = new THREE.Vector3(...vertices[j]);
-            const distance = start.distanceTo(end);
-            // Use thick cylinder for main wireframe
-            const cylinderGeom = new THREE.CylinderGeometry(0.012, 0.012, distance, 8);
-            const cylinderMesh = new THREE.Mesh(cylinderGeom, wireframeMaterial);
-            cylinderMesh.position.copy(start.clone().add(end).multiplyScalar(0.5));
-            cylinderMesh.lookAt(end);
-            cylinderMesh.rotateX(Math.PI / 2);
-            icosahedronWireframeGroup.add(cylinderMesh);
-          });
+          const icoEdgePairs = [];
+          const upVector = new THREE.Vector3(0, 1, 0); // Alias for __UP
+          if (typeof window.__Q === 'undefined') window.__Q = new THREE.Quaternion();
+          const __Q = window.__Q;
+
+          for (let j = 0; j < edgeVertices.length; j += 6) {
+              const start = new THREE.Vector3(edgeVertices[j], edgeVertices[j + 1], edgeVertices[j + 2]);
+              const end = new THREE.Vector3(edgeVertices[j + 3], edgeVertices[j + 4], edgeVertices[j + 5]);
+              const direction = end.clone().sub(start);
+              const distance = direction.length();
+              // Create thick cylinder for icosahedron edge - ADJUST 0.012 for radius
+              const cylinderGeom = new THREE.CylinderGeometry(0.012, 0.012, distance, 8);
+              const cylinderMesh = new THREE.Mesh(cylinderGeom, wireframeMaterial);
+              // Position cylinder at midpoint
+              cylinderMesh.position.copy(start).add(end).multiplyScalar(0.5);
+              // Orient cylinder using quaternion helper (essential for correct rotation conformance)
+              __Q.setFromUnitVectors(upVector, direction.normalize());
+              cylinderMesh.quaternion.copy(__Q);
+              // Store original length and vertex indices for updateThickWireframeCylinders
+              cylinderMesh.userData.baseLength = distance;
+              const iA_ico = nearestVertexIndex(geometry, start);
+              const iB_ico = nearestVertexIndex(geometry, end);
+              icoEdgePairs.push([iA_ico, iB_ico]);
+              icosahedronWireframeGroup.add(cylinderMesh);
+          }
+          icosahedronWireframeGroup.userData.edgePairs = icoEdgePairs;
           wireframeMesh = icosahedronWireframeGroup;
-          console.log('Created thick wireframe for icosahedron with', icosahedronEdges.length, 'cylinder edges');
-        
+          console.log('Created thick wireframe for icosahedron with', edgeVertices.length / 6, 'cylinder edges');
+
       } else {
         // Standard thin wireframe for other geometries
         wireframeMaterial = new THREE.MeshPhongMaterial({
@@ -1172,10 +1246,14 @@ function ThreeScene({
       wireframeMesh.receiveShadow = true
       
       // Add all meshes to the scene
+      const objectGroup = new THREE.Group();
       scene.add(solidMesh)
       scene.add(wireframeMesh)
       scene.add(centerLines)
       scene.add(curvedLines)
+      scene.add(objectGroup);
+
+      
       
       console.log(`Added object ${i} to scene:`, {
         solidMesh: solidMesh.type,
@@ -1191,6 +1269,8 @@ function ThreeScene({
       objectsRef.current.push({
         solidMesh,                  // The solid Three.js object
         wireframeMesh,              // The wireframe Three.js object
+        thickCylinders: (wireframeMesh && wireframeMesh.isGroup) ? wireframeMesh.children.filter(m => m.isMesh) : null,
+        edgePairs: (wireframeMesh && wireframeMesh.userData && wireframeMesh.userData.edgePairs) ? wireframeMesh.userData.edgePairs : null,
         centerLines,                // The center-to-vertex lines
         curvedLines,                // The vertex-to-vertex connections
         material,                   // The solid material (for updating properties)
