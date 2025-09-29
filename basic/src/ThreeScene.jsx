@@ -1,11 +1,9 @@
-import { use, useEffect, useRef } from 'react'
-import * as THREE from 'three'
+// Import necessary libraries
+import { use, useEffect, useRef } from 'react';
+import * as THREE from 'three';
 
 
-
-
-
-// === Wireframe conformance helpers (auto-mapping + space-correct) ===
+// Helper functions for wireframe conformance
 const __UP = new THREE.Vector3(0, 1, 0);
 const __Q = new THREE.Quaternion();
 const __TMP = new THREE.Vector3();
@@ -60,6 +58,7 @@ function updateThickWireframeCylinders(objData) {
     cyl.scale.set(1, len / base, 1);
   }
 }
+
 
 // ========================================================================
 // THREESCENE.JSX - THE 3D RENDERER (RECEIVES PROPS FROM APP.JSX)
@@ -396,7 +395,7 @@ function ThreeScene({
     })
     objectsRef.current = []
 
-    // CREATE NEW OBJECTS using current App.jsx prop values
+    // CREATE NEW OBJECTS USING CURRENT APP.JSX PROP VALUES
     for (let i = 0; i < objectCount; i++) { // Use objectCount prop from App.jsx
       
       // CHOOSE GEOMETRY based on objectType prop from App.jsx
@@ -434,8 +433,6 @@ function ThreeScene({
         flatShading: false,
         reflectivity: specularIntensity,            // Use specularIntensity prop from App.jsx
       })
-
-      console.log(`Created object ${i} with specular color:`, currentSpecularColor, 'from state:', specularColor)
 
       // CREATE TWO MESHES - One solid, one wireframe for blending
       const solidMesh = new THREE.Mesh(geometry, material)
@@ -921,11 +918,23 @@ function ThreeScene({
         }
         
         curvedLines = connectionGroup
-        console.log(`Created hypercube connections: 8 thick cylinder connections`)
+        console.log(`Created hypercube connections: ${innerEdges.length} thick cylinder connections`)
         
       } else if (geometry.type === 'OctahedronGeometry') {
-        // OCTAHEDRON: Create hyper-octahedron with inner octahedron and connections
-        console.log('Creating hyper-octahedron wireframe for OctahedronGeometry')
+        // CUSTOM THICK WIREFRAME for OctahedronGeometry
+        wireframeMaterial = new THREE.MeshPhongMaterial({
+          color: currentBaseColor,
+          specular: currentSpecularColor,
+          shininess: shininess,
+          transparent: true,
+          opacity: wireframeIntensity / 100,
+          flatShading: false,
+          reflectivity: specularIntensity,
+        })
+        
+        // Create thick wireframe using cylinders for octahedron edges
+        const octahedronWireframeGroup = new THREE.Group()
+        const octaEdgePairs = []
         
         // Get the 6 vertices of the octahedron (top, bottom, and 4 around the middle)
         const size = 1.0 // Octahedron radius
@@ -1385,16 +1394,18 @@ function ThreeScene({
                     const endY = edgeVertices[j + 4]
                     const endZ = edgeVertices[j + 5]
                     
-                    const steps = 8
+                    const steps = 8 // Number of spiral steps
                     for (let step = 0; step < steps; step++) {
                       const t1 = step / steps
                       const t2 = (step + 1) / steps
                       
-                      const radius1 = t1 * 0.8
+                      // Spiral parameters
+                      const radius1 = t1 * 0.8 // Gradually increase radius
                       const radius2 = t2 * 0.8
-                      const angle1 = t1 * Math.PI * 2
+                      const angle1 = t1 * Math.PI * 2 // One full rotation
                       const angle2 = t2 * Math.PI * 2
                       
+                      // Interpolate toward the actual edge point
                       const x1 = Math.cos(angle1) * radius1 * (endX / Math.sqrt(endX*endX + endY*endY + endZ*endZ))
                       const y1 = Math.sin(angle1) * radius1 * (endY / Math.sqrt(endX*endX + endY*endY + endZ*endZ)) + t1 * endY
                       const z1 = t1 * endZ
@@ -1443,16 +1454,18 @@ function ThreeScene({
                     const endY = edgeVertices[j + 4]
                     const endZ = edgeVertices[j + 5]
                     
-                    const steps = 8
+                    const steps = 8 // Number of spiral steps
                     for (let step = 0; step < steps; step++) {
                       const t1 = step / steps
                       const t2 = (step + 1) / steps
                       
-                      const radius1 = t1 * 0.8
+                      // Spiral parameters
+                      const radius1 = t1 * 0.8 // Gradually increase radius
                       const radius2 = t2 * 0.8
-                      const angle1 = t1 * Math.PI * 2
+                      const angle1 = t1 * Math.PI * 2 // One full rotation
                       const angle2 = t2 * Math.PI * 2
                       
+                      // Interpolate toward the actual edge point
                       const x1 = Math.cos(angle1) * radius1 * (endX / Math.sqrt(endX*endX + endY*endY + endZ*endZ))
                       const y1 = Math.sin(angle1) * radius1 * (endY / Math.sqrt(endX*endX + endY*endY + endZ*endZ)) + t1 * endY
                       const z1 = t1 * endZ
@@ -1502,16 +1515,18 @@ function ThreeScene({
                     const endY = edgeVertices[j + 4]
                     const endZ = edgeVertices[j + 5]
                     
-                    const steps = 8
+                    const steps = 8 // Number of spiral steps
                     for (let step = 0; step < steps; step++) {
                       const t1 = step / steps
                       const t2 = (step + 1) / steps
                       
-                      const radius1 = t1 * 0.8
+                      // Spiral parameters
+                      const radius1 = t1 * 0.8 // Gradually increase radius
                       const radius2 = t2 * 0.8
-                      const angle1 = t1 * Math.PI * 2
+                      const angle1 = t1 * Math.PI * 2 // One full rotation
                       const angle2 = t2 * Math.PI * 2
                       
+                      // Interpolate toward the actual edge point
                       const x1 = Math.cos(angle1) * radius1 * (endX / Math.sqrt(endX*endX + endY*endY + endZ*endZ))
                       const y1 = Math.sin(angle1) * radius1 * (endY / Math.sqrt(endX*endX + endY*endY + endZ*endZ)) + t1 * endY
                       const z1 = t1 * endZ
@@ -1563,16 +1578,18 @@ function ThreeScene({
                     const endY = edgeVertices[j + 4]
                     const endZ = edgeVertices[j + 5]
                     
-                    const steps = 8
+                    const steps = 8 // Number of spiral steps
                     for (let step = 0; step < steps; step++) {
                       const t1 = step / steps
                       const t2 = (step + 1) / steps
                       
-                      const radius1 = t1 * 0.8
+                      // Spiral parameters
+                      const radius1 = t1 * 0.8 // Gradually increase radius
                       const radius2 = t2 * 0.8
-                      const angle1 = t1 * Math.PI * 2
+                      const angle1 = t1 * Math.PI * 2 // One full rotation
                       const angle2 = t2 * Math.PI * 2
                       
+                      // Interpolate toward the actual edge point
                       const x1 = Math.cos(angle1) * radius1 * (endX / Math.sqrt(endX*endX + endY*endY + endZ*endZ))
                       const y1 = Math.sin(angle1) * radius1 * (endY / Math.sqrt(endX*endX + endY*endY + endZ*endZ)) + t1 * endY
                       const z1 = t1 * endZ
@@ -1666,196 +1683,30 @@ function ThreeScene({
                       const curvedLinesPos = curvedLinesGeom.attributes.position.array
                       
                       // Update the 4 vertex-to-vertex connections
-                      for (let v = 0; v < 4; v++) {
-                        const baseIndex = v * 6
+                      const tetraEdges = [
+                        [0, 1], [0, 2], [0, 3],  // From vertex 0 to others
+                        [1, 2], [1, 3],          // From vertex 1 to remaining 
+                        [2, 3]                   // From vertex 2 to 3
+                      ]
+                      tetraEdges.forEach(([i, j], edgeIndex) => {
+                        const baseIndex = edgeIndex * 6
                         const innerScale = 0.5
                         
                         // Inner vertex
-                        curvedLinesPos[baseIndex] = positions[v * 3] * innerScale
-                        curvedLinesPos[baseIndex + 1] = positions[v * 3 + 1] * innerScale
-                        curvedLinesPos[baseIndex + 2] = positions[v * 3 + 2] * innerScale
+                        curvedLinesPos[baseIndex] = positions[i * 3] * innerScale
+                        curvedLinesPos[baseIndex + 1] = positions[i * 3 + 1] * innerScale
+                        curvedLinesPos[baseIndex + 2] = positions[i * 3 + 2] * innerScale
                         
                         // Outer vertex
-                        curvedLinesPos[baseIndex + 3] = positions[v * 3]
-                        curvedLinesPos[baseIndex + 4] = positions[v * 3 + 1]
-                        curvedLinesPos[baseIndex + 5] = positions[v * 3 + 2]
-                      }
+                        curvedLinesPos[baseIndex + 3] = positions[j * 3]
+                        curvedLinesPos[baseIndex + 4] = positions[j * 3 + 1]
+                        curvedLinesPos[baseIndex + 5] = positions[j * 3 + 2]
+                      })
                       
                       curvedLinesGeom.attributes.position.needsUpdate = true
                     }
                   } else if (geometry.type === 'OctahedronGeometry') {
                     // OCTAHEDRON: Update hyper-octahedron wireframes during DNA morphing
-                    
-                    // Update inner octahedron edges (red lines)
-                    const centerLinesGeom = centerLines.geometry
-                    if (centerLinesGeom && centerLinesGeom.attributes.position) {
-                      const centerLinesPos = centerLinesGeom.attributes.position.array
-                      
-                      // Get current morphed vertices (octahedron has 6 vertices)
-                      const vertices = []
-                      for (let v = 0; v < 6; v++) {
-                        vertices.push([
-                          positions[v * 3],
-                          positions[v * 3 + 1], 
-                          positions[v * 3 + 2]
-                        ])
-                      }
-                      
-                      // Update inner octahedron vertices (scaled 0.5x)
-                      const innerVertices = vertices.map(vertex => [
-                        vertex[0] * 0.5,
-                        vertex[1] * 0.5,
-                        vertex[2] * 0.5
-                      ])
-                      
-                      // Update the 12 inner octahedron edges
-                      const edges = [
-                        [0,2],[0,3],[0,4],[0,5],  // Top vertex to equatorial vertices
-                        [1,2],[1,3],[1,4],[1,5],  // Bottom vertex to equatorial vertices
-                        [2,3],[3,4],[4,5],[5,2]   // Equatorial edge loop
-                      ]
-                      edges.forEach(([i, j], edgeIndex) => {
-                        const baseIndex = edgeIndex * 6
-                        centerLinesPos[baseIndex] = innerVertices[i][0]
-                        centerLinesPos[baseIndex + 1] = innerVertices[i][1]
-                        centerLinesPos[baseIndex + 2] = innerVertices[i][2]
-                        centerLinesPos[baseIndex + 3] = innerVertices[j][0]
-                        centerLinesPos[baseIndex + 4] = innerVertices[j][1]
-                        centerLinesPos[baseIndex + 5] = innerVertices[j][2]
-                      })
-                      
-                      centerLinesGeom.attributes.position.needsUpdate = true
-                    }
-                    
-                    // Update vertex connections (green lines)
-                    const curvedLinesGeom = curvedLines.geometry
-                    if (curvedLinesGeom && curvedLinesGeom.attributes.position) {
-                      const curvedLinesPos = curvedLinesGeom.attributes.position.array
-                      
-                      // Update the 6 vertex-to-vertex connections
-                      for (let v = 0; v < 6; v++) {
-                        const baseIndex = v * 6
-                        const innerScale = 0.5
-                        
-                        // Inner vertex
-                        curvedLinesPos[baseIndex] = positions[v * 3] * innerScale
-                        curvedLinesPos[baseIndex + 1] = positions[v * 3 + 1] * innerScale
-                        curvedLinesPos[baseIndex + 2] = positions[v * 3 + 2] * innerScale
-                        
-                        // Outer vertex
-                        curvedLinesPos[baseIndex + 3] = positions[v * 3]
-                        curvedLinesPos[baseIndex + 4] = positions[v * 3 + 1]
-                        curvedLinesPos[baseIndex + 5] = positions[v * 3 + 2]
-                      }
-                      
-                      curvedLinesGeom.attributes.position.needsUpdate = true
-                    }
-                  }
-                }
-              }
-              
-              currentMesh.rotation.y = t * 0.3 + phase
-              currentMesh.rotation.x = Math.sin(t * 0.2) * 0.2
-              currentMesh.position.copy(originalPosition)
-              break
-
-            case 'liquid':
-              // Liquid Metal: Flowing waves across surface
-              if (geometry && originalPositions) {
-                const positions = geometry.attributes.position.array
-                for (let i = 0; i < positions.length; i += 3) {
-                  const x = originalPositions[i]
-                  const y = originalPositions[i + 1]
-                  const z = originalPositions[i + 2]
-                  
-                  // Multiple wave layers for liquid effect
-                  const wave1 = Math.sin(t * 2 + x * 3 + phase) * 0.15
-                  const wave2 = Math.cos(t * 1.5 + y * 4 + phase) * 0.1
-                  const wave3 = Math.sin(t * 3 + z * 2 + phase) * 0.08
-                  
-                  positions[i] = x + wave1 + Math.sin(t + y * 2) * 0.05
-                  positions[i + 1] = y + wave2 + Math.cos(t * 1.2 + x * 2) * 0.05
-                  positions[i + 2] = z + wave3 + Math.sin(t * 0.8 + z * 3) * 0.05
-                }
-                
-                // UPDATE INTRICATE WIREFRAME TO FOLLOW MORPHED SURFACE - BEFORE needsUpdate
-                if (currentMesh === solidMesh && centerLines && curvedLines) {
-                  if (geometry.type === 'TetrahedronGeometry') {
-                    // TETRAHEDRON: Update hyper-tetrahedron wireframes during morphing
-                    
-                    // Update inner tetrahedron edges (red lines)
-                    const centerLinesGeom = centerLines.geometry
-                    if (centerLinesGeom && centerLinesGeom.attributes.position) {
-                      const centerLinesPos = centerLinesGeom.attributes.position.array
-                      
-                      // Get current morphed vertices using same approach as wireframe creation
-                      const vertices = []
-                      for (let v = 0; v < 4; v++) {
-                        vertices.push([
-                          positions[v * 3],
-                          positions[v * 3 + 1], 
-                          positions[v * 3 + 2]
-                        ])
-                      }
-                      
-                      // Calculate the center of the morphed tetrahedron
-                      const center = [0, 0, 0]
-                      for (let v = 0; v < 4; v++) {
-                        center[0] += vertices[v][0]
-                        center[1] += vertices[v][1]
-                        center[2] += vertices[v][2]
-                      }
-                      center[0] /= 4
-                      center[1] /= 4
-                      center[2] /= 4
-                      
-                      // Update inner tetrahedron vertices (scaled 0.5x from center, not origin)
-                      const innerVertices = vertices.map(vertex => [
-                        center[0] + (vertex[0] - center[0]) * 0.5,
-                        center[1] + (vertex[1] - center[1]) * 0.5,
-                        center[2] + (vertex[2] - center[2]) * 0.5
-                      ])
-                      
-                      // Update the 6 inner tetrahedron edges
-                      const edges = [[0,1],[0,2],[0,3],[1,2],[1,3],[2,3]]
-                      edges.forEach(([i, j], edgeIndex) => {
-                        const baseIndex = edgeIndex * 6
-                        centerLinesPos[baseIndex] = innerVertices[i][0]
-                        centerLinesPos[baseIndex + 1] = innerVertices[i][1]
-                        centerLinesPos[baseIndex + 2] = innerVertices[i][2]
-                        centerLinesPos[baseIndex + 3] = innerVertices[j][0]
-                        centerLinesPos[baseIndex + 4] = innerVertices[j][1]
-                        centerLinesPos[baseIndex + 5] = innerVertices[j][2]
-                      })
-                      
-                      centerLinesGeom.attributes.position.needsUpdate = true
-                    }
-                    
-                    // Update vertex connections (green lines)
-                    const curvedLinesGeom = curvedLines.geometry
-                    if (curvedLinesGeom && curvedLinesGeom.attributes.position) {
-                      const curvedLinesPos = curvedLinesGeom.attributes.position.array
-                      
-                      // Update the 4 vertex-to-vertex connections
-                      for (let v = 0; v < 4; v++) {
-                        const baseIndex = v * 6
-                        const innerScale = 0.5
-                        
-                        // Inner vertex
-                        curvedLinesPos[baseIndex] = positions[v * 3] * innerScale
-                        curvedLinesPos[baseIndex + 1] = positions[v * 3 + 1] * innerScale
-                        curvedLinesPos[baseIndex + 2] = positions[v * 3 + 2] * innerScale
-                        
-                        // Outer vertex
-                        curvedLinesPos[baseIndex + 3] = positions[v * 3]
-                        curvedLinesPos[baseIndex + 4] = positions[v * 3 + 1]
-                        curvedLinesPos[baseIndex + 5] = positions[v * 3 + 2]
-                      }
-                      
-                      curvedLinesGeom.attributes.position.needsUpdate = true
-                    }
-                  } else if (geometry.type === 'OctahedronGeometry') {
-                    // OCTAHEDRON: Update hyper-octahedron wireframes during morphing
                     
                     // Update inner octahedron edges (red lines)
                     const centerLinesGeom = centerLines.geometry
@@ -2180,12 +2031,89 @@ function ThreeScene({
                       
                       curvedLinesGeom.attributes.position.needsUpdate = true
                     }
+                  } else {
+                    // OTHER GEOMETRIES: Use existing update logic
+                    // Update center lines to follow morphed vertices
+                    const centerLinesGeom = centerLines.geometry
+                    if (centerLinesGeom && centerLinesGeom.attributes.position) {
+                      const centerLinesPos = centerLinesGeom.attributes.position.array
+                      let lineIndex = 0
+                      
+                      // Update every other point (the vertex endpoints) to match morphed surface
+                    for (let i = 1; i < centerLinesPos.length; i += 6) { // Every second point (vertex endpoints)
+                      const vertexIndex = lineIndex * 9 // Match the original vertex stepping
+                      if (vertexIndex < positions.length) {
+                        centerLinesPos[i] = positions[vertexIndex]     // X
+                        centerLinesPos[i + 1] = positions[vertexIndex + 1] // Y  
+                        centerLinesPos[i + 2] = positions[vertexIndex + 2] // Z
+                      }
+                      lineIndex++
+                    }
+                    centerLinesGeom.attributes.position.needsUpdate = true
                   }
-                }
-              }
+                  
+                  // Update curved lines to follow morphed vertices
+                  const curvedLinesGeom = curvedLines.geometry
+                  if (curvedLinesGeom && curvedLinesGeom.attributes.position) {
+                    // Update existing curved line endpoints smoothly every frame with validation
+                    const curvedLinesPos = curvedLinesGeom.attributes.position.array
+                    
+                    // Update each line segment, but validate the connection is still appropriate
+                    for (let i = 0; i < curvedLinesPos.length; i += 6) {
+                      // Get the vertex indices for this line
+                      const vertex1Index = Math.floor((i / 6) * 30)
+                      const vertex2Index = vertex1Index + 30
+                      
+                      if (vertex1Index < positions.length && vertex2Index < positions.length) {
+                        const x1 = positions[vertex1Index]
+                        const y1 = positions[vertex1Index + 1]
+                        const z1 = positions[vertex1Index + 2]
+                        const x2 = positions[vertex2Index]
+                        const y2 = positions[vertex2Index + 1]
+                        const z2 = positions[vertex2Index + 2]
+                        
+                        // Check if this connection is still valid
+                        const distance = Math.sqrt((x2-x1)*(x2-x1) + (y2-y1)*(y2-y1) + (z2-z1)*(z2-z1))
+                        let shouldShow = distance < 0.8 && distance > 0.1
+                        
+                        // For torus, check center distance to avoid cross-hole connections
+                        if (geometry.type === 'TorusKnotGeometry' && shouldShow) {
+                          const centerDistance1 = Math.sqrt(x1*x1 + z1*z1)
+                          const centerDistance2 = Math.sqrt(x2*x2 + z2*z2)
+                          const centerDistanceDiff = Math.abs(centerDistance1 - centerDistance2)
+                          shouldShow = centerDistanceDiff < 0.5
+                        }
+                        
+                        if (shouldShow) {
+                          // Update the line endpoints
+                          curvedLinesPos[i] = x1
+                          curvedLinesPos[i + 1] = y1
+                          curvedLinesPos[i + 2] = z1
+                          curvedLinesPos[i + 3] = x2
+                          curvedLinesPos[i + 4] = y2
+                          curvedLinesPos[i + 5] = z2
+                        } else {
+                          // Hide invalid connections by collapsing them to a single point
+                          curvedLinesPos[i] = 0
+                          curvedLinesPos[i + 1] = 0
+                          curvedLinesPos[i + 2] = 0
+                          curvedLinesPos[i + 3] = 0
+                          curvedLinesPos[i + 4] = 0
+                          curvedLinesPos[i + 5] = 0
+                        }
+                      }
+                    }
+                    curvedLinesGeom.attributes.position.needsUpdate = true
+                  }
+                  } // Close the else block for non-tetrahedron geometries
+                } // Close the wireframe update conditional
+                
+                // Update main geometry AFTER wireframe updates for perfect sync
+                geometry.attributes.position.needsUpdate = true
+              } // Close the DNA animation conditional
               
-              currentMesh.rotation.x += 0.005
-              currentMesh.rotation.y += 0.007
+              currentMesh.rotation.y = t * 0.3 + phase
+              currentMesh.rotation.x = Math.sin(t * 0.2) * 0.2
               currentMesh.position.copy(originalPosition)
               break
           }
@@ -2320,6 +2248,33 @@ function ThreeScene({
     })
   }, [baseColor]) // Run when baseColor prop from App.jsx changes
 
+  // Debugging: Ensure objectsRef is populated and baseColor updates correctly
+  useEffect(() => {
+    console.log('Base color change detected:', baseColor);
+    console.log('Objects in objectsRef:', objectsRef.current);
+
+    const convertedColor = parseInt(baseColor.replace('#', ''), 16);
+    console.log('Converted base color value:', convertedColor);
+
+    objectsRef.current.forEach(({ material, wireframeMaterial }, index) => {
+      if (material) {
+        material.color.setHex(convertedColor);
+        material.needsUpdate = true;
+        console.log(`Updated material ${index} base color to:`, material.color);
+      } else {
+        console.log(`Material ${index} is null`);
+      }
+
+      if (wireframeMaterial) {
+        wireframeMaterial.color.setHex(convertedColor);
+        wireframeMaterial.needsUpdate = true;
+        console.log(`Updated wireframe material ${index} base color to:`, wireframeMaterial.color);
+      } else {
+        console.log(`Wireframe material ${index} is null`);
+      }
+    });
+  }, [baseColor]);
+
   // WIREFRAME INTENSITY UPDATER - Responds to wireframeIntensity prop changes
   useEffect(() => {
     const intensity = wireframeIntensity / 100 // Convert 0-100 range to 0-1 range
@@ -2449,6 +2404,27 @@ function ThreeScene({
     }
   }, [directionalLightColor, directionalLightIntensity, directionalLightX, directionalLightY, directionalLightZ]) 
   // ↑ Run when any directional light props from App.jsx change
+
+  // Add pulse glow effect to meshes
+  const clock = new THREE.Clock();
+
+  function animatePulseGlow() {
+    const time = clock.getElapsedTime();
+
+    objectsRef.current.forEach(({ solidMesh }) => {
+      if (solidMesh) {
+        const intensity = (Math.sin(time * 2) + 1) / 2; // Oscillates between 0 and 1
+        const color = solidMesh.material.color;
+        const hsl = {};
+        color.getHSL(hsl);
+        color.setHSL(hsl.h, 0.9 + 0.2 * intensity, 0.1 + 0.3 * intensity); // Adjust saturation and brightness
+      }
+    });
+
+    requestAnimationFrame(animatePulseGlow);
+  }
+
+  animatePulseGlow();
 
   // ===============================================
   // RENDER METHOD - WHAT GETS DISPLAYED IN THE DOM

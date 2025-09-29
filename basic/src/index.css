@@ -85,7 +85,7 @@ body {
 .controls input[type="range"] {
     width: 180px;
     height: 2px;
-    background: rgba(255, 255, 255, 0.2);
+    background: rgba(219, 8, 8, 0.2);
     border-radius: 1px;
     outline: none;
     -webkit-appearance: none;
@@ -237,7 +237,7 @@ body {
 }
 
 .value-display {
-    color: #4ecdc4;
+    color: #0de3d5;
     font-weight: bold;
     float: right;
 }
@@ -251,7 +251,7 @@ body {
 /* Controls styling for collapsible sections */
 .controls hr {
     margin: 15px 0;
-    border: 1px solid rgba(255,255,255,0.2);
+    border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 .section-header {
@@ -269,7 +269,7 @@ body {
 }
 
 .section-header.material-open {
-    background-color: #4a5568;
+    background-color: #456d9189;
     color: #e2e8f0;
 }
 
@@ -423,7 +423,7 @@ body {
 /* Firefox scrollbar styling */
 .controls {
     scrollbar-width: thin;
-    scrollbar-color: #8b5cf6 rgba(30, 30, 50, 0.4);
+    scrollbar-color: #5c9ff69d rgba(30, 30, 50, 0.4);
 }
 
 .futuristic-checkbox-label {
@@ -468,4 +468,25 @@ body {
     top: -8px;
     color: #7fdfff;
     font-weight: bold;
+}
+
+/* Apply default colors to material property swatches */
+.material-swatch-base {
+  background-color: #ff6f61; /* Warm coral */
+}
+
+.material-swatch-specular {
+  background-color: #6fa3ff; /* Cool sky blue */
+}
+
+.material-swatch-wireframe {
+  background-color: #ffd700; /* Warm gold */
+}
+
+.material-swatch-intricate-spiral {
+  background-color: #00ffcc; /* Cool aqua */
+}
+
+.material-swatch-intricate-edge {
+  background-color: #ff4500; /* Warm orange-red */
 }

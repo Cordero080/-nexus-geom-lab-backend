@@ -2,6 +2,13 @@ import { useState } from 'react'
 import ThreeScene from './ThreeScene'
 import Controls from './Controls'
 
+// Updated default colors for psychedelic theme
+const defaultBaseColor = '#ff00ff'; // Vibrant magenta
+const defaultSpecularColor = '#00ffff'; // Bright cyan
+const defaultWireframeColor = '#ffff00'; // Bright yellow
+const defaultIntricateWireframeSpiralColor = '#ff4500'; // Vivid orange-red
+const defaultIntricateWireframeEdgeColor = '#00ff00'; // Bright green
+
 function App() {
   // ==========================================
   // APP.JSX IS THE "BRAIN" - STORES ALL DATA
@@ -12,15 +19,15 @@ function App() {
   // MATERIAL PROPERTIES STATE
   // These control how the 3D objects look and feel
   const [shininess, setShininess] = useState(100)                    // Controlled by: shininess slider in Controls.jsx
-  const [specularColor, setSpecularColor] = useState('#00ff00')      // Controlled by: specular color picker in Controls.jsx
+  const [specularColor, setSpecularColor] = useState(defaultSpecularColor)      // Controlled by: specular color picker in Controls.jsx
   const [specularIntensity, setSpecularIntensity] = useState(1.0)    // Controlled by: specular intensity slider in Controls.jsx
-  const [baseColor, setBaseColor] = useState('#222222')              // Controlled by: base color picker in Controls.jsx
+  const [baseColor, setBaseColor] = useState(defaultBaseColor)              // Controlled by: base color picker in Controls.jsx
   const [wireframeIntensity, setWireframeIntensity] = useState(50)    // Controlled by: wireframe slider in Controls.jsx (TESTING: set to 50% for visibility)
   
   // INTRICATE WIREFRAME STATE
   // These control the colors of the intricate wireframe details
-  const [intricateWireframeSpiralColor, setIntricateWireframeSpiralColor] = useState('#ff4444') // Controlled by: intricate wireframe spiral color picker in Controls.jsx
-  const [intricateWireframeEdgeColor, setIntricateWireframeEdgeColor] = useState('#44ff44')     // Controlled by: intricate wireframe edge color picker in Controls.jsx
+  const [intricateWireframeSpiralColor, setIntricateWireframeSpiralColor] = useState(defaultIntricateWireframeSpiralColor) // Controlled by: intricate wireframe spiral color picker in Controls.jsx
+  const [intricateWireframeEdgeColor, setIntricateWireframeEdgeColor] = useState(defaultIntricateWireframeEdgeColor)     // Controlled by: intricate wireframe edge color picker in Controls.jsx
   
   // SCENE BEHAVIOR STATE
   // These control how the scene behaves and looks
