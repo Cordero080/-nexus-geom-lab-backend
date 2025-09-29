@@ -1,55 +1,7 @@
-/*
- * CONTROLS.JSX - DETAILED DATA FLOW EXPLANATION
- * 
- * PURPOSE: This component creates the user interface that allows users to control the 3D scene
- * 
- * COMPLETE DATA FLOW TRACE:
- * 1. USER INTERACTION: User moves slider, clicks color picker, selects dropdown option
- * 2. BROWSER EVENT: Browser creates 'change' event with event.target.value containing new value
- * 3. REACT HANDLER: onChange attribute calls our handler function (e.g., handleShininessChange)
- * 4. VALUE EXTRACTION: Handler extracts value from event.target.value (usually a string)
- * 5. TYPE CONVERSION: Handler converts string to appropriate type (parseFloat, parseInt, or keep as string)
- * 6. PARENT CALLBACK: Handler calls the setter function passed from App.jsx (e.g., onShininessChange)
- * 7. STATE UPDATE: App.jsx updates its state using the setter function (e.g., setShininess)
- * 8. RE-RENDER CASCADE: App.jsx re-renders and passes new values to both Controls and ThreeScene
- * 9. UI SYNC: Controls displays updated value, ThreeScene updates 3D scene
- * 
- * KEY CONCEPTS:
- * - VALUES FLOW DOWN: App.jsx → Controls (as props like 'shininess')
- * - FUNCTIONS FLOW DOWN: App.jsx → Controls (as props like 'onShininessChange')
- * - UPDATES FLOW UP: Controls → App.jsx (via function calls)
- * - parseFloat() converts "1.5" → 1.5 (decimal numbers)
- * - parseInt() converts "5" → 5 (whole numbers)
- * - Color values stay as strings like "#ff0000"
- * 
- * EXAMPLE TRACE: User moves shininess slider
- * 1. User drags slider → Browser fires onChange event
- * 2. onChange={handleShininessChange} calls our function
- * 3. handleShininessChange gets event, extracts event.target.value
- * 4. parseFloat(event.target.value) converts "100" → 100
- * 5. onShininessChange(100) calls App.jsx's setShininess function
- * 6. App.jsx state updates, re-renders, passes new shininess value back down
- * 7. ThreeScene receives new shininess and updates 3D material
- */
 
-import { useState } from 'react' // Import React's useState hook for managing collapsible section state
 
-/*
- * CONTROLS COMPONENT - User Interface for Three.js Scene
- * 
- * DATA FLOW OVERVIEW:
- * 1. App.jsx creates state variables (like shininess, specularColor, etc.)
- * 2. App.jsx passes these VALUES and their SETTER FUNCTIONS as props to Controls
- * 3. Controls receives: current values + functions to update those values
- * 4. User interacts with Controls UI (sliders, color pickers, dropdowns)
- * 5. Controls calls the setter functions, which update App.jsx state
- * 6. Updated state flows back down to ThreeScene.jsx to update the 3D scene
- * 
- * NAMING PATTERN:
- * - Values: shininess, specularColor, etc. (FROM App.jsx)
- * - Setters: onShininessChange, onSpecularColorChange, etc. (FROM App.jsx)
- * - Handlers: handleShininessChange, handleSpecularColorChange, etc. (CREATED in Controls)
- */
+import React, { useState } from 'react' // Import React and useState hook for managing collapsible section state
+
 
 // PROPS RECEIVED FROM App.jsx - These are the data connections
 function Controls({ 
@@ -89,7 +41,7 @@ function Controls({
   const [lightingOpen, setLightingOpen] = useState(true)   // Lighting Controls section expanded by default
 
   /*
-   * EVENT HANDLER FUNCTIONS
+  // EVENT HANDLER FUNCTIONS
    * These functions bridge between user interactions and App.jsx state updates
    * 
    * PATTERN FOR EACH HANDLER:

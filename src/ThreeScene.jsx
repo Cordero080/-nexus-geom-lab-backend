@@ -1,6 +1,13 @@
 // Import necessary libraries
+import React from 'react';
+import './bg.css';
 import { use, useEffect, useRef } from 'react';
 import * as THREE from 'three';
+import { initializeScene } from './ThreeScene/sceneSetup';
+import { initializeLighting } from './ThreeScene/lightingSetup';
+import { createGeometryByType } from './ThreeScene/geometryCreation';
+import { startAnimationLoop } from './ThreeScene/animationLoop';
+import { updateEnvironment } from './ThreeScene/environmentSetup';
 
 
 // Helper functions for wireframe conformance
@@ -120,27 +127,11 @@ function ThreeScene({
   
   useEffect(() => {
     // 1. CREATE SCENE - The 3D world container
-    const scene = new THREE.Scene()
-    sceneRef.current = scene
-
-    // 2. CREATE CAMERA - The viewpoint into the 3D world
-    const camera = new THREE.PerspectiveCamera(
-      40,                                    // Field of view (how wide the view is)
-      window.innerWidth / window.innerHeight, // Aspect ratio (screen shape)
-      0.1,                                   // Near clipping plane (closest visible distance)
-      1000                                   // Far clipping plane (farthest visible distance)
-    )
-    camera.position.set(0, 0, 6)             // Start camera position
-    cameraRef.current = camera
-
-    // 3. CREATE RENDERER - Converts 3D scene to 2D pixels on screen
-    const renderer = new THREE.WebGLRenderer({ antialias: true }) // Smooth edges
-    renderer.setSize(window.innerWidth, window.innerHeight)       // Match screen size
-    renderer.shadowMap.enabled = true                             // Enable shadows
-    renderer.shadowMap.type = THREE.PCFSoftShadowMap             // Soft shadow type
-    renderer.setClearColor(0x000000, 1)                          // Black background
-    rendererRef.current = renderer
-    mountRef.current.appendChild(renderer.domElement)             // Add canvas to DOM
+    const { scene, camera, renderer } = initializeScene();
+    sceneRef.current = scene;
+    cameraRef.current = camera;
+    rendererRef.current = renderer;
+    mountRef.current.appendChild(renderer.domElement);
 
     // 4. CREATE LIGHTS - Using current prop values from App.jsx
     // Convert hex color strings (like "#ff0000") to Three.js color numbers
@@ -148,10 +139,13 @@ function ThreeScene({
     const directionalLightColorHex = parseInt(directionalLightColor.replace('#', ''), 16)
     
     // Create lights with current App.jsx values
-    const ambientLight = new THREE.AmbientLight(ambientLightColorHex, ambientLightIntensity)
-    const directionalLight = new THREE.DirectionalLight(directionalLightColorHex, directionalLightIntensity)
-    directionalLight.position.set(directionalLightX, directionalLightY, directionalLightZ)
-    directionalLight.castShadow = true
+    const { ambientLight, directionalLight } = initializeLighting({
+      ambientLightColor, 
+      ambientLightIntensity, 
+      directionalLightColor, 
+      directionalLightIntensity, 
+      directionalLightPosition: { x: directionalLightX, y: directionalLightY, z: directionalLightZ },
+    });
     
     // Store lights in refs so we can update them later when App.jsx props change
     ambientLightRef.current = ambientLight
@@ -162,11 +156,7 @@ function ThreeScene({
     scene.add(directionalLight)
 
     // 5. START ANIMATION LOOP - Continuously render the scene
-    function animate() {
-      animationIdRef.current = requestAnimationFrame(animate) // Schedule next frame
-      renderer.render(scene, camera)                          // Draw the current frame
-    }
-    animate() // Start the loop
+    startAnimationLoop(renderer, scene, camera, animationIdRef);
 
     // 6. HANDLE WINDOW RESIZE - Keep canvas matching screen size
     const handleResize = () => {
@@ -195,24 +185,24 @@ function ThreeScene({
   // ===============================================
   // This function converts the objectType prop from App.jsx into actual Three.js geometry
   
-  const createGeometryByType = (type) => {
-    switch(type) {
-      case 'icosahedron':
-        return new THREE.IcosahedronGeometry()           // 20-sided polyhedron
-      case 'sphere':
-        return new THREE.SphereGeometry(1, 16, 16)       // Round ball
-      case 'box':
-        return new THREE.BoxGeometry(1.5, 1.5, 1.5)     // Cube
-      case 'octahedron':
-        return new THREE.OctahedronGeometry()            // 8-sided polyhedron
-      case 'tetrahedron':
-        return new THREE.TetrahedronGeometry(1.2)        // 4-sided pyramid
-      case 'torusknot':
-        return new THREE.TorusKnotGeometry(1, .2, 150, 16) // Twisted donut shape
-      default:
-        return new THREE.IcosahedronGeometry()           // Default fallback
-    }
-  }
+  // const createGeometryByType = (type) => {
+  //   switch(type) {
+  //     case 'icosahedron':
+  //       return new THREE.IcosahedronGeometry()           // 20-sided polyhedron
+  //     case 'sphere':
+  //       return new THREE.SphereGeometry(1, 16, 16)       // Round ball
+  //     case 'box':
+  //       return new THREE.BoxGeometry(1.5, 1.5, 1.5)     // Cube
+  //     case 'octahedron':
+  //       return new THREE.OctahedronGeometry()            // 8-sided polyhedron
+  //     case 'tetrahedron':
+  //       return new THREE.TetrahedronGeometry(1.2)        // 4-sided pyramid
+  //     case 'torusknot':
+  //       return new THREE.TorusKnotGeometry(1, .2, 150, 16) // Twisted donut shape
+  //     default:
+  //       return new THREE.IcosahedronGeometry()           // Default fallback
+  //   }
+  // }
 
   // ===============================================
   // ENVIRONMENT UPDATER - RESPONDS TO environment PROP
@@ -245,131 +235,13 @@ function ThreeScene({
   }, [scale])
 
 
+  // Remove all canvas background creation. Just set scene.background to null for transparency.
   useEffect(() => {
-    if (!sceneRef.current) return // Safety check: make sure scene exists
+    if (!sceneRef.current) return;
+    sceneRef.current.background = null;
+  }, [environment]);
 
-    const scene = sceneRef.current
-
-    // CREATE DIFFERENT BACKGROUNDS based on environment prop from App.jsx
-    const createEnvironment = (envType) => {
-      switch(envType) {
-        case 'purple':
-          // Create purple gradient background using HTML5 canvas
-          const canvas = document.createElement('canvas')
-          const context = canvas.getContext('2d')
-          canvas.width = 512
-          canvas.height = 512
-          const gradient = context.createLinearGradient(0, 0, 0, canvas.height)
-          gradient.addColorStop(0, '#090033ff')
-          gradient.addColorStop(0.3, '#45146bff')
-          gradient.addColorStop(0.7, '#980ae4cd')
-          gradient.addColorStop(1, '#033867ff')
-          context.fillStyle = gradient
-          context.fillRect(0, 0, canvas.width, canvas.height)
-          scene.background = new THREE.CanvasTexture(canvas) // Convert canvas to Three.js texture
-          break
-
-        case 'space':
-          // Create northern lights aurora effect
-          const spaceCanvas = document.createElement('canvas')
-          const spaceCtx = spaceCanvas.getContext('2d')
-          spaceCanvas.width = 1024
-          spaceCanvas.height = 1024
-          
-          // Base dark night sky gradient
-          const baseGrad = spaceCtx.createLinearGradient(0, 0, 0, spaceCanvas.height)
-          baseGrad.addColorStop(0, '#0a0f1c')    // Dark blue top
-          baseGrad.addColorStop(0.3, '#1a1a2e')  // Deeper blue
-          baseGrad.addColorStop(0.7, '#16213ed9')  // Navy blue
-          baseGrad.addColorStop(1, '#0f0f23')    // Almost black bottom
-          spaceCtx.fillStyle = baseGrad
-          spaceCtx.fillRect(0, 0, spaceCanvas.width, spaceCanvas.height)
-          
-          // Aurora curtain layers with different colors
-          const aurora1 = spaceCtx.createLinearGradient(0, 200, 0, 600)
-          aurora1.addColorStop(0, 'transparent')
-          aurora1.addColorStop(0.2, '#00ff8880')  // Bright green
-          aurora1.addColorStop(0.4, '#00e6ff90')  // Bright cyan
-          aurora1.addColorStop(0.6, '#0080ff70')  // Bright blue
-          aurora1.addColorStop(0.8, '#00408050')  // Dark blue
-          aurora1.addColorStop(1, 'transparent')
-          spaceCtx.fillStyle = aurora1
-          spaceCtx.fillRect(0, 200, spaceCanvas.width, 400)
-          
-          // Additional aurora layers for complex effect...
-          const aurora2 = spaceCtx.createLinearGradient(0, 100, 0, 700)
-          aurora2.addColorStop(0, 'transparent')
-          aurora2.addColorStop(0.15, '#520e958d') // Bright purple
-          aurora2.addColorStop(0.35, '#ff00ff80') // Bright magenta
-          aurora2.addColorStop(0.55, '#ff0062ae') // Bright pink
-          aurora2.addColorStop(0.75, '#003380d9') // Dark purple
-          aurora2.addColorStop(1, 'transparent')
-          spaceCtx.fillStyle = aurora2
-          spaceCtx.fillRect(0, 100, spaceCanvas.width, 600)
-          
-          const aurora3 = spaceCtx.createLinearGradient(0, 150, 0, 450)
-          aurora3.addColorStop(0, 'transparent')
-          aurora3.addColorStop(0.25, '#70be229c') // Yellow-green
-          aurora3.addColorStop(0.45, '#14dc4680') // Bright green
-          aurora3.addColorStop(0.65, '#00804060') // Dark green
-           
-          aurora3.addColorStop(1, 'transparent')
-          spaceCtx.fillStyle = aurora3
-          spaceCtx.fillRect(0, 150, spaceCanvas.width, 300)
-          
-          // Add stars scattered across the sky
-          for(let i = 0; i < 250; i++) {
-            const x = Math.random() * spaceCanvas.width
-            const y = Math.random() * spaceCanvas.height
-            const brightness = Math.random() * 0.6 + 0.2
-            const size = Math.random() * 1.5
-            
-            spaceCtx.fillStyle = `rgba(255,255,255,${brightness})`
-            spaceCtx.fillRect(x, y, size, size)
-          }
-          
-          scene.background = new THREE.CanvasTexture(spaceCanvas)
-          break
-
-        case 'sunset':
-          // Create sunset gradient
-          const sunsetCanvas = document.createElement('canvas')
-          const sunsetCtx = sunsetCanvas.getContext('2d')
-          sunsetCanvas.width = 512
-          sunsetCanvas.height = 512
-          const sunsetGrad = sunsetCtx.createLinearGradient(0, 0, 0, sunsetCanvas.height)
-          sunsetGrad.addColorStop(0, '#362aa3ff')
-          sunsetGrad.addColorStop(0.3, '#92530bff')
-          sunsetGrad.addColorStop(0.7, '#8d730cff')
-          sunsetGrad.addColorStop(1, '#62445eff')
-          sunsetCtx.fillStyle = sunsetGrad
-          sunsetCtx.fillRect(0, 0, sunsetCanvas.width, sunsetCanvas.height)
-          scene.background = new THREE.CanvasTexture(sunsetCanvas)
-          break
-
-        case 'matrix':
-          // Create matrix-style blue gradient
-          const matrixCanvas = document.createElement('canvas')
-          const matrixCtx = matrixCanvas.getContext('2d')
-          matrixCanvas.width = 512
-          matrixCanvas.height = 512
-          const matrixGrad = matrixCtx.createLinearGradient(0, 0, 0, matrixCanvas.height)
-          matrixGrad.addColorStop(1, '#3d1642ff')
-          matrixGrad.addColorStop(.3, '#3b1e65ff')
-          matrixGrad.addColorStop(0.5, '#0630affa')
-          matrixGrad.addColorStop(1, '#120101ff')
-          matrixCtx.fillStyle = matrixGrad
-          matrixCtx.fillRect(0, 0, matrixCanvas.width, matrixCanvas.height)
-          scene.background = new THREE.CanvasTexture(matrixCanvas)
-          break
-
-        default:
-          scene.background = new THREE.Color(0x000000) // Plain black
-      }
-    }
-
-    createEnvironment(environment) // Use current environment prop from App.jsx
-  }, [environment]) // Run this effect when environment prop changes
+  // ...existing code...
 
   // ===============================================
   // OBJECTS CREATOR - RESPONDS TO MULTIPLE PROPS
@@ -1514,6 +1386,7 @@ function ThreeScene({
                     const endX = edgeVertices[j + 3]
                     const endY = edgeVertices[j + 4]
                     const endZ = edgeVertices[j + 5]
+
                     
                     const steps = 8 // Number of spiral steps
                     for (let step = 0; step < steps; step++) {
@@ -1553,6 +1426,30 @@ function ThreeScene({
               currentMesh.rotation.x = spiralAngle
               currentMesh.rotation.y = spiralAngle * 0.7
               break
+
+            case 'liquid':
+              // Liquid metal effect: morph vertices with smooth flowing sine/cosine waves
+              if (geometry && originalPositions && currentMesh === solidMesh) {
+                const positions = geometry.attributes.position.array;
+                for (let i = 0; i < positions.length; i += 3) {
+                  const ox = originalPositions[i];
+                  const oy = originalPositions[i + 1];
+                  const oz = originalPositions[i + 2];
+                  // Three gentle, phase-shifted waves
+                  const wave1 = Math.sin(ox * 1.2 + t * 1.1) * 0.12;
+                  const wave2 = Math.cos(oy * 1.3 + t * 0.9) * 0.10;
+                  const wave3 = Math.sin(oz * 1.1 + t * 1.3 + Math.cos(t * 0.5)) * 0.08;
+                  positions[i]     = ox + wave1;
+                  positions[i + 1] = oy + wave2;
+                  positions[i + 2] = oz + wave3;
+                }
+                geometry.attributes.position.needsUpdate = true;
+              }
+              // Slow, gentle rotation and keep original position
+              currentMesh.rotation.x += 0.004;
+              currentMesh.rotation.y += 0.006;
+              currentMesh.position.copy(originalPosition);
+              break;
 
             case 'chaos':
               // Chaotic random movement - reset vertices to original positions first
@@ -1617,248 +1514,181 @@ function ThreeScene({
               break
 
             case 'dna':
-              // DNA Helix: Complex vertex morphing + rotation
-              if (geometry && originalPositions) {
-                const positions = geometry.attributes.position.array
-                for (let i = 0; i < positions.length; i += 3) {
-                  const x = originalPositions[i]
-                  const y = originalPositions[i + 1]
-                  const z = originalPositions[i + 2]
-                  
-                  const radius = Math.sqrt(x * x + z * z)
-                  const angle = Math.atan2(z, x) + t * 0.5 + y * 0.3
-                  
-                  const helixRadius = radius + Math.sin(t * 2 + y * 2 + phase) * 0.2
-                  positions[i] = Math.cos(angle) * helixRadius
-                  positions[i + 1] = y + Math.sin(t * 1.5 + angle + phase) * 0.1
-                  positions[i + 2] = Math.sin(angle) * helixRadius
-                }
-                geometry.attributes.position.needsUpdate = true // Tell Three.js to update vertices
-                
-                // UPDATE INTRICATE WIREFRAME TO FOLLOW MORPHED SURFACE - DNA
-                if (currentMesh === solidMesh && centerLines && curvedLines) {
-                  if (geometry.type === 'TetrahedronGeometry') {
-                    // TETRAHEDRON: Update hyper-tetrahedron wireframes during DNA morphing
-                    
-                    // Update inner tetrahedron edges (red lines)
-                    const centerLinesGeom = centerLines.geometry
-                    if (centerLinesGeom && centerLinesGeom.attributes.position) {
-                      const centerLinesPos = centerLinesGeom.attributes.position.array
-                      
-                      // Get current morphed vertices
-                      const vertices = []
-                      for (let v = 0; v < 4; v++) {
-                        vertices.push([
-                          positions[v * 3],
-                          positions[v * 3 + 1], 
-                          positions[v * 3 + 2]
-                        ])
-                      }
-                      
-                      // Update inner tetrahedron vertices (scaled 0.5x)
-                      const innerVertices = vertices.map(vertex => [
-                        vertex[0] * 0.5,
-                        vertex[1] * 0.5,
-                        vertex[2] * 0.5
-                      ])
-                      
-                      // Update the 6 inner tetrahedron edges
-                      const edges = [[0,1],[0,2],[0,3],[1,2],[1,3],[2,3]]
-                      edges.forEach(([i, j], edgeIndex) => {
-                        const baseIndex = edgeIndex * 6
-                        centerLinesPos[baseIndex] = innerVertices[i][0]
-                        centerLinesPos[baseIndex + 1] = innerVertices[i][1]
-                        centerLinesPos[baseIndex + 2] = innerVertices[i][2]
-                        centerLinesPos[baseIndex + 3] = innerVertices[j][0]
-                        centerLinesPos[baseIndex + 4] = innerVertices[j][1]
-                        centerLinesPos[baseIndex + 5] = innerVertices[j][2]
-                      })
-                      
-                      centerLinesGeom.attributes.position.needsUpdate = true
-                    }
-                    
-                    // Update vertex connections (green lines)
-                    const curvedLinesGeom = curvedLines.geometry
-                    if (curvedLinesGeom && curvedLinesGeom.attributes.position) {
-                      const curvedLinesPos = curvedLinesGeom.attributes.position.array
-                      
-                      // Update the 4 vertex-to-vertex connections
-                      const tetraEdges = [
-                        [0, 1], [0, 2], [0, 3],  // From vertex 0 to others
-                        [1, 2], [1, 3],          // From vertex 1 to remaining 
-                        [2, 3]                   // From vertex 2 to 3
-                      ]
-                      tetraEdges.forEach(([i, j], edgeIndex) => {
-                        const baseIndex = edgeIndex * 6
-                        const innerScale = 0.5
-                        
-                        // Inner vertex
-                        curvedLinesPos[baseIndex] = positions[i * 3] * innerScale
-                        curvedLinesPos[baseIndex + 1] = positions[i * 3 + 1] * innerScale
-                        curvedLinesPos[baseIndex + 2] = positions[i * 3 + 2] * innerScale
-                        
-                        // Outer vertex
-                        curvedLinesPos[baseIndex + 3] = positions[j * 3]
-                        curvedLinesPos[baseIndex + 4] = positions[j * 3 + 1]
-                        curvedLinesPos[baseIndex + 5] = positions[j * 3 + 2]
-                      })
-                      
-                      curvedLinesGeom.attributes.position.needsUpdate = true
-                    }
-                  } else if (geometry.type === 'OctahedronGeometry') {
-                    // OCTAHEDRON: Update hyper-octahedron wireframes during DNA morphing
-                    
-                    // Update inner octahedron edges (red lines)
-                    const centerLinesGeom = centerLines.geometry
-                    if (centerLinesGeom && centerLinesGeom.attributes.position) {
-                      const centerLinesPos = centerLinesGeom.attributes.position.array
-                      
-                      // Get current morphed vertices (octahedron has 6 vertices)
-                      const vertices = []
-                      for (let v = 0; v < 6; v++) {
-                        vertices.push([
-                          positions[v * 3],
-                          positions[v * 3 + 1], 
-                          positions[v * 3 + 2]
-                        ])
-                      }
-                      
-                      // Update inner octahedron vertices (scaled 0.5x)
-                      const innerVertices = vertices.map(vertex => [
-                        vertex[0] * 0.5,
-                        vertex[1] * 0.5,
-                        vertex[2] * 0.5
-                      ])
-                      
-                      // Update the 12 inner octahedron edges
-                      const edges = [
-                        [0,2],[0,3],[0,4],[0,5],  // Top vertex to equatorial vertices
-                        [1,2],[1,3],[1,4],[1,5],  // Bottom vertex to equatorial vertices
-                        [2,3],[3,4],[4,5],[5,2]   // Equatorial edge loop
-                      ]
-                      edges.forEach(([i, j], edgeIndex) => {
-                        const baseIndex = edgeIndex * 6
-                        centerLinesPos[baseIndex] = innerVertices[i][0]
-                        centerLinesPos[baseIndex + 1] = innerVertices[i][1]
-                        centerLinesPos[baseIndex + 2] = innerVertices[i][2]
-                        centerLinesPos[baseIndex + 3] = innerVertices[j][0]
-                        centerLinesPos[baseIndex + 4] = innerVertices[j][1]
-                        centerLinesPos[baseIndex + 5] = innerVertices[j][2]
-                      })
-                      
-                      centerLinesGeom.attributes.position.needsUpdate = true
-                    }
-                    
-                    // Update vertex connections (green lines)
-                    const curvedLinesGeom = curvedLines.geometry
-                    if (curvedLinesGeom && curvedLinesGeom.attributes.position) {
-                      const curvedLinesPos = curvedLinesGeom.attributes.position.array
-                      
-                      // Update the 6 vertex-to-vertex connections
-                      for (let v = 0; v < 6; v++) {
-                        const baseIndex = v * 6
-                        const innerScale = 0.5
-                        
-                        // Inner vertex
-                        curvedLinesPos[baseIndex] = positions[v * 3] * innerScale
-                        curvedLinesPos[baseIndex + 1] = positions[v * 3 + 1] * innerScale
-                        curvedLinesPos[baseIndex + 2] = positions[v * 3 + 2] * innerScale
-                        
-                        // Outer vertex
-                        curvedLinesPos[baseIndex + 3] = positions[v * 3]
-                        curvedLinesPos[baseIndex + 4] = positions[v * 3 + 1]
-                        curvedLinesPos[baseIndex + 5] = positions[v * 3 + 2]
-                      }
-                      
-                      curvedLinesGeom.attributes.position.needsUpdate = true
-                    }
-                  } else {
-                    // OTHER GEOMETRIES: Use existing update logic
-                    // Update center lines to follow morphed vertices
-                    const centerLinesGeom = centerLines.geometry
-                    if (centerLinesGeom && centerLinesGeom.attributes.position) {
-                      const centerLinesPos = centerLinesGeom.attributes.position.array
-                      let lineIndex = 0
-                      
-                      // Update every other point (the vertex endpoints) to match morphed surface
-                    for (let i = 1; i < centerLinesPos.length; i += 6) { // Every second point (vertex endpoints)
-                      const vertexIndex = lineIndex * 9 // Match the original vertex stepping
-                      if (vertexIndex < positions.length) {
-                        centerLinesPos[i] = positions[vertexIndex]     // X
-                        centerLinesPos[i + 1] = positions[vertexIndex + 1] // Y  
-                        centerLinesPos[i + 2] = positions[vertexIndex + 2] // Z
-                      }
-                      lineIndex++
-                    }
-                    centerLinesGeom.attributes.position.needsUpdate = true
-                  }
-                  
-                  // Update curved lines to follow morphed vertices
-                  const curvedLinesGeom = curvedLines.geometry
-                  if (curvedLinesGeom && curvedLinesGeom.attributes.position) {
-                    // Update existing curved line endpoints smoothly every frame with validation
-                    const curvedLinesPos = curvedLinesGeom.attributes.position.array
-                    
-                    // Update each line segment, but validate the connection is still appropriate
-                    for (let i = 0; i < curvedLinesPos.length; i += 6) {
-                      // Get the vertex indices for this line
-                      const vertex1Index = Math.floor((i / 6) * 30)
-                      const vertex2Index = vertex1Index + 30
-                      
-                      if (vertex1Index < positions.length && vertex2Index < positions.length) {
-                        const x1 = positions[vertex1Index]
-                        const y1 = positions[vertex1Index + 1]
-                        const z1 = positions[vertex1Index + 2]
-                        const x2 = positions[vertex2Index]
-                        const y2 = positions[vertex2Index + 1]
-                        const z2 = positions[vertex2Index + 2]
-                        
-                        // Check if this connection is still valid
-                        const distance = Math.sqrt((x2-x1)*(x2-x1) + (y2-y1)*(y2-y1) + (z2-z1)*(z2-z1))
-                        let shouldShow = distance < 0.8 && distance > 0.1
-                        
-                        // For torus, check center distance to avoid cross-hole connections
-                        if (geometry.type === 'TorusKnotGeometry' && shouldShow) {
-                          const centerDistance1 = Math.sqrt(x1*x1 + z1*z1)
-                          const centerDistance2 = Math.sqrt(x2*x2 + z2*z2)
-                          const centerDistanceDiff = Math.abs(centerDistance1 - centerDistance2)
-                          shouldShow = centerDistanceDiff < 0.5
-                        }
-                        
-                        if (shouldShow) {
-                          // Update the line endpoints
-                          curvedLinesPos[i] = x1
-                          curvedLinesPos[i + 1] = y1
-                          curvedLinesPos[i + 2] = z1
-                          curvedLinesPos[i + 3] = x2
-                          curvedLinesPos[i + 4] = y2
-                          curvedLinesPos[i + 5] = z2
-                        } else {
-                          // Hide invalid connections by collapsing them to a single point
-                          curvedLinesPos[i] = 0
-                          curvedLinesPos[i + 1] = 0
-                          curvedLinesPos[i + 2] = 0
-                          curvedLinesPos[i + 3] = 0
-                          curvedLinesPos[i + 4] = 0
-                          curvedLinesPos[i + 5] = 0
-                        }
-                      }
-                    }
-                    curvedLinesGeom.attributes.position.needsUpdate = true
-                  }
-                  } // Close the else block for non-tetrahedron geometries
-                } // Close the wireframe update conditional
-                
-                // Update main geometry AFTER wireframe updates for perfect sync
-                geometry.attributes.position.needsUpdate = true
-              } // Close the liquid animation conditional
-              
-              currentMesh.scale.setScalar(1 + 0.2 * Math.sin(t * 1.5 + phase))
-              currentMesh.rotation.x += Math.sin(t * 0.3) * 0.01
-              currentMesh.rotation.y += Math.cos(t * 0.4) * 0.01
-              currentMesh.position.copy(originalPosition)
-              break
+  // DNA Helix: Geometry-aware vertex morphing + rotation
+  if (geometry && originalPositions && currentMesh === solidMesh) {
+    const positions = geometry.attributes.position.array
+    const type = geometry.type
 
+    // For flat-faced polyhedrons: use gentle wave deformations
+    if (type === 'BoxGeometry' || type === 'TetrahedronGeometry' || type === 'OctahedronGeometry') {
+      for (let i = 0; i < positions.length; i += 3) {
+        const ox = originalPositions[i]
+        const oy = originalPositions[i + 1]
+        const oz = originalPositions[i + 2]
+        positions[i] = ox + Math.sin(t * 2 + oy * 3) * 0.12
+        positions[i + 1] = oy + Math.cos(t * 1.5 + oz * 2) * 0.12
+        positions[i + 2] = oz + Math.sin(t * 1.8 + ox * 2.5) * 0.12
+      }
+    } else {
+      // For round shapes: use helical radial twist
+      for (let i = 0; i < positions.length; i += 3) {
+        const x = originalPositions[i]
+        const y = originalPositions[i + 1]
+        const z = originalPositions[i + 2]
+        const radius = Math.sqrt(x * x + z * z)
+        const angle = Math.atan2(z, x) + t * 0.5 + y * 0.3
+        const helixRadius = radius + Math.sin(t * 2 + y * 2 + phase) * 0.2
+        positions[i] = Math.cos(angle) * helixRadius
+        positions[i + 1] = y + Math.sin(t * 1.5 + angle + phase) * 0.1
+        positions[i + 2] = Math.sin(angle) * helixRadius
+      }
+    }
+    
+    geometry.attributes.position.needsUpdate = true
+    
+    // UPDATE INTRICATE WIREFRAME TO FOLLOW MORPHED SURFACE - DNA
+    if (centerLines && curvedLines) {
+      if (geometry.type === 'TetrahedronGeometry') {
+        const centerLinesGeom = centerLines.geometry
+        if (centerLinesGeom && centerLinesGeom.attributes.position) {
+          const centerLinesPos = centerLinesGeom.attributes.position.array
+          const vertices = []
+          for (let v = 0; v < 4; v++) {
+            vertices.push([positions[v * 3], positions[v * 3 + 1], positions[v * 3 + 2]])
+          }
+          const innerVertices = vertices.map(vertex => [vertex[0] * 0.5, vertex[1] * 0.5, vertex[2] * 0.5])
+          const edges = [[0,1],[0,2],[0,3],[1,2],[1,3],[2,3]]
+          edges.forEach(([i, j], edgeIndex) => {
+            const baseIndex = edgeIndex * 6
+            centerLinesPos[baseIndex] = innerVertices[i][0]
+            centerLinesPos[baseIndex + 1] = innerVertices[i][1]
+            centerLinesPos[baseIndex + 2] = innerVertices[i][2]
+            centerLinesPos[baseIndex + 3] = innerVertices[j][0]
+            centerLinesPos[baseIndex + 4] = innerVertices[j][1]
+            centerLinesPos[baseIndex + 5] = innerVertices[j][2]
+          })
+          centerLinesGeom.attributes.position.needsUpdate = true
+        }
+        
+        const curvedLinesGeom = curvedLines.geometry
+        if (curvedLinesGeom && curvedLinesGeom.attributes.position) {
+          const curvedLinesPos = curvedLinesGeom.attributes.position.array
+          const tetraEdges = [[0, 1], [0, 2], [0, 3], [1, 2], [1, 3], [2, 3]]
+          tetraEdges.forEach(([i, j], edgeIndex) => {
+            const baseIndex = edgeIndex * 6
+            const innerScale = 0.5
+            curvedLinesPos[baseIndex] = positions[i * 3] * innerScale
+            curvedLinesPos[baseIndex + 1] = positions[i * 3 + 1] * innerScale
+            curvedLinesPos[baseIndex + 2] = positions[i * 3 + 2] * innerScale
+            curvedLinesPos[baseIndex + 3] = positions[j * 3]
+            curvedLinesPos[baseIndex + 4] = positions[j * 3 + 1]
+            curvedLinesPos[baseIndex + 5] = positions[j * 3 + 2]
+          })
+          curvedLinesGeom.attributes.position.needsUpdate = true
+        }
+      } else if (geometry.type === 'OctahedronGeometry') {
+        const centerLinesGeom = centerLines.geometry
+        if (centerLinesGeom && centerLinesGeom.attributes.position) {
+          const centerLinesPos = centerLinesGeom.attributes.position.array
+          const vertices = []
+          for (let v = 0; v < 6; v++) {
+            vertices.push([positions[v * 3], positions[v * 3 + 1], positions[v * 3 + 2]])
+          }
+          const innerVertices = vertices.map(vertex => [vertex[0] * 0.5, vertex[1] * 0.5, vertex[2] * 0.5])
+          const edges = [[0,2],[0,3],[0,4],[0,5],[1,2],[1,3],[1,4],[1,5],[2,3],[3,4],[4,5],[5,2]]
+          edges.forEach(([i, j], edgeIndex) => {
+            const baseIndex = edgeIndex * 6
+            centerLinesPos[baseIndex] = innerVertices[i][0]
+            centerLinesPos[baseIndex + 1] = innerVertices[i][1]
+            centerLinesPos[baseIndex + 2] = innerVertices[i][2]
+            centerLinesPos[baseIndex + 3] = innerVertices[j][0]
+            centerLinesPos[baseIndex + 4] = innerVertices[j][1]
+            centerLinesPos[baseIndex + 5] = innerVertices[j][2]
+          })
+          centerLinesGeom.attributes.position.needsUpdate = true
+        }
+        
+        const curvedLinesGeom = curvedLines.geometry
+        if (curvedLinesGeom && curvedLinesGeom.attributes.position) {
+          const curvedLinesPos = curvedLinesGeom.attributes.position.array
+          for (let v = 0; v < 6; v++) {
+            const baseIndex = v * 6
+            const innerScale = 0.5
+            curvedLinesPos[baseIndex] = positions[v * 3] * innerScale
+            curvedLinesPos[baseIndex + 1] = positions[v * 3 + 1] * innerScale
+            curvedLinesPos[baseIndex + 2] = positions[v * 3 + 2] * innerScale
+            curvedLinesPos[baseIndex + 3] = positions[v * 3]
+            curvedLinesPos[baseIndex + 4] = positions[v * 3 + 1]
+            curvedLinesPos[baseIndex + 5] = positions[v * 3 + 2]
+          }
+          curvedLinesGeom.attributes.position.needsUpdate = true
+        }
+      } else {
+        const centerLinesGeom = centerLines.geometry
+        if (centerLinesGeom && centerLinesGeom.attributes.position) {
+          const centerLinesPos = centerLinesGeom.attributes.position.array
+          let lineIndex = 0
+          for (let i = 1; i < centerLinesPos.length; i += 6) {
+            const vertexIndex = lineIndex * 9
+            if (vertexIndex < positions.length) {
+              centerLinesPos[i] = positions[vertexIndex]
+              centerLinesPos[i + 1] = positions[vertexIndex + 1]
+              centerLinesPos[i + 2] = positions[vertexIndex + 2]
+            }
+            lineIndex++
+          }
+          centerLinesGeom.attributes.position.needsUpdate = true
+        }
+        
+        const curvedLinesGeom = curvedLines.geometry
+        if (curvedLinesGeom && curvedLinesGeom.attributes.position) {
+          const curvedLinesPos = curvedLinesGeom.attributes.position.array
+          for (let i = 0; i < curvedLinesPos.length; i += 6) {
+            const vertex1Index = Math.floor((i / 6) * 30)
+            const vertex2Index = vertex1Index + 30
+            if (vertex1Index < positions.length && vertex2Index < positions.length) {
+              const x1 = positions[vertex1Index]
+              const y1 = positions[vertex1Index + 1]
+              const z1 = positions[vertex1Index + 2]
+              const x2 = positions[vertex2Index]
+              const y2 = positions[vertex2Index + 1]
+              const z2 = positions[vertex2Index + 2]
+              const distance = Math.sqrt((x2-x1)*(x2-x1) + (y2-y1)*(y2-y1) + (z2-z1)*(z2-z1))
+              let shouldShow = distance < 0.8 && distance > 0.1
+              if (geometry.type === 'TorusKnotGeometry' && shouldShow) {
+                const centerDistance1 = Math.sqrt(x1*x1 + z1*z1)
+                const centerDistance2 = Math.sqrt(x2*x2 + z2*z2)
+                const centerDistanceDiff = Math.abs(centerDistance1 - centerDistance2)
+                shouldShow = centerDistanceDiff < 0.5
+              }
+              if (shouldShow) {
+                curvedLinesPos[i] = x1
+                curvedLinesPos[i + 1] = y1
+                curvedLinesPos[i + 2] = z1
+                curvedLinesPos[i + 3] = x2
+                curvedLinesPos[i + 4] = y2
+                curvedLinesPos[i + 5] = z2
+              } else {
+                curvedLinesPos[i] = 0
+                curvedLinesPos[i + 1] = 0
+                curvedLinesPos[i + 2] = 0
+                curvedLinesPos[i + 3] = 0
+                curvedLinesPos[i + 4] = 0
+                curvedLinesPos[i + 5] = 0
+              }
+            }
+          }
+          curvedLinesGeom.attributes.position.needsUpdate = true
+        }
+      }
+    }
+  }
+  
+  currentMesh.scale.setScalar(1 + 0.2 * Math.sin(t * 1.5 + phase))
+  currentMesh.rotation.x += Math.sin(t * 0.3) * 0.01
+  currentMesh.rotation.y += Math.cos(t * 0.4) * 0.01
+  currentMesh.position.copy(originalPosition)
+  break
             case 'magnetic':
               // Magnetic Field: Vertices attracted/repelled by moving magnetic points
               if (geometry && originalPositions && magneticPoints) {
@@ -2429,9 +2259,26 @@ function ThreeScene({
   // ===============================================
   // RENDER METHOD - WHAT GETS DISPLAYED IN THE DOM
   // ===============================================
-  // This component renders a simple div that Three.js will attach its canvas to
-  return <div ref={mountRef} className="three-scene-container" />
+  // This component renders a parent div with a CSS gradient background, and the Three.js canvas inside
+  // Helper: map environment names to CSS class names
+  function getBackgroundClass(env) {
+    switch (env) {
+      case 'purple': return 'bg-gradient bg-gradient-purple';
+      case 'space': return 'bg-gradient bg-gradient-space';
+      case 'sunset': return 'bg-gradient bg-gradient-sunset';
+      case 'matrix': return 'bg-gradient bg-gradient-matrix';
+      default: return 'bg-gradient bg-gradient-default';
+    }
+  }
+
+  return (
+    <div className={getBackgroundClass(environment)}>
+      <div ref={mountRef} className="three-scene-container" />
+    </div>
+  );
 }
+
+
 
 export default ThreeScene
 

@@ -1,0 +1,33 @@
+/* bg.css - CSS background gradients for Three.js environments */
+
+.bg-gradient-purple {
+  background: linear-gradient(180deg, #090033ff 0%, #45146bff 30%, #980ae4cd 70%, #033867ff 100%);
+}
+
+.bg-gradient-space {
+  background: linear-gradient(180deg, #0a0f1c 0%, #1a1a2e 30%, #16213ed9 70%, #0f0f23 100%);
+}
+
+.bg-gradient-sunset {
+  background: linear-gradient(180deg, #362aa3ff 0%, #92530bff 30%, #8d730cff 70%, #62445eff 100%);
+}
+
+.bg-gradient-matrix {
+  background: linear-gradient(180deg, #3d1642ff 0%, #3b1e65ff 30%, #0630affa 50%, #120101ff 100%);
+}
+
+.bg-gradient-default {
+  background: linear-gradient(180deg, #000 0%, #222 100%);
+}
+
+.bg-gradient {
+  /* Shared styles for all backgrounds */
+  width: 100vw;
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+}
