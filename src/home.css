@@ -1,0 +1,126 @@
+/* HomePage-specific nav bar styles extracted from index.css */
+
+.quantum-nav {
+  width: 100vw;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 10000;
+  background: rgba(0,0,0,0.2);
+  border-bottom: 2px solid #00ffff44;
+  box-shadow: 0 2px 24px #00ffff22;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 40px;
+  height: 110px;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.nav-logo {
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+
+.logo-text {
+  position: relative;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 28px;
+  font-weight: 800;
+  background: linear-gradient(135deg, #00ffff72, #ff00668d, #ffff0094, #00ff33, #cc00ff, #ff3300);
+  background-size: 300% 300%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  color: #ffffff;
+  text-shadow: 0 0 20px rgba(45, 86, 86, 0.4);
+  animation: logoGlitch 6s ease-in-out infinite, gradientShift 4s ease-in-out infinite;
+}
+
+.logo-text::before {
+  content: attr(data-text);
+  position: absolute;
+  top: 0;
+  left: 2px;
+  color: #ff00ff;
+  animation: glitchShift1 3s ease-in-out infinite;
+  z-index: -1;
+  opacity: 0.7;
+}
+
+.logo-text::after {
+  content: attr(data-text);
+  position: absolute;
+  top: 0;
+  left: -2px;
+  color: #00ffff;
+  animation: glitchShift2 4s ease-in-out infinite;
+  z-index: -2;
+  opacity: 0.5;
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 30px;
+}
+
+.nav-link {
+  color: #00ffff;
+  text-decoration: none;
+  font-size: 18px;
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 700;
+  letter-spacing: 1px;
+  position: relative;
+  transition: color 0.2s;
+}
+
+.nav-link:hover {
+  color: #ff00cc;
+  text-shadow: 0 0 10px #ff00cc;
+}
+
+.nav-terminal {
+  font-size: 14px;
+  color: #00ff99;
+  margin-left: 20px;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.nav-quantum-field {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(90deg, #00ffff, #ff00cc, #ffff00, #00ff00, #9900ff);
+  opacity: 0.5;
+  filter: blur(1px);
+}
+
+@keyframes logoGlitch {
+  0%, 100% { filter: none; }
+  10% { filter: blur(1px) brightness(1.2); }
+  20% { filter: blur(0.5px) brightness(0.8); }
+  30% { filter: blur(2px) brightness(1.4); }
+  40% { filter: blur(0.5px) brightness(1.1); }
+  50% { filter: none; }
+}
+
+@keyframes glitchShift1 {
+  0%, 100% { left: 2px; }
+  50% { left: 6px; }
+}
+
+@keyframes glitchShift2 {
+  0%, 100% { left: -2px; }
+  50% { left: -6px; }
+}
+
+@keyframes gradientShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}

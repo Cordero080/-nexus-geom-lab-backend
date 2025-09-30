@@ -1,7 +1,5 @@
-
-
 import React, { useState } from 'react' // Import React and useState hook for managing collapsible section state
-
+import './controls.css';
 
 // PROPS RECEIVED FROM App.jsx - These are the data connections
 function Controls({ 
@@ -36,9 +34,9 @@ function Controls({
   
   // LOCAL STATE - These are managed by Controls component itself (NOT from App.jsx)
   // These control whether each section is expanded or collapsed in the UI
-  const [materialOpen, setMaterialOpen] = useState(true)   // Material Properties section expanded by default
-  const [sceneOpen, setSceneOpen] = useState(true)         // Scene Controls section expanded by default
-  const [lightingOpen, setLightingOpen] = useState(true)   // Lighting Controls section expanded by default
+  const [materialOpen, setMaterialOpen] = useState(false)   // Material Properties section closed by default
+  const [sceneOpen, setSceneOpen] = useState(false)         // Scene Controls section closed by default
+  const [lightingOpen, setLightingOpen] = useState(false)   // Lighting Controls section closed by default
 
   /*
   // EVENT HANDLER FUNCTIONS

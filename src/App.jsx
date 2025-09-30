@@ -3,6 +3,8 @@ import { Routes, Route, useNavigate } from 'react-router-dom';
 import ThreeScene from './ThreeScene';
 import Controls from './Controls';
 import HomePage from './HomePage';
+import NavBar from './nav/NavBar';
+import QuantumCursor from "./QuantumCursor";
 
 // Updated default colors for psychedelic theme
 const defaultBaseColor = '#ff00ff'; // Vibrant magenta
@@ -42,6 +44,7 @@ function Playground() {
 
   return (
     <>
+      <NavBar />
       <ThreeScene
         scale={scale}
         shininess={shininess}
@@ -117,20 +120,28 @@ function HomePageWithNav() {
   
   const handleEnter = () => {
     console.log('handleEnter called');
-    console.log('Attempting to navigate to /app');
-    navigate('/app');
+    console.log('Attempting to navigate to /playground');
+    navigate('/playground');
     console.log('navigate() executed');
   };
   
-  return <HomePage onEnter={handleEnter} />;
+  return (
+    <>
+      <NavBar />
+      <HomePage onEnter={handleEnter} />
+    </>
+  );
 }
 
 function App() {
   return (
-    <Routes>
-      <Route path="/" element={<HomePageWithNav />} />
-      <Route path="/app" element={<Playground />} />
-    </Routes>
+    <>
+      <QuantumCursor />
+      <Routes>
+        <Route path="/" element={<HomePageWithNav />} />
+        <Route path="/playground" element={<Playground />} />
+      </Routes>
+    </>
   );
 }
 
