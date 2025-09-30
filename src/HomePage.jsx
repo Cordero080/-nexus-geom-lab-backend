@@ -101,14 +101,12 @@ export default function HomePage() {
                 <span className="stat-value" data-stat="network">CONNECTED</span>
               </div>
             </div>
-            <button
-              className="beam-btn"
+            <BeamScanButton
               onClick={() => window.location.href = '/playground'}
+              label="Enter Playground"
               style={{ margin: '32px auto 0', display: 'block' }}
-            >
-              <span className="beam-btn-label">Enter Playground</span>
-              <span className="beam-btn-code">const playground = () =&gt; &#123; /* 3D magic! */ &#125;;</span>
-            </button>
+            />
+import BeamScanButton from './BeamScanButton';
             <div className="reality-particles"></div>
           </div>
         </section>
