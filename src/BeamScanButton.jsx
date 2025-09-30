@@ -13,12 +13,12 @@ export default function BeamScanButton({ onClick, label = 'Enter Playground' }) 
   return (
     <button
       ref={btnRef}
-      className="beam-scan-btn"
+      className="beam-scan-btn beam-btn"
       onClick={onClick}
       tabIndex={0}
     >
-      <span className="beam-scan-label">{label}</span>
-      <span className="beam-scan-code" aria-hidden="true">
+      <span className="beam-scan-label beam-btn-label">{label}</span>
+      <span className="beam-scan-code beam-btn-code" aria-hidden="true">
         <pre>{RAW_CODE}</pre>
       </span>
       <span className="beam-scan-effect" aria-hidden="true" />

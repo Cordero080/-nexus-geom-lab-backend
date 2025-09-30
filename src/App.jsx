@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { Routes, Route, useNavigate } from 'react-router-dom';
-import ThreeScene from './ThreeScene';
-import Controls from './Controls';
-import HomePage from './HomePage';
+import ThreeScene from './ThreeScene/ThreeScene';
+import Controls from './Controls/Controls';
+import HomePage from './HomePage/HomePage';
 import NavBar from './nav/NavBar';
 import QuantumCursor from "./QuantumCursor";
 

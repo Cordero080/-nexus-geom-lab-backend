@@ -1,0 +1,214 @@
+/* === MOVED FROM index.css: Scene/Environment Effects === */
+
+
+
+.quantum-scene {
+	min-height: 100vh;
+	width: 100vw;
+	position: relative;
+	overflow: hidden;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.scene-background {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	z-index: 1;
+	pointer-events: none;
+	transition: filter 0.5s, transform 0.5s;
+}
+
+.scene-content {
+	position: relative;
+	z-index: 2;
+	width: 100%;
+	max-width: 900px;
+	margin: 0 auto;
+	padding: 60px 0 40px 0;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	transition: opacity 0.5s, transform 0.5s;
+}
+
+.quantum-particle {
+	position: fixed;
+	width: 3px;
+	height: 3px;
+	border-radius: 50%;
+	pointer-events: none;
+	z-index: 99997;
+	background: radial-gradient(circle, #00ffff 0%, #ff00cc 100%);
+	opacity: 0.8;
+	box-shadow: 0 0 6px #00ffff, 0 0 12px #ff00cc;
+	transition: opacity 0.2s;
+}
+
+.energy-wave {
+	position: fixed;
+	width: 8px;
+	height: 8px;
+	border-radius: 50%;
+	border: 2px solid #00ffff;
+	background: rgba(0,255,255,0.6);
+	box-shadow: 0 0 8px #00ffff;
+	pointer-events: none;
+	z-index: 99996;
+	opacity: 0.5;
+}
+/* === MOVED FROM index.css: Scene/Environment Effects === */
+.quantum-scene {
+	min-height: 100vh;
+	width: 100vw;
+	position: relative;
+	overflow: hidden;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.scene-background {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	z-index: 1;
+	pointer-events: none;
+	transition: filter 0.5s, transform 0.5s;
+}
+
+.scene-content {
+	position: relative;
+	z-index: 2;
+	width: 100%;
+	max-width: 900px;
+	margin: 0 auto;
+	padding: 60px 0 40px 0;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	transition: opacity 0.5s, transform 0.5s;
+}
+/* bg.css - CSS background gradients for Three.js environments */
+
+.bg-gradient-purple {
+  background: linear-gradient(180deg, #090033ff 0%, #45146bff 30%, #980ae4cd 70%, #033867ff 100%);
+}
+
+.bg-gradient-space {
+  background: linear-gradient(180deg, #0a0a2a 0%, #1a1a4a 100%);
+  position: relative;
+  overflow: hidden;
+}
+
+.bg-gradient-space::before,
+.bg-gradient-space::after {
+  content: '';
+  position: absolute;
+  left: 0; right: 0; top: 0; bottom: 0;
+  pointer-events: none;
+  z-index: 0;
+  transition: opacity 0.8s;
+}
+
+.bg-gradient-space::before {
+  /* Main aurora and rainbow band, animated */
+  background:
+    radial-gradient(ellipse 80% 30% at 50% 20%, rgba(80,255,255,0.18) 0%, rgba(0,0,0,0) 80%),
+    radial-gradient(ellipse 60% 20% at 60% 25%, rgba(120,255,180,0.13) 0%, rgba(0,0,0,0) 80%),
+    radial-gradient(ellipse 50% 15% at 40% 18%, rgba(180,120,255,0.10) 0%, rgba(3, 37, 77, 0) 80%),
+    radial-gradient(ellipse 60% 6% at 40% 48%, rgba(250, 7, 145, 0.989) 0%, rgba(36, 3, 66, 0) 80%),
+    radial-gradient(ellipse 90% .5% at 45% 22%, rgba(255, 230, 0, 0.843) 0%, rgba(0,0,0,0) 80%),
+    radial-gradient(ellipse 90% 25% at 50% 15%,  rgba(255,255,120,0.13) 0%, rgba(0,0,0,0) 80%),
+    radial-gradient(ellipse 40% .5% at 80% 70%, rgba(0, 238, 255, 0.898) 0%, rgba(0,0,0,0) 80%),
+    radial-gradient(ellipse 100% 40% at 50% 10%, rgba(60,120,255,0.13) 0%, rgba(0,0,0,0) 90%),
+    radial-gradient(ellipse 100% 50% at 50% 0%, rgba(26, 8, 69, 0.782) 0%, rgba(0,0,0,0) 100%),
+    linear-gradient(10deg, rgba(47, 2, 74, 0.921) 0%, rgba(0,255,255,0.18) 30%, rgba(0, 255, 208, 0.748) 60%, rgba(255,255,0,0.13) 80%, rgba(120,0,255,0.18) 100%);
+  animation: aurora-move 14s ease-in-out infinite alternate;
+}
+
+.bg-gradient-space::after {
+  /* Dimensional shadow glows and parallax ribbons */
+  background:
+    radial-gradient(ellipse 120% 60% at 50% 80%, rgba(0,40,80,0.22) 0%, rgba(0,0,0,0) 80%),
+    radial-gradient(ellipse 100% 30% at 30% 60%, rgba(178, 28, 28, 0.862) 0%, rgba(0,0,0,0) 80%),
+    radial-gradient(ellipse 80% 20% at 70% 65%, rgba(0,0,0,0.13) 0%, rgba(0,0,0,0) 80%),
+    linear-gradient(100deg, rgba(0,255,255,0.08) 10%, rgba(255,0,255,0.07) 90%);
+  opacity: 0.7;
+  filter: blur(18px) brightness(0.9);
+  animation: aurora-depth-move 22s ease-in-out infinite alternate;
+  z-index: -1;
+}
+
+@keyframes aurora-move {
+  0% {
+    filter: blur(1px) brightness(1.1) hue-rotate(0deg);
+    opacity: 0.85;
+    transform: translateY(0) scaleX(1);
+  }
+  30% {
+    filter: blur(18px) brightness(1.3) hue-rotate(60deg);
+    opacity: 1;
+    transform: translateY(-16px) scaleX(1.09);
+  }
+  60% {
+    filter: blur(16px) brightness(1.2) hue-rotate(-40deg);
+    opacity: 0.95;
+    transform: translateY(-8px) scaleX(1.04);
+  }
+  100% {
+    filter: blur(12px) brightness(1.1) hue-rotate(-20deg);
+    opacity: 0.85;
+    transform: translateY(0) scaleX(1);
+  }
+}
+
+@keyframes aurora-depth-move {
+  0% {
+    filter: blur(18px) brightness(0.9) hue-rotate(0deg);
+    opacity: 0.7;
+    transform: translateY(0) scaleX(1);
+  }
+  50% {
+    filter: blur(28px) brightness(1.1) hue-rotate(30deg);
+    opacity: 0.85;
+    transform: translateY(10px) scaleX(1.04);
+  }
+  100% {
+    filter: blur(18px) brightness(0.9) hue-rotate(-20deg);
+    opacity: 0.7;
+    transform: translateY(0) scaleX(1);
+  }
+}
+
+.bg-gradient-sunset {
+  background: linear-gradient(180deg, #362aa3ff 0%, #92530bff 30%, #8d730cff 70%, #62445eff 100%);
+}
+
+.bg-gradient-matrix {
+  background: linear-gradient(180deg, #3d1642ff 0%, #3b1e65ff 30%, #0630affa 50%, #120101ff 100%);
+}
+
+.bg-gradient-default {
+  background: linear-gradient(180deg, #000 0%, #222 100%);
+}
+
+.bg-gradient {
+  /* Shared styles for all backgrounds */
+  width: 100vw;
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+}
