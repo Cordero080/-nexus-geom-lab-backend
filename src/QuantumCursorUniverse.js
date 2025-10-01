@@ -42,7 +42,7 @@ export default class QuantumCursorUniverse {
     this.mouseX = e.clientX;
     this.mouseY = e.clientY;
     this.isMouseMoving = true;
-    this.cursor.style.opacity = "1";
+    if (this.cursor) this.cursor.style.opacity = "1";
     clearTimeout(this.moveTimeout);
     this.moveTimeout = setTimeout(() => {
       this.isMouseMoving = false;
@@ -100,14 +100,16 @@ export default class QuantumCursorUniverse {
 
   createWormhole() {
     this.wormholeActive = true;
-    this.wormhole.style.opacity = "1";
-    this.wormhole.style.left = this.mouseX - 75 + "px";
-    this.wormhole.style.top = this.mouseY - 75 + "px";
+    if (this.wormhole) {
+      this.wormhole.style.opacity = "1";
+      this.wormhole.style.left = this.mouseX - 75 + "px";
+      this.wormhole.style.top = this.mouseY - 75 + "px";
 
-    // Trigger ripple animation
-    this.wormhole.classList.remove("ripple");
-    void this.wormhole.offsetWidth;
-    this.wormhole.classList.add("ripple");
+      // Trigger ripple animation
+      this.wormhole.classList.remove("ripple");
+      void this.wormhole.offsetWidth;
+      this.wormhole.classList.add("ripple");
+    }
 
     // Suck in nearby particles
     this.particles.forEach((particle) => {
@@ -123,31 +125,43 @@ export default class QuantumCursorUniverse {
 
     setTimeout(() => {
       this.wormholeActive = false;
-      this.wormhole.style.opacity = "0";
-      this.wormhole.classList.remove("ripple");
+      if (this.wormhole) {
+        this.wormhole.style.opacity = "0";
+        this.wormhole.classList.remove("ripple");
+      }
     }, 700);
   }
 
   createDimensionalRift() {
     this.dimensionalTear = true;
-    this.dimensionalRift.style.opacity = "1";
-    this.dimensionalRift.style.left = this.mouseX - 150 + "px";
-    this.dimensionalRift.style.top = this.mouseY + "px";
-    this.dimensionalRift.style.transform = `rotate(${Math.random() * 360}deg)`;
+    if (this.dimensionalRift) {
+      this.dimensionalRift.style.opacity = "1";
+      this.dimensionalRift.style.left = this.mouseX - 150 + "px";
+      this.dimensionalRift.style.top = this.mouseY + "px";
+      this.dimensionalRift.style.transform = `rotate(${
+        Math.random() * 360
+      }deg)`;
+    }
   }
 
   closeDimensionalRift() {
     this.dimensionalTear = false;
-    this.dimensionalRift.style.opacity = "0";
+    if (this.dimensionalRift) {
+      this.dimensionalRift.style.opacity = "0";
+    }
   }
 
   updatePhysics() {
     this.targetX += (this.mouseX - this.targetX) * 0.15;
     this.targetY += (this.mouseY - this.targetY) * 0.15;
-    this.cursor.style.left = this.targetX - 10 + "px";
-    this.cursor.style.top = this.targetY - 10 + "px";
-    this.gravityField.style.left = this.mouseX - 90 + "px";
-    this.gravityField.style.top = this.mouseY - 90 + "px";
+    if (this.cursor) {
+      this.cursor.style.left = this.targetX - 10 + "px";
+      this.cursor.style.top = this.targetY - 10 + "px";
+    }
+    if (this.gravityField) {
+      this.gravityField.style.left = this.mouseX - 90 + "px";
+      this.gravityField.style.top = this.mouseY - 90 + "px";
+    }
 
     this.particles.forEach((particle) => {
       const dx = this.mouseX - particle.x;

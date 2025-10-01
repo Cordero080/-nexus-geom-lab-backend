@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Routes, Route, useNavigate } from 'react-router-dom';
-import ThreeScene from './ThreeScene/ThreeScene';
+import ThreeScene from './features/sceneControls/ThreeScene';
 import Controls from './Controls/Controls';
 import HomePage from './HomePage/HomePage';
 import NavBar from './nav/NavBar';
@@ -39,6 +39,11 @@ function Playground() {
   const [directionalLightIntensity, setDirectionalLightIntensity] = useState(1.0)
   const [directionalLightX, setDirectionalLightX] = useState(10)
   const [directionalLightY, setDirectionalLightY] = useState(10)
+
+  // Debug: log when directionalLightY changes
+  React.useEffect(() => {
+    console.log('[App] directionalLightY state changed:', directionalLightY);
+  }, [directionalLightY]);
   const [directionalLightZ, setDirectionalLightZ] = useState(5)
   const [scale, setScale] = useState(1)
 

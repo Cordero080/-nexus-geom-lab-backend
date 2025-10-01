@@ -1,5 +1,7 @@
-import React, { useState } from 'react' // Import React and useState hook for managing collapsible section state
+import React, { useState } from 'react';
 import './controls.css';
+import LightingControls from './LightingControls';
+import CustomCursor from '../CustomCursor';
 
 // PROPS RECEIVED FROM App.jsx - These are the data connections
 function Controls({ 
@@ -23,13 +25,13 @@ function Controls({
   objectType, onObjectTypeChange,                  // Current object type + function to update it
   
   // LIGHTING PROPERTIES (current values FROM App.jsx + setter functions FROM App.jsx)
-  ambientLightColor, onAmbientLightColorChange,           // Current ambient light color + function to update it
-  ambientLightIntensity, onAmbientLightIntensityChange,   // Current ambient light intensity + function to update it
-  directionalLightColor, onDirectionalLightColorChange,   // Current directional light color + function to update it
-  directionalLightIntensity, onDirectionalLightIntensityChange, // Current directional light intensity + function to update it
-  directionalLightX, onDirectionalLightXChange,           // Current directional light X position + function to update it
-  directionalLightY, onDirectionalLightYChange,           // Current directional light Y position + function to update it
-  directionalLightZ, onDirectionalLightZChange            // Current directional light Z position + function to update it
+  ambientLightColor, onAmbientLightColorChange,
+  ambientLightIntensity, onAmbientLightIntensityChange,
+  directionalLightColor, onDirectionalLightColorChange,
+  directionalLightIntensity, onDirectionalLightIntensityChange,
+  directionalLightX, onDirectionalLightXChange,
+  directionalLightY, onDirectionalLightYChange,
+  directionalLightZ, onDirectionalLightZChange
 }) {
   
   // LOCAL STATE - These are managed by Controls component itself (NOT from App.jsx)
@@ -161,73 +163,8 @@ const handleScaleChange = (event) => {
     onObjectTypeChange(newType) // CALL App.jsx setter function → updates App.jsx state
   }
 
-  /* 
-   * LIGHTING CONTROL EVENT HANDLERS
-   * These handle all lighting-related user interactions
-   */
 
-  // TRIGGERED BY: User clicking/changing the ambient light color picker
-  // DATA FLOW: color input onChange → handleAmbientLightColorChange → onAmbientLightColorChange(newColor) → App.jsx setState
-  const handleAmbientLightColorChange = (event) => {
-    // Color picker value is already a string like "#ffffff", no conversion needed
-    const newColor = event.target.value  // Gets hex color string
-    console.log('Ambient light color changed to:', newColor)
-    onAmbientLightColorChange(newColor) // CALL App.jsx setter function → updates App.jsx state
-  }
-
-  // TRIGGERED BY: User dragging the ambient light intensity slider
-  // DATA FLOW: slider onChange → handleAmbientLightIntensityChange → onAmbientLightIntensityChange(newIntensity) → App.jsx setState
-  const handleAmbientLightIntensityChange = (event) => {
-    // Extract slider value as string, convert to decimal number using parseFloat
-    const newIntensity = parseFloat(event.target.value)  // STRING → NUMBER conversion
-    console.log('Ambient light intensity changed to:', newIntensity)
-    onAmbientLightIntensityChange(newIntensity) // CALL App.jsx setter function → updates App.jsx state
-  }
-
-  // TRIGGERED BY: User clicking/changing the directional light color picker
-  // DATA FLOW: color input onChange → handleDirectionalLightColorChange → onDirectionalLightColorChange(newColor) → App.jsx setState
-  const handleDirectionalLightColorChange = (event) => {
-    // Color picker value is already a string like "#ffffff", no conversion needed
-    const newColor = event.target.value  // Gets hex color string
-    console.log('Directional light color changed to:', newColor)
-    onDirectionalLightColorChange(newColor) // CALL App.jsx setter function → updates App.jsx state
-  }
-
-  // TRIGGERED BY: User dragging the directional light intensity slider
-  // DATA FLOW: slider onChange → handleDirectionalLightIntensityChange → onDirectionalLightIntensityChange(newIntensity) → App.jsx setState
-  const handleDirectionalLightIntensityChange = (event) => {
-    // Extract slider value as string, convert to decimal number using parseFloat
-    const newIntensity = parseFloat(event.target.value)  // STRING → NUMBER conversion
-    console.log('Directional light intensity changed to:', newIntensity)
-    onDirectionalLightIntensityChange(newIntensity) // CALL App.jsx setter function → updates App.jsx state
-  }
-
-  // TRIGGERED BY: User dragging the directional light X position slider
-  // DATA FLOW: slider onChange → handleDirectionalLightXChange → onDirectionalLightXChange(newX) → App.jsx setState
-  const handleDirectionalLightXChange = (event) => {
-    // Extract slider value as string, convert to decimal number using parseFloat
-    const newX = parseFloat(event.target.value)  // STRING → NUMBER conversion
-    console.log('Directional light X changed to:', newX)
-    onDirectionalLightXChange(newX) // CALL App.jsx setter function → updates App.jsx state
-  }
-
-  // TRIGGERED BY: User dragging the directional light Y position slider
-  // DATA FLOW: slider onChange → handleDirectionalLightYChange → onDirectionalLightYChange(newY) → App.jsx setState
-  const handleDirectionalLightYChange = (event) => {
-    // Extract slider value as string, convert to decimal number using parseFloat
-    const newY = parseFloat(event.target.value)  // STRING → NUMBER conversion
-    console.log('Directional light Y changed to:', newY)
-    onDirectionalLightYChange(newY) // CALL App.jsx setter function → updates App.jsx state
-  }
-
-  // TRIGGERED BY: User dragging the directional light Z position slider
-  // DATA FLOW: slider onChange → handleDirectionalLightZChange → onDirectionalLightZChange(newZ) → App.jsx setState
-  const handleDirectionalLightZChange = (event) => {
-    // Extract slider value as string, convert to decimal number using parseFloat
-    const newZ = parseFloat(event.target.value)  // STRING → NUMBER conversion
-    console.log('Directional light Z changed to:', newZ)
-    onDirectionalLightZChange(newZ) // CALL App.jsx setter function → updates App.jsx state
-  }
+  // Lighting event handlers are now handled in LightingControls
 
   /*
    * JSX RETURN - THE USER INTERFACE
@@ -235,7 +172,8 @@ const handleScaleChange = (event) => {
    * Look for onChange attributes to see which elements trigger which handlers
    */
   return (
-    <div className="controls">
+    <>
+      <div className="controls">
       {/* 
        * DEBUG DISPLAY SECTION
        * Shows current values FROM App.jsx - these update automatically when state changes
@@ -449,89 +387,26 @@ const handleScaleChange = (event) => {
         <span>{lightingOpen ? '▼' : '▶'}</span>
       </div>
       
-      <div className={`section-content ${lightingOpen ? 'lighting-open open' : 'closed'}`}>
-        {/* Ambient Light Controls */}
-        <label>
-          Ambient Light Color:
-        </label>
-        <input 
-          type="color" 
-          value={ambientLightColor}
-          onChange={handleAmbientLightColorChange}
+      {lightingOpen && (
+        <LightingControls
+          ambientLightColor={ambientLightColor}
+          onAmbientLightColorChange={onAmbientLightColorChange}
+          ambientLightIntensity={ambientLightIntensity}
+          onAmbientLightIntensityChange={onAmbientLightIntensityChange}
+          directionalLightColor={directionalLightColor}
+          onDirectionalLightColorChange={onDirectionalLightColorChange}
+          directionalLightIntensity={directionalLightIntensity}
+          onDirectionalLightIntensityChange={onDirectionalLightIntensityChange}
+          directionalLightX={directionalLightX}
+          onDirectionalLightXChange={onDirectionalLightXChange}
+          directionalLightY={directionalLightY}
+          onDirectionalLightYChange={onDirectionalLightYChange}
+          directionalLightZ={directionalLightZ}
+          onDirectionalLightZChange={onDirectionalLightZChange}
         />
-
-        <label>
-          Ambient Light Intensity: <span className="value-display">{ambientLightIntensity.toFixed(2)}</span>
-        </label>
-        <input 
-          type="range" 
-          min="0" 
-          max="2" 
-          step="0.05"
-          value={ambientLightIntensity}
-          onChange={handleAmbientLightIntensityChange}
-        />
-
-        {/* Directional Light Controls */}
-        <label>
-          Directional Light Color:
-        </label>
-        <input 
-          type="color" 
-          value={directionalLightColor}
-          onChange={handleDirectionalLightColorChange}
-        />
-
-        <label>
-          Directional Light Intensity: <span className="value-display">{directionalLightIntensity.toFixed(1)}</span>
-        </label>
-        <input 
-          type="range" 
-          min="0" 
-          max="20" 
-          step="0.5"
-          value={directionalLightIntensity}
-          onChange={handleDirectionalLightIntensityChange}
-        />
-
-        {/* Directional Light Position Controls */}
-        <label>
-          Directional Light X: <span className="value-display">{directionalLightX.toFixed(1)}</span>
-        </label>
-        <input 
-          type="range" 
-          min="-20" 
-          max="20" 
-          step="0.5"
-          value={directionalLightX}
-          onChange={handleDirectionalLightXChange}
-        />
-
-        <label>
-          Directional Light Y: <span className="value-display">{directionalLightY.toFixed(1)}</span>
-        </label>
-        <input 
-          type="range" 
-          min="-20" 
-          max="20" 
-          step="0.5"
-          value={directionalLightY}
-          onChange={handleDirectionalLightYChange}
-        />
-
-        <label>
-          Directional Light Z: <span className="value-display">{directionalLightZ.toFixed(1)}</span>
-        </label>
-        <input 
-          type="range" 
-          min="-20" 
-          max="20" 
-          step="0.5"
-          value={directionalLightZ}
-          onChange={handleDirectionalLightZChange}
-        />
+      )}
       </div>
-    </div>
+    </>
   )
 }
 

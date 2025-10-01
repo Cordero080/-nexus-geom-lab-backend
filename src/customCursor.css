@@ -1,0 +1,13 @@
+#custom-cursor {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 40px;
+  height: 40px;
+  pointer-events: none;
+  z-index: 9999;
+}
+
+body {
+  cursor: none !important;
+}
