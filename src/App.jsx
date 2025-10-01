@@ -27,7 +27,7 @@ function Playground() {
   
   // SCENE BEHAVIOR STATE
   const [cameraView, setCameraView] = useState('free')
-  const [environment, setEnvironment] = useState('purple')
+  const [environment, setEnvironment] = useState('space')
   const [objectCount, setObjectCount] = useState(1)
   const [animationStyle, setAnimationStyle] = useState('rotate')
   const [objectType, setObjectType] = useState('icosahedron')

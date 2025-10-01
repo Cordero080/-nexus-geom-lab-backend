@@ -1,11 +1,51 @@
 
 import React, { useEffect, useRef, useState } from 'react';
+
+// Quantum Uncertainty Utility
+function quantumCollapse(states) {
+  return states[Math.floor(Math.random() * states.length)];
+}
+import Quote from './Quote';
+import ProgressBar from './ProgressBar';
+import Scene from './Scene';
 // import './bg.css';
 // import './index.css';
 import './Home.css';
 import BeamScanButton from '../BeamScanButton';
 
 export default function HomePage() {
+  // Quantum Uncertainty UI State (global for parallax)
+  const portalWorlds = [
+    { colors: ['#ff00cc', '#00fff7', '#1a003a'], label: 'Fractal' },
+    { colors: ['#ffea00', '#00ffb3', '#003a2a'], label: 'Nebula' },
+    { colors: ['#ff3300', '#cc00ff', '#0a0f1a'], label: 'Inferno' },
+    { colors: ['#00ff33', '#00aaff', '#003a3a'], label: 'Emerald' },
+    { colors: ['#fff', '#00fff7', '#0a0f1a'], label: 'Singularity' },
+  ];
+  const glyphSets = [
+    ['ψ', 'Ω', 'Σ'],
+    ['λ', 'Φ', 'Ξ'],
+    ['π', 'Δ', 'Γ'],
+    ['μ', 'θ', 'ζ'],
+    ['τ', 'β', 'η'],
+  ];
+  const [portalState, setPortalState] = useState(() => quantumCollapse(portalWorlds));
+  const [glyphState, setGlyphState] = useState(() => quantumCollapse(glyphSets));
+
+  // Collapse state on scroll or click
+  useEffect(() => {
+    const handle = () => {
+      setPortalState(quantumCollapse(portalWorlds));
+      setGlyphState(quantumCollapse(glyphSets));
+    };
+    window.addEventListener('scroll', handle);
+    return () => window.removeEventListener('scroll', handle);
+  }, []);
+  // Also collapse on click/tap
+  function handleQuantumCollapse() {
+    setPortalState(quantumCollapse(portalWorlds));
+    setGlyphState(quantumCollapse(glyphSets));
+  }
   const [activeScene, setActiveScene] = useState(0);
   const parallaxRef = useRef(null);
   const fgRef = useRef(null);
@@ -96,9 +136,40 @@ export default function HomePage() {
       <div className="dimensional-rift" id="dimensional-rift"></div>
 
       {/* VINE-INSPIRED QUANTUM NAVIGATION */}
-      <nav className="quantum-nav" id="quantum-nav">
+      <nav
+        className="quantum-nav"
+        id="quantum-nav"
+        style={{
+          background: `linear-gradient(90deg, rgba(0,0,0,0.82) 80%, ${portalState.colors[1]}22 100%)`,
+          boxShadow: `0 2px 16px 0 ${portalState.colors[2]}11`,
+          transition: 'background 1.2s cubic-bezier(0.4,0,0.2,1), box-shadow 1.2s'
+        }}
+      >
         <div className="nav-logo">
-          <span className="logo-text" data-text="JS_LAB_V2.0">PVBL0_P!ST0LA_V2.0</span>
+          <span
+            className="logo-text"
+            data-text="JS_LAB_V2.0"
+            style={{
+              color: '#fff',
+              filter: `drop-shadow(0 0 4px ${portalState.colors[1]}66)`,
+              transition: 'filter 1.2s'
+            }}
+          >
+            PVBL0_P!ST0LA_V2.0
+          </span>
+          {/* Subtle quantum glyphs in navbar */}
+          <span style={{
+            marginLeft: 10,
+            fontSize: 16,
+            color: portalState.colors[2] + '99',
+            letterSpacing: '0.12em',
+            verticalAlign: 'middle',
+            opacity: 0.55,
+            filter: `blur(0.2px) drop-shadow(0 0 2px ${portalState.colors[1]}44)`,
+            transition: 'color 1.2s, filter 1.2s, opacity 1.2s'
+          }}>
+            {glyphState.join(' ')}
+          </span>
           <div className="logo-particles"></div>
         </div>
         <div className="nav-links">
@@ -115,16 +186,16 @@ export default function HomePage() {
 
       {/* 3D Parallax Layers */}
       <div ref={bgRef} className="parallax-bg-layer" aria-hidden="true">
-        {/* Abstract SVG/gradient background shapes */}
-        <svg width="100%" height="100%" viewBox="0 0 1920 400" style={{position:'absolute',top:0,left:0,width:'100vw',height:'40vh',pointerEvents:'none'}}>
+        {/* Abstract SVG/gradient background shapes, now quantum-reactive */}
+        <svg width="100%" height="100%" viewBox="0 0 1920 400" style={{position:'absolute',top:0,left:0,width:'100vw',height:'40vh',pointerEvents:'none', background: `linear-gradient(120deg, ${portalState.colors[0]} 0%, ${portalState.colors[1]} 60%, ${portalState.colors[2]} 100%)`, transition: 'background 1.2s cubic-bezier(0.4,0,0.2,1)'}}>
           <defs>
             <linearGradient id="bg-grad1" x1="0" y1="0" x2="1" y2="1">
-              <stop offset="0%" stopColor="#0ff" stopOpacity="0.18"/>
-              <stop offset="100%" stopColor="#00f0ff" stopOpacity="0.08"/>
+              <stop offset="0%" stopColor={portalState.colors[0]} stopOpacity="0.18"/>
+              <stop offset="100%" stopColor={portalState.colors[1]} stopOpacity="0.08"/>
             </linearGradient>
           </defs>
           <polygon points="0,0 1920,0 1600,400 0,300" fill="url(#bg-grad1)"/>
-          <ellipse cx="1600" cy="80" rx="220" ry="60" fill="#00f0ff22"/>
+          <ellipse cx="1600" cy="80" rx="220" ry="60" fill={portalState.colors[2]+"22"}/>
         </svg>
       </div>
       <div ref={fgRef} className="parallax-fg-layer" aria-hidden="true">
@@ -163,6 +234,8 @@ export default function HomePage() {
               <span className="title-word" data-word="1">3D</span>
               <span className="title-word" data-word="2">GE0M</span>
               <span className="title-word" data-word="3">STUDI0</span>
+              {/* Show quantum glyphs globally */}
+              
             </h1>
             <p className="quantum-subtitle">
               / / I N T E R A C T I V E _ C O N S O L E _ A W A I T S . . .
@@ -174,7 +247,11 @@ export default function HomePage() {
               </div>
               <div className="stat-item">
                 <span className="stat-label">QUANTUM STATE</span>
-                <span className="stat-value" data-stat="state">STABLE</span>
+                <span className="stat-value" data-stat="state" style={{
+                  color: portalState.colors[0],
+                  textShadow: `0 0 8px ${portalState.colors[1]}, 0 0 2px ${portalState.colors[2]}`,
+                  transition: 'color 1.2s, text-shadow 1.2s'
+                }}>{portalState.label.toUpperCase()}</span>
               </div>
               <div className="stat-item">
                 <span className="stat-label">NETWORK STATUS</span>
@@ -203,9 +280,7 @@ export default function HomePage() {
               <div className="floating-code">import name from './exportingFile.js';</div>
               <div className="floating-code">console.future(identity);</div>
               <div className="floating-code">PABLO DANIEL CORDERO</div>
-              <div className="floating-code quote-highlight">
-                "The universe is a terrifyingly elegant apparatus, built on the immutable laws of the machine (Newton), yet the joy and the agony (Beethoven) of this existence are all contained within the subjective, anxious leap of self-creation (Kierkegaard). We find that the objective reality of the cosmos (Hawking/Tyson) is, in its essence, the consciousness of a dream (Kastrup/Watts). Therefore, abandon the illusion of a separate self and simply be (Pessoa/Gibran) in this brief, defiant affirmation (Nietzsche) of the present moment."
-              </div>
+              <Quote />
               
       
             </div>
@@ -231,32 +306,30 @@ export default function HomePage() {
           
         </section>
 
-        {/* Scene 4: Superposition */}
-        <section className={`quantum-scene${activeScene === 3 ? ' active' : ''}`} id="superposition" data-scene="3">
-          <div className="scene-background bg-superposition"></div>
-          <div className="scene-content">
-            <h2 className="scene-title">SUPERPOSITION STATE</h2>
-            <p className="scene-description">
-              All possibilities exist simultaneously
-            </p>
-            <div className="superposition-field"></div>
-            <div className="quantum-console">
-              <div className="console-line">&gt;&gt;&gt; Initializing quantum state...</div>
-              <div className="console-line">&gt;&gt;&gt; PABLO PISTOLA = ψ(quantum_state)</div>
-              <div className="console-line">&gt;&gt;&gt; Observation collapsed wave function</div>
-              <div className="console-line">&gt;&gt;&gt; Result: "ETHEREAL" ✨</div>
-            </div>
+        <Scene
+          id="superposition"
+          isActive={activeScene === 3}
+          backgroundClass="bg-superposition"
+        >
+          <h2 className="scene-title">SUPERPOSITION STATE</h2>
+          <p className="scene-description">
+            All possibilities exist simultaneously
+          </p>
+          <div className="superposition-field"></div>
+          <div className="quantum-console">
+            <div className="console-line">&gt;&gt;&gt; Initializing quantum state...</div>
+            <div className="console-line">&gt;&gt;&gt; PABLO PISTOLA = ψ(quantum_state)</div>
+            <div className="console-line">&gt;&gt;&gt; Observation collapsed wave function</div>
+            <div className="console-line">&gt;&gt;&gt; Result: "ETHEREAL" ✨</div>
           </div>
-        </section>
+        </Scene>
       </div>
 
-      {/* Quantum Scroll Progress - moved lower in its own space */}
-      <section style={{ marginTop: '120px', marginBottom: '80px', width: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-        <div className="progress-bar" style={{ marginBottom: '24px', width: 'auto' }}>
-          <div className="floating-code">"Be the defiance.</div>
-        </div>
-        <div className="progress-particles">&gt;&gt;&gt;The illusion is already awake."&gt;&gt;&gt;</div>
-      </section>
+      <ProgressBar
+        portalState={portalState}
+        glyphState={glyphState}
+        onQuantumCollapse={handleQuantumCollapse}
+      />
     </>
   );
 }

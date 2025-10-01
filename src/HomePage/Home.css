@@ -1,3 +1,31 @@
+/* Holographic parallax effect for ProgressBar floating text */
+.parallax-holo {
+  will-change: transform, opacity, filter;
+  perspective: 800px;
+  transition: none;
+  display: inline-block;
+  font-size: 2.2em;
+  font-family: 'Orbitron', 'JetBrains Mono', monospace;
+  font-weight: 900;
+  letter-spacing: 0.04em;
+  color: #00fff7;
+  text-shadow: 0 0 24px #00fff7cc, 0 0 60px #00fff744, 0 0 2px #fff;
+  filter: blur(0.5px) brightness(1.1) saturate(1.2);
+  opacity: 0.7;
+  transform: translateZ(0px) scale(1);
+  transition: transform 1.2s cubic-bezier(0.4,0,0.2,1), opacity 1.2s, filter 1.2s;
+}
+.parallax-holo.animate {
+  opacity: 0;
+  filter: blur(8px) brightness(2.2) saturate(2.5);
+  transform: translateZ(180px) scale(2.2) skewY(-6deg) rotateX(18deg);
+  pointer-events: none;
+  transition: transform 1.2s cubic-bezier(0.4,0,0.2,1), opacity 1.2s, filter 1.2s;
+}
+.parallax-holo {
+  /* Ensure it returns to original state when not animated */
+  transition: transform 1.2s cubic-bezier(0.4,0,0.2,1), opacity 1.2s, filter 1.2s;
+}
 /* Seamless scene fade effect */
 .quantum-scene {
   opacity: 1;

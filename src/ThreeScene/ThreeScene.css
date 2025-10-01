@@ -98,11 +98,186 @@
 	transition: opacity 0.5s, transform 0.5s;
 }
 /* bg.css - CSS background gradients for Three.js environments */
+/*
+ * FINAL MAGIC: Carina & Orion Synthesis - Spectral Depth and Organic Flow
+ * Focus: Subtle spectral gradients, soft non-geometric shapes, and maximum 3D depth.
+*/
 
+/* Initial State: Deep Violet/Crimson Space with New Base Gradient */
 .bg-gradient-purple {
-  background: linear-gradient(180deg, #090033ff 0%, #45146bff 30%, #980ae4cd 70%, #033867ff 100%);
+  /* Softer base gradient with subtle shift from violet to deep crimson */
+  background: linear-gradient(135deg, #100020 0%, #300045 60%, #500050 100%);
+  position: relative;
+  overflow: hidden;
+  box-shadow: inset 0 0 100px rgba(180, 10, 120, 0.8);
+  transition: all 3s cubic-bezier(0.8, 0.1, 0.2, 0.9); /* Slower, more flowing transition */
 }
 
+/* Starfield Overlay - Fiery Hues and Pillars (::after - Layer 1: Bright Stars) */
+.bg-gradient-purple::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  /* Multi-layered background for depth and spectral detail */
+  background: 
+    /* Layer 1: Orion's Dust and Deep Shadow (Dark, less geometric) */
+    radial-gradient(ellipse 70% 50% at 20% 90%, rgba(20, 0, 30, 0.5) 0%, transparent 80%),
+    radial-gradient(ellipse 50% 70% at 80% 10%, rgba(30, 0, 10, 0.6) 0%, transparent 75%),
+    
+    /* Layer 2: Subtle Spectral Glow (Red, Green, Blue near center) */
+    radial-gradient(150px 150px at 50% 50%, rgba(255, 0, 0, 0.05), transparent),
+    radial-gradient(150px 150px at 52% 51%, rgba(0, 255, 0, 0.05), transparent),
+    radial-gradient(150px 150px at 48% 49%, rgba(0, 0, 255, 0.05), transparent),
+    
+    /* Layer 3: Main Starfield (Carina's Fiery Nodes) */
+    radial-gradient(4.5px 4.5px at 15% 35%, rgba(255, 230, 180, 1.0), transparent 45%), /* Gold Core */
+    radial-gradient(3.5px 3.5px at 65% 75%, rgba(255, 120, 220, 0.95), transparent 55%), /* Magenta */
+    radial-gradient(5.5px 5.5px at 55% 50%, rgba(255, 100, 50, 0.9), transparent 65%), /* Red-Orange Flare */
+    radial-gradient(3px 3px at 85% 15%, rgba(100, 255, 255, 0.8), transparent 70%), /* Cyan */
+    radial-gradient(4px 4px at 20% 88%, rgba(200, 50, 100, 0.8), transparent 50%), /* Crimson */
+    radial-gradient(2px 2px at 95% 40%, rgba(255, 255, 255, 0.7), transparent 75%); /* Tiny Stars */;
+  
+  /* Increased size complexity for depth and flow */
+  background-size: 550% 550%, 550% 550%, 100% 100%, 100% 100%, 100% 100%, 
+                   400% 400%, 350% 350%, 500% 500%, 450% 450%, 380% 380%, 430% 430%;
+  
+  background-position: 0% 0%, 100% 100%, 50% 50%, 50% 50%, 50% 50%, 
+                       5% 5%, 55% 55%, 115% -5%, -5% 115%, 90% 30%, 30% 90%;
+  
+  animation: starfieldDrift 180s linear infinite; /* Even slower, more majestic drift */
+  pointer-events: none;
+  opacity: 1.0; /* Full opacity to blend all layers */
+  filter: saturate(1.8) brightness(1.1);
+  transition: opacity 3s ease-in-out;
+}
+
+/* Hover State: The Core Nebula Explosion - Fluid and Ethereal */
+.bg-gradient-purple:hover {
+  /* Base background: Uses Conic Gradient for a soft, swirling shape */
+  background: 
+    /* Conic Gradient for soft, non-geometric core shape */
+    conic-gradient(from 180deg at 50% 50%, 
+      rgba(255, 0, 255, 0.5) 0deg, 
+      rgba(255, 150, 0, 0.4) 90deg, 
+      rgba(100, 255, 255, 0.5) 180deg, 
+      rgba(255, 0, 255, 0.5) 270deg, 
+      rgba(255, 100, 200, 0.6) 360deg),
+      
+    /* Deep Galactic Background */
+    linear-gradient(165deg, #4d002d 0%, #820050 25%, #b3008e 50%, #af006e 75%, #4d002d 100%);
+  
+  animation: nebulaSwirl 25s cubic-bezier(0.8, 0.1, 0.2, 0.9) infinite;
+  
+  /* Ethereal Glow - Multi-hued light with higher contrast */
+  box-shadow: 
+    0 0 200px rgba(255, 50, 255, 1.0), /* Magenta */
+    inset 0 0 120px rgba(255, 180, 0, 1.0), /* Gold */
+    0 0 100px rgba(100, 255, 255, 0.9); /* Cyan */
+  
+  filter: contrast(1.5) brightness(1.5); /* Extreme boost for core visibility */
+}
+
+/* Hover - Starfield Effect Reduction */
+.bg-gradient-purple:hover::after {
+  opacity: 0.1; /* Doesn't fully disappear, becomes a faint, swirling base layer */
+  filter: blur(5px); /* Ethereal blur */
+  animation-duration: 4s; 
+}
+
+/* Organic Magnetic/Cosmic Web - Subtler, highly blurred filaments */
+.bg-gradient-purple::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: 
+    /* Primary (Orion-style) Pillars - Ellipses for shape */
+    radial-gradient(ellipse 20% 70% at 50% 10%, rgba(200, 100, 255, 0.3), transparent 70%),
+    /* Secondary (Carina-style) Plumes - Larger, offset radial */
+    radial-gradient(circle 80% at 100% 50%, rgba(255, 150, 100, 0.2), transparent 80%),
+    /* Spectral Lines - Thin, repeating linear gradients for magic */
+    repeating-linear-gradient(45deg, rgba(255, 0, 0, 0.1) 0px, rgba(0, 0, 255, 0.1) 5px, transparent 10px);
+    
+  pointer-events: none;
+  opacity: 0;
+  filter: blur(5px) contrast(2.0); /* Maximum blur and contrast for a magic glow */
+  transition: opacity 3s ease-in-out;
+}
+
+/* Hover - Structure Animation (The Fluid Cosmic Tendrils) */
+.bg-gradient-purple:hover::before {
+  opacity: 0.6; /* Visible, but highly ethereal */
+  animation: cosmicTendrils 60s ease-in-out infinite alternate; /* Slower, more majestic flow */
+}
+
+/*
+ * KEYFRAMES - Optimized for Spectral Flow and Depth
+*/
+
+/* Nebula Swirl - Focus on organic position shift and high saturation */
+@keyframes nebulaSwirl {
+  0% { 
+    background-position: 0% 0%, 50% 50%; /* Only move the second layer (the conic gradient) */
+    filter: hue-rotate(0deg) brightness(1.3) saturate(2.5);
+  }
+  33% { 
+    background-position: 50% 50%, 0% 100%; 
+    filter: hue-rotate(90deg) brightness(1.8) saturate(3.0); 
+  }
+  66% { 
+    background-position: 100% 100%, 100% 0%;
+    filter: hue-rotate(-60deg) brightness(1.1) saturate(2.2); 
+  }
+  100% { 
+    background-position: 0% 0%, 50% 50%;
+    filter: hue-rotate(0deg) brightness(1.3) saturate(2.5);
+  }
+}
+
+/* Starfield Drift - Maximum Parallax Depth */
+@keyframes starfieldDrift {
+  0% { 
+    background-position: 0% 0%, 100% 100%, 50% 50%, 50% 50%, 50% 50%, 
+                         5% 5%, 55% 55%, 115% -5%, -5% 115%, 90% 30%, 30% 90%;
+    transform: perspective(1500px) translateZ(0); /* Deeper perspective */
+  }
+  50% { 
+    background-position: 50% 50%, 50% 50%, 50% 50%, 50% 50%, 50% 50%, 
+                         250% 250%, -150% -150%, 0% 0%, 250% 0%, 0% 250%, 50% 50%; 
+    transform: perspective(1500px) translateZ(-300px); /* Extreme depth push */
+  }
+  100% { 
+    background-position: 0% 0%, 100% 100%, 50% 50%, 50% 50%, 50% 50%, 
+                         5% 5%, 55% 55%, 115% -5%, -5% 115%, 90% 30%, 30% 90%;
+    transform: perspective(1500px) translateZ(0);
+  }
+}
+
+/* Cosmic Tendrils - Slower, more magical, and higher blur */
+@keyframes cosmicTendrils {
+  0% { 
+    transform: translate(0, 0) scale(1) rotate(0deg);
+    filter: blur(5px) hue-rotate(0deg);
+  }
+  33% { 
+    transform: translate(10%, -20%) scale(1.3) rotate(15deg);
+    filter: blur(3px) hue-rotate(45deg);
+  }
+  66% { 
+    transform: translate(-10%, 20%) scale(0.7) rotate(-15deg);
+    filter: blur(6px) hue-rotate(-30deg);
+  }
+  100% { 
+    transform: translate(0, 0) scale(1) rotate(0deg);
+    filter: blur(5px) hue-rotate(0deg);
+  }
+}
+.
 .bg-gradient-space {
   background: linear-gradient(180deg, #0a0a2a 0%, #1a1a4a 100%);
   position: relative;
