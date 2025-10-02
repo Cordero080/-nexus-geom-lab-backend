@@ -313,6 +313,7 @@ const handleScaleChange = (event) => {
           <option value="float">Floating Dance</option>
           <option value="spiral">Spiral Motion</option>
           <option value="chaos">Chaotic Movement</option>
+          <option value="alien">Omni</option>
           <option value="dna">🧬 DNA Helix</option>
           <option value="liquid">🌊 Liquid Metal</option>
           <option value="magnetic">🧲 Magnetic Field</option>

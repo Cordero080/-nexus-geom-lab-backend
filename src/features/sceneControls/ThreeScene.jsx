@@ -1424,7 +1424,7 @@ function ThreeScene({
 									for (let j = 0; j < edgeVertices.length; j += 12) {
 										const endX = edgeVertices[j + 3]
 										const endY = edgeVertices[j + 4]
-										const endZ = edgeVertices[j + 5]
+										const endZ = edgeVertices[j + 9]
 										
 										const steps = 8 // Number of spiral steps
 										for (let step = 0; step < steps; step++) {
@@ -1463,7 +1463,213 @@ function ThreeScene({
 							currentMesh.rotation.y = t * 1.5 + phase
 							currentMesh.rotation.z = t * 2.5 + phase
 							break
+case 'alien':
+  // ============================================
+  // ALIEN INTELLIGENCE V4.0 - SENTIENT SYMPHONY (Slow Build & Elliptical Dash)
+  // Focus: Non-repetitive, slowly building spin, and a curved, curious recede/return.
+  // ============================================
 
+  // --- Utility Easing Functions (for graceful, sentient transitions) ---
+  const easeInOutCubic = (t) => t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+  const easeInQuart = (t) => t * t * t * t;
+  const easeOutQuart = (t) => 1 - Math.pow(1 - t, 4);
+  const easeInOutQuad = (t) => t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
+  // New Easing: Smoother, more organic buildup
+  const easeInOutQuint = (t) => t < 0.5 ? 16 * t * t * t * t * t : 1 + 16 * (t - 1) * (t - 1) * (t - 1) * (t - 1) * (t - 1);
+
+  // STEP 1 & 2: Reset & Rebuild (Kept the same)
+  if (geometry && originalPositions && currentMesh === solidMesh) {
+    const positions = geometry.attributes.position.array
+    for (let i = 0; i < positions.length; i++) {
+      positions[i] = originalPositions[i]
+    }
+    geometry.attributes.position.needsUpdate = true
+
+    if (centerLines && centerLines.geometry && geometry.type !== 'TetrahedronGeometry') {
+      const edgesGeometry = new THREE.EdgesGeometry(geometry)
+      const edgeVertices = edgesGeometry.attributes.position.array
+      const centerLinesGeometry = centerLines.geometry
+      const centerLinesPositions = []
+
+      for (let j = 0; j < edgeVertices.length; j += 6) {
+        const p1 = new THREE.Vector3(edgeVertices[j], edgeVertices[j + 1], edgeVertices[j + 2]);
+        const p2 = new THREE.Vector3(edgeVertices[j + 3], edgeVertices[j + 4], edgeVertices[j + 5]);
+        const dir = p2.clone().sub(p1).normalize();
+        
+        const steps = 6;
+        const noiseScale = 0.05 * (speedVariation + 1);
+        for (let step = 0; step < steps; step++) {
+          const t1 = step / steps;
+          const t2 = (step + 1) / steps;
+          
+          const x1 = p1.x + dir.x * (p2.x - p1.x) * t1 + Math.sin(t * 10 + j) * noiseScale * t1;
+          const y1 = p1.y + dir.y * (p2.y - p1.y) * t1 + Math.cos(t * 10 + j) * noiseScale * t1;
+          const z1 = p1.z + dir.z * (p2.z - p1.z) * t1;
+          
+          const x2 = p1.x + dir.x * (p2.x - p1.x) * t2 + Math.sin(t * 10 + j) * noiseScale * t2;
+          const y2 = p1.y + dir.y * (p2.y - p1.y) * t2 + Math.cos(t * 10 + j) * noiseScale * t2;
+          const z2 = p1.z + dir.z * (p2.z - p1.z) * t2;
+          
+          centerLinesPositions.push(x1, y1, z1, x2, y2, z2) 
+        }
+      }
+      
+      if (centerLinesPositions.length > 0) {
+        centerLinesGeometry.setAttribute('position', new THREE.Float32BufferAttribute(centerLinesPositions, 3))
+        centerLinesGeometry.attributes.position.needsUpdate = true;
+      }
+    }
+  }
+
+  // STEP 3: Choose speed variation (Kept the same)
+  const speedVariation = index % 4
+  let cycleTime, orbitSize, reactionSpeed
+  
+  switch(speedVariation) {
+    case 0: // Reflective & Smooth (Emotion: Curiosity)
+      cycleTime = 30 
+      orbitSize = 3 
+      reactionSpeed = 10 
+      break
+    case 1: // Observational & Measured (Emotion: Calm Intelligence)
+      cycleTime = 22
+      orbitSize = 4.5
+      reactionSpeed = 15
+      break
+    case 2: // Focused & Intense (Emotion: Determination/Aversion)
+      cycleTime = 16 
+      orbitSize = 6
+      reactionSpeed = 20
+      break
+    case 3: // Erratic & Unpredictable (Emotion: Disturbed/Agitated)
+      cycleTime = 18 + Math.sin(t * 0.5 + phase) * 3 
+      orbitSize = 5 + Math.cos(t * 0.3 + phase) * 1.5
+      reactionSpeed = 18 + Math.sin(t * 0.7 + phase) * 5
+      break
+  }
+
+  const cycleProgress = ((t + phase) % cycleTime) / cycleTime
+
+  // --- Intelligent Movement Phases ---
+
+  // PHASE 1: Initial Float & Contemplation (0% - 20%)
+  if (cycleProgress < 0.20) {
+    const hoverIntensity = 0.15 + (speedVariation * 0.05)
+    
+    currentMesh.position.x = originalPosition.x + Math.sin(t * 3 + phase) * hoverIntensity * 1.2 
+    currentMesh.position.y = originalPosition.y + Math.cos(t * 4 + phase) * hoverIntensity
+    currentMesh.position.z = originalPosition.z + Math.sin(t * 2 + phase) * hoverIntensity * 0.5
+    
+    currentMesh.rotation.y = t * 0.3 + phase 
+    currentMesh.rotation.x = Math.sin(t * 0.7 + phase) * 0.3
+    currentMesh.rotation.z = Math.cos(t * 0.4 + phase) * 0.2
+    
+    currentMesh.scale.setScalar(1 + Math.sin(t * 2 + phase) * 0.03) 
+  }
+
+  // PHASE 2: Symphonic Pause & Dervish Dance (20% - 35%)
+  // Sentient: Spin varies its speed and builds up slowly at unpredictable intervals.
+  else if (cycleProgress < 0.35) {
+    const t_spin = (cycleProgress - 0.20) / 0.15
+    const eased_pos = easeInOutQuad(t_spin)
+
+    // Position: Swiftly returns to origin and holds (The 'stop for a second' request)
+    currentMesh.position.x = THREE.MathUtils.lerp(currentMesh.position.x, originalPosition.x, eased_pos * 0.5) 
+    currentMesh.position.y = THREE.MathUtils.lerp(currentMesh.position.y, originalPosition.y, eased_pos * 0.5) 
+    currentMesh.position.z = THREE.MathUtils.lerp(currentMesh.position.z, originalPosition.z, eased_pos * 0.5) 
+    
+    // --- New Modulated Spin Logic (Non-Repetitive Buildup) ---
+    
+    // 1. Time-Based Modulator: Slower wave to reduce repetitiveness (t * 0.5)
+    const longWaveModulator = (Math.sin(t * 0.5 + phase * 2) * 0.5 + 0.5); 
+    
+    // 2. Slow Build-up Curve: Use a slower easing function (Quintic) on the local spin time (t_spin)
+    const buildUpFactor = easeInOutQuint(t_spin);
+
+    // 3. Emotional Speed Mix: Max speed is now based on the slow-building factor
+    const minSpeed = 0.05 + speedVariation * 0.05; // Very slow base spin for observation
+    const maxSpeed = reactionSpeed * 0.05;       // Maximum possible dart speed
+    
+    // Current Spin is controlled by the slow time wave, scaled by the buildup over the phase
+    const currentSpinSpeed = THREE.MathUtils.lerp(
+        minSpeed, 
+        maxSpeed * longWaveModulator, // The max speed is varied slowly over t
+        buildUpFactor // The spin only reaches its max over the 0.15 phase duration
+    );
+
+    // Rotation: Apply the modulated speed with complex, odd-axis factors
+    currentMesh.rotation.x += currentSpinSpeed * 1.5 * Math.sin(t * 0.4 + phase) // Dervish tilt X
+    currentMesh.rotation.y += currentSpinSpeed * 2.0 // Main spin axis
+    currentMesh.rotation.z += currentSpinSpeed * 1.0 * Math.cos(t * 0.7 + phase) // Dervish tilt Z
+    
+    // Curiosity/Wobble only happens when spin is very slow
+    currentMesh.position.x += Math.sin(t * 10 + phase) * (1 - buildUpFactor) * 0.02;
+    currentMesh.position.y += Math.cos(t * 8 + phase) * (1 - buildUpFactor) * 0.02;
+  }
+
+  // PHASE 3: Elliptical Recede & Curious Return (35% - 50%)
+  // Sentient: Recedes in a curved dash, then returns with Curiosity.
+  else if (cycleProgress < 0.50) {
+    const t_dash = (cycleProgress - 0.35) / 0.15
+    const eased_recede = easeInOutQuad(t_dash); // Smooth, fast dash out and in
+
+    const maxDashDistance = orbitSize * 1.5; // Larger, more dramatic move
+    const ellipseHeight = orbitSize * 0.4;
+    
+    // Position: Move back (Z-) and swing out in an ellipse (X/Y curve)
+    currentMesh.position.x = originalPosition.x + Math.sin(eased_recede * Math.PI) * maxDashDistance * 0.3; // Curved X-out/in
+    currentMesh.position.y = originalPosition.y + Math.cos(eased_recede * Math.PI) * ellipseHeight;        // Ellipse up/down
+    currentMesh.position.z = originalPosition.z - eased_recede * maxDashDistance * 0.8;                     // Swift recede back
+
+    // Rotation: Orient itself to the target of its "curiosity" (the camera/viewer)
+    currentMesh.rotation.x = Math.sin(t * 5 + phase) * 0.1 * (1 - eased_recede); // Subtle wobble on return
+    currentMesh.rotation.y = eased_recede * Math.PI * 2; // Spin as it dashes away
+    currentMesh.rotation.z = Math.cos(t * 3 + phase) * 0.1;
+  }
+
+  // PHASE 4: Erratic Figure-8 Ellipse Observation (50% - 85%)
+  // (Kept the same highly intelligent pathing)
+  else if (cycleProgress < 0.85) {
+    const t_figure8 = (cycleProgress - 0.50) / 0.35
+    const t_angle = t_figure8 * Math.PI * 2 * 1.5 
+    const ellipseRadiusX = orbitSize * 0.8
+    const ellipseRadiusY = orbitSize * 0.5
+    const ellipseRadiusZ = orbitSize * 0.4
+    const centerZ = -orbitSize * 0.3 
+
+    currentMesh.position.x = originalPosition.x + ellipseRadiusX * Math.cos(t_angle) 
+    currentMesh.position.y = originalPosition.y + ellipseRadiusY * Math.sin(t_angle * 2) * Math.sin(t * 3 + phase) * 0.5 + Math.sin(t_figure8 * Math.PI * 4) * 0.5
+    currentMesh.position.z = originalPosition.z + centerZ + ellipseRadiusZ * Math.sin(t_angle)
+
+    currentMesh.rotation.z = Math.sin(t_angle * 0.5) * 0.8
+    currentMesh.rotation.x = Math.cos(t_angle * 0.7) * 0.5
+    currentMesh.rotation.y += (t * 0.5 + phase) * 0.1 
+  }
+
+  // PHASE 5: Swift Return & Re-entry (85% - 100%)
+  // (Kept the same swift, graceful return)
+  else {
+    const t_return = (cycleProgress - 0.85) / 0.15
+    const eased = easeInOutCubic(t_return) 
+
+    currentMesh.position.x = THREE.MathUtils.lerp(currentMesh.position.x, originalPosition.x, eased)
+    currentMesh.position.y = THREE.MathUtils.lerp(currentMesh.position.y, originalPosition.y, eased)
+    currentMesh.position.z = THREE.MathUtils.lerp(currentMesh.position.z, originalPosition.z, eased)
+
+    currentMesh.rotation.x = THREE.MathUtils.lerp(currentMesh.rotation.x, 0, eased * 0.5)
+    currentMesh.rotation.y = THREE.MathUtils.lerp(currentMesh.rotation.y, 0, eased * 0.5)
+    currentMesh.rotation.z = THREE.MathUtils.lerp(currentMesh.rotation.z, 0, eased * 0.5)
+
+    currentMesh.scale.setScalar(1 + (1 - eased) * 0.05)
+  }
+    
+  // Global Constraint: Ensure it stays in-frame
+  const maxBoundary = 7; 
+  currentMesh.position.x = THREE.MathUtils.clamp(currentMesh.position.x, originalPosition.x - maxBoundary, originalPosition.x + maxBoundary);
+  currentMesh.position.y = THREE.MathUtils.clamp(currentMesh.position.y, originalPosition.y - maxBoundary, originalPosition.y + maxBoundary);
+  currentMesh.position.z = THREE.MathUtils.clamp(currentMesh.position.z, originalPosition.z - maxBoundary, originalPosition.z + maxBoundary);
+    
+  break
 						case 'dna':
 	// DNA Helix: Geometry-aware vertex morphing + rotation
 	if (geometry && originalPositions && currentMesh === solidMesh) {
