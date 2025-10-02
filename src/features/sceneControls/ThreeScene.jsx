@@ -150,27 +150,7 @@ function ThreeScene({
 	// ===============================================
 	// GEOMETRY CREATION HELPER FUNCTION
 	// ===============================================
-	// This function converts the objectType prop from App.jsx into actual Three.js geometry
 	
-	// const createGeometryByType = (type) => {
-	//   switch(type) {
-	//     case 'icosahedron':
-	//       return new THREE.IcosahedronGeometry()           // 20-sided polyhedron
-	//     case 'sphere':
-	//       return new THREE.SphereGeometry(1, 16, 16)       // Round ball
-	//     case 'box':
-	//       return new THREE.BoxGeometry(1.5, 1.5, 1.5)     // Cube
-	//     case 'octahedron':
-	//       return new THREE.OctahedronGeometry()            // 8-sided polyhedron
-	//     case 'tetrahedron':
-	//       return new THREE.TetrahedronGeometry(1.2)        // 4-sided pyramid
-	//     case 'torusknot':
-	//       return new THREE.TorusKnotGeometry(1, .2, 150, 16) // Twisted donut shape
-	//     default:
-	//       return new THREE.IcosahedronGeometry()           // Default fallback
-	//   }
-	// }
-
 	// ===============================================
 	// ENVIRONMENT UPDATER - RESPONDS TO environment PROP
 	// ===============================================
@@ -217,7 +197,7 @@ function ThreeScene({
 	// and recreates all the 3D objects with the new values
 	
 	useEffect(() => {
-		if (!sceneRef.current) return // Safety check
+		if (!sceneRef.current) return; // Safety check
 
 		const scene = sceneRef.current
 		
