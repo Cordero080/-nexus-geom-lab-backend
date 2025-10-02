@@ -359,7 +359,7 @@ const handleScaleChange = (event) => {
           Environment:
         </label>
         <select value={environment} onChange={handleEnvironmentChange}>
-          <option value="purple">Purple Gradient</option>
+          <option value="nebula">Nebula</option>
           <option value="space">Space Scene</option>
           <option value="sunset">Sunset Sky</option>
           <option value="matrix">Matrix Code</option>

@@ -104,7 +104,7 @@
 */
 
 /* Initial State: Deep Violet/Crimson Space with New Base Gradient */
-.bg-gradient-purple {
+.bg-gradient-nebula {
   /* Softer base gradient with subtle shift from violet to deep crimson */
   background: linear-gradient(135deg, #100020 0%, #300045 60%, #500050 100%);
   position: relative;
@@ -114,7 +114,7 @@
 }
 
 /* Starfield Overlay - Fiery Hues and Pillars (::after - Layer 1: Bright Stars) */
-.bg-gradient-purple::after {
+.bg-gradient-nebula::after {
   content: '';
   position: absolute;
   top: 0;
@@ -155,7 +155,7 @@
 }
 
 /* Hover State: The Core Nebula Explosion - Fluid and Ethereal */
-.bg-gradient-purple:hover {
+.bg-gradient-nebula:hover {
   /* Base background: Uses Conic Gradient for a soft, swirling shape */
   background: 
     /* Conic Gradient for soft, non-geometric core shape */
@@ -181,14 +181,14 @@
 }
 
 /* Hover - Starfield Effect Reduction */
-.bg-gradient-purple:hover::after {
+.bg-gradient-nebula:hover::after {
   opacity: 0.1; /* Doesn't fully disappear, becomes a faint, swirling base layer */
   filter: blur(5px); /* Ethereal blur */
   animation-duration: 4s; 
 }
 
 /* Organic Magnetic/Cosmic Web - Subtler, highly blurred filaments */
-.bg-gradient-purple::before {
+.bg-gradient-nebula::before {
   content: '';
   position: absolute;
   top: -50%;
@@ -210,7 +210,7 @@
 }
 
 /* Hover - Structure Animation (The Fluid Cosmic Tendrils) */
-.bg-gradient-purple:hover::before {
+.bg-gradient-nebula:hover::before {
   opacity: 0.6; /* Visible, but highly ethereal */
   animation: cosmicTendrils 60s ease-in-out infinite alternate; /* Slower, more majestic flow */
 }

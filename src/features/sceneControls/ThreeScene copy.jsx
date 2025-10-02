@@ -2263,7 +2263,7 @@ function ThreeScene({
   // Helper: map environment names to CSS class names
   function getBackgroundClass(env) {
     switch (env) {
-      case 'purple': return 'bg-gradient bg-gradient-purple';
+      case 'nebula': return 'bg-gradient bg-gradient-nebula';
       case 'space': return 'bg-gradient bg-gradient-space';
       case 'sunset': return 'bg-gradient bg-gradient-sunset';
       case 'matrix': return 'bg-gradient bg-gradient-matrix';

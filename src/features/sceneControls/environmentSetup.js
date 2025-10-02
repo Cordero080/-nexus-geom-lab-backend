@@ -5,7 +5,7 @@ export function updateEnvironment(scene, environment) {
 
   const createEnvironment = (envType) => {
     switch (envType) {
-      case "purple": {
+      case "nebula": {
         const canvas = document.createElement("canvas");
         const context = canvas.getContext("2d");
         canvas.width = 512;
