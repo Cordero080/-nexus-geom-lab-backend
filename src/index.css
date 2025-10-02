@@ -296,6 +296,10 @@ h1.quantum-title::after {
   88% { transform: translate(2px, 2px); }
 }
 
+* {
+    font-family: 'Orbitron', 'JetBrains Mono', monospace !important;
+}
+
 * { cursor: none !important; }
 
 .cursor {

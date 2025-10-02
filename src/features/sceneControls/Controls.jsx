@@ -1,4 +1,3 @@
-
 import './controls.css';
 import { useState } from 'react';
 
@@ -66,7 +65,11 @@ function Controls({
 	directionalLightY, onDirectionalLightYChange,           // Current directional light Y position + function to update it
 	directionalLightZ, onDirectionalLightZChange            // Current directional light Z position + function to update it
 }) {
-	// ...existing code from Controls.jsx...
+	return (
+		<div className="controls" style={{ fontFamily: "'Orbitron', 'JetBrains Mono', monospace" }}>
+			{/* ...existing content... */}
+		</div>
+	);
 }
 
 export default Controls;

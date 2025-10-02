@@ -31,7 +31,7 @@ function LightingControls({
       <input 
         type="color" 
         value={ambientLightColor}
-        onChange={onAmbientLightColorChange}
+        onChange={e => onAmbientLightColorChange(e.target.value)}
       />
 
       <label>
@@ -53,7 +53,7 @@ function LightingControls({
       <input 
         type="color" 
         value={directionalLightColor}
-        onChange={onDirectionalLightColorChange}
+        onChange={e => onDirectionalLightColorChange(e.target.value)}
       />
 
       <label>
@@ -65,7 +65,11 @@ function LightingControls({
         max="20" 
         step="0.5"
         value={directionalLightIntensity}
-        onChange={onDirectionalLightIntensityChange}
+        onChange={e => {
+          const val = parseFloat(e.target.value);
+          console.log('[LightingControls] Directional Light Intensity changed:', val);
+          onDirectionalLightIntensityChange(val);
+        }}
       />
 
       {/* Directional Light Position Controls */}
@@ -78,7 +82,11 @@ function LightingControls({
         max="20" 
         step="0.5"
         value={directionalLightX}
-        onChange={e => onDirectionalLightXChange(parseFloat(e.target.value))}
+        onChange={e => {
+          const val = parseFloat(e.target.value);
+          console.log('[LightingControls] Directional Light X changed:', val);
+          onDirectionalLightXChange(val);
+        }}
       />
 
       <label>
