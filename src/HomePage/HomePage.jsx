@@ -11,7 +11,7 @@ import Scene from './Scene';
 // import './bg.css';
 // import './index.css';
 import './Home.css';
-import BeamScanButton from '../BeamScanButton';
+import { BeamScanButton } from '../components/HUD';
 
 export default function HomePage() {
   // Quantum Uncertainty UI State (global for parallax)

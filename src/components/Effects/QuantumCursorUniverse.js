@@ -1,4 +1,8 @@
-// QUANTUM CONSTELLATION CURSOR UNIVERSE ENGINE
+/**
+ * QUANTUM CONSTELLATION CURSOR UNIVERSE ENGINE
+ * Controls the behavior of the QuantumCursor component
+ * Creates particle effects, energy waves, and interactive cursor elements
+ */
 export default class QuantumCursorUniverse {
   constructor() {
     this.cursor = document.getElementById("cursor");

@@ -70,3 +70,34 @@
   background: none;
   text-align: left;
 }
+
+/* Additional styling for specific variants */
+.beam-btn {
+  padding: 16px 32px;
+  font-size: 18px;
+}
+
+/* Optional animation for the beam effect */
+.beam-scan-effect {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent 0%, #00ffff 50%, transparent 100%);
+  transform: translateX(-100%);
+  animation: beam-scan 2s linear infinite;
+  z-index: 4;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.beam-scan-btn:hover .beam-scan-effect,
+.beam-scan-btn:focus .beam-scan-effect {
+  opacity: 1;
+}
+
+@keyframes beam-scan {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}

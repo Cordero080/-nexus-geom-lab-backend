@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { Routes, Route, useNavigate } from 'react-router-dom';
 import ThreeScene from './features/sceneControls/ThreeScene';
-import Controls from './Controls/Controls';
+import Controls from './components/Controls/Controls';
 import HomePage from './HomePage/HomePage';
 import NavBar from './nav/NavBar';
-import QuantumCursor from "./QuantumCursor";
+import { QuantumCursor } from "./components/Effects";
 
 // Updated default colors for psychedelic theme
 const defaultBaseColor = '#ff00ff'; // Vibrant magenta
@@ -123,12 +123,9 @@ function HomePageWithNav() {
   
   console.log('HomePageWithNav rendered, navigate:', navigate);
   
-  const handleEnter = () => {
-    console.log('handleEnter called');
-    console.log('Attempting to navigate to /playground');
-    navigate('/playground');
-    console.log('navigate() executed');
-  };
+  // Import navigation handler
+  const { handleEnterPlayground } = require('./handlers');
+  const handleEnter = handleEnterPlayground(navigate);
   
   return (
     <>

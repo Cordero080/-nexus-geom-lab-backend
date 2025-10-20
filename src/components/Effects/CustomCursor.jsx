@@ -1,6 +1,10 @@
 import React, { useEffect } from 'react';
-import './customCursor.css';
+import './CustomCursor.css';
 
+/**
+ * CustomCursor component for creating a custom mouse cursor
+ * Replaces the default cursor with a custom SVG shape that follows mouse movement
+ */
 const CustomCursor = () => {
   useEffect(() => {
     const moveCursor = (e) => {
