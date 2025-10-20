@@ -1669,6 +1669,11 @@ case 'alien':
   currentMesh.position.y = THREE.MathUtils.clamp(currentMesh.position.y, originalPosition.y - maxBoundary, originalPosition.y + maxBoundary);
   currentMesh.position.z = THREE.MathUtils.clamp(currentMesh.position.z, originalPosition.z - maxBoundary, originalPosition.z + maxBoundary);
     
+  // Update thick wireframe cylinders for sphere geometry
+  if (objData.thickCylinders && objData.edgePairs) {
+    updateThickWireframeCylinders(objData);
+  }
+    
   break
 						case 'dna':
 	// DNA Helix: Geometry-aware vertex morphing + rotation
