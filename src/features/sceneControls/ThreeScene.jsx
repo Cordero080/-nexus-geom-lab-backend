@@ -1469,6 +1469,10 @@ case 'alien':
   // Focus: Non-repetitive, slowly building spin, and a curved, curious recede/return.
   // ============================================
 
+  // STEP 3: Choose speed variation (Moved up from below)
+  const speedVariation = index % 4;
+  let cycleTime, orbitSize, reactionSpeed;
+  
   // --- Utility Easing Functions (for graceful, sentient transitions) ---
   const easeInOutCubic = (t) => t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
   const easeInQuart = (t) => t * t * t * t;
@@ -1521,10 +1525,7 @@ case 'alien':
     }
   }
 
-  // STEP 3: Choose speed variation (Kept the same)
-  const speedVariation = index % 4
-  let cycleTime, orbitSize, reactionSpeed
-  
+  // Set speed parameters based on variation
   switch(speedVariation) {
     case 0: // Reflective & Smooth (Emotion: Curiosity)
       cycleTime = 30 

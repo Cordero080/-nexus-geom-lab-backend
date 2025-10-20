@@ -25,33 +25,74 @@ export default class QuantumCursorUniverse {
     this.quantumState = 0;
     this.wormholeActive = false;
     this.dimensionalTear = false;
+    this.isOverControl = false; // Track if mouse is over a control element
 
     this.init();
   }
 
   init() {
-    document.body.style.cursor = "none";
+    // Don't set cursor style here - we'll let the CSS handle it
+
     this.createParticleSystem();
     this.createEnergyWaves();
 
     document.addEventListener("mousemove", (e) => this.updateMousePosition(e));
-    document.addEventListener("click", () => this.createWormhole());
-    document.addEventListener("mousedown", () => this.createDimensionalRift());
+    document.addEventListener("click", (e) => {
+      // Disable wormhole effect in the playground route and over controls
+      if (!this.isInPlayground() && !this.isOverControl) {
+        this.createWormhole();
+      }
+    });
+    document.addEventListener("mousedown", (e) => {
+      // Disable dimensional rift effect in the playground route and over controls
+      if (!this.isInPlayground() && !this.isOverControl) {
+        this.createDimensionalRift();
+      }
+    });
     document.addEventListener("mouseup", () => this.closeDimensionalRift());
 
     this.animate();
   }
 
+  // Helper method to check if we're currently in the playground route
+  isInPlayground() {
+    return window.location.pathname.includes("/playground");
+  }
+
   updateMousePosition(e) {
     this.mouseX = e.clientX;
     this.mouseY = e.clientY;
+
+    // Check if mouse is over an interactive control element
+    const target = e.target;
+    this.isOverControl =
+      target.tagName === "INPUT" ||
+      target.tagName === "SELECT" ||
+      target.tagName === "BUTTON" ||
+      target.tagName === "LABEL" ||
+      target.classList.contains("section-header") ||
+      target.classList.contains("controls");
+
+    // Show/hide cursor based on our context
+    if (this.cursor) {
+      // Completely hide cursor in playground or when over controls
+      if (this.isInPlayground() || this.isOverControl) {
+        this.cursor.style.opacity = "0"; // Completely hide
+      } else {
+        this.cursor.style.opacity = "1"; // Only show on homepage and not over controls
+      }
+    }
+
     this.isMouseMoving = true;
-    if (this.cursor) this.cursor.style.opacity = "1";
     clearTimeout(this.moveTimeout);
     this.moveTimeout = setTimeout(() => {
       this.isMouseMoving = false;
     }, 100);
-    this.createQuantumParticles();
+
+    // Only create particles when not in playground and not over controls
+    if (!this.isInPlayground() && !this.isOverControl) {
+      this.createQuantumParticles();
+    }
   }
 
   createParticleSystem() {
@@ -158,13 +199,23 @@ export default class QuantumCursorUniverse {
   updatePhysics() {
     this.targetX += (this.mouseX - this.targetX) * 0.15;
     this.targetY += (this.mouseY - this.targetY) * 0.15;
+
     if (this.cursor) {
       this.cursor.style.left = this.targetX - 10 + "px";
       this.cursor.style.top = this.targetY - 10 + "px";
     }
+
+    // Adjust gravity field visibility
     if (this.gravityField) {
       this.gravityField.style.left = this.mouseX - 90 + "px";
       this.gravityField.style.top = this.mouseY - 90 + "px";
+
+      // Hide gravity field entirely in playground or when over controls
+      if (this.isInPlayground() || this.isOverControl) {
+        this.gravityField.style.opacity = "0";
+      } else {
+        this.gravityField.style.opacity = "0.7";
+      }
     }
 
     this.particles.forEach((particle) => {

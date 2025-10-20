@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Routes, Route, useNavigate } from 'react-router-dom';
 import ThreeScene from './features/sceneControls/ThreeScene';
 import Controls from './components/Controls/Controls';
 import HomePage from './HomePage/HomePage';
 import NavBar from './nav/NavBar';
 import { QuantumCursor } from "./components/Effects";
+import './cursor-override.css';
 
 // Updated default colors for psychedelic theme
 const defaultBaseColor = '#ff00ff'; // Vibrant magenta
@@ -123,9 +124,11 @@ function HomePageWithNav() {
   
   console.log('HomePageWithNav rendered, navigate:', navigate);
   
-  // Import navigation handler
-  const { handleEnterPlayground } = require('./handlers');
-  const handleEnter = handleEnterPlayground(navigate);
+  // Direct navigation handler
+  const handleEnter = () => {
+    console.log('Navigating to /playground');
+    navigate('/playground');
+  };
   
   return (
     <>
@@ -136,9 +139,29 @@ function HomePageWithNav() {
 }
 
 function App() {
+  // Use location hook from react-router-dom to track route changes reliably
+  const location = useNavigate();
+  const isHomePage = window.location.pathname === '/' || window.location.pathname === '';
+  
+  // Set cursor style and body class based on current route
+  useEffect(() => {
+    console.log(`App route change detected - path: ${window.location.pathname}, isHomePage: ${isHomePage}`);
+    
+    if (isHomePage) {
+      // On homepage, hide the default cursor to allow quantum cursor to work
+      console.log('Homepage mode active - quantum cursor enabled');
+      document.body.classList.remove('playground-page');
+    } else {
+      // On playground, use default cursor for better control interaction
+      document.body.classList.add('playground-page');
+      console.log('Playground mode active - normal cursor enabled');
+    }
+  }, [window.location.pathname, isHomePage]);
+  
   return (
     <>
-      <QuantumCursor />
+      {/* Only render QuantumCursor on the homepage */}
+      {isHomePage && <QuantumCursor />}
       <Routes>
         <Route path="/" element={<HomePageWithNav />} />
         <Route path="/playground" element={<Playground />} />

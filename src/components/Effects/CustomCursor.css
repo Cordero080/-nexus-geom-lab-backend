@@ -8,6 +8,12 @@
   z-index: 9999;
 }
 
-body {
+/* Apply cursor:none with !important on homepage only */
+body:not(.playground-page) {
   cursor: none !important;
+}
+
+/* Explicitly show cursor in playground */
+body.playground-page {
+  cursor: auto !important;
 }

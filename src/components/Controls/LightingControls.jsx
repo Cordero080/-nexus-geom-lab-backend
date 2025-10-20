@@ -1,5 +1,4 @@
 import React from 'react';
-import * as handlers from '../../handlers';
 
 function LightingControls({
   ambientLightColor,
@@ -32,7 +31,7 @@ function LightingControls({
       <input 
         type="color" 
         value={ambientLightColor}
-        onChange={handlers.handleAmbientLightColorChange(onAmbientLightColorChange)}
+        onChange={(event) => onAmbientLightColorChange(event.target.value)}
       />
 
       <label>
@@ -44,7 +43,7 @@ function LightingControls({
         max="2" 
         step="0.05"
         value={ambientLightIntensity}
-        onChange={handlers.handleAmbientLightIntensityChange(onAmbientLightIntensityChange)}
+        onChange={(event) => onAmbientLightIntensityChange(parseFloat(event.target.value))}
       />
 
       {/* Directional Light Controls */}
@@ -54,7 +53,7 @@ function LightingControls({
       <input 
         type="color" 
         value={directionalLightColor}
-        onChange={handlers.handleDirectionalLightColorChange(onDirectionalLightColorChange)}
+        onChange={(event) => onDirectionalLightColorChange(event.target.value)}
       />
 
       <label>
@@ -66,7 +65,7 @@ function LightingControls({
         max="20" 
         step="0.5"
         value={directionalLightIntensity}
-        onChange={handlers.handleDirectionalLightIntensityChange(onDirectionalLightIntensityChange)}
+        onChange={(event) => onDirectionalLightIntensityChange(parseFloat(event.target.value))}
       />
 
       {/* Directional Light Position Controls */}
@@ -79,7 +78,7 @@ function LightingControls({
         max="20" 
         step="0.5"
         value={directionalLightX}
-        onChange={handlers.handleDirectionalLightXChange(onDirectionalLightXChange)}
+        onChange={(event) => onDirectionalLightXChange(parseFloat(event.target.value))}
       />
 
       <label>
@@ -91,7 +90,7 @@ function LightingControls({
         max="20" 
         step="0.5"
         value={directionalLightY}
-        onChange={handlers.handleDirectionalLightYChange(onDirectionalLightYChange)}
+        onChange={(event) => onDirectionalLightYChange(parseFloat(event.target.value))}
       />
 
       <label>
@@ -103,7 +102,7 @@ function LightingControls({
         max="20" 
         step="0.5"
         value={directionalLightZ}
-        onChange={handlers.handleDirectionalLightZChange(onDirectionalLightZChange)}
+        onChange={(event) => onDirectionalLightZChange(parseFloat(event.target.value))}
       />
     </div>
   );

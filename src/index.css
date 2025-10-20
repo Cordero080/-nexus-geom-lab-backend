@@ -300,7 +300,7 @@ h1.quantum-title::after {
     font-family: 'Orbitron', 'JetBrains Mono', monospace !important;
 }
 
-* { cursor: none !important; }
+/* Cursor styles will be handled by cursor-override.css */
 
 .cursor {
   position: fixed;

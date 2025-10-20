@@ -1,6 +1,7 @@
 /* Controls Side Panel Styles (moved from index.css) */
 .controls * {
     font-size: 14px; /* Adjusted font size for all elements inside the controls panel */
+    cursor: auto !important; /* Ensure controls always show cursor and override any global settings */
 }
 /* Simple control panel for Step 1 */
 .controls {

@@ -52,80 +52,115 @@ function Controls({
    * 6. Updated state flows to ThreeScene.jsx
    */
 
-  /*
-  // EVENT HANDLER FUNCTIONS
-   * These functions are now imported from handlers/controlHandlers.js
-   * Each handler is a higher-order function that takes a setter function and returns an event handler
-   */
-  
-  // Define handler functions directly
+  // TRIGGERED BY: User dragging the shininess slider
+  // DATA FLOW: slider onChange → handleShininessChange → onShininessChange(newValue) → App.jsx setState
   const handleShininessChange = (event) => {
-    const newShininess = parseFloat(event.target.value);
-    onShininessChange(newShininess);
-  };
-  
+    // Extract slider value as string, convert to number using parseFloat
+    // parseFloat converts "100" → 100, "50.5" → 50.5
+    const newShininess = parseFloat(event.target.value)  // STRING → NUMBER conversion
+    console.log('Shininess changed to:', newShininess)
+    onShininessChange(newShininess) // CALL App.jsx setter function → updates App.jsx state
+  }
+
+  // TRIGGERED BY: User clicking/changing the specular color picker
+  // DATA FLOW: color input onChange → handleSpecularColorChange → onSpecularColorChange(newColor) → App.jsx setState
   const handleSpecularColorChange = (event) => {
-    const newColor = event.target.value;
-    onSpecularColorChange(newColor);
-  };
-  
-  const handleScaleChange = (event) => {
-    onScaleChange(parseFloat(event.target.value));
-  };
-  
+    // Color picker value is already a string like "#ff0000", no conversion needed
+    const newColor = event.target.value  // Gets hex color string like "#ff0000"
+    console.log('Specular color changed to:', newColor)
+    onSpecularColorChange(newColor) // CALL App.jsx setter function → updates App.jsx state
+  }
+const handleScaleChange = (event) => {
+  onScaleChange(parseFloat(event.target.value))
+}
+  // TRIGGERED BY: User dragging the specular intensity slider
+  // DATA FLOW: slider onChange → handleSpecularIntensityChange → onSpecularIntensityChange(newValue) → App.jsx setState
   const handleSpecularIntensityChange = (event) => {
-    const newIntensity = parseFloat(event.target.value);
-    onSpecularIntensityChange(newIntensity);
-  };
-  
+    // Extract slider value as string, convert to number using parseFloat
+    const newIntensity = parseFloat(event.target.value)  // STRING → NUMBER conversion
+    console.log('Specular intensity changed to:', newIntensity)
+    onSpecularIntensityChange(newIntensity) // CALL App.jsx setter function → updates App.jsx state
+  }
+
+  // TRIGGERED BY: User clicking/changing the base color picker
+  // DATA FLOW: color input onChange → handleBaseColorChange → onBaseColorChange(newColor) → App.jsx setState
   const handleBaseColorChange = (event) => {
-    const newColor = event.target.value;
-    onBaseColorChange(newColor);
-  };
-  
+    // Color picker value is already a string like "#222222", no conversion needed
+    const newColor = event.target.value  // Gets hex color string
+    console.log('Base color changed to:', newColor)
+    onBaseColorChange(newColor) // CALL App.jsx setter function → updates App.jsx state
+  }
+
+  // TRIGGERED BY: User dragging the wireframe intensity slider
+  // DATA FLOW: slider onChange → handleWireframeIntensityChange → onWireframeIntensityChange(newValue) → App.jsx setState
   const handleWireframeIntensityChange = (event) => {
-    const newIntensity = parseFloat(event.target.value);
-    onWireframeIntensityChange(newIntensity);
-  };
-  
-  const handleWireframeToggle = (event) => {
-    onWireframeIntensityChange(event.target.checked ? 100 : 0);
-  };
-  
+    // Extract slider value as string, convert to number using parseFloat
+    const newIntensity = parseFloat(event.target.value)  // STRING → NUMBER conversion
+    console.log('Wireframe intensity changed to:', newIntensity)
+    onWireframeIntensityChange(newIntensity) // CALL App.jsx setter function → updates App.jsx state
+  }
+
+  // TRIGGERED BY: User changing the intricate wireframe spiral color picker
+  // DATA FLOW: color picker onChange → handleIntricateWireframeSpiralColorChange → onIntricateWireframeSpiralColorChange(newColor) → App.jsx setState
   const handleIntricateWireframeSpiralColorChange = (event) => {
-    const newColor = event.target.value;
-    onIntricateWireframeSpiralColorChange(newColor);
-  };
-  
+    const newColor = event.target.value // Get color value as hex string (like "#ff0000")
+    console.log('Intricate wireframe spiral color changed to:', newColor)
+    onIntricateWireframeSpiralColorChange(newColor) // CALL App.jsx setter function → updates App.jsx state
+  }
+
+  // TRIGGERED BY: User changing the intricate wireframe edge color picker
+  // DATA FLOW: color picker onChange → handleIntricateWireframeEdgeColorChange → onIntricateWireframeEdgeColorChange(newColor) → App.jsx setState
   const handleIntricateWireframeEdgeColorChange = (event) => {
-    const newColor = event.target.value;
-    onIntricateWireframeEdgeColorChange(newColor);
-  };
-  
+    const newColor = event.target.value // Get color value as hex string (like "#00ff00")
+    console.log('Intricate wireframe edge color changed to:', newColor)
+    onIntricateWireframeEdgeColorChange(newColor) // CALL App.jsx setter function → updates App.jsx state
+  }
+
+  // TRIGGERED BY: User selecting from camera view dropdown
+  // DATA FLOW: select onChange → handleCameraViewChange → onCameraViewChange(newView) → App.jsx setState
   const handleCameraViewChange = (event) => {
-    const newView = event.target.value;
-    onCameraViewChange(newView);
-  };
-  
+    // Dropdown value is already a string like "free", "orbit", etc. - no conversion needed
+    const newView = event.target.value  // Gets selected option value as string
+    console.log('Camera view changed to:', newView)
+    onCameraViewChange(newView) // CALL App.jsx setter function → updates App.jsx state
+  }
+
+  // TRIGGERED BY: User selecting from environment dropdown
+  // DATA FLOW: select onChange → handleEnvironmentChange → onEnvironmentChange(newEnv) → App.jsx setState
   const handleEnvironmentChange = (event) => {
-    const newEnv = event.target.value;
-    onEnvironmentChange(newEnv);
-  };
-  
+    // Dropdown value is already a string like "purple", "space", etc. - no conversion needed
+    const newEnv = event.target.value  // Gets selected option value as string
+    console.log('Environment changed to:', newEnv)
+    onEnvironmentChange(newEnv) // CALL App.jsx setter function → updates App.jsx state
+  }
+
+  // TRIGGERED BY: User dragging the object count slider
+  // DATA FLOW: slider onChange → handleObjectCountChange → onObjectCountChange(newCount) → App.jsx setState
   const handleObjectCountChange = (event) => {
-    const newCount = parseInt(event.target.value);
-    onObjectCountChange(newCount);
-  };
-  
+    // Extract slider value as string, convert to integer using parseInt
+    // parseInt converts "5" → 5, "10" → 10 (whole numbers only)
+    const newCount = parseInt(event.target.value)  // STRING → INTEGER conversion
+    console.log('Object count changed to:', newCount)
+    onObjectCountChange(newCount) // CALL App.jsx setter function → updates App.jsx state
+  }
+
+  // TRIGGERED BY: User selecting from animation style dropdown
+  // DATA FLOW: select onChange → handleAnimationStyleChange → onAnimationStyleChange(newStyle) → App.jsx setState
   const handleAnimationStyleChange = (event) => {
-    const newStyle = event.target.value;
-    onAnimationStyleChange(newStyle);
-  };
-  
+    // Dropdown value is already a string like "rotate", "float", etc. - no conversion needed
+    const newStyle = event.target.value  // Gets selected option value as string
+    console.log('Animation style changed to:', newStyle)
+    onAnimationStyleChange(newStyle) // CALL App.jsx setter function → updates App.jsx state
+  }
+
+  // TRIGGERED BY: User selecting from object type dropdown
+  // DATA FLOW: select onChange → handleObjectTypeChange → onObjectTypeChange(newType) → App.jsx setState
   const handleObjectTypeChange = (event) => {
-    const newType = event.target.value;
-    onObjectTypeChange(newType);
-  };
+    // Dropdown value is already a string like "icosahedron", "sphere", etc. - no conversion needed
+    const newType = event.target.value  // Gets selected option value as string
+    console.log('Object type changed to:', newType)
+    onObjectTypeChange(newType) // CALL App.jsx setter function → updates App.jsx state
+  }
 
 
   // Lighting event handlers are now handled in LightingControls
@@ -217,7 +252,7 @@ function Controls({
           <input
             type="checkbox"
             checked={wireframeIntensity > 0}
-            onChange={handleWireframeToggle}
+            onChange={e => onWireframeIntensityChange(e.target.checked ? 100 : 0)}
             className="futuristic-checkbox"
           />
           <span className="futuristic-custom-checkbox"></span>

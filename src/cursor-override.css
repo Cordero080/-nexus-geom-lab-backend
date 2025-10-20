@@ -1,0 +1,39 @@
+/* 
+ * CURSOR OVERRIDE STYLES
+ * These styles will be loaded last and will override any other cursor styles
+ */
+
+/* Global base styles - hide cursor on all pages by default */
+html, body {
+  cursor: none !important;
+}
+
+/* Show regular cursor ONLY in playground */
+body.playground-page {
+  cursor: auto !important;
+}
+
+/* Ensure all elements inside the body inherit cursor style */
+body * {
+  cursor: inherit;
+}
+
+/* Specialized controls in playground */
+body.playground-page .controls * {
+  cursor: auto !important;
+}
+
+/* Input fields should show text cursor in playground */
+body.playground-page input, 
+body.playground-page select,
+body.playground-page textarea {
+  cursor: text !important;
+}
+
+/* Buttons, links, etc. should show pointer in playground */
+body.playground-page button,
+body.playground-page a,
+body.playground-page [role="button"],
+body.playground-page .section-header {
+  cursor: pointer !important;
+}

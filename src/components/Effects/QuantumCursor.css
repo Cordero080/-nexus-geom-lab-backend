@@ -5,7 +5,7 @@
   border-radius: 50%;
   background: #fff;
   box-shadow: 0 0 12px #00ffff, 0 0 4px #00ffff inset;
-  pointer-events: none;
+  pointer-events: none !important; /* Ensure this is ignored for pointer events */
   transform: translate(-50%, -50%);
   z-index: 99999;
   transition: opacity 0.3s ease;
