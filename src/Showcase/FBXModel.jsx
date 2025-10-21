@@ -29,8 +29,8 @@ export default function FBXModel({ url, scale = 0.01, rotation = [0, 0, 0], posi
         const size = box.getSize(new THREE.Vector3());
         
         // Center horizontally, place at bottom of cube
-        fbx.position.x = -center.x + offsetX;
-        fbx.position.z = -center.z + offsetZ;
+        fbx.position.x = -center.x;
+        fbx.position.z = -center.z;
         fbx.position.y = -box.min.y; // Put feet at y=0
         
         // Setup animation mixer if animations exist
@@ -38,8 +38,15 @@ export default function FBXModel({ url, scale = 0.01, rotation = [0, 0, 0], posi
           const mixer = new THREE.AnimationMixer(fbx);
           mixerRef.current = mixer;
           
-          // Play the first animation
-          const action = mixer.clipAction(fbx.animations[0]);
+          // Clone the animation and remove root position tracks to prevent position drift
+          const clip = fbx.animations[0].clone();
+          clip.tracks = clip.tracks.filter(track => {
+            // Keep all tracks except root position (removes X and Z position animation)
+            return !track.name.includes('.position');
+          });
+          
+          // Play the modified animation
+          const action = mixer.clipAction(clip);
           action.play();
         }
         
@@ -71,5 +78,5 @@ export default function FBXModel({ url, scale = 0.01, rotation = [0, 0, 0], posi
     }
   });
 
-  return <group ref={groupRef} position={[0, positionY, 0]} />;
+  return <group ref={groupRef} position={[offsetX, positionY, offsetZ]} />;
 }

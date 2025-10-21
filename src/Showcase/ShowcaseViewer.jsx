@@ -5,6 +5,7 @@ import RotatingCube from './RotatingCube';
 import './ShowcaseViewer.css';
 
 export default function ShowcaseViewer({ animation, onClose }) {
+
   return (
     <div 
       className="viewer-overlay"

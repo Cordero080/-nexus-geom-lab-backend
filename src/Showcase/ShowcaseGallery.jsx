@@ -33,14 +33,30 @@ export default function ShowcaseGallery() {
       variant: 'Arctic White',
       description: 'A technological guardian frozen in digital meditation, awaiting its next command.',
       fbxUrl: '/models/white-cat-break-1.fbx',
-      scale: 0.00024368,
-      galleryScale: 0.0001617,
+      scale: 0.00024,
+      galleryScale: 0.000147,
       rotation: [0, 0, 0],
       positionY: -2.2,
       galleryPositionY: -1.5,
       offsetX: 0.05,
       offsetZ: 0,
       background: 'linear-gradient(135deg, #0a0015 0%, #75fad9ff 25%, #d643f3ed 50%, #00ffff 75%, #0a0015 100%)'
+    },
+    {
+      id: 3,
+      name: 'Fire-Tech Warrior #003',
+      animation: 'Combat Stance',
+      variant: 'Crimson Flame',
+      description: 'A battle-hardened entity radiating pure kinetic energy, ready to strike.',
+      fbxUrl: '/models/red-tech-fight.fbx',
+      scale: 0.00025,
+      galleryScale: 0.000147,
+      rotation: [0, 0, 0],
+      positionY: -2.2,
+      galleryPositionY: -1.5,
+      offsetX: -0.4,
+      offsetZ: 0.1,
+      background: 'linear-gradient(180deg, #0a0015 0%, #ff3300 20%, #d643f3ed 50%, #ff6600 80%, #0a0015 100%)'
     }
   ];
   
@@ -66,25 +82,9 @@ export default function ShowcaseGallery() {
                 camera={{ position: [0, 2, 4], fov: 65 }}
                 style={{ width: '100%', height: '100%' }}
               >
-                <ambientLight intensity={0.5} />
-                {/* Dramatic spotlights shining through the character */}
-                <spotLight 
-                  position={[0, 5, 3]} 
-                  angle={0.5} 
-                  penumbra={0.5} 
-                  intensity={2} 
-                  color="#00ffff"
-                  castShadow
-                />
-                <spotLight 
-                  position={[0, -3, 3]} 
-                  angle={0.4} 
-                  penumbra={0.5} 
-                  intensity={1.5} 
-                  color="#ff00ff"
-                />
-                <pointLight position={[3, 0, 2]} intensity={1} color="#ffffff" />
-                <pointLight position={[-3, 0, 2]} intensity={1} color="#ffffff" />
+                {/* Simplified lighting for gallery performance */}
+                <ambientLight intensity={0.6} />
+                <directionalLight position={[5, 5, 5]} intensity={1.2} color="#ffffff" />
                 <RotatingCube 
                   fbxUrl={animation.fbxUrl} 
                   scale={animation.galleryScale || animation.scale} 

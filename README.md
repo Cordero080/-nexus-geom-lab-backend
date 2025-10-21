@@ -1,10 +1,100 @@
 # Three.js React Project
 
-A Three.js-based 3D visualization project with multiple geometries and animation styles.
+## 🌌 Project Vision & Concept
+
+**A Multi-Dimensional 3D Art Platform** combining interactive geometry manipulation, character animation showcases, and full-stack capabilities.
+
+### Core Philosophy
+
+This project explores the intersection of **geometric mathematics**, **character animation**, and **web interactivity** through Three.js. It's built around two primary experiences:
+
+1. **Geometric Consciousness Lab** - Interactive 3D shapes with synchronized wireframe structures that respond to various animation algorithms (liquid metal, magnetic fields, alien oscillations, DNA helixes)
+
+2. **Animation Showcase Gallery** - A curated collection of animated 3D characters displayed in rotating transparent cubes with custom lighting, gradients, and theatrical presentation
+
+### What Makes This Unique
+
+**Technical Complexity:**
+
+- Synchronized multi-component 3D objects (solid mesh + thick wireframe cylinders + inner structures + connecting rods)
+- Per-vertex deformation algorithms that maintain structural integrity
+- FBX model loading with animation mixing and precise positioning controls
+- Multiple canvas management with optimized lighting systems
+
+**Visual Impact:**
+
+- Ethereal transparent cubes with interior lighting
+- Character-specific gradient backgrounds (blue tech, cyan glow, fire orange)
+- Spectral lighting systems (cyan/magenta spotlights, blue directional, multi-point white lighting)
+- Glassmorphic UI elements with custom quantum cursor
+
+**Architecture Philosophy:**
+
+- Desktop-first experience (prioritized visual fidelity over mobile responsiveness)
+- Per-model configuration system (scale, rotation, positioning offsets per animation)
+- Separation of concerns (gallery lighting vs. viewer lighting)
+- Performance optimization through strategic light reduction
+
+### Current State
+
+**Feature Complete:**
+
+- ✅ Interactive 3D geometry editor with 7 animation algorithms
+- ✅ Showcase gallery with 3 animated characters (expandable to 50+)
+- ✅ Full-screen viewer with orbital camera controls
+- ✅ Custom cursor system with quantum particle effects
+- ✅ Responsive navigation with modal management
+- ✅ Per-animation gradient backgrounds and custom lighting
+
+**Ready for Expansion:**
+
+- 🎯 User authentication & scene saving
+- 🎯 Public gallery with social features (likes, comments)
+- 🎯 Backend API integration (Express + PostgreSQL)
+- 🎯 Additional animated characters (target: 50+ unique animations)
+
+### The Technical Pipeline
+
+```
+GEOMETRY LAB:
+Mathematical Definitions → Three.js Geometries → Vertex Manipulation →
+Wireframe Synchronization → Animation Loops → User Controls
+
+SHOWCASE GALLERY:
+Meshy.ai (model generation) → Mixamo (50+ animations) →
+Blender (texturing/optimization) → FBXLoader →
+React Three Fiber → Rotating Cube Display → User Interaction
+```
+
+### Use Cases
+
+**For Developers:**
+
+- Learn advanced Three.js patterns (vertex manipulation, animation mixers, multi-canvas rendering)
+- Study component synchronization in 3D space
+- Reference implementation for FBX model integration
+
+**For Artists:**
+
+- Interactive 3D art installation framework
+- Character animation showcase platform
+- Experimental geometry playground
+
+**For Interviewers:**
+
+- Demonstrates full-stack capability (frontend complete, backend planned)
+- Shows mastery of complex state management
+- Proves understanding of 3D mathematics and graphics programming
+- Portfolio differentiator (not another CRUD app)
+
+---
+
+## 🎨 Feature Overview
 
 ## 🎨 Recent Updates
 
 **Showcase Gallery Feature - Multi-Animation Support (Latest)**
+
 - Added second animated character (white tech cat with break dance animation)
 - Implemented per-model positioning and scaling system:
   - Separate `galleryScale` and `scale` for different cube sizes (gallery vs viewer)
@@ -18,6 +108,7 @@ A Three.js-based 3D visualization project with multiple geometries and animation
 - Enhanced visual consistency between gallery cards and viewer
 
 **Showcase Gallery Feature (Initial Release)**
+
 - Built interactive 3D showcase gallery with rotating transparent cubes
 - Integrated FBX model loading with animation support (@react-three/fiber + FBXLoader)
 - Implemented full-screen viewer with OrbitControls for user interaction
@@ -84,6 +175,41 @@ Each 3D shape consists of multiple components that must move together in unison:
 
 1. **Transform copying**: `wireframeMesh.position.copy(solidMesh.position)` - Used for transform-based animations
 2. **Direct vertex updates**: Update wireframe cylinder positions/orientations based on deformed vertex positions - Used for vertex-deformation animations
+
+---
+
+## 🎯 Problem Solutions & Technical Fixes
+
+### FBX Animation Root Motion Issue
+
+**Problem:** Animated characters with offsetX/offsetZ positioning would appear correct on the first animation loop, but reset to a different position on subsequent loops.
+
+**Cause:** Mixamo animations often include root motion (position keyframes baked into the animation itself), which overrides manual positioning offsets.
+
+**Solution:** Strip position tracks from the animation clip before playing:
+
+```javascript
+// In FBXModel.jsx - Setup animation mixer
+if (fbx.animations && fbx.animations.length > 0) {
+  const mixer = new THREE.AnimationMixer(fbx);
+  mixerRef.current = mixer;
+
+  // Clone the animation and remove root position tracks
+  const clip = fbx.animations[0].clone();
+  clip.tracks = clip.tracks.filter((track) => {
+    // Keep all tracks except root position (removes X and Z position animation)
+    return !track.name.includes(".position");
+  });
+
+  // Play the modified animation
+  const action = mixer.clipAction(clip);
+  action.play();
+}
+```
+
+**Result:** Character maintains consistent positioning throughout all animation loops while keeping all bone animations intact.
+
+**When to Use:** Any time you need to position FBX models with offsetX/offsetZ and the animation has unwanted position drift/reset behavior.
 
 ## Development
 
