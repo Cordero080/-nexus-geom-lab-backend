@@ -1067,21 +1067,19 @@ function ThreeScene({
 				curvedLines.position.set(x, y, z) // Same position
 			}
 			
-			// Enable shadows for both meshes
-			solidMesh.castShadow = true
-			solidMesh.receiveShadow = true
-			wireframeMesh.castShadow = true
-			wireframeMesh.receiveShadow = true
-			
-			// Add all meshes to the scene
-			const objectGroup = new THREE.Group();
-			scene.add(solidMesh)
-			scene.add(wireframeMesh)
-			scene.add(centerLines)
-			scene.add(curvedLines)
-			scene.add(objectGroup);
-
-			
+		// Enable shadows for both meshes
+		solidMesh.castShadow = true
+		solidMesh.receiveShadow = true
+		wireframeMesh.castShadow = true
+		wireframeMesh.receiveShadow = true
+		
+		// Add all meshes to the scene
+		const objectGroup = new THREE.Group();
+		scene.add(solidMesh)
+		scene.add(wireframeMesh)
+		scene.add(centerLines)
+		scene.add(curvedLines)
+		scene.add(objectGroup);			
 			
 			console.log(`Added object ${i} to scene:`, {
 				solidMesh: solidMesh.type,
@@ -1472,6 +1470,9 @@ function ThreeScene({
 							currentMesh.rotation.z = t * 2.5 + phase
 							break
 case 'alien':
+  // Only animate solidMesh - wireframes will be synchronized after
+  if (currentMesh !== solidMesh) break;
+  
   // ============================================
   // ALIEN INTELLIGENCE V4.0 - SENTIENT SYMPHONY (Slow Build & Elliptical Dash)
   // Focus: Non-repetitive, slowly building spin, and a curved, curious recede/return.
@@ -1489,40 +1490,105 @@ case 'alien':
   // New Easing: Smoother, more organic buildup
   const easeInOutQuint = (t) => t < 0.5 ? 16 * t * t * t * t * t : 1 + 16 * (t - 1) * (t - 1) * (t - 1) * (t - 1) * (t - 1);
 
-  // STEP 1 & 2: Reset & Rebuild (Kept the same)
+  // STEP 1 & 2: Reset & Rebuild with geometry-specific handling
   if (geometry && originalPositions && currentMesh === solidMesh) {
     const positions = geometry.attributes.position.array
+    
+    // Check if this is a structured geometry
+    const isSphere = geometry.type === 'SphereGeometry';
+    const isBox = geometry.type === 'BoxGeometry';
+    const isOctahedron = geometry.type === 'OctahedronGeometry';
+    const isTetrahedron = geometry.type === 'TetrahedronGeometry';
+    const shouldMaintainStructure = isSphere || isBox || isOctahedron || isTetrahedron;
+    
+    // Restore original positions
     for (let i = 0; i < positions.length; i++) {
       positions[i] = originalPositions[i]
     }
     geometry.attributes.position.needsUpdate = true
 
-    if (centerLines && centerLines.geometry && geometry.type !== 'TetrahedronGeometry') {
+    // Rebuild centerLines using geometry-specific patterns
+    if (centerLines && centerLines.geometry) {
       const edgesGeometry = new THREE.EdgesGeometry(geometry)
       const edgeVertices = edgesGeometry.attributes.position.array
       const centerLinesGeometry = centerLines.geometry
       const centerLinesPositions = []
 
-      for (let j = 0; j < edgeVertices.length; j += 6) {
-        const p1 = new THREE.Vector3(edgeVertices[j], edgeVertices[j + 1], edgeVertices[j + 2]);
-        const p2 = new THREE.Vector3(edgeVertices[j + 3], edgeVertices[j + 4], edgeVertices[j + 5]);
-        const dir = p2.clone().sub(p1).normalize();
-        
-        const steps = 6;
-        const noiseScale = 0.05 * (speedVariation + 1);
-        for (let step = 0; step < steps; step++) {
-          const t1 = step / steps;
-          const t2 = (step + 1) / steps;
+      if (isSphere) {
+        // Spiral pattern for spheres
+        for (let j = 0; j < edgeVertices.length; j += 12) {
+          const endX = edgeVertices[j + 3];
+          const endY = edgeVertices[j + 4];
+          const endZ = edgeVertices[j + 5];
+          const steps = 8;
+          for (let step = 0; step < steps; step++) {
+            const t1 = step / steps;
+            const t2 = (step + 1) / steps;
+            const radius1 = t1 * 0.8;
+            const radius2 = t2 * 0.8;
+            const angle1 = t1 * Math.PI * 2;
+            const angle2 = t2 * Math.PI * 2;
+            const norm = Math.sqrt(endX*endX + endY*endY + endZ*endZ);
+            const x1 = Math.cos(angle1) * radius1 * (endX / norm);
+            const y1 = Math.sin(angle1) * radius1 * (endY / norm) + t1 * endY;
+            const z1 = t1 * endZ;
+            const x2 = Math.cos(angle2) * radius2 * (endX / norm);
+            const y2 = Math.sin(angle2) * radius2 * (endY / norm) + t2 * endY;
+            const z2 = t2 * endZ;
+            centerLinesPositions.push(x1, y1, z1, x2, y2, z2);
+          }
+        }
+      } else if (isBox || isOctahedron) {
+        // Clean linear interpolation for boxes and octahedrons
+        for (let j = 0; j < edgeVertices.length; j += 6) {
+          const p1 = new THREE.Vector3(edgeVertices[j], edgeVertices[j + 1], edgeVertices[j + 2]);
+          const p2 = new THREE.Vector3(edgeVertices[j + 3], edgeVertices[j + 4], edgeVertices[j + 5]);
+          const steps = 6;
+          for (let step = 0; step < steps; step++) {
+            const t1 = step / steps;
+            const t2 = (step + 1) / steps;
+            const x1 = p1.x + (p2.x - p1.x) * t1;
+            const y1 = p1.y + (p2.y - p1.y) * t1;
+            const z1 = p1.z + (p2.z - p1.z) * t1;
+            const x2 = p1.x + (p2.x - p1.x) * t2;
+            const y2 = p1.y + (p2.y - p1.y) * t2;
+            const z2 = p1.z + (p2.z - p1.z) * t2;
+            centerLinesPositions.push(x1, y1, z1, x2, y2, z2);
+          }
+        }
+      } else if (isTetrahedron) {
+        // Direct vertex connections for tetrahedrons
+        const verts = [];
+        for (let i = 0; i < positions.length; i += 3) {
+          verts.push([positions[i], positions[i + 1], positions[i + 2]]);
+        }
+        const edges = [[0,1],[0,2],[0,3],[1,2],[1,3],[2,3]];
+        for (const [a, b] of edges) {
+          centerLinesPositions.push(...verts[a], ...verts[b]);
+        }
+      } else {
+        // For other geometries, use the original noisy pattern
+        for (let j = 0; j < edgeVertices.length; j += 6) {
+          const p1 = new THREE.Vector3(edgeVertices[j], edgeVertices[j + 1], edgeVertices[j + 2]);
+          const p2 = new THREE.Vector3(edgeVertices[j + 3], edgeVertices[j + 4], edgeVertices[j + 5]);
+          const dir = p2.clone().sub(p1).normalize();
           
-          const x1 = p1.x + dir.x * (p2.x - p1.x) * t1 + Math.sin(t * 10 + j) * noiseScale * t1;
-          const y1 = p1.y + dir.y * (p2.y - p1.y) * t1 + Math.cos(t * 10 + j) * noiseScale * t1;
-          const z1 = p1.z + dir.z * (p2.z - p1.z) * t1;
-          
-          const x2 = p1.x + dir.x * (p2.x - p1.x) * t2 + Math.sin(t * 10 + j) * noiseScale * t2;
-          const y2 = p1.y + dir.y * (p2.y - p1.y) * t2 + Math.cos(t * 10 + j) * noiseScale * t2;
-          const z2 = p1.z + dir.z * (p2.z - p1.z) * t2;
-          
-          centerLinesPositions.push(x1, y1, z1, x2, y2, z2) 
+          const steps = 6;
+          const noiseScale = 0.05 * (speedVariation + 1);
+          for (let step = 0; step < steps; step++) {
+            const t1 = step / steps;
+            const t2 = (step + 1) / steps;
+            
+            const x1 = p1.x + dir.x * (p2.x - p1.x) * t1 + Math.sin(t * 10 + j) * noiseScale * t1;
+            const y1 = p1.y + dir.y * (p2.y - p1.y) * t1 + Math.cos(t * 10 + j) * noiseScale * t1;
+            const z1 = p1.z + dir.z * (p2.z - p1.z) * t1;
+            
+            const x2 = p1.x + dir.x * (p2.x - p1.x) * t2 + Math.sin(t * 10 + j) * noiseScale * t2;
+            const y2 = p1.y + dir.y * (p2.y - p1.y) * t2 + Math.cos(t * 10 + j) * noiseScale * t2;
+            const z2 = p1.z + dir.z * (p2.z - p1.z) * t2;
+            
+            centerLinesPositions.push(x1, y1, z1, x2, y2, z2);
+          }
         }
       }
       
@@ -1689,6 +1755,23 @@ case 'alien':
     if (!shouldMaintainStructure) {
       updateThickWireframeCylinders(objData);
     }
+  }
+  
+  // Synchronize wireframe and centerLines with solidMesh
+  if (wireframeMesh) {
+    wireframeMesh.position.copy(solidMesh.position);
+    wireframeMesh.rotation.copy(solidMesh.rotation);
+    wireframeMesh.scale.copy(solidMesh.scale);
+  }
+  if (centerLines) {
+    centerLines.position.copy(solidMesh.position);
+    centerLines.rotation.copy(solidMesh.rotation);
+    centerLines.scale.copy(solidMesh.scale);
+  }
+  if (curvedLines) {
+    curvedLines.position.copy(solidMesh.position);
+    curvedLines.rotation.copy(solidMesh.rotation);
+    curvedLines.scale.copy(solidMesh.scale);
   }
     
   break
