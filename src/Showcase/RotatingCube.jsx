@@ -3,7 +3,7 @@ import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 import FBXModel from './FBXModel';
 
-export default function RotatingCube({ size = 3, fbxUrl = null }) {
+export default function RotatingCube({ size = 3, fbxUrl = null, scale = 0.001275, rotation = [0, 0, 0], positionY = -1.8, offsetX = 0, offsetZ = 0, cubeY = -0.5 }) {
   const cubeRef = useRef();
   const innerLightRef = useRef();
 
@@ -23,7 +23,7 @@ export default function RotatingCube({ size = 3, fbxUrl = null }) {
   const sphereRadius = size * 0.27;
 
   return (
-    <group ref={cubeRef} position={[0, -0.5, 0]}>
+    <group ref={cubeRef} position={[0, cubeY, 0]}>
       {/* Transparent cube container */}
       <mesh>
         <boxGeometry args={[size, size, size]} />
@@ -56,7 +56,7 @@ export default function RotatingCube({ size = 3, fbxUrl = null }) {
       
       {/* FBX Model or placeholder sphere */}
       {fbxUrl ? (
-        <FBXModel url={fbxUrl} scale={0.001275} />
+        <FBXModel url={fbxUrl} scale={scale} rotation={rotation} positionY={positionY} offsetX={offsetX} offsetZ={offsetZ} />
       ) : (
         <mesh position={[0, 0, 0]}>
           <sphereGeometry args={[sphereRadius, 32, 32]} />

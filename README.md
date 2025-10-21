@@ -2,6 +2,19 @@
 
 A Three.js-based 3D visualization project with multiple geometries and animation styles.
 
+## 🎨 Recent Updates
+
+**Showcase Gallery Feature (Completed)**
+
+- Built interactive 3D showcase gallery with rotating transparent cubes
+- Integrated FBX model loading with animation support (@react-three/fiber + FBXLoader)
+- Implemented full-screen viewer with OrbitControls for user interaction
+- Added dramatic spectral lighting system (cyan, magenta, blue directional lights)
+- Created responsive grid layout with glassmorphic card styling
+- Navigation integration: clicking navbar "Showcase" link closes viewer modal
+- Optimized character positioning (Y: -1.8) and camera angles
+- Stable Y-axis rotation without tilting for clean presentation
+
 ## Project Structure
 
 Each 3D shape consists of multiple components that must move together in unison:
@@ -558,6 +571,7 @@ VITE_API_URL=https://3d-art-api.render.com/api
    ```
 
 5. **Loading a Scene**: Frontend fetches config, applies all values to controls:
+
    ```javascript
    const loadScene = async (sceneId) => {
      const response = await fetch(`${API_URL}/scenes/${sceneId}`);

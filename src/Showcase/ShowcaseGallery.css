@@ -41,6 +41,7 @@
 }
 
 .showcase-title {
+  font-family: 'Futura', 'Trebuchet MS', 'Arial', sans-serif;
   font-size: 3rem;
   font-weight: 700;
   background: linear-gradient(135deg, #00ffff, #ff00ff, #ffff00);
@@ -72,7 +73,7 @@
 }
 
 .showcase-card {
-  background: rgba(0, 255, 255, 0.05);
+  background: linear-gradient(135deg, #0a0015 0%, #d643f3ed 50%, #0a0015 100%);
   border: 2px solid rgba(0, 255, 255, 0.3);
   border-radius: 16px;
   overflow: hidden;

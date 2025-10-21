@@ -6,7 +6,10 @@ import './ShowcaseViewer.css';
 
 export default function ShowcaseViewer({ animation, onClose }) {
   return (
-    <div className="viewer-overlay">
+    <div 
+      className="viewer-overlay"
+      style={animation?.background ? { background: animation.background } : {}}
+    >
       <button className="viewer-back-button" onClick={onClose}>
         ← Back to Gallery
       </button>
@@ -65,7 +68,7 @@ export default function ShowcaseViewer({ animation, onClose }) {
           <pointLight position={[0, 0, -5]} intensity={1} color="#ffff00" />
           
           {/* Big cube - pass size as prop */}
-          <RotatingCube size={5} fbxUrl="/models/blue_robot.fbx" />
+          <RotatingCube size={5} fbxUrl={animation?.fbxUrl} scale={animation?.scale} rotation={animation?.rotation} positionY={animation?.positionY} offsetX={animation?.offsetX} offsetZ={animation?.offsetZ} />
           
           {/* OrbitControls lets user rotate with mouse */}
           <OrbitControls 
