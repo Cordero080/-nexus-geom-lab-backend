@@ -1378,9 +1378,18 @@ function ThreeScene({
 							currentMesh.rotation.y = spiralAngle * 0.7
 							break
 
-						case 'liquid':
-							// Liquid metal effect: morph vertices with smooth flowing sine/cosine waves
-							if (geometry && originalPositions && currentMesh === solidMesh) {
+					case 'liquid':
+						// Liquid metal effect: morph vertices with smooth flowing sine/cosine waves
+						if (geometry && originalPositions && currentMesh === solidMesh) {
+							// Check if this is a structured geometry that should maintain its shape
+							const isSphere = geometry.type === 'SphereGeometry';
+							const isBox = geometry.type === 'BoxGeometry';
+							const isOctahedron = geometry.type === 'OctahedronGeometry';
+							const isTetrahedron = geometry.type === 'TetrahedronGeometry';
+							const shouldMaintainStructure = isSphere || isBox || isOctahedron || isTetrahedron;
+							
+							if (!shouldMaintainStructure) {
+								// Only deform unstructured geometries
 								const positions = geometry.attributes.position.array;
 								for (let i = 0; i < positions.length; i += 3) {
 									const ox = originalPositions[i];
@@ -1396,13 +1405,12 @@ function ThreeScene({
 								}
 								geometry.attributes.position.needsUpdate = true;
 							}
-							// Slow, gentle rotation and keep original position
-							currentMesh.rotation.x += 0.004;
-							currentMesh.rotation.y += 0.006;
-							currentMesh.position.copy(originalPosition);
-							break;
-
-						case 'chaos':
+						}
+						// Slow, gentle rotation and keep original position
+						currentMesh.rotation.x += 0.004;
+						currentMesh.rotation.y += 0.006;
+						currentMesh.position.copy(originalPosition);
+						break;						case 'chaos':
 							// Chaotic random movement - reset vertices to original positions first
 							if (geometry && originalPositions && currentMesh === solidMesh) {
 								const positions = geometry.attributes.position.array
@@ -1670,9 +1678,17 @@ case 'alien':
   currentMesh.position.y = THREE.MathUtils.clamp(currentMesh.position.y, originalPosition.y - maxBoundary, originalPosition.y + maxBoundary);
   currentMesh.position.z = THREE.MathUtils.clamp(currentMesh.position.z, originalPosition.z - maxBoundary, originalPosition.z + maxBoundary);
     
-  // Update thick wireframe cylinders for sphere geometry
-  if (objData.thickCylinders && objData.edgePairs) {
-    updateThickWireframeCylinders(objData);
+  // Update thick wireframe cylinders ONLY for unstructured geometries
+  if (objData.thickCylinders && objData.edgePairs && geometry) {
+    const isSphere = geometry.type === 'SphereGeometry';
+    const isBox = geometry.type === 'BoxGeometry';
+    const isOctahedron = geometry.type === 'OctahedronGeometry';
+    const isTetrahedron = geometry.type === 'TetrahedronGeometry';
+    const shouldMaintainStructure = isSphere || isBox || isOctahedron || isTetrahedron;
+    
+    if (!shouldMaintainStructure) {
+      updateThickWireframeCylinders(objData);
+    }
   }
     
   break
@@ -1681,18 +1697,16 @@ case 'alien':
 	if (geometry && originalPositions && currentMesh === solidMesh) {
 		const positions = geometry.attributes.position.array
 		const type = geometry.type
-
-		// For flat-faced polyhedrons: use gentle wave deformations
-		if (type === 'BoxGeometry' || type === 'TetrahedronGeometry' || type === 'OctahedronGeometry') {
-			for (let i = 0; i < positions.length; i += 3) {
-				const ox = originalPositions[i]
-				const oy = originalPositions[i + 1]
-				const oz = originalPositions[i + 2]
-				positions[i] = ox + Math.sin(t * 2 + oy * 3) * 0.12
-				positions[i + 1] = oy + Math.cos(t * 1.5 + oz * 2) * 0.12
-				positions[i + 2] = oz + Math.sin(t * 1.8 + ox * 2.5) * 0.12
-			}
-		} else {
+		
+		// Check if this is a structured geometry that should maintain its shape
+		const isSphere = type === 'SphereGeometry';
+		const isBox = type === 'BoxGeometry';
+		const isOctahedron = type === 'OctahedronGeometry';
+		const isTetrahedron = type === 'TetrahedronGeometry';
+		const shouldMaintainStructure = isSphere || isBox || isOctahedron || isTetrahedron;
+		
+		if (!shouldMaintainStructure) {
+			// Only deform unstructured geometries
 			// For round shapes: use helical radial twist
 			for (let i = 0; i < positions.length; i += 3) {
 				const x = originalPositions[i]
@@ -1705,9 +1719,14 @@ case 'alien':
 				positions[i + 1] = y + Math.sin(t * 1.5 + angle + phase) * 0.1
 				positions[i + 2] = Math.sin(angle) * helixRadius
 			}
+			geometry.attributes.position.needsUpdate = true
+		} else {
+			// Structured geometries: keep original positions
+			for (let i = 0; i < positions.length; i++) {
+				positions[i] = originalPositions[i];
+			}
+			geometry.attributes.position.needsUpdate = true
 		}
-		
-		geometry.attributes.position.needsUpdate = true
 		
 		// UPDATE INTRICATE WIREFRAME TO FOLLOW MORPHED SURFACE - DNA
 		if (centerLines && curvedLines) {
@@ -1901,11 +1920,20 @@ case 'alien':
 	currentMesh.rotation.y += Math.cos(t * 0.4) * 0.01
 	currentMesh.position.copy(originalPosition)
 	break
-						case 'magnetic':
-							// Magnetic Field: Vertices attracted/repelled by moving magnetic points
-							if (geometry && originalPositions && magneticPoints) {
-								const positions = geometry.attributes.position.array
-								
+					case 'magnetic':
+						// Magnetic Field: Vertices attracted/repelled by moving magnetic points
+						if (geometry && originalPositions && magneticPoints) {
+							const positions = geometry.attributes.position.array
+							
+							// Check if this is a structured geometry that should maintain its shape
+							const isSphere = geometry.type === 'SphereGeometry';
+							const isBox = geometry.type === 'BoxGeometry';
+							const isOctahedron = geometry.type === 'OctahedronGeometry';
+							const isTetrahedron = geometry.type === 'TetrahedronGeometry';
+							const shouldMaintainStructure = isSphere || isBox || isOctahedron || isTetrahedron;
+							
+							if (!shouldMaintainStructure) {
+								// Only deform unstructured geometries
 								// Move magnetic points around
 								magneticPoints.forEach((point, pIndex) => {
 									point.x = Math.sin(t * 0.5 + pIndex * 2) * 3
@@ -1940,8 +1968,13 @@ case 'alien':
 									positions[i + 2] = z + totalForceZ * 0.3
 								}
 								geometry.attributes.position.needsUpdate = true
-								
-								// UPDATE INTRICATE WIREFRAME TO FOLLOW MORPHED SURFACE - MAGNETIC
+							} else {
+								// Structured geometries: keep original positions
+								for (let i = 0; i < positions.length; i++) {
+									positions[i] = originalPositions[i];
+								}
+								geometry.attributes.position.needsUpdate = true
+							}								// UPDATE INTRICATE WIREFRAME TO FOLLOW MORPHED SURFACE - MAGNETIC
 								if (currentMesh === solidMesh && centerLines && curvedLines) {
 									if (geometry.type === 'TetrahedronGeometry') {
 										// TETRAHEDRON: Update hyper-tetrahedron wireframes during magnetic morphing
