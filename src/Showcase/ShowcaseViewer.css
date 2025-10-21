@@ -83,31 +83,38 @@
 
 .viewer-info {
   padding: 20px 30px;
-  background: linear-gradient(180deg, rgba(0, 0, 0, 0.8) 0%, rgba(10, 0, 30, 0.9) 100%);
-  border-top: 2px solid rgba(0, 255, 255, 0.3);
+  background: linear-gradient(180deg, rgba(255, 80, 0, 0.15) 0%, rgba(255, 0, 80, 0.25) 100%);
+  border-top: 2px solid rgba(255, 120, 50, 0.4);
   text-align: center;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 -5px 20px rgba(255, 80, 0, 0.2);
+  position: relative;
+  z-index: 10;
 }
 
 .viewer-title {
   font-size: 1.8rem;
   font-weight: 700;
-  background: linear-gradient(135deg, #00ffff, #ff00ff);
+  background: linear-gradient(135deg, #ff6a00, #ff2b00, #ffcc00);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
   margin: 0 0 10px 0;
   text-transform: uppercase;
   letter-spacing: 2px;
+  text-shadow: 0 0 15px rgba(255, 100, 0, 0.4);
 }
 
 .viewer-description {
   font-size: 0.95rem;
-  color: rgba(0, 255, 255, 0.8);
+  color: rgba(255, 255, 255, 0.9);
   margin: 0 0 16px 0;
   font-style: italic;
   max-width: 700px;
   margin-left: auto;
   margin-right: auto;
+  text-shadow: 0 0 10px rgba(255, 100, 0, 0.5);
+  letter-spacing: 0.5px;
 }
 
 .viewer-meta {
@@ -119,12 +126,20 @@
 
 .meta-tag {
   padding: 6px 16px;
-  background: rgba(255, 0, 255, 0.1);
-  border: 1px solid rgba(255, 0, 255, 0.3);
+  background: rgba(255, 100, 0, 0.15);
+  border: 1px solid rgba(255, 80, 0, 0.4);
   border-radius: 20px;
-  color: #ff00ff;
+  color: #ff7700;
   font-size: 0.8rem;
   font-weight: 500;
+  backdrop-filter: blur(5px);
+  box-shadow: 0 2px 8px rgba(255, 60, 0, 0.2);
+  transition: all 0.3s ease;
+}
+
+.meta-tag:hover {
+  background: rgba(255, 100, 0, 0.25);
+  box-shadow: 0 2px 12px rgba(255, 60, 0, 0.3);
 }
 
 /* Responsive */
