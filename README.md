@@ -4,8 +4,20 @@ A Three.js-based 3D visualization project with multiple geometries and animation
 
 ## 🎨 Recent Updates
 
-**Showcase Gallery Feature (Completed)**
+**Showcase Gallery Feature - Multi-Animation Support (Latest)**
+- Added second animated character (white tech cat with break dance animation)
+- Implemented per-model positioning and scaling system:
+  - Separate `galleryScale` and `scale` for different cube sizes (gallery vs viewer)
+  - Custom `positionY`, `offsetX`, `offsetZ` controls for precise character placement
+  - Model rotation support for proper orientation
+- Added unique gradient backgrounds per animation:
+  - Blue robot: Deep blue accents with 225° diagonal gradient
+  - White cat: Cyan accent gradient with tech-inspired hues
+- Raised gallery cubes vertically to prevent card info overlap
+- Applied Futura font to showcase title
+- Enhanced visual consistency between gallery cards and viewer
 
+**Showcase Gallery Feature (Initial Release)**
 - Built interactive 3D showcase gallery with rotating transparent cubes
 - Integrated FBX model loading with animation support (@react-three/fiber + FBXLoader)
 - Implemented full-screen viewer with OrbitControls for user interaction
