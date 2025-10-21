@@ -2010,56 +2010,40 @@ case 'alien':
 						if (geometry && originalPositions && magneticPoints) {
 							const positions = geometry.attributes.position.array
 							
-							// Check if this is a structured geometry that should maintain its shape
-							const isSphere = geometry.type === 'SphereGeometry';
-							const isBox = geometry.type === 'BoxGeometry';
-							const isOctahedron = geometry.type === 'OctahedronGeometry';
-							const isTetrahedron = geometry.type === 'TetrahedronGeometry';
-							const shouldMaintainStructure = isSphere || isBox || isOctahedron || isTetrahedron;
+							// Move magnetic points around
+							magneticPoints.forEach((point, pIndex) => {
+								point.x = Math.sin(t * 0.5 + pIndex * 2) * 3
+								point.y = Math.cos(t * 0.7 + pIndex * 2) * 2
+								point.z = Math.sin(t * 0.3 + pIndex * 3) * 3
+							})
 							
-							if (!shouldMaintainStructure) {
-								// Only deform unstructured geometries
-								// Move magnetic points around
-								magneticPoints.forEach((point, pIndex) => {
-									point.x = Math.sin(t * 0.5 + pIndex * 2) * 3
-									point.y = Math.cos(t * 0.7 + pIndex * 2) * 2
-									point.z = Math.sin(t * 0.3 + pIndex * 3) * 3
+							for (let i = 0; i < positions.length; i += 3) {
+								const x = originalPositions[i]
+								const y = originalPositions[i + 1]
+								const z = originalPositions[i + 2]
+								
+								let totalForceX = 0, totalForceY = 0, totalForceZ = 0
+								
+								// Calculate magnetic forces from each point
+								magneticPoints.forEach(point => {
+									const dx = x - point.x
+									const dy = y - point.y
+									const dz = z - point.z
+									const distance = Math.sqrt(dx * dx + dy * dy + dz * dz) + 0.1
+									const force = point.strength / (distance * distance)
+									
+									const direction = Math.sin(t + point.x + point.y) > 0 ? -1 : 1
+									
+									totalForceX += (dx / distance) * force * direction
+									totalForceY += (dy / distance) * force * direction
+									totalForceZ += (dz / distance) * force * direction
 								})
 								
-								for (let i = 0; i < positions.length; i += 3) {
-									const x = originalPositions[i]
-									const y = originalPositions[i + 1]
-									const z = originalPositions[i + 2]
-									
-									let totalForceX = 0, totalForceY = 0, totalForceZ = 0
-									
-									// Calculate magnetic forces from each point
-									magneticPoints.forEach(point => {
-										const dx = x - point.x
-										const dy = y - point.y
-										const dz = z - point.z
-										const distance = Math.sqrt(dx * dx + dy * dy + dz * dz) + 0.1
-										const force = point.strength / (distance * distance)
-										
-										const direction = Math.sin(t + point.x + point.y) > 0 ? -1 : 1
-										
-										totalForceX += (dx / distance) * force * direction
-										totalForceY += (dy / distance) * force * direction
-										totalForceZ += (dz / distance) * force * direction
-									})
-									
-									positions[i] = x + totalForceX * 0.3
-									positions[i + 1] = y + totalForceY * 0.3
-									positions[i + 2] = z + totalForceZ * 0.3
-								}
-								geometry.attributes.position.needsUpdate = true
-							} else {
-								// Structured geometries: keep original positions
-								for (let i = 0; i < positions.length; i++) {
-									positions[i] = originalPositions[i];
-								}
-								geometry.attributes.position.needsUpdate = true
-							}								// UPDATE INTRICATE WIREFRAME TO FOLLOW MORPHED SURFACE - MAGNETIC
+								positions[i] = x + totalForceX * 0.3
+								positions[i + 1] = y + totalForceY * 0.3
+								positions[i + 2] = z + totalForceZ * 0.3
+							}
+							geometry.attributes.position.needsUpdate = true								// UPDATE INTRICATE WIREFRAME TO FOLLOW MORPHED SURFACE - MAGNETIC
 								if (currentMesh === solidMesh && centerLines && curvedLines) {
 									if (geometry.type === 'TetrahedronGeometry') {
 										// TETRAHEDRON: Update hyper-tetrahedron wireframes during magnetic morphing
@@ -2266,16 +2250,64 @@ case 'alien':
 										curvedLinesGeom.attributes.position.needsUpdate = true
 									}
 									} // Close the else block for non-tetrahedron geometries
-								} // Close the wireframe update conditional
+								} // Close the if (currentMesh === solidMesh && centerLines && curvedLines) block
 								
-								// Update main geometry AFTER wireframe updates for perfect sync
-								geometry.attributes.position.needsUpdate = true
-							} // Close the DNA animation conditional
-							
+								// Update wireframe cylinders to follow deformed vertices
+								if (currentMesh === solidMesh && wireframeMesh && wireframeMesh.isGroup && objData.edgePairs) {
+									const cylinders = wireframeMesh.children?.filter((c) => c.isMesh) || [];
+									const edgePairs = objData.edgePairs;
+									const positions = geometry.attributes.position.array;
+									
+									for (let k = 0; k < Math.min(edgePairs.length, cylinders.length); k++) {
+										const cyl = cylinders[k];
+										const [iA, iB] = edgePairs[k];
+										
+										// Get deformed vertex positions
+										const vA = new THREE.Vector3(
+											positions[iA * 3],
+											positions[iA * 3 + 1],
+											positions[iA * 3 + 2]
+										);
+										const vB = new THREE.Vector3(
+											positions[iB * 3],
+											positions[iB * 3 + 1],
+											positions[iB * 3 + 2]
+										);
+										
+										// Update cylinder position (midpoint)
+										cyl.position.copy(vA).add(vB).multiplyScalar(0.5);
+										
+										// Update cylinder orientation
+										const direction = vB.clone().sub(vA);
+										const length = direction.length() || 1e-6;
+										const up = new THREE.Vector3(0, 1, 0);
+										const quaternion = new THREE.Quaternion();
+										quaternion.setFromUnitVectors(up, direction.normalize());
+										cyl.quaternion.copy(quaternion);
+										
+										// Update cylinder scale to match deformed length
+										const baseLength = cyl.userData.baseLength ?? (cyl.geometry?.parameters?.height || length);
+										cyl.userData.baseLength = baseLength;
+										cyl.scale.set(1, length / baseLength, 1);
+									}
+								}
+						} // Close the if (geometry && originalPositions && magneticPoints) block
+						
+						// For geometries with thick wireframes, don't rotate - deformation provides the motion
+						const hasThickWireframe = geometry && (
+							geometry.type === 'SphereGeometry' || 
+							geometry.type === 'BoxGeometry' || 
+							geometry.type === 'OctahedronGeometry' || 
+							geometry.type === 'TetrahedronGeometry' ||
+							geometry.type === 'IcosahedronGeometry'
+						);
+						
+						if (!hasThickWireframe) {
 							currentMesh.rotation.y = t * 0.3 + phase
 							currentMesh.rotation.x = Math.sin(t * 0.2) * 0.2
-							currentMesh.position.copy(originalPosition)
-							break
+						}
+						currentMesh.position.copy(originalPosition)
+						break
 					}
 				}) // Close meshesToAnimate.forEach
 			}) // Close objectsRef.current.forEach
