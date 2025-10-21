@@ -10,7 +10,7 @@
   position: absolute;
   top: 0;
   left: 0;
-  z-index: 100;
+  z-index: 1100;
   min-height: 64px; /* Ensure enough height for nav */
   box-sizing: border-box;
 }

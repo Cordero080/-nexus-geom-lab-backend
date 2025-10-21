@@ -4,6 +4,7 @@ import ThreeScene from './features/sceneControls/ThreeScene';
 import Controls from './components/Controls/Controls';
 import HomePage from './HomePage/HomePage';
 import NavBar from './nav/NavBar';
+import ShowcaseGallery from './Showcase/ShowcaseGallery';
 import { QuantumCursor } from "./components/Effects";
 import './cursor-override.css';
 
@@ -165,6 +166,7 @@ function App() {
       <Routes>
         <Route path="/" element={<HomePageWithNav />} />
         <Route path="/playground" element={<Playground />} />
+        <Route path="/showcase" element={<><NavBar /><ShowcaseGallery /></>} />
       </Routes>
     </>
   );

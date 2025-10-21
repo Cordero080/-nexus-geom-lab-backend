@@ -11,7 +11,8 @@ export default function NavBar() {
       </div>
       <div className="nav-links">
         <Link to="/" className="nav-link">Home</Link>
-        <Link to="/app" className="nav-link">Playground</Link>
+        <Link to="/playground" className="nav-link">Playground</Link>
+        <Link to="/showcase" className="nav-link">Showcase</Link>
       </div>
     </nav>
   );
