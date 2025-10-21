@@ -1499,7 +1499,8 @@ case 'alien':
     const isBox = geometry.type === 'BoxGeometry';
     const isOctahedron = geometry.type === 'OctahedronGeometry';
     const isTetrahedron = geometry.type === 'TetrahedronGeometry';
-    const shouldMaintainStructure = isSphere || isBox || isOctahedron || isTetrahedron;
+    const isIcosahedron = geometry.type === 'IcosahedronGeometry';
+    const shouldMaintainStructure = isSphere || isBox || isOctahedron || isTetrahedron || isIcosahedron;
     
     // Restore original positions
     for (let i = 0; i < positions.length; i++) {
@@ -1538,8 +1539,8 @@ case 'alien':
             centerLinesPositions.push(x1, y1, z1, x2, y2, z2);
           }
         }
-      } else if (isBox || isOctahedron) {
-        // Clean linear interpolation for boxes and octahedrons
+      } else if (isBox || isOctahedron || isIcosahedron) {
+        // Clean linear interpolation for boxes, octahedrons, and icosahedrons
         for (let j = 0; j < edgeVertices.length; j += 6) {
           const p1 = new THREE.Vector3(edgeVertices[j], edgeVertices[j + 1], edgeVertices[j + 2]);
           const p2 = new THREE.Vector3(edgeVertices[j + 3], edgeVertices[j + 4], edgeVertices[j + 5]);
@@ -1750,7 +1751,8 @@ case 'alien':
     const isBox = geometry.type === 'BoxGeometry';
     const isOctahedron = geometry.type === 'OctahedronGeometry';
     const isTetrahedron = geometry.type === 'TetrahedronGeometry';
-    const shouldMaintainStructure = isSphere || isBox || isOctahedron || isTetrahedron;
+    const isIcosahedron = geometry.type === 'IcosahedronGeometry';
+    const shouldMaintainStructure = isSphere || isBox || isOctahedron || isTetrahedron || isIcosahedron;
     
     if (!shouldMaintainStructure) {
       updateThickWireframeCylinders(objData);
