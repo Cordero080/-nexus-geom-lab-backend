@@ -1787,6 +1787,55 @@ case 'alien':
 					curvedLinesGeom.attributes.position.needsUpdate = true
 				}
 			} else {
+				// GENERAL WIREFRAME SYNCHRONIZATION for other geometry types (sphere, box, etc.)
+				
+				// Update wireframe cylinders to follow the morphed mesh - DNA animation
+				if (wireframeMesh && wireframeMesh.isGroup && objData.edgePairs) {
+					const cylinders = wireframeMesh.children?.filter((c) => c.isMesh) || [];
+					const n = Math.min(objData.edgePairs.length, cylinders.length);
+					
+					for (let k = 0; k < n; k++) {
+						const cyl = cylinders[k];
+						const [iA, iB] = objData.edgePairs[k];
+						
+						// Get current deformed vertex positions directly
+						const vA = new THREE.Vector3(
+							positions[iA * 3],
+							positions[iA * 3 + 1], 
+							positions[iA * 3 + 2]
+						);
+						const vB = new THREE.Vector3(
+							positions[iB * 3],
+							positions[iB * 3 + 1],
+							positions[iB * 3 + 2]
+						);
+						
+						// Update cylinder position to midpoint of deformed vertices
+						const midpoint = vA.clone().add(vB).multiplyScalar(0.5);
+						cyl.position.copy(midpoint);
+						
+						// Update cylinder rotation to align with deformed edge direction
+						const direction = vB.clone().sub(vA).normalize();
+						const up = new THREE.Vector3(0, 1, 0);
+						const rotationMatrix = new THREE.Matrix4();
+						rotationMatrix.lookAt(new THREE.Vector3(), direction, up);
+						cyl.setRotationFromMatrix(rotationMatrix);
+						cyl.rotateX(Math.PI / 2); // Adjust for cylinder's default orientation
+						
+						// Update cylinder scale to match deformed edge length
+						const len = vA.distanceTo(vB);
+						const base = cyl.userData.baseLength ?? (cyl.geometry?.parameters?.height || len);
+						cyl.userData.baseLength = base;
+						cyl.scale.set(1, len / base, 1);
+						
+						// Apply wireframe intensity
+						if (cyl.material && wireframeIntensity !== undefined) {
+							cyl.material.opacity = wireframeIntensity / 100;
+							cyl.material.visible = wireframeIntensity > 0;
+						}
+					}
+				}
+				
 				const centerLinesGeom = centerLines.geometry
 				if (centerLinesGeom && centerLinesGeom.attributes.position) {
 					const centerLinesPos = centerLinesGeom.attributes.position.array
