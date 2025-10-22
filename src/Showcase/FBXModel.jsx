@@ -97,9 +97,49 @@ export default function FBXModel({ url, scale = 0.01, rotation = [0, 0, 0], posi
     
     // Cleanup
     return () => {
-      if (modelRef.current && groupRef.current) {
-        groupRef.current.remove(modelRef.current);
+      // Stop and dispose animation mixer
+      if (mixerRef.current) {
+        mixerRef.current.stopAllAction();
+        mixerRef.current = null;
       }
+      
+      // Dispose of the model and its resources
+      if (modelRef.current) {
+        modelRef.current.traverse((child) => {
+          if (child.isMesh) {
+            // Dispose geometry
+            if (child.geometry) {
+              child.geometry.dispose();
+            }
+            
+            // Dispose materials and textures
+            if (child.material) {
+              const materials = Array.isArray(child.material) ? child.material : [child.material];
+              materials.forEach((mat) => {
+                // Dispose textures
+                if (mat.map) mat.map.dispose();
+                if (mat.normalMap) mat.normalMap.dispose();
+                if (mat.roughnessMap) mat.roughnessMap.dispose();
+                if (mat.metalnessMap) mat.metalnessMap.dispose();
+                if (mat.emissiveMap) mat.emissiveMap.dispose();
+                if (mat.aoMap) mat.aoMap.dispose();
+                if (mat.lightMap) mat.lightMap.dispose();
+                // Dispose material
+                mat.dispose();
+              });
+            }
+          }
+        });
+        
+        // Remove from scene
+        if (groupRef.current) {
+          groupRef.current.remove(modelRef.current);
+        }
+        
+        modelRef.current = null;
+      }
+      
+      actionRef.current = null;
     };
   }, [url, scale]);
 

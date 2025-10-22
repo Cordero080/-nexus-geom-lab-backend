@@ -177,7 +177,7 @@ export default function ShowcaseGallery() {
       >
         {/* Fixed Title Overlay */}
         <div className="showcase-title-overlay">
-          <h1 className="showcase-main-title">The Transcendence Chamber</h1>
+          <h1 className="showcase-main-title">Technosentient Nexus</h1>
           <p className="showcase-main-subtitle">
             A collection of consciousness evolving inside geometric vessels
           </p>

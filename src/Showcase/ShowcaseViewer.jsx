@@ -55,6 +55,8 @@ export default function ShowcaseViewer({ animation, onClose }) {
             intensity={3.2} 
             color="#00ffff"
             castShadow
+            shadow-mapSize-width={1024}
+            shadow-mapSize-height={1024}
           />
           <spotLight 
             position={[0, 10, -2]} 
@@ -77,7 +79,6 @@ export default function ShowcaseViewer({ animation, onClose }) {
             penumbra={0.3} 
             intensity={2.4} 
             color="#00ffff"
-            castShadow
           />
           <spotLight 
             position={[0, -5, 5]} 
