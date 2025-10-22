@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+
+import React, { useState, useEffect, useRef } from 'react';
 import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader';
 import { Canvas } from '@react-three/fiber';
 import { useLocation } from 'react-router-dom';
@@ -7,19 +8,81 @@ import ShowcaseViewer from './ShowcaseViewer';
 import './ShowcaseGallery.css';
 
 export default function ShowcaseGallery() {
-  // ...existing code...
   const [selectedAnimation, setSelectedAnimation] = useState(null);
   const [hoveredCard, setHoveredCard] = useState(null);
-  const [preloadedModels, setPreloadedModels] = useState({}); // { [id]: fbx }
-  const [modelLoaded, setModelLoaded] = useState({}); // { [id]: true }
+  const [preloadedModels, setPreloadedModels] = useState({});
+  const [modelLoaded, setModelLoaded] = useState({});
   const location = useLocation();
+  const containerRef = useRef(null);
 
-  // Close viewer when navigating (e.g., clicking Showcase link in nav)
+  // Close viewer when navigating and manage document body overflow
   useEffect(() => {
     setSelectedAnimation(null);
   }, [location]);
+  
+  // Prevent background scrolling and manage visibility when viewer is open
+  useEffect(() => {
+    if (selectedAnimation) {
+      // Disable scrolling on body when viewer is open
+      document.body.style.overflow = 'hidden';
+      
+      // Hide the container when viewer is open
+      if (containerRef.current) {
+        containerRef.current.style.visibility = 'hidden';
+      }
+    } else {
+      // Re-enable scrolling when viewer is closed
+      document.body.style.overflow = '';
+      
+      // Show the container when viewer is closed
+      if (containerRef.current) {
+        containerRef.current.style.visibility = 'visible';
+      }
+    }
+    
+    return () => {
+      // Re-enable scrolling when component unmounts
+      document.body.style.overflow = '';
+    };
+  }, [selectedAnimation]);
 
-  // Mock data - will come from backend later
+  // Scroll progress bar
+  useEffect(() => {
+    const handleScroll = () => {
+      const container = containerRef.current;
+      if (!container) return;
+      const scrollProgress = (container.scrollTop / (container.scrollHeight - container.clientHeight)) * 100;
+      const progressBar = document.querySelector('.scroll-progress');
+      if (progressBar) {
+        progressBar.style.width = scrollProgress + '%';
+      }
+    };
+
+    const container = containerRef.current;
+    container?.addEventListener('scroll', handleScroll);
+    return () => container?.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  // Intersection Observer for scroll animations
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('parallax-info-visible');
+          }
+        });
+      },
+      { threshold: 0.3 }
+    );
+
+    const infoElements = document.querySelectorAll('.parallax-info');
+    infoElements.forEach((el) => observer.observe(el));
+
+    return () => observer.disconnect();
+  }, [modelLoaded]);
+
+  // Mock data
   const mockAnimations = [
     {
       id: 1,
@@ -29,7 +92,9 @@ export default function ShowcaseGallery() {
       description: 'A consciousness evolving inside a geometric vessel, suspended in the void between dimensions.',
       fbxUrl: '/models/blue_robot.fbx',
       scale: 0.001275,
-      background: 'linear-gradient(225deg, #0a0015 0%, #0066ff 20%, #d643f3ed 50%, #0066ff 80%, #0a0015 100%)'
+      background: 'linear-gradient(180deg, rgba(10, 0, 21, 0.95) 0%, rgba(8, 141, 236, 0.78) 30%, rgba(214, 67, 243, 0.6) 70%, rgba(0, 102, 255, 0.5) 100%)',
+      // Enhanced viewer background (brighter version specifically for this model)
+      viewerBackground: 'linear-gradient(135deg, #1c0038 0%, #3b78ff 50%, #1c0038 100%)'
     },
     {
       id: 2,
@@ -45,7 +110,9 @@ export default function ShowcaseGallery() {
       galleryPositionY: -1.5,
       offsetX: 0.05,
       offsetZ: 0,
-      background: 'linear-gradient(135deg, #0a0015 0%, #75fad9ff 25%, #d643f3ed 50%, #00ffff 75%, #0a0015 100%)'
+      background: 'linear-gradient(180deg, rgba(0, 102, 255, 0.5) 0%, rgba(117, 250, 217, 0.7) 30%, rgba(214, 67, 243, 0.6) 70%, rgba(0, 255, 255, 0.5) 100%)',
+      // Enhanced viewer background (brighter cyan-themed background for this model)
+      viewerBackground: 'linear-gradient(135deg, #003045 0%, #00e5ff 50%, #003045 100%)'
     },
     {
       id: 3,
@@ -61,7 +128,9 @@ export default function ShowcaseGallery() {
       galleryPositionY: -1.5,
       offsetX: -0.4,
       offsetZ: 0.1,
-      background: 'linear-gradient(180deg, #0a0015 0%, #ff3300 20%, #d643f3ed 50%, #60042eff 80%, #0a0015 100%)'
+      background: 'linear-gradient(180deg, rgba(0, 255, 255, 0.5) 0%, rgba(255, 51, 0, 0.7) 30%, rgba(214, 67, 243, 0.6) 70%, rgba(96, 4, 46, 0.8) 100%)',
+      // Enhanced viewer background (brighter fire-themed background for this model)
+      viewerBackground: 'linear-gradient(135deg, #300a00 0%, #ff3000 50%, #300a00 100%)'
     }
   ];
 
@@ -90,7 +159,7 @@ export default function ShowcaseGallery() {
     return () => { isMounted = false; };
   }, []);
 
-  // Determine position for each card: center, left, right pattern
+  // Determine position for each card
   const getCardPosition = (index) => {
     const positions = ['center', 'left', 'right'];
     return positions[index % positions.length];
@@ -98,17 +167,29 @@ export default function ShowcaseGallery() {
 
   return (
     <>
-      <div className="parallax-showcase-container">
+      {/* Scroll Progress Bar */}
+      <div className="scroll-progress" style={{ visibility: selectedAnimation ? 'hidden' : 'visible' }} />
+
+      <div 
+        className="parallax-showcase-container" 
+        ref={containerRef}
+        style={{ visibility: selectedAnimation ? 'hidden' : 'visible' }}
+      >
+        {/* Fixed Title Overlay */}
         <div className="showcase-title-overlay">
           <h1 className="showcase-main-title">The Transcendence Chamber</h1>
-          <p className="showcase-main-subtitle">A collection of consciousness evolving inside geometric vessels</p>
+          <p className="showcase-main-subtitle">
+            A collection of consciousness evolving inside geometric vessels
+          </p>
         </div>
+
+        {/* Parallax Scenes */}
         {mockAnimations.map((animation, index) => {
           const position = getCardPosition(index);
           return (
             <div
               key={animation.id}
-              className={`parallax-scene parallax-scene-${position}`}
+              className={`parallax-scene parallax-scene-${position} scene-${animation.id}`}
               style={animation.background ? { background: animation.background } : {}}
             >
               <div
@@ -119,7 +200,12 @@ export default function ShowcaseGallery() {
               >
                 <Canvas
                   camera={{ position: [0, 1, 7], fov: 50 }}
-                  style={{ width: '100%', height: '100%', opacity: modelLoaded[animation.id] ? 1 : 0, transition: 'opacity 0.7s'}}
+                  style={{
+                    width: '100%',
+                    height: '100%',
+                    opacity: modelLoaded[animation.id] ? 1 : 0,
+                    transition: 'opacity 0.7s'
+                  }}
                 >
                   <ambientLight intensity={0.6} />
                   <directionalLight position={[5, 5, 5]} intensity={1.2} color="#ffffff" />
@@ -133,19 +219,26 @@ export default function ShowcaseGallery() {
                     cubeY={0.3}
                     size={3.4}
                     isPlaying={hoveredCard === animation.id}
-                    onModelLoaded={() => setModelLoaded(prev => ({...prev, [animation.id]: true}))}
+                    onModelLoaded={() =>
+                      setModelLoaded((prev) => ({ ...prev, [animation.id]: true }))
+                    }
                     preloadedModel={preloadedModels[animation.id]}
                   />
                 </Canvas>
+
+                {/* Loading Spinner */}
                 {!modelLoaded[animation.id] && (
-                  <div style={{position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(10,0,21,0.7)', zIndex: 2}}>
+                  <div className="loader-container">
                     <div className="loader-spinner" />
                   </div>
                 )}
               </div>
-              
+
+              {/* Info Panel */}
               <div className="parallax-info">
-                <h2 className="parallax-title">{animation.name}</h2>
+                <h2 className="parallax-title" data-text={animation.name}>
+                  {animation.name}
+                </h2>
                 <p className="parallax-animation">{animation.animation}</p>
                 <p className="parallax-description">{animation.description}</p>
               </div>

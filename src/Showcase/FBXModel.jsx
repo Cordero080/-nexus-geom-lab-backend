@@ -3,10 +3,11 @@ import { useFrame } from '@react-three/fiber';
 import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader';
 import * as THREE from 'three';
 
-export default function FBXModel({ url, scale = 0.01, rotation = [0, 0, 0], positionY = -1.8, offsetX = 0, offsetZ = 0 }) {
+export default function FBXModel({ url, scale = 0.01, rotation = [0, 0, 0], positionY = -1.8, offsetX = 0, offsetZ = 0, isPlaying = true, onModelLoaded }) {
   const groupRef = useRef();
   const mixerRef = useRef();
   const modelRef = useRef();
+  const actionRef = useRef();
 
   useEffect(() => {
     const loader = new FBXLoader();
@@ -16,43 +17,74 @@ export default function FBXModel({ url, scale = 0.01, rotation = [0, 0, 0], posi
       (fbx) => {
         // Store the model
         modelRef.current = fbx;
-        
+
         // Scale the model
         fbx.scale.setScalar(scale);
-        
+
         // Apply rotation if needed
         fbx.rotation.set(rotation[0], rotation[1], rotation[2]);
-        
+
         // Center the model and place at bottom
         const box = new THREE.Box3().setFromObject(fbx);
         const center = box.getCenter(new THREE.Vector3());
         const size = box.getSize(new THREE.Vector3());
-        
+
         // Center horizontally, place at bottom of cube
         fbx.position.x = -center.x;
         fbx.position.z = -center.z;
         fbx.position.y = -box.min.y; // Put feet at y=0
-        
+
         // Setup animation mixer if animations exist
         if (fbx.animations && fbx.animations.length > 0) {
           const mixer = new THREE.AnimationMixer(fbx);
           mixerRef.current = mixer;
-          
+
           // Clone the animation and remove root position tracks to prevent position drift
           const clip = fbx.animations[0].clone();
           clip.tracks = clip.tracks.filter(track => {
             // Keep all tracks except root position (removes X and Z position animation)
             return !track.name.includes('.position');
           });
-          
-          // Play the modified animation
+
+          // Create the action and store it
           const action = mixer.clipAction(clip);
-          action.play();
+          actionRef.current = action;
+
+          // Play if isPlaying is true initially
+          if (isPlaying) {
+            action.play();
+          }
         }
-        
+
         // Add to scene
         if (groupRef.current) {
           groupRef.current.add(fbx);
+        }
+
+        // Wait for all textures to load before calling onModelLoaded
+        const imagePromises = [];
+        fbx.traverse((child) => {
+          if (child.isMesh && child.material) {
+            const materials = Array.isArray(child.material) ? child.material : [child.material];
+            materials.forEach((mat) => {
+              if (mat.map && mat.map.image) {
+                const img = mat.map.image;
+                if (!img.complete) {
+                  imagePromises.push(new Promise((resolve) => {
+                    img.addEventListener('load', resolve, { once: true });
+                  }));
+                }
+              }
+            });
+          }
+        });
+
+        if (imagePromises.length > 0) {
+          Promise.all(imagePromises).then(() => {
+            if (onModelLoaded) onModelLoaded();
+          });
+        } else {
+          if (onModelLoaded) onModelLoaded();
         }
       },
       (xhr) => {
@@ -71,9 +103,20 @@ export default function FBXModel({ url, scale = 0.01, rotation = [0, 0, 0], posi
     };
   }, [url, scale]);
 
+  // Handle play/pause when isPlaying changes
+  useEffect(() => {
+    if (actionRef.current) {
+      if (isPlaying) {
+        actionRef.current.play();
+      } else {
+        actionRef.current.stop();
+      }
+    }
+  }, [isPlaying]);
+
   // Update animation mixer
   useFrame((state, delta) => {
-    if (mixerRef.current) {
+    if (mixerRef.current && isPlaying) {
       mixerRef.current.update(delta);
     }
   });

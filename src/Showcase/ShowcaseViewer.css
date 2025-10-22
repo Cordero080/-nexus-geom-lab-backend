@@ -2,29 +2,80 @@
   position: fixed;
   top: 0;
   left: 0;
-  width: 100vw;
-  height: 100vh;
-  background: linear-gradient(135deg, #0a0015 0%, #d643f3ed 50%, #0a0015 100%);
-  z-index: 1000;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  height: 100%;
+  background: #0050cc; /* Default fallback background */
+  background: linear-gradient(135deg, 
+    #03398b 0%, 
+    #00c8ff 50%, 
+    #0050cc 100%
+  );
+  z-index: 9999; /* Higher z-index to ensure it's above everything */
   display: flex;
   flex-direction: column;
   animation: fadeIn 0.3s ease;
+  /* Ensure it blocks background content */
+  overflow: hidden;
+  transition: opacity 0.2s ease-in;
+  filter: brightness(1.5) saturate(1.2); /* Significantly increased brightness and saturation */
+}
+
+/* ========================================
+   CHARACTER-SPECIFIC VIEWER BACKGROUNDS
+   ======================================== */
+
+/* Animation 1 - Cosmic Entity #001 (Purple-Blue) */
+.viewer-overlay-1 {
+  background: linear-gradient(135deg, #1c0038 0%, #3373fdbf 50%, #1c0038 100%);
+}
+
+/* Animation 2 - Tech Feline #002 (Cyan-Teal) */
+.viewer-overlay-2 {
+  background: linear-gradient(135deg, #0c043e 0%, #056b76 50%, #af06aad5 100%);
+}
+
+/* Animation 3 - Fire-Tech Warrior #003 (Red-Orange) */
+.viewer-overlay-3 {
+  background: linear-gradient(135deg, #300a00 0%, #ff3000 50%, #300a00 100%);
+}
+
+.viewer-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #000000;
+  z-index: 9998; /* Just below the viewer overlay */
+  animation: instantAppear 0.01s forwards;
+}
+
+@keyframes instantAppear {
+  0% { opacity: 0; }
+  1% { opacity: 1; }
+  100% { opacity: 1; }
 }
 
 @keyframes fadeIn {
-  from {
+  0% {
     opacity: 0;
   }
-  to {
+  100% {
     opacity: 1;
   }
 }
+
+
 
 .viewer-back-button {
   position: absolute;
   top: 20px;
   left: 20px;
-  color: #00ffff;
+  color: #00ffff; /* Cyan theme - fits Animation 2 best */
   text-decoration: none;
   font-size: 1rem;
   font-weight: 500;
@@ -81,21 +132,45 @@
   position: relative;
 }
 
+
+
 .viewer-info {
   padding: 20px 30px;
-  background: linear-gradient(180deg, rgba(255, 80, 0, 0.15) 0%, rgba(255, 0, 80, 0.25) 100%);
-  border-top: 2px solid rgba(255, 120, 50, 0.4);
+  /* Current style is orange/red themed - matches Animation 3 best */
+  background: linear-gradient(180deg, rgba(255, 100, 0, 0.25) 0%, rgba(255, 0, 100, 0.35) 100%);
+  border-top: 2px solid rgba(255, 140, 70, 0.5);
   text-align: center;
   backdrop-filter: blur(10px);
-  box-shadow: 0 -5px 20px rgba(255, 80, 0, 0.2);
+  box-shadow: 0 -5px 30px rgba(255, 100, 0, 0.3);
   position: relative;
   z-index: 10;
 }
 
+/* 
+-------------------------------------------------------
+TEXT & META STYLES 
+Could be customized per animation viewer
+-------------------------------------------------------
+Animation 1 (Cosmic Entity #001): 
+  - Title gradient: Could use blue-purple (#3b78ff, #1c0038, #8844ff)
+  - Text shadow: Could use blue glow (rgba(59, 120, 255, 0.6))
+  - Meta tags: Could use blue theme (#3b78ff)
+
+Animation 2 (Tech Feline #002):
+  - Title gradient: Could use cyan-teal (#00e5ff, #003045, #00a0c8)
+  - Text shadow: Could use cyan glow (rgba(0, 229, 255, 0.6))
+  - Meta tags: Could use cyan theme (#00e5ff)
+
+Animation 3 (Fire-Tech Warrior #003):
+  - Title gradient: Currently orange-red (#ff6a00, #ff2b00, #ffcc00) - matches this theme
+  - Text shadow: Currently orange glow (rgba(255, 100, 0, 0.5)) - matches this theme
+  - Meta tags: Currently orange theme (#ff7700) - matches this theme
+*/
+
 .viewer-title {
   font-size: 1.8rem;
   font-weight: 700;
-  background: linear-gradient(135deg, #ff6a00, #ff2b00, #ffcc00);
+  background: linear-gradient(135deg, #ff6a00, #ff2b00, #ffcc00); /* Orange-red gradient - fits Animation 3 */
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -103,6 +178,7 @@
   text-transform: uppercase;
   letter-spacing: 2px;
   text-shadow: 0 0 15px rgba(255, 100, 0, 0.4);
+  display: inline-block; /* Ensures gradient only applies to text */
 }
 
 .viewer-description {
@@ -113,7 +189,7 @@
   max-width: 700px;
   margin-left: auto;
   margin-right: auto;
-  text-shadow: 0 0 10px rgba(255, 100, 0, 0.5);
+  text-shadow: 0 0 10px rgba(255, 100, 0, 0.5); /* Orange glow - fits Animation 3 */
   letter-spacing: 0.5px;
 }
 
@@ -126,7 +202,7 @@
 
 .meta-tag {
   padding: 6px 16px;
-  background: rgba(255, 100, 0, 0.15);
+  background: rgba(255, 100, 0, 0.15); /* Orange theme - fits Animation 3 */
   border: 1px solid rgba(255, 80, 0, 0.4);
   border-radius: 20px;
   color: #ff7700;
