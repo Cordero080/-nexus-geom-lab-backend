@@ -12,132 +12,6 @@
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
 }
-.showcase-container {
-  width: 100%;
-  min-height: 100vh;
-  background: linear-gradient(135deg, #780ee9ab 0%, #91950aa6 50%, #062790 100%);
-  padding: 80px 40px 40px;
-  box-sizing: border-box;
-  position: relative;
-  z-index: 1;
-}
-
-.showcase-header {
-  text-align: center;
-  margin-bottom: 60px;
-  padding: 0 20px;
-  position: relative;
-}
-
-.back-link {
-  position: absolute;
-  left: 20px;
-  top: 0;
-  color: #00ffff;
-  text-decoration: none;
-  font-size: 1rem;
-  font-weight: 500;
-  padding: 10px 20px;
-  border: 2px solid rgba(0, 255, 255, 0.3);
-  border-radius: 8px;
-  background: rgba(0, 255, 255, 0.05);
-  transition: all 0.3s ease;
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.back-link:hover {
-  background: rgba(0, 255, 255, 0.15);
-  border-color: rgba(0, 255, 255, 0.6);
-  transform: translateX(-5px);
-  box-shadow: 0 4px 20px rgba(0, 255, 255, 0.3);
-}
-
-.showcase-title {
-  font-family: 'Futura', 'Trebuchet MS', 'Arial', sans-serif;
-  font-size: 3rem;
-  font-weight: 700;
-  background: linear-gradient(135deg, #00ffff, #ff00ff, #ffff00);
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-  margin-bottom: 16px;
-  text-transform: uppercase;
-  letter-spacing: 4px;
-  animation: shimmer 3s ease-in-out infinite;
-}
-
-.showcase-subtitle {
-  font-size: 1.2rem;
-  color: #00ffff;
-  font-style: italic;
-  opacity: 0.8;
-  max-width: 600px;
-  margin: 0 auto;
-}
-
-.showcase-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
-  gap: 40px;
-  max-width: 1600px;
-  margin: 0 auto;
-  padding: 0 20px;
-}
-
-.showcase-card {
-  background: linear-gradient(135deg, #0a0015 0%, #d643f3ed 50%, #0a0015 100%);
-  border: 2px solid rgba(0, 255, 255, 0.3);
-  border-radius: 16px;
-  overflow: hidden;
-  transition: all 0.3s ease;
-  cursor: pointer;
-  position: relative;
-  height: 500px;
-  display: flex;
-  flex-direction: column;
-}
-
-.showcase-card:hover {
-  transform: translateY(-10px);
-  border-color: rgba(255, 0, 255, 0.6);
-  box-shadow: 0 10px 40px rgba(255, 0, 255, 0.3);
-}
-
-.showcase-card canvas {
-  flex: 1;
-  min-height: 0;
-}
-
-.card-info {
-  padding: 12px 16px;
-  background: rgba(0, 0, 0, 0.5);
-  border-top: 1px solid rgba(0, 255, 255, 0.2);
-}
-
-.card-info h3 {
-  color: #00ffff;
-  font-size: 0.95rem;
-  margin: 0 0 4px 0;
-  font-weight: 600;
-}
-
-.card-info p {
-  color: #ff00ff;
-  font-size: 0.75rem;
-  margin: 0;
-  opacity: 0.8;
-}
-
-@keyframes shimmer {
-  0%, 100% {
-    filter: hue-rotate(0deg);
-  }
-  50% {
-    filter: hue-rotate(20deg);
-  }
-}
 
 /* Parallax Showcase Styles */
 .parallax-showcase-container {
@@ -146,6 +20,42 @@
   overflow-y: scroll;
   scroll-snap-type: y mandatory;
   scroll-behavior: smooth;
+  position: relative;
+}
+
+/* Title overlay */
+.showcase-title-overlay {
+  position: fixed;
+  top: 120px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 100;
+  text-align: center;
+  pointer-events: none;
+  transition: opacity 0.5s ease;
+}
+
+.showcase-main-title {
+  font-family: 'Futura', 'Trebuchet MS', 'Arial', sans-serif;
+  font-size: 3rem;
+  font-weight: 700;
+  background: linear-gradient(135deg, #00ffff, #ff00ff, #ffff00);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin: 0 0 12px 0;
+  text-transform: uppercase;
+  letter-spacing: 4px;
+  text-shadow: 0 0 30px rgba(0, 255, 255, 0.3);
+}
+
+.showcase-main-subtitle {
+  font-size: 1.2rem;
+  color: #00ffff;
+  font-style: italic;
+  opacity: 0.9;
+  margin: 0;
+  text-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
 }
 
 .parallax-scene {
@@ -164,6 +74,7 @@
 .parallax-scene-center {
   justify-content: center;
   flex-direction: column;
+  padding-top: calc(200px + 20vh);
 }
 
 .parallax-scene-center .parallax-model-card {
@@ -208,8 +119,8 @@
 
 /* Model card styling */
 .parallax-model-card {
-  width: 400px;
-  height: 500px;
+  width: 600px;
+  height: 800px;
   border: 2px solid rgba(0, 255, 255, 0.3);
   border-radius: 20px;
   overflow: hidden;
@@ -224,6 +135,13 @@
   transform: scale(1.05);
   border-color: rgba(255, 0, 255, 0.6);
   box-shadow: 0 10px 40px rgba(255, 0, 255, 0.4);
+}
+
+/* Specific heights for all models - consistent sizing */
+.parallax-model-card-1,
+.parallax-model-card-2,
+.parallax-model-card-3 {
+  height: 580px;
 }
 
 /* Info panel styling */
@@ -260,32 +178,17 @@
 
 /* Responsive design */
 @media (max-width: 768px) {
-  .showcase-container {
-    padding: 70px 20px 20px;
+  .showcase-title-overlay {
+    top: 40px;
   }
-  
-  .back-link {
-    position: static;
-    margin-bottom: 20px;
-    display: inline-flex;
-  }
-  
-  .showcase-title {
+
+  .showcase-main-title {
     font-size: 2rem;
     letter-spacing: 2px;
   }
-  
-  .showcase-subtitle {
+
+  .showcase-main-subtitle {
     font-size: 1rem;
-  }
-  
-  .showcase-grid {
-    grid-template-columns: 1fr;
-    gap: 30px;
-  }
-  
-  .showcase-card {
-    height: 350px;
   }
 
   /* Parallax responsive */

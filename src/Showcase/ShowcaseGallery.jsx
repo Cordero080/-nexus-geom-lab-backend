@@ -99,6 +99,10 @@ export default function ShowcaseGallery() {
   return (
     <>
       <div className="parallax-showcase-container">
+        <div className="showcase-title-overlay">
+          <h1 className="showcase-main-title">The Transcendence Chamber</h1>
+          <p className="showcase-main-subtitle">A collection of consciousness evolving inside geometric vessels</p>
+        </div>
         {mockAnimations.map((animation, index) => {
           const position = getCardPosition(index);
           return (
@@ -108,13 +112,13 @@ export default function ShowcaseGallery() {
               style={animation.background ? { background: animation.background } : {}}
             >
               <div
-                className="parallax-model-card"
+                className={`parallax-model-card parallax-model-card-${animation.id}`}
                 onClick={() => setSelectedAnimation(animation)}
                 onMouseEnter={() => setHoveredCard(animation.id)}
                 onMouseLeave={() => setHoveredCard(null)}
               >
                 <Canvas
-                  camera={{ position: [0, 2, 4], fov: 65 }}
+                  camera={{ position: [0, 1, 7], fov: 50 }}
                   style={{ width: '100%', height: '100%', opacity: modelLoaded[animation.id] ? 1 : 0, transition: 'opacity 0.7s'}}
                 >
                   <ambientLight intensity={0.6} />
@@ -127,6 +131,7 @@ export default function ShowcaseGallery() {
                     offsetX={animation.offsetX}
                     offsetZ={animation.offsetZ}
                     cubeY={0.3}
+                    size={3.4}
                     isPlaying={hoveredCard === animation.id}
                     onModelLoaded={() => setModelLoaded(prev => ({...prev, [animation.id]: true}))}
                     preloadedModel={preloadedModels[animation.id]}
