@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader';
 import { Canvas } from '@react-three/fiber';
 import { useLocation } from 'react-router-dom';
 import RotatingCube from './RotatingCube';
@@ -6,14 +7,18 @@ import ShowcaseViewer from './ShowcaseViewer';
 import './ShowcaseGallery.css';
 
 export default function ShowcaseGallery() {
+  // ...existing code...
   const [selectedAnimation, setSelectedAnimation] = useState(null);
+  const [hoveredCard, setHoveredCard] = useState(null);
+  const [preloadedModels, setPreloadedModels] = useState({}); // { [id]: fbx }
+  const [modelLoaded, setModelLoaded] = useState({}); // { [id]: true }
   const location = useLocation();
-  
+
   // Close viewer when navigating (e.g., clicking Showcase link in nav)
   useEffect(() => {
     setSelectedAnimation(null);
   }, [location]);
-  
+
   // Mock data - will come from backend later
   const mockAnimations = [
     {
@@ -48,66 +53,105 @@ export default function ShowcaseGallery() {
       animation: 'Combat Stance',
       variant: 'Crimson Flame',
       description: 'A battle-hardened entity radiating pure kinetic energy, ready to strike.',
-      fbxUrl: '/models/red-tech-fight.fbx',
-      scale: 0.00025,
-      galleryScale: 0.000147,
+      fbxUrl: '/models/red-tech-cat.fbx',
+      scale: 0.02375,
+      galleryScale: 0.01425,
       rotation: [0, 0, 0],
       positionY: -2.2,
       galleryPositionY: -1.5,
       offsetX: -0.4,
       offsetZ: 0.1,
-      background: 'linear-gradient(180deg, #0a0015 0%, #ff3300 20%, #d643f3ed 50%, #ff6600 80%, #0a0015 100%)'
+      background: 'linear-gradient(180deg, #0a0015 0%, #ff3300 20%, #d643f3ed 50%, #60042eff 80%, #0a0015 100%)'
     }
   ];
-  
+
+  // Preload all FBX models in parallel on mount
+  useEffect(() => {
+    let isMounted = true;
+    const loader = new FBXLoader();
+    const promises = mockAnimations.map((animation) => {
+      return new Promise((resolve, reject) => {
+        loader.load(
+          animation.fbxUrl,
+          (fbx) => resolve({ id: animation.id, fbx }),
+          undefined,
+          (err) => reject(err)
+        );
+      });
+    });
+    Promise.all(promises).then((results) => {
+      if (!isMounted) return;
+      const models = {};
+      results.forEach(({ id, fbx }) => {
+        models[id] = fbx;
+      });
+      setPreloadedModels(models);
+    });
+    return () => { isMounted = false; };
+  }, []);
+
+  // Determine position for each card: center, left, right pattern
+  const getCardPosition = (index) => {
+    const positions = ['center', 'left', 'right'];
+    return positions[index % positions.length];
+  };
+
   return (
     <>
-      <div className="showcase-container">
-        <div className="showcase-header">
-          <h1 className="showcase-title">The Transcendence Chamber</h1>
-          <p className="showcase-subtitle">
-            A collection of consciousness evolving inside geometric vessels
-          </p>
-        </div>
-        
-        <div className="showcase-grid">
-          {mockAnimations.map((animation) => (
-            <div 
+      <div className="parallax-showcase-container">
+        {mockAnimations.map((animation, index) => {
+          const position = getCardPosition(index);
+          return (
+            <div
               key={animation.id}
-              className="showcase-card"
-              onClick={() => setSelectedAnimation(animation)}
+              className={`parallax-scene parallax-scene-${position}`}
               style={animation.background ? { background: animation.background } : {}}
             >
-              <Canvas
-                camera={{ position: [0, 2, 4], fov: 65 }}
-                style={{ width: '100%', height: '100%' }}
+              <div
+                className="parallax-model-card"
+                onClick={() => setSelectedAnimation(animation)}
+                onMouseEnter={() => setHoveredCard(animation.id)}
+                onMouseLeave={() => setHoveredCard(null)}
               >
-                {/* Simplified lighting for gallery performance */}
-                <ambientLight intensity={0.6} />
-                <directionalLight position={[5, 5, 5]} intensity={1.2} color="#ffffff" />
-                <RotatingCube 
-                  fbxUrl={animation.fbxUrl} 
-                  scale={animation.galleryScale || animation.scale} 
-                  rotation={animation.rotation} 
-                  positionY={animation.galleryPositionY || animation.positionY} 
-                  offsetX={animation.offsetX} 
-                  offsetZ={animation.offsetZ}
-                  cubeY={0.3}
-                />
-              </Canvas>
+                <Canvas
+                  camera={{ position: [0, 2, 4], fov: 65 }}
+                  style={{ width: '100%', height: '100%', opacity: modelLoaded[animation.id] ? 1 : 0, transition: 'opacity 0.7s'}}
+                >
+                  <ambientLight intensity={0.6} />
+                  <directionalLight position={[5, 5, 5]} intensity={1.2} color="#ffffff" />
+                  <RotatingCube
+                    fbxUrl={animation.fbxUrl}
+                    scale={animation.galleryScale || animation.scale}
+                    rotation={animation.rotation}
+                    positionY={animation.galleryPositionY || animation.positionY}
+                    offsetX={animation.offsetX}
+                    offsetZ={animation.offsetZ}
+                    cubeY={0.3}
+                    isPlaying={hoveredCard === animation.id}
+                    onModelLoaded={() => setModelLoaded(prev => ({...prev, [animation.id]: true}))}
+                    preloadedModel={preloadedModels[animation.id]}
+                  />
+                </Canvas>
+                {!modelLoaded[animation.id] && (
+                  <div style={{position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(10,0,21,0.7)', zIndex: 2}}>
+                    <div className="loader-spinner" />
+                  </div>
+                )}
+              </div>
               
-              <div className="card-info">
-                <h3>{animation.name}</h3>
-                <p>Animation: {animation.animation}</p>
+              <div className="parallax-info">
+                <h2 className="parallax-title">{animation.name}</h2>
+                <p className="parallax-animation">{animation.animation}</p>
+                <p className="parallax-description">{animation.description}</p>
               </div>
             </div>
-          ))}
-        </div>
+          );
+        })}
       </div>
-      
+
       {/* Full screen viewer modal */}
       {selectedAnimation && (
-        <ShowcaseViewer 
+        <ShowcaseViewer
           animation={selectedAnimation}
           onClose={() => setSelectedAnimation(null)}
         />

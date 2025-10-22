@@ -1,3 +1,17 @@
+/* Loader spinner for card */
+.loader-spinner {
+  width: 48px;
+  height: 48px;
+  border: 6px solid #00ffff;
+  border-top: 6px solid #ff00ff;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
 .showcase-container {
   width: 100%;
   min-height: 100vh;
@@ -125,6 +139,125 @@
   }
 }
 
+/* Parallax Showcase Styles */
+.parallax-showcase-container {
+  width: 100vw;
+  height: 100vh;
+  overflow-y: scroll;
+  scroll-snap-type: y mandatory;
+  scroll-behavior: smooth;
+}
+
+.parallax-scene {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  padding: 80px 100px;
+  box-sizing: border-box;
+  scroll-snap-align: start;
+  position: relative;
+  gap: 60px;
+}
+
+/* Center position - first model */
+.parallax-scene-center {
+  justify-content: center;
+  flex-direction: column;
+}
+
+.parallax-scene-center .parallax-model-card {
+  margin: 0 auto;
+}
+
+.parallax-scene-center .parallax-info {
+  text-align: center;
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+/* Left position - second model */
+.parallax-scene-left {
+  justify-content: flex-start;
+  flex-direction: row;
+}
+
+.parallax-scene-left .parallax-model-card {
+  margin-right: auto;
+}
+
+.parallax-scene-left .parallax-info {
+  text-align: left;
+  max-width: 500px;
+}
+
+/* Right position - third model */
+.parallax-scene-right {
+  justify-content: flex-end;
+  flex-direction: row-reverse;
+}
+
+.parallax-scene-right .parallax-model-card {
+  margin-left: auto;
+}
+
+.parallax-scene-right .parallax-info {
+  text-align: right;
+  max-width: 500px;
+}
+
+/* Model card styling */
+.parallax-model-card {
+  width: 400px;
+  height: 500px;
+  border: 2px solid rgba(0, 255, 255, 0.3);
+  border-radius: 20px;
+  overflow: hidden;
+  background: rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(10px);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.parallax-model-card:hover {
+  transform: scale(1.05);
+  border-color: rgba(255, 0, 255, 0.6);
+  box-shadow: 0 10px 40px rgba(255, 0, 255, 0.4);
+}
+
+/* Info panel styling */
+.parallax-info {
+  color: white;
+  padding: 20px;
+}
+
+.parallax-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  background: linear-gradient(135deg, #00ffff, #ff00ff, #ffff00);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 12px;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+}
+
+.parallax-animation {
+  font-size: 1.2rem;
+  color: #ff00ff;
+  font-weight: 600;
+  margin-bottom: 16px;
+}
+
+.parallax-description {
+  font-size: 1rem;
+  color: rgba(255, 255, 255, 0.8);
+  line-height: 1.6;
+  font-style: italic;
+}
+
 /* Responsive design */
 @media (max-width: 768px) {
   .showcase-container {
@@ -153,5 +286,36 @@
   
   .showcase-card {
     height: 350px;
+  }
+
+  /* Parallax responsive */
+  .parallax-scene {
+    padding: 60px 20px;
+    flex-direction: column !important;
+    justify-content: center !important;
+  }
+
+  .parallax-model-card {
+    width: 90vw;
+    height: 400px;
+    margin: 0 auto !important;
+  }
+
+  .parallax-info {
+    text-align: center !important;
+    max-width: 90vw !important;
+    margin: 0 auto !important;
+  }
+
+  .parallax-title {
+    font-size: 1.8rem;
+  }
+
+  .parallax-animation {
+    font-size: 1rem;
+  }
+
+  .parallax-description {
+    font-size: 0.9rem;
   }
 }
