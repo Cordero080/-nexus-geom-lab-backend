@@ -226,11 +226,11 @@ See [WIREFRAME_FIX_DOCUMENTATION.md](./WIREFRAME_FIX_DOCUMENTATION.md) for detai
 
 ## 🔧 Refactoring Progress (ThreeScene.jsx Modularization)
 
-### Current Status: **Phase 4 Complete** (32% reduction achieved!)
+### Current Status: **Phase 5 Complete** (50% reduction achieved!)
 
 **Starting Point:** 2700 lines  
-**Current:** 1839 lines  
-**Removed:** 861 lines (32% reduction)
+**Current:** 1362 lines  
+**Removed:** 1338 lines (50% reduction)
 
 ### Completed Phases ✅
 
@@ -268,7 +268,7 @@ See [WIREFRAME_FIX_DOCUMENTATION.md](./WIREFRAME_FIX_DOCUMENTATION.md) for detai
 - ✅ Inner structures and connecting rods properly isolated
 - ✅ Commit: `4610b54`
 
-#### Phase 4: Object Factory (262 lines removed) ✨ NEW
+#### Phase 4: Object Factory (262 lines removed)
 
 - ✅ Created `factories/objectFactory.js` (478 lines)
 - ✅ Consolidated entire object creation workflow:
@@ -283,11 +283,52 @@ See [WIREFRAME_FIX_DOCUMENTATION.md](./WIREFRAME_FIX_DOCUMENTATION.md) for detai
 - ✅ Reduced ThreeScene.jsx from 2101 → 1839 lines
 - ✅ Simplified object creation loop from ~290 lines to ~35 lines
 - ✅ Returns complete object data structure ready for animations
-- ✅ No errors, dev server running successfully
+- ✅ Commit: `c5750ec`
+
+#### Phase 5: Custom Hooks (477 lines removed) ✨ NEW
+
+- ✅ Created `hooks/` directory with 6 custom hooks
+- ✅ **useSceneInitialization.js** (100 lines):
+  - Scene, camera, renderer setup
+  - Lighting initialization
+  - Animation loop start
+  - Window resize handling
+  - Cleanup on unmount
+- ✅ **useObjectManager.js** (105 lines):
+  - Object creation and updates
+  - Scene cleanup (remove old objects)
+  - Factory orchestration
+  - Material reference management
+- ✅ **useCameraController.js** (45 lines):
+  - Camera positioning based on cameraView prop
+  - 5 view modes: free, orbit, top, side, cinematic
+- ✅ **useMaterialUpdates.js** (267 lines):
+  - Scale updater
+  - Shininess, specular color, specular intensity updaters
+  - Base color updater (with debugging duplicate)
+  - Wireframe intensity with dual-mesh blending
+  - Intricate wireframe color updaters (spiral, edge)
+- ✅ **useLightingUpdates.js** (62 lines):
+  - Ambient light color and intensity
+  - Directional light color, intensity, and position
+  - Safety clamping for light values
+- ✅ **useSceneEffects.js** (42 lines):
+
+  - Mouse tracking for orb interaction
+  - Environment updates (background and orbs)
+
+- ✅ Reduced ThreeScene.jsx from 1839 → 1362 lines
+- ✅ Removed all material/lighting update useEffects (~260 lines)
+- ✅ Removed scene initialization useEffect (~60 lines)
+- ✅ Removed object manager useEffect (~80 lines)
+- ✅ Removed camera controller useEffect (~40 lines)
+- ✅ Removed mouse tracking and environment useEffects (~37 lines)
+- ✅ ThreeScene.jsx now uses composition pattern with hooks
+- ✅ No errors, all functionality preserved
 
 ### Remaining Phases ⏳
 
-#### Phase 5: Custom Hooks (~560 lines, 45-60 min)
+#### Phase 6: Animation/Update Logic (~160 lines, 20-30 min)
 
 - Extract useEffect blocks into reusable hooks:
   - `hooks/useSceneInitialization.js` - Scene setup
@@ -307,45 +348,47 @@ See [WIREFRAME_FIX_DOCUMENTATION.md](./WIREFRAME_FIX_DOCUMENTATION.md) for detai
 ### Final Goal
 
 **Target:** ~1,200 lines (55% reduction from original 2700)  
-**Remaining:** ~640 lines to remove across Phases 5-6
+**Current:** 1362 lines (50% reduction achieved!)  
+**Remaining:** ~160 lines to remove in Phase 6
 
 ### Benefits Achieved So Far
 
-✅ **Better organization** - All creation logic separated into focused factories  
-✅ **Easier testing** - Each factory function can be unit tested independently  
-✅ **Code reusability** - Factories can be used in other projects  
-✅ **Clearer structure** - Separation of concerns (materials, wireframes, intricate details, object assembly)  
-✅ **Maintainability** - Changes to one geometry type don't affect others  
-✅ **Simplified main file** - ThreeScene.jsx now 32% smaller with cleaner object creation
+✅ **Better organization** - All creation logic and effects separated into focused modules  
+✅ **Easier testing** - Each factory and hook can be unit tested independently  
+✅ **Code reusability** - Factories and hooks can be used in other projects  
+✅ **Clearer structure** - Perfect separation of concerns (factories, hooks, components)  
+✅ **Maintainability** - Changes to one area don't affect others  
+✅ **Simplified main file** - ThreeScene.jsx now 50% smaller with composition pattern  
+✅ **Hook reusability** - Material, lighting, and object management can be reused
 
 ### Next Session Prompt
 
 When resuming this refactoring work, use this prompt:
 
 ```
-Continue refactoring ThreeScene.jsx - we're on Phase 5: Custom Hooks
+Continue refactoring ThreeScene.jsx - we're on Phase 6: Animation/Update Logic (FINAL PHASE)
 
 Progress so far:
 - Phase 1 ✅: Extracted wireframe builders (246 lines removed)
 - Phase 2 ✅: Extracted material factory (49 lines removed)
 - Phase 3 ✅: Extracted intricate wireframe builders (347 lines removed)
 - Phase 4 ✅: Extracted object factory (262 lines removed)
-- Current file: 1839 lines (started at 2700) - 32% reduction
+- Phase 5 ✅: Extracted custom hooks (477 lines removed)
+- Current file: 1362 lines (started at 2700) - 50% reduction
 
-Phase 5 task:
-Extract useEffect blocks into custom hooks. This includes:
-- useSceneInitialization.js - Scene setup (camera, renderer, lights)
-- useObjectManager.js - Object creation/updates
-- useCameraController.js - Camera positioning based on cameraView prop
-- useAnimationLoop.js - Animation loop management
-- useMaterialUpdates.js - Material property updates
-- useLightingUpdates.js - Lighting updates based on props
+Phase 6 task (FINAL):
+Extract the massive animation loop useEffect into smaller, focused modules:
+- utils/animationHelpers.js - Pure animation calculation functions
+- utils/materialUpdaters.js - Material update utilities
+- Possibly create useAnimationLoop hook to orchestrate everything
 
-Create: src/features/sceneControls/hooks/ directory
+The animation loop is the last major block (~800+ lines) remaining in ThreeScene.jsx.
+It handles rotate, float, spiral, liquid, chaos, alien, dna, and magnetic animations.
 
-Expected outcome: Remove ~560 lines, convert massive useEffect blocks into focused, reusable hooks
+Expected outcome: Remove ~160 lines, reaching target of ~1,200 lines (55% reduction)
 
-The hooks should handle all React lifecycle integration while keeping ThreeScene.jsx as a simple composition layer.
+The goal is to make the animation logic testable, maintainable, and reusable while
+keeping ThreeScene.jsx as a clean composition layer that just wires everything together.
 ```
 
 ---

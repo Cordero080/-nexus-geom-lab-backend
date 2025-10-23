@@ -4,11 +4,13 @@ import React from 'react';
 import './ThreeScene.css';
 import { use, useEffect, useRef } from 'react';
 import * as THREE from 'three';
-import { initializeScene } from './sceneSetup';
-import { initializeLighting } from './lightingSetup';
-import { startAnimationLoop } from './animationLoop';
-import { updateMousePosition } from './spectralOrbs';
 import { createSceneObject } from './factories/objectFactory';
+import { useSceneInitialization } from './hooks/useSceneInitialization';
+import { useObjectManager } from './hooks/useObjectManager';
+import { useCameraController } from './hooks/useCameraController';
+import { useMaterialUpdates } from './hooks/useMaterialUpdates';
+import { useLightingUpdates } from './hooks/useLightingUpdates';
+import { useMouseTracking, useEnvironmentUpdate } from './hooks/useSceneEffects';
 
 
 
@@ -88,236 +90,44 @@ function ThreeScene({
 	const directionalLightRef = useRef(null)   // Reference to directional light (so we can update it)
 
 	// =============================================
-	// INITIAL SETUP - RUNS ONCE WHEN COMPONENT MOUNTS
+	// CUSTOM HOOKS - ORGANIZED SCENE MANAGEMENT
 	// =============================================
-	// This useEffect has an empty dependency array [], so it only runs once
-	// It sets up the basic Three.js scene structure that won't change
 	
-	useEffect(() => {
-		// 1. CREATE SCENE - The 3D world container
-		const { scene, camera, renderer } = initializeScene();
-		sceneRef.current = scene;
-		cameraRef.current = camera;
-		rendererRef.current = renderer;
-		mountRef.current.appendChild(renderer.domElement);
+	// Initialize scene, camera, renderer, lights (runs once on mount)
+	useSceneInitialization(
+		{ sceneRef, cameraRef, rendererRef, mountRef, ambientLightRef, directionalLightRef, animationIdRef },
+		{ ambientLightColor, ambientLightIntensity, directionalLightColor, directionalLightIntensity, 
+		  directionalLightX, directionalLightY, directionalLightZ }
+	);
 
-		// 4. CREATE LIGHTS - Using current prop values from App.jsx
-		// Convert hex color strings (like "#ff0000") to Three.js color numbers
-		const ambientLightColorHex = parseInt(ambientLightColor.replace('#', ''), 16)
-		const directionalLightColorHex = parseInt(directionalLightColor.replace('#', ''), 16)
-		
-		// Create lights with current App.jsx values
-		const { ambientLight, directionalLight } = initializeLighting({
-			ambientLightColor, 
-			ambientLightIntensity, 
-			directionalLightColor, 
-			directionalLightIntensity, 
-			directionalLightPosition: { x: directionalLightX, y: directionalLightY, z: directionalLightZ },
-		});
-		
-		// Store lights in refs so we can update them later when App.jsx props change
-		ambientLightRef.current = ambientLight
-		directionalLightRef.current = directionalLight
-		
-		// Add lights to the scene
-		scene.add(ambientLight)
-		scene.add(directionalLight)
+	// Track mouse for orb interaction
+	useMouseTracking(rendererRef, cameraRef);
 
-		// 5. START ANIMATION LOOP - Continuously render the scene
-		startAnimationLoop(renderer, scene, camera, animationIdRef);
+	// Update environment (background and orbs)
+	useEnvironmentUpdate(sceneRef, environment);
 
-		// 6. HANDLE WINDOW RESIZE - Keep canvas matching screen size
-		const handleResize = () => {
-			camera.aspect = window.innerWidth / window.innerHeight
-			camera.updateProjectionMatrix()
-			renderer.setSize(window.innerWidth, window.innerHeight)
-		}
-		window.addEventListener('resize', handleResize)
+	// Manage object creation and updates
+	useObjectManager(
+		{ sceneRef, objectsRef, materialRef },
+		{ objectCount, objectType, baseColor, specularColor, shininess, specularIntensity, 
+		  wireframeIntensity, intricateWireframeSpiralColor, intricateWireframeEdgeColor }
+	);
 
-		// 7. CLEANUP FUNCTION - Runs when component unmounts
-		// Important: Clean up Three.js objects to prevent memory leaks
-		return () => {
-			window.removeEventListener('resize', handleResize)
-			if (animationIdRef.current) {
-				cancelAnimationFrame(animationIdRef.current)
-			}
-			if (mountRef.current && renderer.domElement) {
-				mountRef.current.removeChild(renderer.domElement)
-			}
-			renderer.dispose()
-		}
-	}, []) // Empty dependency array = run once on mount
+	// Control camera position
+	useCameraController(cameraRef, cameraView);
 
-	// ===============================================
-	// MOUSE TRACKING FOR ORB INTERACTION
-	// ===============================================
-	useEffect(() => {
-		const handleMouseMove = (event) => {
-			if (rendererRef.current && cameraRef.current) {
-				updateMousePosition(event, cameraRef.current, rendererRef.current.domElement);
-			}
-		};
+	// Update material properties
+	useMaterialUpdates(objectsRef, {
+		scale, shininess, specularColor, specularIntensity, baseColor, wireframeIntensity,
+		intricateWireframeSpiralColor, intricateWireframeEdgeColor
+	});
 
-		// Add mouse move listener to the entire window for smooth tracking
-		window.addEventListener('mousemove', handleMouseMove);
-
-		// Cleanup on unmount
-		return () => {
-			window.removeEventListener('mousemove', handleMouseMove);
-		};
-	}, []); // Empty dependency array = run once on mount
-
-	// ===============================================
-	// GEOMETRY CREATION HELPER FUNCTION
-	// ===============================================
-	
-	// ===============================================
-	// ENVIRONMENT UPDATER - RESPONDS TO environment PROP
-	// ===============================================
-	// When App.jsx changes the environment prop, this useEffect runs
-	// and updates the scene background accordingly
-	
-	// Scale updater - responds to scale prop changes
-	useEffect(() => {
-		objectsRef.current.forEach(({ solidMesh, wireframeMesh, centerLines, curvedLines, mesh }) => {
-			// Handle dual-mesh objects
-			if (solidMesh) {
-				solidMesh.scale.setScalar(scale)
-			}
-			if (wireframeMesh) {
-				wireframeMesh.scale.setScalar(scale)
-			}
-			// Handle intricate wireframe elements
-			if (centerLines) {
-				centerLines.scale.setScalar(scale)
-			}
-			if (curvedLines) {
-				curvedLines.scale.setScalar(scale)
-			}
-			// Handle legacy single mesh objects
-			if (mesh) {
-				mesh.scale.setScalar(scale)
-			}
-		})
-	}, [scale])
-
-
-	// Update environment (sets background and adds/removes orbs)
-	useEffect(() => {
-		if (!sceneRef.current) return;
-		updateEnvironment(sceneRef.current, environment);
-	}, [environment]);
-
-	// ...existing code...
-
-	// ===============================================
-	// OBJECTS CREATOR - RESPONDS TO MULTIPLE PROPS
-	// ===============================================
-	// When App.jsx changes objectCount, baseColor, specularColor, etc., this useEffect runs
-	// and recreates all the 3D objects with the new values
-	
-	useEffect(() => {
-		if (!sceneRef.current) return; // Safety check
-
-		const scene = sceneRef.current
-		
-		// REMOVE OLD OBJECTS from scene and clear our reference array
-		objectsRef.current.forEach(obj => {
-			// Remove solid and wireframe meshes
-			if (obj.solidMesh) scene.remove(obj.solidMesh)
-			if (obj.wireframeMesh) scene.remove(obj.wireframeMesh)
-			// Remove intricate wireframe elements
-			if (obj.centerLines) scene.remove(obj.centerLines)
-			if (obj.curvedLines) scene.remove(obj.curvedLines)
-			// Also handle legacy single mesh objects
-			if (obj.mesh) scene.remove(obj.mesh)
-		})
-		objectsRef.current = []
-
-		// CREATE NEW OBJECTS USING CURRENT APP.JSX PROP VALUES
-		for (let i = 0; i < objectCount; i++) {
-			// Create object using factory
-			const objectData = createSceneObject({
-				objectType,
-				objectCount,
-				objectIndex: i,
-				baseColor,
-				specularColor,
-				shininess,
-				specularIntensity,
-				wireframeIntensity,
-				intricateWireframeSpiralColor,
-				intricateWireframeEdgeColor
-			});
-
-			// Add all components to scene
-			const { solidMesh, wireframeMesh, centerLines, curvedLines } = objectData;
-			scene.add(solidMesh);
-			scene.add(wireframeMesh);
-			scene.add(centerLines);
-			scene.add(curvedLines);
-
-			console.log(`Added object ${i} to scene:`, {
-				solidMesh: solidMesh.type,
-				wireframeMesh: wireframeMesh.type,
-				centerLines: centerLines ? centerLines.type : 'NULL',
-				curvedLines: curvedLines ? curvedLines.type : 'NULL',
-				centerLinesChildren: centerLines ? centerLines.children?.length : 'N/A',
-				curvedLinesChildren: curvedLines ? curvedLines.children?.length : 'N/A',
-				position: solidMesh.position
-			});
-
-			// Store object data for animations and updates
-			objectsRef.current.push(objectData);
-		}
-
-		// Store first material as main reference for debugging
-		if (objectsRef.current.length > 0) {
-			materialRef.current = objectsRef.current[0].material
-			console.log('Set main material reference, specular color:', objectsRef.current[0].material.specular.getHex())
-		}
-		
-		console.log(`Created ${objectsRef.current.length} objects with current React state values`)
-	}, [objectCount, baseColor, specularColor, objectType]) 
-	// ↑ This effect runs when ANY of these App.jsx props change (removed wireframeIntensity, specularIntensity, and shininess)
-
-	// ===============================================
-	// CAMERA CONTROLLER - RESPONDS TO cameraView PROP
-	// ===============================================
-	// When App.jsx changes cameraView prop, this useEffect runs and repositions the camera
-	
-	useEffect(() => {
-		if (!cameraRef.current) return // Safety check
-
-		const camera = cameraRef.current
-
-		// DEBUG: Log cameraView changes and camera position
-		console.log('[ThreeScene] cameraView effect:', cameraView)
-
-		// POSITION CAMERA based on cameraView prop from App.jsx
-		switch(cameraView) {
-			case 'free':
-				camera.position.set(0, 0, 6)     // Standard front view
-				break
-			case 'orbit':
-				camera.position.set(0, 3, 6)     // Elevated view for orbiting
-				camera.lookAt(0, 0, 0)           // Look at center
-				break
-			case 'top':
-				camera.position.set(0, 10, 0)    // Directly above
-				camera.lookAt(0, 0, 0)           // Look down at center
-				break
-			case 'side':
-				camera.position.set(10, 0, 0)    // Far to the right side
-				camera.lookAt(0, 0, 0)           // Look at center
-				break
-			case 'cinematic':
-				camera.position.set(-3, 2, 5)    // Dramatic angle
-				camera.lookAt(0, 0, 0)           // Look at center
-				break
-		}
-		console.log('[ThreeScene] camera position after update:', camera.position)
-	}, [cameraView]) // Run when cameraView prop from App.jsx changes
+	// Update lighting
+	useLightingUpdates(
+		{ ambientLightRef, directionalLightRef },
+		{ ambientLightColor, ambientLightIntensity, directionalLightColor, directionalLightIntensity,
+		  directionalLightX, directionalLightY, directionalLightZ }
+	);
 
 	// ===============================================
 	// ANIMATION CONTROLLER - RESPONDS TO animationStyle PROP
@@ -1492,293 +1302,6 @@ case 'alien':
 			}
 		}
 	}, [animationStyle, cameraView]) // Run when animationStyle or cameraView props from App.jsx change
-
-	// ===============================================
-	// MATERIAL PROPERTY UPDATERS - RESPOND TO MATERIAL PROPS
-	// ===============================================
-	// These useEffects listen for changes to specific material properties from App.jsx
-	// and update the existing 3D objects without recreating them entirely
-
-	// SHININESS UPDATER - Responds to shininess prop changes
-	useEffect(() => {
-		console.log('Updating shininess to:', shininess) // Debug: shows when App.jsx changes shininess
-		objectsRef.current.forEach(({ material, wireframeMaterial }, index) => {
-			// Update solid material
-			if (material) {
-				material.shininess = shininess          // Apply new shininess value from App.jsx
-				material.needsUpdate = true             // Tell Three.js to re-render material
-				console.log(`Updated material ${index} shininess to:`, shininess)
-			}
-			// Update wireframe material
-			if (wireframeMaterial) {
-				wireframeMaterial.shininess = shininess // Apply to wireframe material too
-				wireframeMaterial.needsUpdate = true
-				console.log(`Updated wireframe material ${index} shininess to:`, shininess)
-			}
-		})
-	}, [shininess]) // Run when shininess prop from App.jsx changes
-
-	// SPECULAR COLOR UPDATER - Responds to specularColor prop changes
-	useEffect(() => {
-		console.log('Updating specular color to:', specularColor) // Debug: shows color changes
-		console.log('Number of objects:', objectsRef.current.length)
-		
-		if (objectsRef.current.length === 0) {
-			console.log('No objects available for specular update')
-			return
-		}
-		
-		// Convert hex color string from App.jsx (like "#ff0000") to Three.js color number
-		const convertedColor = parseInt(specularColor.replace('#', ''), 16)
-		console.log('Converted color value:', convertedColor)
-		
-		objectsRef.current.forEach(({ material, wireframeMaterial }, index) => {
-			// Update solid material
-			if (material) {
-				console.log(`Updating material ${index} specular color`)
-				material.specular.setHex(convertedColor) // Apply new specular color from App.jsx
-				material.needsUpdate = true              // Tell Three.js to re-render material
-			} else {
-				console.log(`Material ${index} is null`)
-			}
-			// Update wireframe material
-			if (wireframeMaterial) {
-				console.log(`Updating wireframe material ${index} specular color`)
-				wireframeMaterial.specular.setHex(convertedColor) // Apply to wireframe material too
-				wireframeMaterial.needsUpdate = true
-			}
-		})
-	}, [specularColor]) // Run when specularColor prop from App.jsx changes
-
-	// SPECULAR INTENSITY UPDATER - Responds to specularIntensity prop changes
-	useEffect(() => {
-		console.log('Updating specular intensity to:', specularIntensity)
-		
-		objectsRef.current.forEach(({ material, wireframeMaterial }, index) => {
-			// Update solid material
-			if (material) {
-				material.reflectivity = specularIntensity // Apply new intensity from App.jsx
-				material.needsUpdate = true               // Tell Three.js to re-render material
-				console.log(`Updated material ${index} specular intensity to:`, specularIntensity)
-			} else {
-				console.log(`Material ${index} is null`)
-			}
-			// Update wireframe material
-			if (wireframeMaterial) {
-				wireframeMaterial.reflectivity = specularIntensity // Apply to wireframe material too
-				wireframeMaterial.needsUpdate = true
-				console.log(`Updated wireframe material ${index} specular intensity to:`, specularIntensity)
-			}
-		})
-	}, [specularIntensity]) // Run when specularIntensity prop from App.jsx changes
-
-	// BASE COLOR UPDATER - Responds to baseColor prop changes
-	useEffect(() => {
-		console.log('Updating base color to:', baseColor)
-		// Convert hex color string from App.jsx to Three.js color number
-		const convertedColor = parseInt(baseColor.replace('#', ''), 16)
-		console.log('Converted base color value:', convertedColor)
-		
-		objectsRef.current.forEach(({ material, wireframeMaterial }, index) => {
-			// Update solid material
-			if (material) {
-				material.color.setHex(convertedColor) // Apply new base color from App.jsx
-				material.needsUpdate = true           // Tell Three.js to re-render material
-				console.log(`Updated material ${index} base color`)
-			}
-			// Update wireframe material
-			if (wireframeMaterial) {
-				wireframeMaterial.color.setHex(convertedColor) // Apply to wireframe material too
-				wireframeMaterial.needsUpdate = true
-				console.log(`Updated wireframe material ${index} base color`)
-			}
-		})
-	}, [baseColor]) // Run when baseColor prop from App.jsx changes
-
-	// Debugging: Ensure objectsRef is populated and baseColor updates correctly
-	useEffect(() => {
-		console.log('Base color change detected:', baseColor);
-		console.log('Objects in objectsRef:', objectsRef.current);
-
-		const convertedColor = parseInt(baseColor.replace('#', ''), 16);
-		console.log('Converted base color value:', convertedColor);
-
-		objectsRef.current.forEach(({ material, wireframeMaterial }, index) => {
-			if (material) {
-				material.color.setHex(convertedColor);
-				material.needsUpdate = true;
-				console.log(`Updated material ${index} base color to:`, material.color);
-			} else {
-				console.log(`Material ${index} is null`);
-			}
-
-			if (wireframeMaterial) {
-				wireframeMaterial.color.setHex(convertedColor);
-				wireframeMaterial.needsUpdate = true;
-				console.log(`Updated wireframe material ${index} base color to:`, wireframeMaterial.color);
-			} else {
-				console.log(`Wireframe material ${index} is null`);
-			}
-		});
-	}, [baseColor]);
-
-	// WIREFRAME INTENSITY UPDATER - Responds to wireframeIntensity prop changes
-	useEffect(() => {
-		const intensity = wireframeIntensity / 100 // Convert 0-100 range to 0-1 range
-		
-		console.log(`Updating wireframe intensity to ${wireframeIntensity}% (${intensity}) for ${objectsRef.current.length} objects`)
-		
-		objectsRef.current.forEach(({ material, wireframeMaterial, centerLinesMaterial, curvedLinesMaterial }, index) => {
-			console.log(`Updating object ${index}:`, {
-				hasMaterial: !!material,
-				hasWireframeMaterial: !!wireframeMaterial,
-				hasCenterLinesMaterial: !!centerLinesMaterial,
-				hasCurvedLinesMaterial: !!curvedLinesMaterial
-			})
-			
-			if (material && wireframeMaterial) {
-				// DUAL-MESH BLENDING: Smooth transition between solid and wireframe
-				if (intensity === 0) {
-					// Full solid: solid mesh visible, wireframe mesh invisible
-					material.transparent = false
-					material.opacity = 1
-					wireframeMaterial.transparent = true
-					wireframeMaterial.opacity = 0
-				} else if (intensity === 1) {
-					// Full wireframe: solid mesh invisible, wireframe mesh visible
-					material.transparent = true
-					material.opacity = 0
-					wireframeMaterial.transparent = true
-					wireframeMaterial.opacity = 1
-				} else {
-					// Blended: both meshes partially visible
-					material.transparent = true
-					material.opacity = 1 - intensity  // Solid fades out as wireframe increases
-					wireframeMaterial.transparent = true
-					wireframeMaterial.opacity = intensity  // Wireframe fades in as intensity increases
-				}
-				
-				// UPDATE INTRICATE WIREFRAME ELEMENTS
-				if (centerLinesMaterial) {
-					centerLinesMaterial.opacity = 0.8 // Keep bright red lines visible
-					centerLinesMaterial.needsUpdate = true
-				}
-				
-				if (curvedLinesMaterial) {
-					curvedLinesMaterial.opacity = 0.8 // Keep bright green lines visible
-					curvedLinesMaterial.needsUpdate = true
-				}
-				
-				material.needsUpdate = true
-				wireframeMaterial.needsUpdate = true
-				
-				console.log(`Wireframe intensity ${wireframeIntensity}%: solid opacity = ${material.opacity}, wireframe opacity = ${wireframeMaterial.opacity}`)
-			} else if (material) {
-				// Legacy single-mesh fallback (old wireframe behavior)
-				if (intensity === 0) {
-					material.wireframe = false
-					material.transparent = false
-					material.opacity = 1
-				} else {
-					material.wireframe = true
-					material.transparent = true
-					material.opacity = 0.3 + (intensity * 0.7)
-				}
-				material.needsUpdate = true
-			}
-		})
-	}, [wireframeIntensity]) // Run when wireframeIntensity prop from App.jsx changes
-
-	// ===============================================
-	// INTRICATE WIREFRAME COLOR UPDATERS - RESPOND TO INTRICATE WIREFRAME PROPS
-	// ===============================================
-	// These useEffects update intricate wireframe colors when App.jsx changes the color controls
-
-	// INTRICATE WIREFRAME SPIRAL COLOR UPDATER - Responds to spiral color prop changes
-	useEffect(() => {
-		console.log('Updating intricate wireframe spiral color to:', intricateWireframeSpiralColor)
-		const convertedColor = new THREE.Color(intricateWireframeSpiralColor)
-		
-		objectsRef.current.forEach(({ centerLinesMaterial }, index) => {
-			if (centerLinesMaterial) {
-				centerLinesMaterial.color.copy(convertedColor)
-				centerLinesMaterial.needsUpdate = true
-				console.log(`Updated center lines material ${index} color`)
-			}
-		})
-	}, [intricateWireframeSpiralColor]) // Run when spiral color prop from App.jsx changes
-
-	// INTRICATE WIREFRAME EDGE COLOR UPDATER - Responds to edge color prop changes
-	useEffect(() => {
-		console.log('Updating intricate wireframe edge color to:', intricateWireframeEdgeColor)
-		const convertedColor = new THREE.Color(intricateWireframeEdgeColor)
-		
-		objectsRef.current.forEach(({ curvedLinesMaterial }, index) => {
-			if (curvedLinesMaterial) {
-				curvedLinesMaterial.color.copy(convertedColor)
-				curvedLinesMaterial.needsUpdate = true
-				console.log(`Updated curved lines material ${index} color`)
-			}
-		})
-	}, [intricateWireframeEdgeColor]) // Run when edge color prop from App.jsx changes
-
-	// ===============================================
-	// LIGHTING UPDATERS - RESPOND TO LIGHTING PROPS
-	// ===============================================
-	// These useEffects update the lights when App.jsx changes lighting properties
-
-	// AMBIENT LIGHT UPDATER - Responds to ambient light prop changes
-	useEffect(() => {
-		if (ambientLightRef.current) {
-			// Convert hex color from App.jsx to Three.js color number
-			const convertedColor = parseInt(ambientLightColor.replace('#', ''), 16)
-			ambientLightRef.current.color.setHex(convertedColor)     // Apply new color from App.jsx
-			ambientLightRef.current.intensity = ambientLightIntensity // Apply new intensity from App.jsx
-			console.log('Updated ambient light:', ambientLightColor, ambientLightIntensity)
-		}
-	}, [ambientLightColor, ambientLightIntensity]) // Run when ambient light props from App.jsx change
-
-	// DIRECTIONAL LIGHT UPDATER - Responds to directional light prop changes
-	useEffect(() => {
-			if (directionalLightRef.current) {
-				// Clamp intensity to a minimum value
-				const safeIntensity = Math.max(0.05, directionalLightIntensity);
-				// Clamp position to a reasonable range
-				const clamp = (val, min, max) => Math.max(min, Math.min(max, val));
-				const safeX = clamp(directionalLightX, -50, 50);
-				const safeY = clamp(directionalLightY, -50, 50);
-				const safeZ = clamp(directionalLightZ, -50, 50);
-				// Convert hex color from App.jsx to Three.js color number
-				const convertedColor = parseInt(directionalLightColor.replace('#', ''), 16)
-				directionalLightRef.current.color.setHex(convertedColor)        // Apply new color from App.jsx
-				directionalLightRef.current.intensity = safeIntensity // Apply clamped intensity
-				// Position the light using clamped X, Y, Z coordinates
-				directionalLightRef.current.position.set(safeX, safeY, safeZ)
-				console.log('[ThreeScene] Updated directional light:', directionalLightColor, safeIntensity, 'position:', safeX, safeY, safeZ, '| prop Y:', directionalLightY);
-			}
-	}, [directionalLightColor, directionalLightIntensity, directionalLightX, directionalLightY, directionalLightZ]) 
-	// ↑ Run when any directional light props from App.jsx change
-
-	// Add pulse glow effect to meshes
-	const clock = new THREE.Clock();
-
-	function animatePulseGlow() {
-		const time = clock.getElapsedTime();
-
-		objectsRef.current.forEach(({ solidMesh }) => {
-			if (solidMesh) {
-				const intensity = (Math.sin(time * 2) + 1) / 2; // Oscillates between 0 and 1
-				const color = solidMesh.material.color;
-				const hsl = {};
-				color.getHSL(hsl);
-				color.setHSL(hsl.h, 0.9 + 0.2 * intensity, 0.1 + 0.3 * intensity); // Adjust saturation and brightness
-			}
-		});
-
-		requestAnimationFrame(animatePulseGlow);
-	}
-
-	animatePulseGlow();
 
 	// ===============================================
 	// RENDER METHOD - WHAT GETS DISPLAYED IN THE DOM
