@@ -35,10 +35,11 @@ export function useMouseTracking(rendererRef, cameraRef) {
  *
  * @param {Object} sceneRef - Reference to the Three.js scene
  * @param {string} environment - Environment type
+ * @param {number} environmentHue - Hue shift in degrees (0-360)
  */
-export function useEnvironmentUpdate(sceneRef, environment) {
+export function useEnvironmentUpdate(sceneRef, environment, environmentHue) {
   useEffect(() => {
     if (!sceneRef.current) return;
-    updateEnvironment(sceneRef.current, environment);
-  }, [environment]);
+    updateEnvironment(sceneRef.current, environment, environmentHue);
+  }, [environment, environmentHue]);
 }

@@ -23,24 +23,24 @@ const sceneSchema = new mongoose.Schema({
     type: Boolean,
     default: true,
   },
- // NESTED OBJECT / SUBDOCUMENT
+  // NESTED OBJECT / SUBDOCUMENT
   // ALL PLAYGROUND SETTINGS HERE
   config: {
-    // Material Properties   // Fields inside the nested object
+    // Material Properties
     scale: { type: Number, default: 1 },
-    shininess: { type: Number, default: 100 },
-    specularColor: { type: String, default: "#00ffff" },
-    specularIntensity: { type: Number, default: 1.0 },
+    metalness: { type: Number, default: 0.5 },
+    emissiveIntensity: { type: Number, default: 0 },
     baseColor: { type: String, default: "#ff00ff" },
     wireframeIntensity: { type: Number, default: 50 },
 
-    // Intricate Wireframe
-    intricateWireframeSpiralColor: { type: String, default: "#ff4500" },
-    intricateWireframeEdgeColor: { type: String, default: "#00ff00" },
+    // Intricate Wireframe (Hyperframe)
+    hyperframeColor: { type: String, default: "#ff4500" },
+    hyperframeLineColor: { type: String, default: "#00ff00" },
 
     // Scene Behavior
     cameraView: { type: String, default: "free" },
     environment: { type: String, default: "nebula" },
+    environmentHue: { type: Number, default: 0 },
     objectCount: { type: Number, default: 1 },
     animationStyle: { type: String, default: "rotate" },
     objectType: { type: String, default: "icosahedron" },

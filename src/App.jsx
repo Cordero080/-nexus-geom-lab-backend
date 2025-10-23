@@ -28,6 +28,7 @@ function Playground() {
   // SCENE BEHAVIOR STATE
   const [cameraView, setCameraView] = useState('free')
   const [environment, setEnvironment] = useState('nebula')
+  const [environmentHue, setEnvironmentHue] = useState(0) // Hue rotation for environment (0-360)
   const [objectCount, setObjectCount] = useState(1)
   const [animationStyle, setAnimationStyle] = useState('rotate')
   const [objectType, setObjectType] = useState('icosahedron')
@@ -60,6 +61,7 @@ function Playground() {
         hyperframeLineColor={hyperframeLineColor}
         cameraView={cameraView}
         environment={environment}
+        environmentHue={environmentHue}
         objectCount={objectCount}
         animationStyle={animationStyle}
         objectType={objectType}
@@ -90,6 +92,8 @@ function Playground() {
         onCameraViewChange={setCameraView}
         environment={environment}
         onEnvironmentChange={setEnvironment}
+        environmentHue={environmentHue}
+        onEnvironmentHueChange={setEnvironmentHue}
         objectCount={objectCount}
         onObjectCountChange={setObjectCount}
         animationStyle={animationStyle}

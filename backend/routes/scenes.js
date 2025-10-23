@@ -31,6 +31,12 @@ router.post(
 
     // Validate config exists and is an object
     body("config").isObject().withMessage("Config must be an object"),
+    
+    // Validate animation style (removed: liquid, metal, dna)
+    body("config.animationStyle")
+      .optional()
+      .isIn(["rotate", "float", "spiral", "chaos", "alien", "magnetic"])
+      .withMessage("Invalid animation style"),
   ],
 
   async (req, res) => {
@@ -54,7 +60,7 @@ router.post(
         name,
         description: description || "", //If no description, use empty string
         userId: req.user._id, // req.user set by authMiddleware
-        config, // All 20+ playground settings!
+        config, // All playground settings including new environmentHue!
 
         // Ternary operator: if isPublic is defined, use it, otherwise default to true
         isPublic: isPublic !== undefined ? isPublic : true,
@@ -74,7 +80,7 @@ router.post(
 
         res.status(201).json({
           success: true,
-          message: "Scene created succesfully",
+          message: "Scene created successfully",
           scene,
           // req.unlockedAnimations was set by unlock checker if any unlocked
           // || [] = If undefined, use empty array
@@ -92,16 +98,18 @@ router.post(
   }
 );
 
-// * GET ALL SCENES ROUTE
-//  * GET /api/scenes
-//  * Gets public scenes (gallery) OR user's own scenes
-//  * Public (no login required for gallery)
-//  */
+/**
+ * GET ALL SCENES ROUTE
+ * GET /api/scenes
+ * Gets public scenes (gallery) OR user's own scenes
+ * Public (no login required for gallery)
+ */
 
 router.get("/", async (req, res) => {
   try {
     const { userId, isPublic } = req.query;
     let query = {};
+    
     if (userId) {
       const token = req.header("Authorization")?.replace("Bearer ", "");
       if (token) {
@@ -114,10 +122,12 @@ router.get("/", async (req, res) => {
     } else {
       query.isPublic = true;
     }
+    
     const scenes = await Scene.find(query)
       .populate("userId", "username")
       .sort({ createdAt: -1 })
       .limit(50);
+      
     res.json({
       success: true,
       count: scenes.length,
@@ -178,16 +188,17 @@ router.get("/:id", async (req, res) => {
       "username"
     );
 
-    //id scene doesn't exist
+    // If scene doesn't exist
     if (!scene) {
       return res.status(404).json({
         success: false,
         message: "Scene not found",
       });
     }
-    //Check if user is the owner
-    const token = req.header("Authorization")?.replace("Bearer", "");
-    //let = Can be reassigned
+    
+    // Check if user is the owner
+    const token = req.header("Authorization")?.replace("Bearer ", "");
+    // let = Can be reassigned
     let isOwner = false;
 
     if (token) {
@@ -229,65 +240,6 @@ router.get("/:id", async (req, res) => {
 });
 
 /**
- * GET SINGLE SCENE ROUTE
- * GET /api/scenes/:id
- * Gets one specific scene by ID
- * Public (if scene is public) or Private (if user's scene)
- */
-// :id = Route parameter (dynamic value in URL)
-// Example: /api/scenes/abc123 → req.params.id = "abc123"
-
-router.get('/', async (res, req) => {
-  try{
-    const scene = await  Scene.findById(req.params.id)
-    .populate('userId', 'username');
-
-    // If doesn't exist
-    if(!scene) {
-      return res.status(404).json({
-        success: false,
-        message: 'Scene not found'
-      });
-    }
-    // Check if user is the owner
-    const token = req.header('Authorization')?.replace('Bearer ', '');
-
-    let isOwner = false;
-
-    if (token) {
-      const jwt = require('jsonwebtoken');
-      try {
-        const decoded =jwt.verify(token, process.env.JWT_SECRET);
-        // .toString() = Convert ObjectId to string for comparison
-        isOwner = decoded.userId === scene.userId._id.toString();
-      } catch (err) {
-        // Invalid token, treat as public request
-      }
-    }
-    // If scene is private AND user is not owner
-    // && = AND operator (both conditions must be true)
-    if(!scene.isPublic && !isOwner) {
-      return res.status(403).json({
-        success: false,
-        message: 'Access denied - scene is private'
-      });
-    }
-
-    scene.views += 1;
-    await scene.save();
-
-    res.json({
-      success: true,
-      scene
-    });
-  } catch (error) {
-    console.error(500).json({
-      success: false,
-      message: 'Error fetching scene'
-    });
-  }
-});
-/**
  * UPDATE SCENE ROUTE
  * PUT /api/scenes/:id
  * Updates an existing scene
@@ -301,12 +253,27 @@ router.put(
   [ 
     // .optional() = Field doesn't have to be present
     body('name')
-    .optional()
-    .trim()
-    .isLength({ max: 100} )
-    .withMessage('Scene name cannot exceed 100 characters'),
+      .optional()
+      .trim()
+      .isLength({ max: 100 })
+      .withMessage('Scene name cannot exceed 100 characters'),
 
-    body('config').optional().isObject().withMessage('Config must be an object')
+    body('config')
+      .optional()
+      .isObject()
+      .withMessage('Config must be an object'),
+    
+    // Validate animation style if provided (removed: liquid, metal, dna)
+    body("config.animationStyle")
+      .optional()
+      .isIn(["rotate", "float", "spiral", "chaos", "alien", "magnetic"])
+      .withMessage("Invalid animation style"),
+      
+    // Validate environmentHue if provided (0-360 degrees)
+    body("config.environmentHue")
+      .optional()
+      .isFloat({ min: 0, max: 360 })
+      .withMessage("Environment hue must be between 0 and 360"),
   ],
   async (req, res) => {
     try {
@@ -317,6 +284,7 @@ router.put(
           errors: errors.array()
         });
       }
+      
       // Find scene by ID
       const scene = await Scene.findById(req.params.id);
 
@@ -326,6 +294,7 @@ router.put(
           message: 'Scene not found'
         });
       }
+      
       // Check if current user owns this scene
       // !== = Not equal (strict inequality)
       if (scene.userId.toString() !== req.user._id.toString()) {
@@ -334,23 +303,25 @@ router.put(
           message: 'Not authorized to update this scene'
         });
       }
+      
       // Update fields if provided
       const {name, description, config, isPublic} = req.body;
-// if (name) = If name exists (truthy value)
-if (name) scene.name = name;
+      
+      // if (name) = If name exists (truthy value)
+      if (name) scene.name = name;
 
- // !== undefined = If description was sent (even if empty string)
- if (description !== undefined) scene.description = description;
- if(config) scene.config = config;
- if (isPublic !== undefined) scene,isPublic = isPublic;
+      // !== undefined = If description was sent (even if empty string)
+      if (description !== undefined) scene.description = description;
+      if (config) scene.config = config;
+      if (isPublic !== undefined) scene.isPublic = isPublic;
 
- await scene.save();
+      await scene.save();
 
- res.json({
-  success: true,
-  message: 'Scene updated successfully',
-  scene
- });
+      res.json({
+        success: true,
+        message: 'Scene updated successfully',
+        scene
+      });
 
     } catch (error) {
       console.error('Update scene error:', error);
@@ -362,13 +333,13 @@ if (name) scene.name = name;
   }
 );
 
-
 /**
  * DELETE SCENE ROUTE
  * DELETE /api/scenes/:id
  * Deletes a scene
  * Private (must be scene owner)
  */
+// TODO: Implement delete route
 
 
 module.exports = router;

@@ -14,8 +14,14 @@ let mouse2D = new THREE.Vector2();
  * @param {THREE.Scene} scene - The Three.js scene
  * @param {number} count - Number of orbs to create
  * @param {number} orbitRadius - Distance from center
+ * @param {number} hueShift - Hue rotation in degrees (0-360)
  */
-export function createSpectralOrbs(scene, count = 8, orbitRadius = 4) {
+export function createSpectralOrbs(
+  scene,
+  count = 8,
+  orbitRadius = 4,
+  hueShift = 0
+) {
   // Clean up existing orbs
   removeSpectralOrbs(scene);
 
@@ -24,7 +30,7 @@ export function createSpectralOrbs(scene, count = 8, orbitRadius = 4) {
   orbs = [];
 
   // Spectral colors (rainbow/mystical palette)
-  const spectralColors = [
+  const baseColors = [
     0x000ff, // Magenta
     0x00ffff, // Cyan
     0xff0020, // Hot Pink
@@ -34,6 +40,13 @@ export function createSpectralOrbs(scene, count = 8, orbitRadius = 4) {
     0x8000ff, // Purple
     0xf00000, // Yellow
   ];
+
+  // Apply hue shift to all colors
+  const spectralColors = baseColors.map((color) => {
+    const threeColor = new THREE.Color(color);
+    threeColor.offsetHSL(hueShift / 360, 0, 0); // Convert degrees to 0-1 range for THREE.js
+    return threeColor.getHex();
+  });
 
   // Create main gradient orbs
   for (let i = 0; i < count; i++) {
@@ -391,9 +404,15 @@ export function removeSpectralOrbs(scene) {
  * @param {THREE.Scene} scene - The Three.js scene
  * @param {number} count - New number of orbs
  * @param {number} orbitRadius - Orbit radius
+ * @param {number} hueShift - Hue rotation in degrees (0-360)
  */
-export function updateSpectralOrbCount(scene, count, orbitRadius = 4) {
-  createSpectralOrbs(scene, count, orbitRadius);
+export function updateSpectralOrbCount(
+  scene,
+  count,
+  orbitRadius = 4,
+  hueShift = 0
+) {
+  createSpectralOrbs(scene, count, orbitRadius, hueShift);
 }
 
 /**

@@ -58,7 +58,7 @@ userSchema.methods.hasUnlockedAnimation = function (animationId) {
 // Method to unlock animation
 userSchema.methods.unlockAnimation = function (animationId) {
   if (!this.hasUnlockedAnimation(animationId)) {
-    this.unlockAnimations.push(animationId);
+    this.unlockedAnimations.push(animationId); // FIXED: was "unlockAnimations" (typo)
   }
 };
 module.exports = mongoose.model("User", userSchema);

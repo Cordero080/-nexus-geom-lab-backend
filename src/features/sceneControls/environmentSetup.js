@@ -1,7 +1,7 @@
 import * as THREE from "three";
 import { createSpectralOrbs, removeSpectralOrbs } from "./spectralOrbs";
 
-export function updateEnvironment(scene, environment) {
+export function updateEnvironment(scene, environment, hueShift = 0) {
   if (!scene) return;
 
   const createEnvironment = (envType) => {
@@ -11,8 +11,8 @@ export function updateEnvironment(scene, environment) {
         // Don't set scene.background - let CSS background show through
         scene.background = null;
 
-        // Add spectral orbs (NO lights, won't affect background)
-        createSpectralOrbs(scene, 8, 4);
+        // Add spectral orbs with hue shift (NO lights, won't affect background)
+        createSpectralOrbs(scene, 8, 4, hueShift);
         break;
       }
       case "space": {

@@ -18,6 +18,7 @@ function Controls({
   // SCENE PROPERTIES (current values FROM App.jsx + setter functions FROM App.jsx)
   cameraView, onCameraViewChange,                  // Current camera view mode + function to update it
   environment, onEnvironmentChange,                // Current environment setting + function to update it
+  environmentHue, onEnvironmentHueChange,          // Current environment hue shift + function to update it
   objectCount, onObjectCountChange,                // Current object count + function to update it
   animationStyle, onAnimationStyleChange,          // Current animation style + function to update it
   objectType, onObjectTypeChange,                  // Current object type + function to update it
@@ -104,6 +105,11 @@ function Controls({
   const handleEnvironmentChange = (event) => {
     const newEnv = event.target.value;
     onEnvironmentChange(newEnv);
+  };
+  
+  const handleEnvironmentHueChange = (event) => {
+    const newHue = parseInt(event.target.value);
+    onEnvironmentHueChange(newHue);
   };
   
   const handleObjectCountChange = (event) => {
@@ -310,6 +316,18 @@ function Controls({
           <option value="sunset">Sunset Sky</option>
           <option value="matrix">Matrix Code</option>
         </select>
+
+        {/* Environment Hue Shift Control */}
+        <label>
+          Environment Hue: <span className="value-display">{environmentHue}°</span>
+        </label>
+        <input 
+          type="range" 
+          min="0" 
+          max="360" 
+          value={environmentHue}
+          onChange={handleEnvironmentHueChange}
+        />
 
         {/* Object Count Control */}
         <label>
