@@ -425,12 +425,84 @@ function ThreeScene({
 								}
 							}
 							
-							currentMesh.position.x = originalPosition.x + Math.sin(t * 3 + phase) * 2
-							currentMesh.position.y = originalPosition.y + Math.cos(t * 2 + phase) * 2
-							currentMesh.position.z = originalPosition.z + Math.sin(t * 1.5 + phase) * 2
-							currentMesh.rotation.x = t * 2 + phase
-							currentMesh.rotation.y = t * 1.5 + phase
-							currentMesh.rotation.z = t * 2.5 + phase
+							// Slowdown cycle: smooth 40% slowdown for 4 seconds in the middle of each 12-second cycle
+							const cycleDuration = 12; // Total cycle duration in seconds
+							const chaosCycleTime = t % cycleDuration; // Current position in cycle (0-12)
+							const slowdownStart = 4; // Start slowdown at 4 seconds
+							const slowdownEnd = 8; // End slowdown at 8 seconds (4 second duration)
+							const transitionDuration = 1; // 1 second smooth transition in/out
+							
+							let speedMultiplier = 1.0;
+							
+							if (chaosCycleTime >= slowdownStart && chaosCycleTime <= slowdownEnd) {
+								// Calculate smooth transition
+								const timeInSlowdown = chaosCycleTime - slowdownStart;
+								const slowdownPeriod = slowdownEnd - slowdownStart;
+								
+								if (timeInSlowdown < transitionDuration) {
+									// Fade in: smoothly transition from 1.0 to 0.6
+									const fadeProgress = timeInSlowdown / transitionDuration;
+									const smoothFade = fadeProgress * fadeProgress * (3 - 2 * fadeProgress); // Smoothstep
+									speedMultiplier = 1.0 - (0.4 * smoothFade);
+								} else if (timeInSlowdown > slowdownPeriod - transitionDuration) {
+									// Fade out: smoothly transition from 0.6 back to 1.0
+									const fadeProgress = (timeInSlowdown - (slowdownPeriod - transitionDuration)) / transitionDuration;
+									const smoothFade = fadeProgress * fadeProgress * (3 - 2 * fadeProgress); // Smoothstep
+									speedMultiplier = 0.6 + (0.4 * smoothFade);
+								} else {
+									// Full slowdown: stay at 0.6
+									speedMultiplier = 0.6;
+								}
+							}
+							
+							// Unpredictable amplitude: smooth transition to/from burst
+							const burstCycle = Math.floor(t / 15); // New burst every 15 seconds
+							const burstStart = 9.5;
+							const burstEnd = 11.5;
+							const burstTransition = 0.5; // Smooth 0.5 second transition
+							
+							let burstAmplitude = 0.8; // Default contained amplitude
+							
+							if (chaosCycleTime >= burstStart && chaosCycleTime <= burstEnd) {
+								const timeInBurst = chaosCycleTime - burstStart;
+								const burstDuration = burstEnd - burstStart;
+								
+								if (timeInBurst < burstTransition) {
+									// Smooth transition into burst (0.8 -> 2.4, reduced from 4)
+									const progress = timeInBurst / burstTransition;
+									const smoothProgress = progress * progress * (3 - 2 * progress);
+									burstAmplitude = 0.8 + (1.6 * smoothProgress); // 0.8 -> 2.4
+								} else if (timeInBurst > burstDuration - burstTransition) {
+									// Smooth transition out of burst (2.4 -> 0.8)
+									const progress = (timeInBurst - (burstDuration - burstTransition)) / burstTransition;
+									const smoothProgress = progress * progress * (3 - 2 * progress);
+									burstAmplitude = 2.4 - (1.6 * smoothProgress); // 2.4 -> 0.8
+								} else {
+									// Full burst: 2.4 (40% slower than original 4)
+									burstAmplitude = 2.4;
+								}
+							} else if (chaosCycleTime >= 11.5) {
+								// After burst ends, ensure smooth return to 0.8 before cycle resets
+								burstAmplitude = 0.8;
+							}
+							
+							// Varied movement patterns for unpredictability
+							const pattern1 = Math.sin(t * 0.525 * speedMultiplier + phase);
+							const pattern2 = Math.cos(t * 0.35 * speedMultiplier + phase * 1.5);
+							const pattern3 = Math.sin(t * 0.2625 * speedMultiplier + phase * 0.7);
+							const pattern4 = Math.cos(t * 0.4 * speedMultiplier + phase * 2);
+							
+							// Combine patterns with noise for organic chaos
+							const noiseX = Math.sin(t * 0.13 + burstCycle) * 0.3;
+							const noiseY = Math.cos(t * 0.17 + burstCycle) * 0.3;
+							const noiseZ = Math.sin(t * 0.11 + burstCycle) * 0.3;
+							
+							currentMesh.position.x = originalPosition.x + (pattern1 + noiseX) * burstAmplitude
+							currentMesh.position.y = originalPosition.y + (pattern2 + noiseY) * burstAmplitude
+							currentMesh.position.z = originalPosition.z + (pattern3 + noiseZ) * burstAmplitude
+							currentMesh.rotation.x = t * 0.35 * speedMultiplier + pattern4 * 0.5 + phase
+							currentMesh.rotation.y = t * 0.2625 * speedMultiplier + pattern1 * 0.3 + phase
+							currentMesh.rotation.z = t * 0.4375 * speedMultiplier + pattern2 * 0.4 + phase
 							break
 case 'alien':
   // Only animate solidMesh - wireframes will be synchronized after

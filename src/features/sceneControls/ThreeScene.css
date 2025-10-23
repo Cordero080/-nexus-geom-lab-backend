@@ -228,7 +228,141 @@
 }
 
 .bg-gradient-sunset {
-  background: linear-gradient(180deg, #362aa3ff 0%, #92530bff 30%, #8d730cff 70%, #62445eff 100%);
+  /* Base cosmic sunset: Inspired by nebula + space aurora */
+  background: 
+    /* Conic gradient for sunset core (like nebula swirl) */
+    conic-gradient(from 180deg at 50% 85%, 
+      rgba(200, 60, 0, 0.5) 0deg,      /* Darker deep orange */
+      rgba(220, 110, 30, 0.6) 45deg,   /* Darker golden orange */
+      rgba(230, 160, 70, 0.7) 90deg,   /* Darker warm gold */
+      rgba(200, 90, 140, 0.4) 135deg,  /* Darker pink sunset */
+      rgba(110, 30, 200, 0.35) 180deg, /* Darker purple twilight */
+      rgba(50, 70, 180, 0.25) 225deg,  /* Darker deep blue evening */
+      rgba(200, 40, 90, 0.5) 270deg,   /* Darker magenta horizon */
+      rgba(200, 60, 0, 0.5) 360deg),   /* Back to dark orange */
+    
+    /* Base gradient: Darker twilight to golden hour */
+    linear-gradient(180deg, 
+      #100528 0%,      /* Darker deep purple night sky */
+      #2a0f45 20%,     /* Darker purple twilight */
+      #5a1a40 40%,     /* Darker magenta dusk */
+      #a04515 60%,     /* Darker orange sunset */
+      #c07820 80%,     /* Darker golden hour */
+      #3a2540 100%);   /* Darker purple horizon shadow */
+  
+  position: relative;
+  overflow: hidden;
+  animation: sunset-pulse 8s cubic-bezier(0.8, 0.1, 1.2, 0.9) infinite;
+  
+  /* Ethereal sunset glow - Reduced intensity */
+  box-shadow: 
+    0 0 220px rgba(200, 90, 0, 0.6),      /* Dimmer warm orange glow */
+    inset 0 0 130px rgba(220, 160, 60, 0.5), /* Dimmer golden inner light */
+    0 0 100px rgba(200, 40, 140, 0.4);    /* Dimmer pink atmospheric scatter */
+  
+  filter: contrast(1.2) brightness(0.9);
+}
+
+.bg-gradient-sunset::before {
+  content: '';
+  position: absolute;
+  left: 0; right: 0; top: 0; bottom: 0;
+  pointer-events: none;
+  z-index: 0;
+  
+  /* Aurora-style sunset bands (inspired by space background) */
+  background:
+    /* Upper atmosphere ribbons */
+    radial-gradient(ellipse 90% 25% at 50% 15%, rgba(180,100,255,0.2) 0%, rgba(0,0,0,0) 80%),
+    radial-gradient(ellipse 80% 20% at 60% 20%, rgba(255,150,200,0.15) 0%, rgba(0,0,0,0) 80%),
+    
+    /* Main sunset horizon glow */
+    radial-gradient(ellipse 100% 30% at 50% 75%, rgba(255,140,0,0.4) 0%, rgba(0,0,0,0) 90%),
+    radial-gradient(ellipse 120% 25% at 50% 80%, rgba(255,200,60,0.5) 0%, rgba(0,0,0,0) 85%),
+    radial-gradient(ellipse 90% 15% at 45% 78%, rgba(255,80,120,0.3) 0%, rgba(0,0,0,0) 80%),
+    
+    /* Atmospheric light rays */
+    radial-gradient(ellipse 100% 1% at 50% 76%, rgba(255,230,100,0.9) 0%, rgba(0,0,0,0) 80%),
+    radial-gradient(ellipse 80% 0.8% at 40% 77%, rgba(255,180,0,0.8) 0%, rgba(0,0,0,0) 80%),
+    radial-gradient(ellipse 70% 0.6% at 60% 75%, rgba(255,100,180,0.7) 0%, rgba(0,0,0,0) 80%),
+    
+    /* Color blend layer */
+    linear-gradient(180deg, 
+      rgba(120,60,180,0.15) 0%, 
+      rgba(255,120,0,0.2) 50%, 
+      rgba(255,200,80,0.25) 70%, 
+      rgba(200,80,160,0.15) 100%);
+  
+  animation: sunset-aurora-move 16s ease-in-out infinite alternate;
+}
+
+.bg-gradient-sunset::after {
+  content: '';
+  position: absolute;
+  left: 0; right: 0; top: 0; bottom: 0;
+  pointer-events: none;
+  z-index: -1;
+  
+  /* Depth and shadow layers */
+  background:
+    radial-gradient(ellipse 100% 40% at 50% 90%, rgba(60,20,80,0.3) 0%, rgba(0,0,0,0) 80%),
+    radial-gradient(ellipse 120% 30% at 30% 85%, rgba(100,30,60,0.2) 0%, rgba(0,0,0,0) 80%),
+    radial-gradient(ellipse 90% 25% at 70% 82%, rgba(80,40,100,0.18) 0%, rgba(0,0,0,0) 80%),
+    linear-gradient(170deg, rgba(180,80,200,0.1) 10%, rgba(255,120,80,0.12) 90%);
+  
+  opacity: 0.8;
+  filter: blur(20px) brightness(0.9);
+  animation: sunset-depth-move 20s ease-in-out infinite alternate;
+}
+
+@keyframes sunset-pulse {
+  0%, 100% {
+    filter: contrast(1.2) brightness(0.9) hue-rotate(0deg);
+  }
+  50% {
+    filter: contrast(1.25) brightness(0.95) hue-rotate(5deg);
+  }
+}
+
+@keyframes sunset-aurora-move {
+  0% {
+    filter: blur(12px) brightness(1.1) hue-rotate(0deg);
+    opacity: 0.85;
+    transform: translateY(0) scaleX(1);
+  }
+  30% {
+    filter: blur(18px) brightness(1.2) hue-rotate(10deg);
+    opacity: 0.95;
+    transform: translateY(-12px) scaleX(1.06);
+  }
+  70% {
+    filter: blur(15px) brightness(1.15) hue-rotate(-8deg);
+    opacity: 0.9;
+    transform: translateY(-6px) scaleX(1.03);
+  }
+  100% {
+    filter: blur(12px) brightness(1.1) hue-rotate(0deg);
+    opacity: 0.85;
+    transform: translateY(0) scaleX(1);
+  }
+}
+
+@keyframes sunset-depth-move {
+  0% {
+    filter: blur(20px) brightness(0.85) hue-rotate(0deg);
+    opacity: 0.75;
+    transform: translateY(0) scaleX(1);
+  }
+  50% {
+    filter: blur(25px) brightness(0.95) hue-rotate(15deg);
+    opacity: 0.8;
+    transform: translateY(8px) scaleX(1.04);
+  }
+  100% {
+    filter: blur(20px) brightness(0.85) hue-rotate(-10deg);
+    opacity: 0.75;
+    transform: translateY(0) scaleX(1);
+  }
 }
 
 .bg-gradient-matrix {
