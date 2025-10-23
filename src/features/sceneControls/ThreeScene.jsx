@@ -13,6 +13,7 @@ import { createSphereWireframe } from './factories/wireframeBuilders/sphereWiref
 import { createBoxWireframe } from './factories/wireframeBuilders/boxWireframe';
 import { createOctahedronWireframe } from './factories/wireframeBuilders/octahedronWireframe';
 import { createTetrahedronWireframe, createIcosahedronWireframe, createCommonWireframe } from './factories/wireframeBuilders/commonWireframe';
+import { createSolidMaterial, createWireframeMaterial } from './factories/materialFactory';
 
 
 
@@ -263,98 +264,48 @@ function ThreeScene({
 			const originalPositions = geometry.attributes.position.array.slice()
 			
 			// CREATE SOLID MATERIAL using current App.jsx prop values
-			const currentBaseColor = new THREE.Color(baseColor)           // Convert App.jsx baseColor prop
-			const currentSpecularColor = new THREE.Color(specularColor)   // Convert App.jsx specularColor prop
-			
-			const material = new THREE.MeshPhongMaterial({
-				color: currentBaseColor,                    // Use baseColor prop from App.jsx
-				specular: currentSpecularColor,             // Use specularColor prop from App.jsx
-				shininess: shininess,                       // Use shininess prop from App.jsx
-				wireframe: false,                           // Solid material is NEVER wireframe
-				transparent: true,                          // Always transparent for blending
-				opacity: 1 - (wireframeIntensity / 100),   // Start with inverse of wireframe intensity
-				flatShading: false,
-				reflectivity: specularIntensity,            // Use specularIntensity prop from App.jsx
-			})
+			const material = createSolidMaterial({
+				baseColor,
+				specularColor,
+				shininess,
+				specularIntensity,
+				wireframeIntensity,
+			});
 
 			// CREATE TWO MESHES - One solid, one wireframe for blending
 			const solidMesh = new THREE.Mesh(geometry, material)
 			
-			let wireframeMesh
-			let wireframeMaterial // Make sure this is available for all geometry types
+			// CREATE WIREFRAME MATERIAL - shared material config for all geometry types
+			const materialConfig = {
+				baseColor,
+				specularColor,
+				shininess,
+				specularIntensity,
+				wireframeIntensity,
+			};
 
+			let wireframeMesh
+			let wireframeMaterial
+
+			// Create geometry-specific wireframes with appropriate materials
 			if (geometry.type === 'SphereGeometry') {
-				// CUSTOM THICK WIREFRAME for SphereGeometry
-				wireframeMaterial = new THREE.MeshPhongMaterial({
-					color: currentBaseColor,
-					specular: currentSpecularColor,
-					shininess: shininess,
-					transparent: true,
-					opacity: wireframeIntensity / 100,
-					flatShading: false,
-					reflectivity: specularIntensity,
-				})
+				wireframeMaterial = createWireframeMaterial(materialConfig);
 				wireframeMesh = createSphereWireframe(geometry, wireframeMaterial);
 			} else if (geometry.type === 'BoxGeometry') {
-				// CUSTOM THICK WIREFRAME for BoxGeometry
-				wireframeMaterial = new THREE.MeshPhongMaterial({
-					color: currentBaseColor,
-					specular: currentSpecularColor,
-					shininess: shininess,
-					transparent: true,
-					opacity: wireframeIntensity / 100,
-					flatShading: false,
-					reflectivity: specularIntensity,
-				})
+				wireframeMaterial = createWireframeMaterial(materialConfig);
 				wireframeMesh = createBoxWireframe(geometry, wireframeMaterial);
 			} else if (geometry.type === 'OctahedronGeometry') {
-				// CUSTOM THICK WIREFRAME for OctahedronGeometry
-				wireframeMaterial = new THREE.MeshPhongMaterial({
-					color: currentBaseColor,
-					specular: currentSpecularColor,
-					shininess: shininess,
-					transparent: true,
-					opacity: wireframeIntensity / 100,
-					flatShading: false,
-					reflectivity: specularIntensity,
-				})
+				wireframeMaterial = createWireframeMaterial(materialConfig);
 				wireframeMesh = createOctahedronWireframe(geometry, wireframeMaterial);
 			} else if (geometry.type === 'TetrahedronGeometry') {
-				// CUSTOM THICK WIREFRAME for TetrahedronGeometry
-				wireframeMaterial = new THREE.MeshPhongMaterial({
-					color: currentBaseColor,
-					specular: currentSpecularColor,
-					shininess: shininess,
-					transparent: true,
-					opacity: wireframeIntensity / 100,
-					flatShading: false,
-					reflectivity: specularIntensity,
-				})
+				wireframeMaterial = createWireframeMaterial(materialConfig);
 				wireframeMesh = createTetrahedronWireframe(geometry, wireframeMaterial);
 			} else if (geometry.type === 'IcosahedronGeometry') {
-				// CUSTOM THICK WIREFRAME for IcosahedronGeometry (20-sided)
-				wireframeMaterial = new THREE.MeshPhongMaterial({
-					color: currentBaseColor,
-					specular: currentSpecularColor,
-					shininess: shininess,
-					transparent: true,
-					opacity: wireframeIntensity / 100,
-					flatShading: false,
-					reflectivity: specularIntensity,
-				});
+				wireframeMaterial = createWireframeMaterial(materialConfig);
 				wireframeMesh = createIcosahedronWireframe(geometry, wireframeMaterial);
 			} else {
-				// Standard thin wireframe for other geometries
-				wireframeMaterial = new THREE.MeshPhongMaterial({
-					color: currentBaseColor,
-					specular: currentSpecularColor,
-					shininess: shininess,
-					wireframe: true,           // This one is always wireframe
-					transparent: true,
-					opacity: wireframeIntensity / 100, // Start with current wireframe intensity
-					flatShading: false,
-					reflectivity: specularIntensity,
-				})
+				// Standard thin wireframe for other geometries (TorusKnot, etc.)
+				wireframeMaterial = createWireframeMaterial({ ...materialConfig, isStandardWireframe: true });
 				wireframeMesh = createCommonWireframe(geometry, wireframeMaterial);
 			}
 			
