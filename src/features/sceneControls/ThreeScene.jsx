@@ -6,18 +6,9 @@ import { use, useEffect, useRef } from 'react';
 import * as THREE from 'three';
 import { initializeScene } from './sceneSetup';
 import { initializeLighting } from './lightingSetup';
-import { createGeometryByType } from './geometryCreation';
 import { startAnimationLoop } from './animationLoop';
 import { updateMousePosition } from './spectralOrbs';
-import { createSphereWireframe } from './factories/wireframeBuilders/sphereWireframe';
-import { createBoxWireframe } from './factories/wireframeBuilders/boxWireframe';
-import { createOctahedronWireframe } from './factories/wireframeBuilders/octahedronWireframe';
-import { createTetrahedronWireframe, createIcosahedronWireframe, createCommonWireframe } from './factories/wireframeBuilders/commonWireframe';
-import { createSolidMaterial, createWireframeMaterial } from './factories/materialFactory';
-import { createTetrahedronIntricateWireframe } from './factories/intricateWireframeBuilders/tetrahedronIntricate';
-import { createBoxIntricateWireframe } from './factories/intricateWireframeBuilders/boxIntricate';
-import { createOctahedronIntricateWireframe } from './factories/intricateWireframeBuilders/octahedronIntricate';
-import { createIcosahedronIntricateWireframe } from './factories/intricateWireframeBuilders/icosahedronIntricate';
+import { createSceneObject } from './factories/objectFactory';
 
 
 
@@ -244,268 +235,28 @@ function ThreeScene({
 		objectsRef.current = []
 
 		// CREATE NEW OBJECTS USING CURRENT APP.JSX PROP VALUES
-		for (let i = 0; i < objectCount; i++) { // Use objectCount prop from App.jsx
-			
-			// CHOOSE GEOMETRY based on objectType prop from App.jsx
-			let geometry
-			if (objectCount === 1) {
-				// Single object: use the selected objectType from App.jsx
-				geometry = createGeometryByType(objectType)
-			} else {
-				// Multiple objects: cycle through different types for variety
-				const geometryTypes = [
-					() => new THREE.IcosahedronGeometry(),
-					() => new THREE.SphereGeometry(1, 16, 16),
-					() => new THREE.BoxGeometry(1.5, 1.5, 1.5),
-					() => new THREE.OctahedronGeometry(),
-					() => new THREE.TetrahedronGeometry(1.2),
-					() => new THREE.TorusKnotGeometry(1, .2, 150, 16),
-				]
-				geometry = geometryTypes[i % geometryTypes.length]()
-			}
-			
-			// Store original vertex positions for advanced animations
-			const originalPositions = geometry.attributes.position.array.slice()
-			
-			// CREATE SOLID MATERIAL using current App.jsx prop values
-			const material = createSolidMaterial({
+		for (let i = 0; i < objectCount; i++) {
+			// Create object using factory
+			const objectData = createSceneObject({
+				objectType,
+				objectCount,
+				objectIndex: i,
 				baseColor,
 				specularColor,
 				shininess,
 				specularIntensity,
 				wireframeIntensity,
+				intricateWireframeSpiralColor,
+				intricateWireframeEdgeColor
 			});
 
-			// CREATE TWO MESHES - One solid, one wireframe for blending
-			const solidMesh = new THREE.Mesh(geometry, material)
-			
-			// CREATE WIREFRAME MATERIAL - shared material config for all geometry types
-			const materialConfig = {
-				baseColor,
-				specularColor,
-				shininess,
-				specularIntensity,
-				wireframeIntensity,
-			};
+			// Add all components to scene
+			const { solidMesh, wireframeMesh, centerLines, curvedLines } = objectData;
+			scene.add(solidMesh);
+			scene.add(wireframeMesh);
+			scene.add(centerLines);
+			scene.add(curvedLines);
 
-			let wireframeMesh
-			let wireframeMaterial
-
-			// Create geometry-specific wireframes with appropriate materials
-			if (geometry.type === 'SphereGeometry') {
-				wireframeMaterial = createWireframeMaterial(materialConfig);
-				wireframeMesh = createSphereWireframe(geometry, wireframeMaterial);
-			} else if (geometry.type === 'BoxGeometry') {
-				wireframeMaterial = createWireframeMaterial(materialConfig);
-				wireframeMesh = createBoxWireframe(geometry, wireframeMaterial);
-			} else if (geometry.type === 'OctahedronGeometry') {
-				wireframeMaterial = createWireframeMaterial(materialConfig);
-				wireframeMesh = createOctahedronWireframe(geometry, wireframeMaterial);
-			} else if (geometry.type === 'TetrahedronGeometry') {
-				wireframeMaterial = createWireframeMaterial(materialConfig);
-				wireframeMesh = createTetrahedronWireframe(geometry, wireframeMaterial);
-			} else if (geometry.type === 'IcosahedronGeometry') {
-				wireframeMaterial = createWireframeMaterial(materialConfig);
-				wireframeMesh = createIcosahedronWireframe(geometry, wireframeMaterial);
-			} else {
-				// Standard thin wireframe for other geometries (TorusKnot, etc.)
-				wireframeMaterial = createWireframeMaterial({ ...materialConfig, isStandardWireframe: true });
-				wireframeMesh = createCommonWireframe(geometry, wireframeMaterial);
-			}
-			
-			// CREATE INTRICATE WIREFRAME DETAILS
-			console.log(`Creating intricate wireframe for object ${i}, geometry type:`, geometry.type)
-			console.log('Available geometry types check:', geometry.type === 'TetrahedronGeometry')
-			console.log('Geometry constructor:', geometry.constructor.name)
-			console.log('All geometry properties:', Object.getOwnPropertyNames(geometry))
-			
-			// Create simple center-to-vertex wireframes for tetrahedron only
-			let centerLines, centerLinesMaterial, curvedLines, curvedLinesMaterial
-			
-			if (geometry.type === 'TetrahedronGeometry' || geometry.constructor.name === 'TetrahedronGeometry') {
-				const result = createTetrahedronIntricateWireframe(geometry, intricateWireframeSpiralColor, intricateWireframeEdgeColor);
-				centerLines = result.centerLines;
-				centerLinesMaterial = result.centerLinesMaterial;
-				curvedLines = result.curvedLines;
-				curvedLinesMaterial = result.curvedLinesMaterial;
-			} else if (geometry.type === 'BoxGeometry') {
-				const result = createBoxIntricateWireframe(geometry, intricateWireframeSpiralColor, intricateWireframeEdgeColor);
-				centerLines = result.centerLines;
-				centerLinesMaterial = result.centerLinesMaterial;
-				curvedLines = result.curvedLines;
-				curvedLinesMaterial = result.curvedLinesMaterial;
-			} else if (geometry.type === 'OctahedronGeometry') {
-				const result = createOctahedronIntricateWireframe(geometry, intricateWireframeSpiralColor, intricateWireframeEdgeColor);
-				centerLines = result.centerLines;
-				centerLinesMaterial = result.centerLinesMaterial;
-				curvedLines = result.curvedLines;
-				curvedLinesMaterial = result.curvedLinesMaterial;
-			} else if (geometry.type === 'IcosahedronGeometry') {
-				const result = createIcosahedronIntricateWireframe(geometry, intricateWireframeSpiralColor, intricateWireframeEdgeColor);
-				centerLines = result.centerLines;
-				centerLinesMaterial = result.centerLinesMaterial;
-				curvedLines = result.curvedLines;
-				curvedLinesMaterial = result.curvedLinesMaterial;
-				
-			} else {
-				// OTHER GEOMETRIES: Use existing complex wireframe logic
-				const edgesGeometry = new THREE.EdgesGeometry(geometry)
-				const edgeVertices = edgesGeometry.attributes.position.array
-				
-				console.log(`Object ${i} has ${edgeVertices.length / 6} wireframe edges`)
-				
-				// 1. Spiral connections to wireframe vertices
-				const centerLinesGeometry = new THREE.BufferGeometry()
-				const centerLinesPositions = []
-				
-				// Create spiral paths from center to actual wireframe edge points
-				let createCenterLines = true
-				if (geometry.type === 'TorusKnotGeometry') {
-					createCenterLines = false // No center lines for torus
-				}
-				
-				if (createCenterLines) {
-					// Use actual wireframe edge endpoints for connections
-					for (let j = 0; j < edgeVertices.length; j += 12) { // Every other edge
-						const endX = edgeVertices[j + 3] // End point of edge
-						const endY = edgeVertices[j + 4]
-						const endZ = edgeVertices[j + 5]
-						
-						// Create spiral path from center to edge endpoint
-						const steps = 8 // Number of spiral steps
-						for (let step = 0; step < steps; step++) {
-							const t1 = step / steps
-							const t2 = (step + 1) / steps
-							
-							// Spiral parameters
-							const radius1 = t1 * 0.8 // Gradually increase radius
-							const radius2 = t2 * 0.8
-							const angle1 = t1 * Math.PI * 2 // One full rotation
-							const angle2 = t2 * Math.PI * 2
-							
-							// Interpolate toward the actual edge point
-							const x1 = Math.cos(angle1) * radius1 * (endX / Math.sqrt(endX*endX + endY*endY + endZ*endZ))
-							const y1 = Math.sin(angle1) * radius1 * (endY / Math.sqrt(endX*endX + endY*endY + endZ*endZ)) + t1 * endY
-							const z1 = t1 * endZ
-							
-							const x2 = Math.cos(angle2) * radius2 * (endX / Math.sqrt(endX*endX + endY*endY + endZ*endZ))
-							const y2 = Math.sin(angle2) * radius2 * (endY / Math.sqrt(endX*endX + endY*endY + endZ*endZ)) + t2 * endY
-							const z2 = t2 * endZ
-							
-							centerLinesPositions.push(x1, y1, z1, x2, y2, z2)
-						}
-					}
-				}
-				
-				// Only create center lines if we have valid positions
-				if (centerLinesPositions.length > 0) {
-					centerLinesGeometry.setAttribute('position', new THREE.Float32BufferAttribute(centerLinesPositions, 3))
-					
-					centerLinesMaterial = new THREE.LineBasicMaterial({
-						color: new THREE.Color(intricateWireframeSpiralColor), // Use the new spiral color control
-						transparent: true,
-						opacity: 0.6,
-					})
-					
-					centerLines = new THREE.LineSegments(centerLinesGeometry, centerLinesMaterial)
-					console.log(`Created spiral center lines for object ${i} with ${centerLinesPositions.length / 6} segments`)
-				} else {
-					centerLines = new THREE.Object3D()
-					centerLinesMaterial = null
-					console.log(`No center lines created for object ${i}`)
-				}
-				
-				// 2. Enhanced wireframe edge connections
-				const curvedLinesGeometry = new THREE.BufferGeometry()
-				const curvedLinesPositions = []
-				
-				// Connect wireframe edges to create enhanced patterns
-				for (let j = 0; j < edgeVertices.length; j += 6) {
-					const edge1Start = [edgeVertices[j], edgeVertices[j + 1], edgeVertices[j + 2]]
-					const edge1End = [edgeVertices[j + 3], edgeVertices[j + 4], edgeVertices[j + 5]]
-					
-					// Find nearby edges to connect to
-					for (let k = j + 6; k < edgeVertices.length && k < j + 36; k += 6) {
-						const edge2Start = [edgeVertices[k], edgeVertices[k + 1], edgeVertices[k + 2]]
-						const edge2End = [edgeVertices[k + 3], edgeVertices[k + 4], edgeVertices[k + 5]]
-						
-						// Calculate distance between edge endpoints
-						const dist1 = Math.sqrt(
-							(edge1End[0] - edge2Start[0])**2 + 
-							(edge1End[1] - edge2Start[1])**2 + 
-							(edge1End[2] - edge2Start[2])**2
-						)
-						
-						const dist2 = Math.sqrt(
-							(edge1End[0] - edge2End[0])**2 + 
-							(edge1End[1] - edge2End[1])**2 + 
-							(edge1End[2] - edge2End[2])**2
-						)
-						
-						// Connect to nearby edge points
-						const maxDist = geometry.type === 'TorusKnotGeometry' ? 0.6 : 1.2
-						
-						if (dist1 < maxDist) {
-							curvedLinesPositions.push(...edge1End, ...edge2Start)
-						} else if (dist2 < maxDist) {
-							curvedLinesPositions.push(...edge1End, ...edge2End)
-						}
-					}
-				}
-				
-				// Only create curved lines if we have valid positions
-				if (curvedLinesPositions.length > 0) {
-					curvedLinesGeometry.setAttribute('position', new THREE.Float32BufferAttribute(curvedLinesPositions, 3))
-					
-					curvedLinesMaterial = new THREE.LineBasicMaterial({
-						color: new THREE.Color(intricateWireframeEdgeColor), // Use the new edge color control
-						transparent: true,
-						opacity: 0.4,
-					})
-					
-					curvedLines = new THREE.LineSegments(curvedLinesGeometry, curvedLinesMaterial)
-					console.log(`Created edge connections for object ${i} with ${curvedLinesPositions.length / 6} segments`)
-				} else {
-					curvedLines = new THREE.Object3D()
-					curvedLinesMaterial = null
-					console.log(`No edge connections created for object ${i}`)
-				}
-			}
-			
-			// POSITION ALL OBJECTS in same location
-			if (objectCount === 1) {
-				solidMesh.position.set(0, 0, 0) // Single object at center
-				wireframeMesh.position.set(0, 0, 0) // Same position
-				centerLines.position.set(0, 0, 0) // Same position
-				curvedLines.position.set(0, 0, 0) // Same position
-			} else {
-				// Multiple objects arranged in a circle
-				const angle = (i / objectCount) * Math.PI * 2
-				const radius = 3
-				const x = Math.cos(angle) * radius
-				const y = (Math.random() - 0.9) * 1 // Random Y position for variety
-				const z = Math.sin(angle) * radius
-				
-				solidMesh.position.set(x, y, z)
-				wireframeMesh.position.set(x, y, z) // Same position
-				centerLines.position.set(x, y, z) // Same position
-				curvedLines.position.set(x, y, z) // Same position
-			}
-			
-		// Enable shadows for both meshes
-		solidMesh.castShadow = true
-		solidMesh.receiveShadow = true
-		wireframeMesh.castShadow = true
-		wireframeMesh.receiveShadow = true
-		
-		// Add all meshes to the scene
-		const objectGroup = new THREE.Group();
-		scene.add(solidMesh)
-		scene.add(wireframeMesh)
-		scene.add(centerLines)
-		scene.add(curvedLines)
-		scene.add(objectGroup);			
-			
 			console.log(`Added object ${i} to scene:`, {
 				solidMesh: solidMesh.type,
 				wireframeMesh: wireframeMesh.type,
@@ -514,31 +265,10 @@ function ThreeScene({
 				centerLinesChildren: centerLines ? centerLines.children?.length : 'N/A',
 				curvedLinesChildren: curvedLines ? curvedLines.children?.length : 'N/A',
 				position: solidMesh.position
-			})
+			});
 
-			// STORE OBJECT DATA for later updates and animations
-			objectsRef.current.push({
-				solidMesh,                  // The solid Three.js object
-				wireframeMesh,              // The wireframe Three.js object
-				thickCylinders: (wireframeMesh && wireframeMesh.isGroup) ? wireframeMesh.children.filter(m => m.isMesh) : null,
-				edgePairs: (wireframeMesh && wireframeMesh.userData && wireframeMesh.userData.edgePairs) ? wireframeMesh.userData.edgePairs : null,
-				centerLines,                // The center-to-vertex lines
-				curvedLines,                // The vertex-to-vertex connections
-				material,                   // The solid material (for updating properties)
-				wireframeMaterial,          // The wireframe material (for updating properties)
-				centerLinesMaterial,        // The center lines material (for updating properties)
-				curvedLinesMaterial,        // The curved lines material (for updating properties)
-				geometry,                   // The geometry (for vertex animations)
-				originalPositions,          // Original vertex positions (for morphing effects)
-				originalPosition: solidMesh.position.clone(), // Original object position
-				phase: Math.random() * Math.PI * 2,      // Random phase for varied animations
-				// Magnetic points for magnetic field animation effect
-				magneticPoints: [
-					{ x: Math.random() * 4 - 2, y: Math.random() * 4 - 2, z: Math.random() * 4 - 2, strength: Math.random() + 0.5 },
-					{ x: Math.random() * 4 - 2, y: Math.random() * 4 - 2, z: Math.random() * 4 - 2, strength: Math.random() + 0.5 },
-					{ x: Math.random() * 4 - 2, y: Math.random() * 4 - 2, z: Math.random() * 4 - 2, strength: Math.random() + 0.5 }
-				]
-			})
+			// Store object data for animations and updates
+			objectsRef.current.push(objectData);
 		}
 
 		// Store first material as main reference for debugging

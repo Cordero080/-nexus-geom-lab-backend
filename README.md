@@ -226,11 +226,11 @@ See [WIREFRAME_FIX_DOCUMENTATION.md](./WIREFRAME_FIX_DOCUMENTATION.md) for detai
 
 ## 🔧 Refactoring Progress (ThreeScene.jsx Modularization)
 
-### Current Status: **Phase 3 Complete** (24% reduction achieved!)
+### Current Status: **Phase 4 Complete** (32% reduction achieved!)
 
 **Starting Point:** 2700 lines  
-**Current:** 2109 lines  
-**Removed:** 591 lines (22% reduction)
+**Current:** 1839 lines  
+**Removed:** 861 lines (32% reduction)
 
 ### Completed Phases ✅
 
@@ -268,14 +268,24 @@ See [WIREFRAME_FIX_DOCUMENTATION.md](./WIREFRAME_FIX_DOCUMENTATION.md) for detai
 - ✅ Inner structures and connecting rods properly isolated
 - ✅ Commit: `4610b54`
 
+#### Phase 4: Object Factory (262 lines removed) ✨ NEW
+
+- ✅ Created `factories/objectFactory.js` (478 lines)
+- ✅ Consolidated entire object creation workflow:
+  - `createSceneObject()` - Main factory function orchestrates all creation steps
+  - `createGenericIntricateWireframe()` - Helper for non-standard geometries (TorusKnot, etc.)
+- ✅ Integrated all previous factories:
+  - Geometry selection logic (single vs multiple objects)
+  - Material creation via materialFactory
+  - Wireframe building via wireframeBuilders
+  - Intricate wireframe building via intricateWireframeBuilders
+  - Positioning, shadows, and metadata assembly
+- ✅ Reduced ThreeScene.jsx from 2101 → 1839 lines
+- ✅ Simplified object creation loop from ~290 lines to ~35 lines
+- ✅ Returns complete object data structure ready for animations
+- ✅ No errors, dev server running successfully
+
 ### Remaining Phases ⏳
-
-#### Phase 4: Object Factory (~120 lines, 15-20 min)
-
-- Extract object creation loop orchestration
-- Create `factories/objectFactory.js`
-- Consolidate geometry selection logic
-- Simplify main object creation workflow
 
 #### Phase 5: Custom Hooks (~560 lines, 45-60 min)
 
@@ -297,42 +307,45 @@ See [WIREFRAME_FIX_DOCUMENTATION.md](./WIREFRAME_FIX_DOCUMENTATION.md) for detai
 ### Final Goal
 
 **Target:** ~1,200 lines (55% reduction from original 2700)  
-**Remaining:** ~890 lines to remove across Phases 4-6
+**Remaining:** ~640 lines to remove across Phases 5-6
 
 ### Benefits Achieved So Far
 
-✅ **Better organization** - Wireframe logic separated by geometry type  
-✅ **Easier testing** - Each builder function can be unit tested  
+✅ **Better organization** - All creation logic separated into focused factories  
+✅ **Easier testing** - Each factory function can be unit tested independently  
 ✅ **Code reusability** - Factories can be used in other projects  
-✅ **Clearer structure** - Separation of concerns (materials, wireframes, intricate details)  
-✅ **Maintainability** - Changes to one geometry type don't affect others
+✅ **Clearer structure** - Separation of concerns (materials, wireframes, intricate details, object assembly)  
+✅ **Maintainability** - Changes to one geometry type don't affect others  
+✅ **Simplified main file** - ThreeScene.jsx now 32% smaller with cleaner object creation
 
 ### Next Session Prompt
 
 When resuming this refactoring work, use this prompt:
 
 ```
-Continue refactoring ThreeScene.jsx - we're on Phase 4: Object Factory
+Continue refactoring ThreeScene.jsx - we're on Phase 5: Custom Hooks
 
 Progress so far:
 - Phase 1 ✅: Extracted wireframe builders (246 lines removed)
 - Phase 2 ✅: Extracted material factory (49 lines removed)
 - Phase 3 ✅: Extracted intricate wireframe builders (347 lines removed)
-- Current file: 2109 lines (started at 2700)
+- Phase 4 ✅: Extracted object factory (262 lines removed)
+- Current file: 1839 lines (started at 2700) - 32% reduction
 
-Phase 4 task:
-Extract the object creation loop into a factory function. This includes:
-- Geometry selection logic (single vs multiple objects)
-- Material creation orchestration
-- Wireframe builder selection based on geometry type
-- Intricate wireframe builder selection
-- Object group assembly with userData
+Phase 5 task:
+Extract useEffect blocks into custom hooks. This includes:
+- useSceneInitialization.js - Scene setup (camera, renderer, lights)
+- useObjectManager.js - Object creation/updates
+- useCameraController.js - Camera positioning based on cameraView prop
+- useAnimationLoop.js - Animation loop management
+- useMaterialUpdates.js - Material property updates
+- useLightingUpdates.js - Lighting updates based on props
 
-Create: src/features/sceneControls/factories/objectFactory.js
+Create: src/features/sceneControls/hooks/ directory
 
-Expected outcome: Remove ~120 lines, simplify the main object creation loop in ThreeScene.jsx
+Expected outcome: Remove ~560 lines, convert massive useEffect blocks into focused, reusable hooks
 
-The object factory should handle the entire flow from geometry type → complete 3D object group.
+The hooks should handle all React lifecycle integration while keeping ThreeScene.jsx as a simple composition layer.
 ```
 
 ---
