@@ -25,8 +25,8 @@ function ThreeScene({
   wireframeIntensity = 30,  // Current wireframe intensity → will update Three.js material.wireframe
   
   // INTRICATE WIREFRAME PROPS - How the intricate wireframe should look
-  intricateWireframeSpiralColor = "#5900ff",  // Current spiral color → will update intricate wireframe spiral lines
-  intricateWireframeEdgeColor = "#00ff00",    // Current edge color → will update intricate wireframe edge connections
+  hyperframeColor = "#5900ff",  // Current spiral color → will update intricate wireframe spiral lines
+  hyperframeLineColor = "#00ff00",    // Current edge color → will update intricate wireframe edge connections
   
   // SCENE BEHAVIOR PROPS - How the scene should behave
   cameraView = "free",          // Current camera view → will position/animate camera
@@ -353,7 +353,7 @@ function ThreeScene({
       if (geometry.type === 'TetrahedronGeometry') {
         // Tetrahedron wireframe
         centerLinesMaterial = new THREE.MeshBasicMaterial({
-          color: new THREE.Color(intricateWireframeSpiralColor),
+          color: new THREE.Color(hyperframeColor),
           transparent: false,
           opacity: 1.0,
         });
@@ -397,7 +397,7 @@ function ThreeScene({
         
         // Create connections between inner and outer vertices
         curvedLinesMaterial = new THREE.MeshBasicMaterial({
-          color: new THREE.Color(intricateWireframeEdgeColor),
+          color: new THREE.Color(hyperframeLineColor),
           transparent: false,
           opacity: 1.0,
         });
@@ -443,7 +443,7 @@ function ThreeScene({
         
         // Inner cube edges
         centerLinesMaterial = new THREE.MeshBasicMaterial({
-          color: new THREE.Color(intricateWireframeSpiralColor),
+          color: new THREE.Color(hyperframeColor),
           transparent: false,
           opacity: 1.0,
         });
@@ -474,7 +474,7 @@ function ThreeScene({
         
         // Connections between inner and outer corners
         curvedLinesMaterial = new THREE.MeshBasicMaterial({
-          color: new THREE.Color(intricateWireframeEdgeColor),
+          color: new THREE.Color(hyperframeLineColor),
           transparent: false,
           opacity: 1.0,
         });
@@ -518,7 +518,7 @@ function ThreeScene({
         
         // Inner octahedron edges
         centerLinesMaterial = new THREE.MeshBasicMaterial({
-          color: new THREE.Color(intricateWireframeSpiralColor),
+          color: new THREE.Color(hyperframeColor),
           transparent: false,
           opacity: 1.0,
         });
@@ -549,7 +549,7 @@ function ThreeScene({
         
         // Connections between inner and outer vertices
         curvedLinesMaterial = new THREE.MeshBasicMaterial({
-          color: new THREE.Color(intricateWireframeEdgeColor),
+          color: new THREE.Color(hyperframeLineColor),
           transparent: false,
           opacity: 1.0,
         });
@@ -597,7 +597,7 @@ function ThreeScene({
         
         // Inner icosahedron edges
         centerLinesMaterial = new THREE.MeshBasicMaterial({
-          color: new THREE.Color(intricateWireframeSpiralColor),
+          color: new THREE.Color(hyperframeColor),
           transparent: false,
           opacity: 1.0,
         });
@@ -636,7 +636,7 @@ function ThreeScene({
         
         // Connections between inner and outer vertices
         curvedLinesMaterial = new THREE.MeshBasicMaterial({
-          color: new THREE.Color(intricateWireframeEdgeColor),
+          color: new THREE.Color(hyperframeLineColor),
           transparent: false,
           opacity: 1.0,
         });
@@ -711,7 +711,7 @@ function ThreeScene({
           centerLinesGeometry.setAttribute('position', new THREE.Float32BufferAttribute(centerLinesPositions, 3));
           
           centerLinesMaterial = new THREE.LineBasicMaterial({
-            color: new THREE.Color(intricateWireframeSpiralColor),
+            color: new THREE.Color(hyperframeColor),
             transparent: true,
             opacity: 0.6,
           });
@@ -764,7 +764,7 @@ function ThreeScene({
           curvedLinesGeometry.setAttribute('position', new THREE.Float32BufferAttribute(curvedLinesPositions, 3));
           
           curvedLinesMaterial = new THREE.LineBasicMaterial({
-            color: new THREE.Color(intricateWireframeEdgeColor),
+            color: new THREE.Color(hyperframeLineColor),
             transparent: true,
             opacity: 0.4,
           });
@@ -837,7 +837,7 @@ function ThreeScene({
     if (objectsRef.current.length > 0) {
       materialRef.current = objectsRef.current[0].material;
     }
-  }, [objectCount, baseColor, specularColor, objectType, intricateWireframeSpiralColor, intricateWireframeEdgeColor]);
+  }, [objectCount, baseColor, specularColor, objectType, hyperframeColor, hyperframeLineColor]);
 
   // ===============================================
   // ANIMATION UPDATES - Wire and Material Properties
@@ -885,18 +885,18 @@ function ThreeScene({
   useEffect(() => {
     objectsRef.current.forEach(obj => {
       if (obj.centerLinesMaterial) {
-        obj.centerLinesMaterial.color = new THREE.Color(intricateWireframeSpiralColor);
+        obj.centerLinesMaterial.color = new THREE.Color(hyperframeColor);
       }
     });
-  }, [intricateWireframeSpiralColor]);
+  }, [hyperframeColor]);
 
   useEffect(() => {
     objectsRef.current.forEach(obj => {
       if (obj.curvedLinesMaterial) {
-        obj.curvedLinesMaterial.color = new THREE.Color(intricateWireframeEdgeColor);
+        obj.curvedLinesMaterial.color = new THREE.Color(hyperframeLineColor);
       }
     });
-  }, [intricateWireframeEdgeColor]);
+  }, [hyperframeLineColor]);
 
   // ===============================================
   // ANIMATION CONTROLLER - Basic animations

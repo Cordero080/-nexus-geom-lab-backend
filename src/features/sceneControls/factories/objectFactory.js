@@ -29,12 +29,11 @@ import { createIcosahedronIntricateWireframe } from "./intricateWireframeBuilder
  * @param {number} config.objectCount - Total number of objects being created
  * @param {number} config.objectIndex - Index of this specific object
  * @param {string} config.baseColor - Base color for materials
- * @param {string} config.specularColor - Specular color for materials
  * @param {number} config.metalness - Metalness value (0-1)
  * @param {number} config.emissiveIntensity - Emissive intensity (0-2)
  * @param {number} config.wireframeIntensity - Wireframe opacity intensity
- * @param {string} config.intricateWireframeSpiralColor - Color for spiral center lines
- * @param {string} config.intricateWireframeEdgeColor - Color for edge connections
+ * @param {string} config.hyperframeColor - Color for spiral center lines
+ * @param {string} config.hyperframeLineColor - Color for edge connections
  * @returns {Object} Object containing all mesh components and metadata
  */
 export function createSceneObject(config) {
@@ -43,12 +42,11 @@ export function createSceneObject(config) {
     objectCount,
     objectIndex,
     baseColor,
-    specularColor,
     metalness,
     emissiveIntensity,
     wireframeIntensity,
-    intricateWireframeSpiralColor,
-    intricateWireframeEdgeColor,
+    hyperframeColor,
+    hyperframeLineColor,
   } = config;
 
   // ========================================
@@ -79,7 +77,6 @@ export function createSceneObject(config) {
   // ========================================
   const materialConfig = {
     baseColor,
-    specularColor,
     metalness,
     emissiveIntensity,
     wireframeIntensity,
@@ -134,32 +131,32 @@ export function createSceneObject(config) {
   ) {
     const result = createTetrahedronIntricateWireframe(
       geometry,
-      intricateWireframeSpiralColor,
-      intricateWireframeEdgeColor
+      hyperframeColor,
+      hyperframeLineColor
     );
     ({ centerLines, centerLinesMaterial, curvedLines, curvedLinesMaterial } =
       result);
   } else if (geometry.type === "BoxGeometry") {
     const result = createBoxIntricateWireframe(
       geometry,
-      intricateWireframeSpiralColor,
-      intricateWireframeEdgeColor
+      hyperframeColor,
+      hyperframeLineColor
     );
     ({ centerLines, centerLinesMaterial, curvedLines, curvedLinesMaterial } =
       result);
   } else if (geometry.type === "OctahedronGeometry") {
     const result = createOctahedronIntricateWireframe(
       geometry,
-      intricateWireframeSpiralColor,
-      intricateWireframeEdgeColor
+      hyperframeColor,
+      hyperframeLineColor
     );
     ({ centerLines, centerLinesMaterial, curvedLines, curvedLinesMaterial } =
       result);
   } else if (geometry.type === "IcosahedronGeometry") {
     const result = createIcosahedronIntricateWireframe(
       geometry,
-      intricateWireframeSpiralColor,
-      intricateWireframeEdgeColor
+      hyperframeColor,
+      hyperframeLineColor
     );
     ({ centerLines, centerLinesMaterial, curvedLines, curvedLinesMaterial } =
       result);
@@ -167,8 +164,8 @@ export function createSceneObject(config) {
     // OTHER GEOMETRIES: Create generic intricate wireframes
     const result = createGenericIntricateWireframe(
       geometry,
-      intricateWireframeSpiralColor,
-      intricateWireframeEdgeColor
+      hyperframeColor,
+      hyperframeLineColor
     );
     ({ centerLines, centerLinesMaterial, curvedLines, curvedLinesMaterial } =
       result);

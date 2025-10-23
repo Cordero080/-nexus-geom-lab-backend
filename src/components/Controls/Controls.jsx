@@ -7,14 +7,13 @@ function Controls({
   // MATERIAL PROPERTIES (current values FROM App.jsx + setter functions FROM App.jsx)
   scale, onScaleChange,                            // Current scale value + function to update it
   metalness, onMetalnessChange,                    // Current metalness value + function to update it
-  specularColor, onSpecularColorChange,            // Current specular color + function to update it
   emissiveIntensity, onEmissiveIntensityChange,    // Current emissive intensity + function to update it
   baseColor, onBaseColorChange,                    // Current base color + function to update it
   wireframeIntensity, onWireframeIntensityChange,  // Current wireframe intensity + function to update it
   
   // INTRICATE WIREFRAME PROPERTIES (current values FROM App.jsx + setter functions FROM App.jsx)
-  intricateWireframeSpiralColor, onIntricateWireframeSpiralColorChange,    // Current spiral color + function to update it
-  intricateWireframeEdgeColor, onIntricateWireframeEdgeColorChange,        // Current edge color + function to update it
+  hyperframeColor, onHyperframeColorChange,    // Current spiral color + function to update it
+  hyperframeLineColor, onHyperframeLineColorChange,        // Current edge color + function to update it
   
   // SCENE PROPERTIES (current values FROM App.jsx + setter functions FROM App.jsx)
   cameraView, onCameraViewChange,                  // Current camera view mode + function to update it
@@ -64,11 +63,6 @@ function Controls({
     onMetalnessChange(newMetalness);
   };
   
-  const handleSpecularColorChange = (event) => {
-    const newColor = event.target.value;
-    onSpecularColorChange(newColor);
-  };
-  
   const handleScaleChange = (event) => {
     onScaleChange(parseFloat(event.target.value));
   };
@@ -92,14 +86,14 @@ function Controls({
     onWireframeIntensityChange(event.target.checked ? 100 : 0);
   };
   
-  const handleIntricateWireframeSpiralColorChange = (event) => {
+  const handleHyperframeColorChange = (event) => {
     const newColor = event.target.value;
-    onIntricateWireframeSpiralColorChange(newColor);
+    onHyperframeColorChange(newColor);
   };
   
-  const handleIntricateWireframeEdgeColorChange = (event) => {
+  const handleHyperframeLineColorChange = (event) => {
     const newColor = event.target.value;
-    onIntricateWireframeEdgeColorChange(newColor);
+    onHyperframeLineColorChange(newColor);
   };
   
   const handleCameraViewChange = (event) => {
@@ -174,17 +168,6 @@ function Controls({
           onChange={handleBaseColorChange}       
         />
         
-        {/* SPECULAR COLOR PICKER: User clicks/changes → handleSpecularColorChange → App.jsx setState */}
-        <label>
-          Specular Color: {/* Label shows current value from App.jsx: {specularColor} */}
-        </label>
-        {/* This color input DISPLAYS current value FROM App.jsx and TRIGGERS handler WHEN user changes color */}
-        <input 
-          type="color" 
-          value={specularColor}                  
-          onChange={handleSpecularColorChange}   
-        />
-
         {/* EMISSIVE INTENSITY SLIDER: User drags → handleEmissiveIntensityChange → App.jsx setState */}
         <label>
           Emissive Intensity: <span className="value-display">{emissiveIntensity.toFixed(1)}</span> {/* Shows current value FROM App.jsx */}
@@ -236,24 +219,24 @@ function Controls({
           onChange={handleWireframeIntensityChange}
         />
 
-        {/* Inner wireframe spiral color picker */}
+        {/* Hyperframe color picker */}
         <label>
-          Inner Wireframe Spiral Color:
+          Hyperframe Color:
         </label>
         <input 
           type="color" 
-          value={intricateWireframeSpiralColor}
-          onChange={handleIntricateWireframeSpiralColorChange}
+          value={hyperframeColor}
+          onChange={handleHyperframeColorChange}
         />
 
-        {/* Inner wireframe edge color picker */}
+        {/* Hyperframe lines color picker */}
         <label>
-          Inner Wireframe Edge Color:
+          Hyperframe Lines Color:
         </label>
         <input 
           type="color" 
-          value={intricateWireframeEdgeColor}
-          onChange={handleIntricateWireframeEdgeColorChange}
+          value={hyperframeLineColor}
+          onChange={handleHyperframeLineColorChange}
         />
 
         {/* Object Type Control */}

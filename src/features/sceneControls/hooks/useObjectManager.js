@@ -13,12 +13,11 @@ import { createSceneObject } from "../factories/objectFactory";
  * @param {number} objectProps.objectCount - Number of objects to create
  * @param {string} objectProps.objectType - Type of geometry
  * @param {string} objectProps.baseColor - Base color hex
- * @param {string} objectProps.specularColor - Specular color hex
  * @param {number} objectProps.metalness - Metalness value (0-1)
  * @param {number} objectProps.emissiveIntensity - Emissive intensity (0-2)
  * @param {number} objectProps.wireframeIntensity - Wireframe opacity
- * @param {string} objectProps.intricateWireframeSpiralColor - Spiral color hex
- * @param {string} objectProps.intricateWireframeEdgeColor - Edge color hex
+ * @param {string} objectProps.hyperframeColor - Spiral color hex
+ * @param {string} objectProps.hyperframeLineColor - Edge color hex
  */
 export function useObjectManager(refs, objectProps) {
   const { sceneRef, objectsRef, materialRef } = refs;
@@ -26,12 +25,11 @@ export function useObjectManager(refs, objectProps) {
     objectCount,
     objectType,
     baseColor,
-    specularColor,
     metalness,
     emissiveIntensity,
     wireframeIntensity,
-    intricateWireframeSpiralColor,
-    intricateWireframeEdgeColor,
+    hyperframeColor,
+    hyperframeLineColor,
   } = objectProps;
 
   useEffect(() => {
@@ -60,12 +58,11 @@ export function useObjectManager(refs, objectProps) {
         objectCount,
         objectIndex: i,
         baseColor,
-        specularColor,
         metalness,
         emissiveIntensity,
         wireframeIntensity,
-        intricateWireframeSpiralColor,
-        intricateWireframeEdgeColor,
+        hyperframeColor,
+        hyperframeLineColor,
       });
 
       // Add all components to scene
@@ -103,6 +100,6 @@ export function useObjectManager(refs, objectProps) {
     console.log(
       `Created ${objectsRef.current.length} objects with current React state values`
     );
-  }, [objectCount, baseColor, specularColor, objectType]);
+  }, [objectCount, baseColor, objectType]);
   // Effect runs when these props change
 }

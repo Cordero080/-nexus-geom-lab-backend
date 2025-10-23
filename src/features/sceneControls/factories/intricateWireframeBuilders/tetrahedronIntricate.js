@@ -3,14 +3,14 @@ import * as THREE from "three";
 /**
  * Create intricate hyper-tetrahedron wireframe with inner tetrahedron and vertex connections
  * @param {THREE.BufferGeometry} geometry - The tetrahedron geometry
- * @param {string} intricateWireframeSpiralColor - Color for inner wireframe
- * @param {string} intricateWireframeEdgeColor - Color for connections
+ * @param {string} hyperframeColor - Color for inner wireframe
+ * @param {string} hyperframeLineColor - Color for connections
  * @returns {Object} { centerLines, centerLinesMaterial, curvedLines, curvedLinesMaterial }
  */
 export function createTetrahedronIntricateWireframe(
   geometry,
-  intricateWireframeSpiralColor,
-  intricateWireframeEdgeColor
+  hyperframeColor,
+  hyperframeLineColor
 ) {
   console.log("*** ENTERING TETRAHEDRON SECTION ***");
   console.log(
@@ -41,7 +41,7 @@ export function createTetrahedronIntricateWireframe(
 
   // 1. Create inner tetrahedron wireframe using thick cylinders
   const centerLinesMaterial = new THREE.MeshBasicMaterial({
-    color: new THREE.Color(intricateWireframeSpiralColor),
+    color: new THREE.Color(hyperframeColor),
     transparent: false,
     opacity: 1.0,
   });
@@ -80,7 +80,7 @@ export function createTetrahedronIntricateWireframe(
 
   // 2. Create hyper-tetrahedron connections (vertex to vertex) using thick cylinders
   const curvedLinesMaterial = new THREE.MeshBasicMaterial({
-    color: new THREE.Color(intricateWireframeEdgeColor),
+    color: new THREE.Color(hyperframeLineColor),
     transparent: false,
     opacity: 1.0,
   });

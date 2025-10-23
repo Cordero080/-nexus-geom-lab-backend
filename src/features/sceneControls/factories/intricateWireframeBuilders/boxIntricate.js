@@ -3,14 +3,14 @@ import * as THREE from "three";
 /**
  * Create intricate hypercube wireframe with inner cube and corner-to-corner connections
  * @param {THREE.BufferGeometry} geometry - The box geometry
- * @param {string} intricateWireframeSpiralColor - Color for inner wireframe
- * @param {string} intricateWireframeEdgeColor - Color for connections
+ * @param {string} hyperframeColor - Color for inner wireframe
+ * @param {string} hyperframeLineColor - Color for connections
  * @returns {Object} { centerLines, centerLinesMaterial, curvedLines, curvedLinesMaterial }
  */
 export function createBoxIntricateWireframe(
   geometry,
-  intricateWireframeSpiralColor,
-  intricateWireframeEdgeColor
+  hyperframeColor,
+  hyperframeLineColor
 ) {
   console.log("Creating hypercube wireframe for BoxGeometry");
 

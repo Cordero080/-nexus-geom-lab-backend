@@ -10,22 +10,20 @@ import './cursor-override.css';
 
 // Updated default colors for psychedelic theme
 const defaultBaseColor = '#ff00ff'; // Vibrant magenta
-const defaultSpecularColor = '#00ffff'; // Bright cyan
 const defaultWireframeColor = '#ffff00'; // Bright yellow
-const defaultIntricateWireframeSpiralColor = '#ff4500'; // Vivid orange-red
-const defaultIntricateWireframeEdgeColor = '#00ff00'; // Bright green
+const defaultHyperframeColor = '#ff4500'; // Vivid orange-red
+const defaultHyperframeLineColor = '#00ff00'; // Bright green
 
 function Playground() {
   // MATERIAL PROPERTIES STATE
   const [metalness, setMetalness] = useState(0.5) // 0 = plastic, 1 = full metal
-  const [specularColor, setSpecularColor] = useState(defaultSpecularColor)
   const [emissiveIntensity, setEmissiveIntensity] = useState(0) // 0 = no glow, 2 = bright glow
   const [baseColor, setBaseColor] = useState(defaultBaseColor)
   const [wireframeIntensity, setWireframeIntensity] = useState(50)
   
   // INTRICATE WIREFRAME STATE
-  const [intricateWireframeSpiralColor, setIntricateWireframeSpiralColor] = useState(defaultIntricateWireframeSpiralColor)
-  const [intricateWireframeEdgeColor, setIntricateWireframeEdgeColor] = useState(defaultIntricateWireframeEdgeColor)
+  const [hyperframeColor, setHyperframeColor] = useState(defaultHyperframeColor)
+  const [hyperframeLineColor, setHyperframeLineColor] = useState(defaultHyperframeLineColor)
   
   // SCENE BEHAVIOR STATE
   const [cameraView, setCameraView] = useState('free')
@@ -55,12 +53,11 @@ function Playground() {
       <ThreeScene
         scale={scale}
         metalness={metalness}
-        specularColor={specularColor}
         emissiveIntensity={emissiveIntensity}
         baseColor={baseColor}
         wireframeIntensity={wireframeIntensity}
-        intricateWireframeSpiralColor={intricateWireframeSpiralColor}
-        intricateWireframeEdgeColor={intricateWireframeEdgeColor}
+        hyperframeColor={hyperframeColor}
+        hyperframeLineColor={hyperframeLineColor}
         cameraView={cameraView}
         environment={environment}
         objectCount={objectCount}
@@ -79,18 +76,16 @@ function Playground() {
         onScaleChange={setScale}
         metalness={metalness}
         onMetalnessChange={setMetalness}
-        specularColor={specularColor}
-        onSpecularColorChange={setSpecularColor}
         emissiveIntensity={emissiveIntensity}
         onEmissiveIntensityChange={setEmissiveIntensity}
         baseColor={baseColor}
         onBaseColorChange={setBaseColor}
         wireframeIntensity={wireframeIntensity}
         onWireframeIntensityChange={setWireframeIntensity}
-        intricateWireframeSpiralColor={intricateWireframeSpiralColor}
-        onIntricateWireframeSpiralColorChange={setIntricateWireframeSpiralColor}
-        intricateWireframeEdgeColor={intricateWireframeEdgeColor}
-        onIntricateWireframeEdgeColorChange={setIntricateWireframeEdgeColor}
+        hyperframeColor={hyperframeColor}
+        onHyperframeColorChange={setHyperframeColor}
+        hyperframeLineColor={hyperframeLineColor}
+        onHyperframeLineColorChange={setHyperframeLineColor}
         cameraView={cameraView}
         onCameraViewChange={setCameraView}
         environment={environment}

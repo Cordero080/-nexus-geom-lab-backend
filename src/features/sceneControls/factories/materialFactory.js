@@ -4,7 +4,6 @@ import * as THREE from "three";
  * Create a solid material for 3D objects
  * @param {Object} options - Material configuration options
  * @param {string} options.baseColor - Base color hex string
- * @param {string} options.specularColor - Specular highlight color hex string
  * @param {number} options.metalness - Metalness value (0-1)
  * @param {number} options.emissiveIntensity - Emissive intensity (0-2, multiplied by baseColor)
  * @param {number} options.wireframeIntensity - Wireframe intensity (0-100) - used to calculate solid opacity
@@ -12,7 +11,6 @@ import * as THREE from "three";
  */
 export function createSolidMaterial({
   baseColor,
-  specularColor,
   metalness,
   emissiveIntensity,
   wireframeIntensity,
@@ -39,7 +37,6 @@ export function createSolidMaterial({
  * Create a wireframe material for 3D objects
  * @param {Object} options - Material configuration options
  * @param {string} options.baseColor - Base color hex string
- * @param {string} options.specularColor - Specular highlight color hex string
  * @param {number} options.metalness - Metalness value (0-1)
  * @param {number} options.emissiveIntensity - Emissive intensity (0-2, multiplied by baseColor)
  * @param {number} options.wireframeIntensity - Wireframe intensity (0-100) - used as opacity
@@ -48,7 +45,6 @@ export function createSolidMaterial({
  */
 export function createWireframeMaterial({
   baseColor,
-  specularColor,
   metalness,
   emissiveIntensity,
   wireframeIntensity,
@@ -75,12 +71,10 @@ export function createWireframeMaterial({
 /**
  * Get color objects for material creation
  * @param {string} baseColor - Base color hex string
- * @param {string} specularColor - Specular highlight color hex string
- * @returns {Object} Color objects { currentBaseColor, currentSpecularColor }
+ * @returns {Object} Color object { currentBaseColor }
  */
-export function getColorObjects(baseColor, specularColor) {
+export function getColorObjects(baseColor) {
   return {
     currentBaseColor: new THREE.Color(baseColor),
-    currentSpecularColor: new THREE.Color(specularColor),
   };
 }

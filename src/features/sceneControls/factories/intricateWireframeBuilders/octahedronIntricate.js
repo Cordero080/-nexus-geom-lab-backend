@@ -3,14 +3,14 @@ import * as THREE from "three";
 /**
  * Create intricate hyper-octahedron wireframe with inner octahedron and vertex connections
  * @param {THREE.BufferGeometry} geometry - The octahedron geometry
- * @param {string} intricateWireframeSpiralColor - Color for inner wireframe
- * @param {string} intricateWireframeEdgeColor - Color for connections
+ * @param {string} hyperframeColor - Color for inner wireframe
+ * @param {string} hyperframeLineColor - Color for connections
  * @returns {Object} { centerLines, centerLinesMaterial, curvedLines, curvedLinesMaterial }
  */
 export function createOctahedronIntricateWireframe(
   geometry,
-  intricateWireframeSpiralColor,
-  intricateWireframeEdgeColor
+  hyperframeColor,
+  hyperframeLineColor
 ) {
   // Get the 6 vertices of the octahedron (top, bottom, and 4 around the middle)
   const size = 1.0; // Octahedron radius
@@ -33,7 +33,7 @@ export function createOctahedronIntricateWireframe(
 
   // 1. Create inner octahedron wireframe using thick cylinders
   const centerLinesMaterial = new THREE.MeshBasicMaterial({
-    color: new THREE.Color(intricateWireframeSpiralColor),
+    color: new THREE.Color(hyperframeColor),
     transparent: false,
     opacity: 1.0,
   });
@@ -83,7 +83,7 @@ export function createOctahedronIntricateWireframe(
 
   // 2. Create hyper-octahedron connections using thick cylinders
   const curvedLinesMaterial = new THREE.LineBasicMaterial({
-    color: new THREE.Color(intricateWireframeEdgeColor),
+    color: new THREE.Color(hyperframeLineColor),
     transparent: true,
     opacity: 0.7,
   });

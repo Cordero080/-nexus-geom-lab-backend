@@ -8,24 +8,22 @@ import * as THREE from "three";
  * @param {Object} objectsRef - Reference to array of object data
  * @param {Object} materialProps - Material configuration properties
  * @param {number} materialProps.scale - Scale value for all objects
- * @param {number} materialProps.metalness - Metalness value (0-1, mapped to shininess 0-100)
- * @param {string} materialProps.specularColor - Specular color hex
+ * @param {number} materialProps.metalness - Metalness value (0-1)
  * @param {number} materialProps.emissiveIntensity - Emissive intensity (0-2, multiplied by baseColor)
  * @param {string} materialProps.baseColor - Base color hex
  * @param {number} materialProps.wireframeIntensity - Wireframe opacity (0-100)
- * @param {string} materialProps.intricateWireframeSpiralColor - Spiral color hex
- * @param {string} materialProps.intricateWireframeEdgeColor - Edge color hex
+ * @param {string} materialProps.hyperframeColor - Spiral color hex
+ * @param {string} materialProps.hyperframeLineColor - Edge color hex
  */
 export function useMaterialUpdates(objectsRef, materialProps) {
   const {
     scale,
     metalness,
-    specularColor,
     emissiveIntensity,
     baseColor,
     wireframeIntensity,
-    intricateWireframeSpiralColor,
-    intricateWireframeEdgeColor,
+    hyperframeColor,
+    hyperframeLineColor,
   } = materialProps;
 
   // SCALE UPDATER
@@ -237,9 +235,9 @@ export function useMaterialUpdates(objectsRef, materialProps) {
   useEffect(() => {
     console.log(
       "Updating intricate wireframe spiral color to:",
-      intricateWireframeSpiralColor
+      hyperframeColor
     );
-    const convertedColor = new THREE.Color(intricateWireframeSpiralColor);
+    const convertedColor = new THREE.Color(hyperframeColor);
 
     objectsRef.current.forEach(({ centerLinesMaterial }, index) => {
       if (centerLinesMaterial) {
@@ -248,15 +246,15 @@ export function useMaterialUpdates(objectsRef, materialProps) {
         console.log(`Updated center lines material ${index} color`);
       }
     });
-  }, [intricateWireframeSpiralColor]);
+  }, [hyperframeColor]);
 
   // INTRICATE WIREFRAME EDGE COLOR UPDATER
   useEffect(() => {
     console.log(
       "Updating intricate wireframe edge color to:",
-      intricateWireframeEdgeColor
+      hyperframeLineColor
     );
-    const convertedColor = new THREE.Color(intricateWireframeEdgeColor);
+    const convertedColor = new THREE.Color(hyperframeLineColor);
 
     objectsRef.current.forEach(({ curvedLinesMaterial }, index) => {
       if (curvedLinesMaterial) {
@@ -265,5 +263,5 @@ export function useMaterialUpdates(objectsRef, materialProps) {
         console.log(`Updated curved lines material ${index} color`);
       }
     });
-  }, [intricateWireframeEdgeColor]);
+  }, [hyperframeLineColor]);
 }

@@ -41,18 +41,18 @@ export const handleWireframeToggle =
     onWireframeIntensityChange(event.target.checked ? 100 : 0);
   };
 
-export const handleIntricateWireframeSpiralColorChange =
-  (onIntricateWireframeSpiralColorChange) => (event) => {
+export const handleHyperframeColorChange =
+  (onHyperframeColorChange) => (event) => {
     const newColor = event.target.value;
     console.log("Intricate wireframe spiral color changed to:", newColor);
-    onIntricateWireframeSpiralColorChange(newColor);
+    onHyperframeColorChange(newColor);
   };
 
-export const handleIntricateWireframeEdgeColorChange =
-  (onIntricateWireframeEdgeColorChange) => (event) => {
+export const handleHyperframeLineColorChange =
+  (onHyperframeLineColorChange) => (event) => {
     const newColor = event.target.value;
     console.log("Intricate wireframe edge color changed to:", newColor);
-    onIntricateWireframeEdgeColorChange(newColor);
+    onHyperframeLineColorChange(newColor);
   };
 
 // SCENE CONTROL HANDLERS

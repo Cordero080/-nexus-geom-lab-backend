@@ -6,15 +6,14 @@ import LightingControls from './LightingControls';
 function Controls({ 
   // MATERIAL PROPERTIES (current values FROM App.jsx + setter functions FROM App.jsx)
   scale, onScaleChange,                            // Current scale value + function to update it
-  shininess, onShininessChange,                    // Current shininess value + function to update it
-  specularColor, onSpecularColorChange,            // Current specular color + function to update it
-  specularIntensity, onSpecularIntensityChange,    // Current specular intensity + function to update it
+  metalness, onMetalnessChange,                    // Current metalness value + function to update it
+  emissiveIntensity, onEmissiveIntensityChange,    // Current emissive intensity + function to update it
   baseColor, onBaseColorChange,                    // Current base color + function to update it
   wireframeIntensity, onWireframeIntensityChange,  // Current wireframe intensity + function to update it
   
   // INTRICATE WIREFRAME PROPERTIES (current values FROM App.jsx + setter functions FROM App.jsx)
-  intricateWireframeSpiralColor, onIntricateWireframeSpiralColorChange,    // Current spiral color + function to update it
-  intricateWireframeEdgeColor, onIntricateWireframeEdgeColorChange,        // Current edge color + function to update it
+  hyperframeColor, onHyperframeColorChange,    // Current spiral color + function to update it
+  hyperframeLineColor, onHyperframeLineColorChange,        // Current edge color + function to update it
   
   // SCENE PROPERTIES (current values FROM App.jsx + setter functions FROM App.jsx)
   cameraView, onCameraViewChange,                  // Current camera view mode + function to update it
@@ -53,33 +52,20 @@ function Controls({
    */
 
   // TRIGGERED BY: User dragging the shininess slider
-  // DATA FLOW: slider onChange → handleShininessChange → onShininessChange(newValue) → App.jsx setState
-  const handleShininessChange = (event) => {
-    // Extract slider value as string, convert to number using parseFloat
-    // parseFloat converts "100" → 100, "50.5" → 50.5
-    const newShininess = parseFloat(event.target.value)  // STRING → NUMBER conversion
-    console.log('Shininess changed to:', newShininess)
-    onShininessChange(newShininess) // CALL App.jsx setter function → updates App.jsx state
+  // TRIGGERED BY: User dragging the metalness slider
+  const handleMetalnessChange = (event) => {
+    const newMetalness = parseFloat(event.target.value)
+    onMetalnessChange(newMetalness)
   }
 
-  // TRIGGERED BY: User clicking/changing the specular color picker
-  // DATA FLOW: color input onChange → handleSpecularColorChange → onSpecularColorChange(newColor) → App.jsx setState
-  const handleSpecularColorChange = (event) => {
-    // Color picker value is already a string like "#ff0000", no conversion needed
-    const newColor = event.target.value  // Gets hex color string like "#ff0000"
-    console.log('Specular color changed to:', newColor)
-    onSpecularColorChange(newColor) // CALL App.jsx setter function → updates App.jsx state
-  }
 const handleScaleChange = (event) => {
   onScaleChange(parseFloat(event.target.value))
 }
-  // TRIGGERED BY: User dragging the specular intensity slider
-  // DATA FLOW: slider onChange → handleSpecularIntensityChange → onSpecularIntensityChange(newValue) → App.jsx setState
-  const handleSpecularIntensityChange = (event) => {
-    // Extract slider value as string, convert to number using parseFloat
-    const newIntensity = parseFloat(event.target.value)  // STRING → NUMBER conversion
-    console.log('Specular intensity changed to:', newIntensity)
-    onSpecularIntensityChange(newIntensity) // CALL App.jsx setter function → updates App.jsx state
+
+  // TRIGGERED BY: User dragging the emissive intensity slider
+  const handleEmissiveIntensityChange = (event) => {
+    const newIntensity = parseFloat(event.target.value)
+    onEmissiveIntensityChange(newIntensity)
   }
 
   // TRIGGERED BY: User clicking/changing the base color picker
@@ -101,19 +87,19 @@ const handleScaleChange = (event) => {
   }
 
   // TRIGGERED BY: User changing the intricate wireframe spiral color picker
-  // DATA FLOW: color picker onChange → handleIntricateWireframeSpiralColorChange → onIntricateWireframeSpiralColorChange(newColor) → App.jsx setState
-  const handleIntricateWireframeSpiralColorChange = (event) => {
+  // DATA FLOW: color picker onChange → handleHyperframeColorChange → onHyperframeColorChange(newColor) → App.jsx setState
+  const handleHyperframeColorChange = (event) => {
     const newColor = event.target.value // Get color value as hex string (like "#ff0000")
     console.log('Intricate wireframe spiral color changed to:', newColor)
-    onIntricateWireframeSpiralColorChange(newColor) // CALL App.jsx setter function → updates App.jsx state
+    onHyperframeColorChange(newColor) // CALL App.jsx setter function → updates App.jsx state
   }
 
   // TRIGGERED BY: User changing the intricate wireframe edge color picker
-  // DATA FLOW: color picker onChange → handleIntricateWireframeEdgeColorChange → onIntricateWireframeEdgeColorChange(newColor) → App.jsx setState
-  const handleIntricateWireframeEdgeColorChange = (event) => {
+  // DATA FLOW: color picker onChange → handleHyperframeLineColorChange → onHyperframeLineColorChange(newColor) → App.jsx setState
+  const handleHyperframeLineColorChange = (event) => {
     const newColor = event.target.value // Get color value as hex string (like "#00ff00")
     console.log('Intricate wireframe edge color changed to:', newColor)
-    onIntricateWireframeEdgeColorChange(newColor) // CALL App.jsx setter function → updates App.jsx state
+    onHyperframeLineColorChange(newColor) // CALL App.jsx setter function → updates App.jsx state
   }
 
   // TRIGGERED BY: User selecting from camera view dropdown
@@ -209,42 +195,30 @@ const handleScaleChange = (event) => {
           onChange={handleBaseColorChange}       
         />
         
-        {/* SPECULAR COLOR PICKER: User clicks/changes → handleSpecularColorChange → App.jsx setState */}
+        {/* EMISSIVE INTENSITY SLIDER */}
         <label>
-          Specular Color: {/* Label shows current value from App.jsx: {specularColor} */}
+          Emissive Intensity: <span className="value-display">{emissiveIntensity.toFixed(1)}</span>
         </label>
-        {/* This color input DISPLAYS current value FROM App.jsx and TRIGGERS handler WHEN user changes color */}
-        <input 
-          type="color" 
-          value={specularColor}                  
-          onChange={handleSpecularColorChange}   
-        />
-
-        {/* SPECULAR INTENSITY SLIDER: User drags → handleSpecularIntensityChange → App.jsx setState */}
-        <label>
-          Specular Intensity: <span className="value-display">{specularIntensity}</span> {/* Shows current value FROM App.jsx */}
-        </label>
-        {/* This range slider DISPLAYS current value FROM App.jsx and TRIGGERS handler WHEN user drags slider */}
         <input 
           type="range" 
           min="0" 
           max="2" 
           step="0.1"
-          value={specularIntensity}                   
-          onChange={handleSpecularIntensityChange}    
+          value={emissiveIntensity}                   
+          onChange={handleEmissiveIntensityChange}    
         />
         
-        {/* SHININESS SLIDER: User drags → handleShininessChange → App.jsx setState */}
+        {/* METALNESS SLIDER */}
         <label>
-          Shininess: <span className="value-display">{shininess}</span> {/* Shows current value FROM App.jsx */}
+          Metalness: <span className="value-display">{metalness.toFixed(2)}</span>
         </label>
-        {/* This range slider DISPLAYS current value FROM App.jsx and TRIGGERS handler WHEN user drags slider */}
         <input 
           type="range" 
-          min="1" 
-          max="2000" 
-          value={shininess}
-          onChange={handleShininessChange}
+          min="0" 
+          max="1" 
+          step="0.01"
+          value={metalness}
+          onChange={handleMetalnessChange}
         />
 
         {/* Wireframe visibility toggle */}
@@ -270,24 +244,24 @@ const handleScaleChange = (event) => {
           onChange={handleWireframeIntensityChange}
         />
 
-        {/* Inner wireframe spiral color picker */}
+        {/* Hyperframe color picker */}
         <label>
-          Inner Wireframe Spiral Color:
+          Hyperframe Color:
         </label>
         <input 
           type="color" 
-          value={intricateWireframeSpiralColor}
-          onChange={handleIntricateWireframeSpiralColorChange}
+          value={hyperframeColor}
+          onChange={handleHyperframeColorChange}
         />
 
-        {/* Inner wireframe edge color picker */}
+        {/* Hyperframe lines color picker */}
         <label>
-          Inner Wireframe Edge Color:
+          Hyperframe Lines Color:
         </label>
         <input 
           type="color" 
-          value={intricateWireframeEdgeColor}
-          onChange={handleIntricateWireframeEdgeColorChange}
+          value={hyperframeLineColor}
+          onChange={handleHyperframeLineColorChange}
         />
 
         {/* Object Type Control */}

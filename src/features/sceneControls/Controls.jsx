@@ -46,8 +46,8 @@ function Controls({
 	wireframeIntensity, onWireframeIntensityChange,  // Current wireframe intensity + function to update it
   
 	// INTRICATE WIREFRAME PROPERTIES (current values FROM App.jsx + setter functions FROM App.jsx)
-	intricateWireframeSpiralColor, onIntricateWireframeSpiralColorChange,    // Current spiral color + function to update it
-	intricateWireframeEdgeColor, onIntricateWireframeEdgeColorChange,        // Current edge color + function to update it
+	hyperframeColor, onHyperframeColorChange,    // Current spiral color + function to update it
+	hyperframeLineColor, onHyperframeLineColorChange,        // Current edge color + function to update it
   
 	// SCENE PROPERTIES (current values FROM App.jsx + setter functions FROM App.jsx)
 	cameraView, onCameraViewChange,                  // Current camera view mode + function to update it

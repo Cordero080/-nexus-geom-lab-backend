@@ -24,15 +24,14 @@ import { useMouseTracking, useEnvironmentUpdate } from './hooks/useSceneEffects'
 function ThreeScene({ 
 	// MATERIAL PROPS - How the 3D objects should look (FROM App.jsx state)
 	scale,                 // Current scale value → will update Three.js object scale
-	metalness,           // Current metalness value → will update Three.js material.shininess (mapped 0-1 to 0-100)
-	specularColor,       // Current specular color → will update Three.js material.specular
+	metalness,           // Current metalness value → will update Three.js material.metalness (0-1)
 	emissiveIntensity,   // Current emissive intensity → will update Three.js material.emissive (multiplied by baseColor)
 	baseColor,           // Current base color → will update Three.js material.color
 	wireframeIntensity,  // Current wireframe intensity → will update Three.js material.wireframe
 	
 	// INTRICATE WIREFRAME PROPS - How the intricate wireframe should look (FROM App.jsx state)
-	intricateWireframeSpiralColor,  // Current spiral color → will update intricate wireframe spiral lines
-	intricateWireframeEdgeColor,    // Current edge color → will update intricate wireframe edge connections
+	hyperframeColor,  // Current spiral color → will update intricate wireframe spiral lines
+	hyperframeLineColor,    // Current edge color → will update intricate wireframe edge connections
 	
 	// SCENE BEHAVIOR PROPS - How the scene should behave (FROM App.jsx state)
 	cameraView,          // Current camera view → will position/animate camera
@@ -54,12 +53,11 @@ function ThreeScene({
 	console.log('[ThreeScene] Rendered with props:', {
 		scale,
 		metalness,
-		specularColor,
 		emissiveIntensity,
 		baseColor,
 		wireframeIntensity,
-		intricateWireframeSpiralColor,
-		intricateWireframeEdgeColor,
+		hyperframeColor,
+		hyperframeLineColor,
 		cameraView,
 		environment,
 		objectCount,
@@ -109,8 +107,8 @@ function ThreeScene({
 	// Manage object creation and updates
 	useObjectManager(
 		{ sceneRef, objectsRef, materialRef },
-		{ objectCount, objectType, baseColor, specularColor, metalness, emissiveIntensity, 
-		  wireframeIntensity, intricateWireframeSpiralColor, intricateWireframeEdgeColor }
+		{ objectCount, objectType, baseColor, metalness, emissiveIntensity, 
+		  wireframeIntensity, hyperframeColor, hyperframeLineColor }
 	);
 
 	// Control camera position
@@ -118,8 +116,8 @@ function ThreeScene({
 
 	// Update material properties
 	useMaterialUpdates(objectsRef, {
-		scale, metalness, specularColor, emissiveIntensity, baseColor, wireframeIntensity,
-		intricateWireframeSpiralColor, intricateWireframeEdgeColor
+		scale, metalness, emissiveIntensity, baseColor, wireframeIntensity,
+		hyperframeColor, hyperframeLineColor
 	});
 
 	// Update lighting
@@ -595,17 +593,18 @@ case 'alien':
 
   // PHASE 1: Initial Float & Contemplation (0% - 20%)
   if (cycleProgress < 0.20) {
-    const hoverIntensity = 0.15 + (speedVariation * 0.05)
+    const hoverIntensity = 0.08 + (speedVariation * 0.02) // Reduced from 0.15
     
-    currentMesh.position.x = originalPosition.x + Math.sin(t * 3 + phase) * hoverIntensity * 1.2 
-    currentMesh.position.y = originalPosition.y + Math.cos(t * 4 + phase) * hoverIntensity
-    currentMesh.position.z = originalPosition.z + Math.sin(t * 2 + phase) * hoverIntensity * 0.5
+    currentMesh.position.x = originalPosition.x + Math.sin(t * 0.8 + phase) * hoverIntensity * 1.2 // Much slower from t*1.5
+    currentMesh.position.y = originalPosition.y + Math.cos(t * 1.0 + phase) * hoverIntensity // Much slower from t*2
+    currentMesh.position.z = originalPosition.z + Math.sin(t * 0.6 + phase) * hoverIntensity * 0.5 // Much slower from t*1
     
-    currentMesh.rotation.y = t * 0.3 + phase 
-    currentMesh.rotation.x = Math.sin(t * 0.7 + phase) * 0.3
-    currentMesh.rotation.z = Math.cos(t * 0.4 + phase) * 0.2
+    // Very gentle, contemplative rotation (50% slower than Phase 2)
+    currentMesh.rotation.y = t * 0.05 + phase // 50% of Phase 2's 0.1
+    currentMesh.rotation.x = Math.sin(t * 0.1 + phase) * 0.05 // 50% slower time & amplitude
+    currentMesh.rotation.z = Math.cos(t * 0.075 + phase) * 0.04 // 50% slower time & amplitude
     
-    currentMesh.scale.setScalar(1 + Math.sin(t * 2 + phase) * 0.03) 
+    currentMesh.scale.setScalar(1 + Math.sin(t * 0.5 + phase) * 0.015) // Much slower breathing from t*1
   }
 
   // PHASE 2: Symphonic Pause & Dervish Dance (20% - 35%)
@@ -621,31 +620,31 @@ case 'alien':
     
     // --- New Modulated Spin Logic (Non-Repetitive Buildup) ---
     
-    // 1. Time-Based Modulator: Slower wave to reduce repetitiveness (t * 0.5)
-    const longWaveModulator = (Math.sin(t * 0.5 + phase * 2) * 0.5 + 0.5); 
+    // 1. Time-Based Modulator: Very slow wave for ultra-graceful movement
+    const longWaveModulator = (Math.sin(t * 0.15 + phase * 2) * 0.5 + 0.5); // Much slower from t*0.3
     
     // 2. Slow Build-up Curve: Use a slower easing function (Quintic) on the local spin time (t_spin)
     const buildUpFactor = easeInOutQuint(t_spin);
 
-    // 3. Emotional Speed Mix: Max speed is now based on the slow-building factor
-    const minSpeed = 0.05 + speedVariation * 0.05; // Very slow base spin for observation
-    const maxSpeed = reactionSpeed * 0.05;       // Maximum possible dart speed
+    // 3. Emotional Speed Mix: Further reduced max speed for ultra-smooth motion
+    const minSpeed = 0.02 + speedVariation * 0.01; // Further reduced
+    const maxSpeed = reactionSpeed * 0.02;         // Further reduced
     
     // Current Spin is controlled by the slow time wave, scaled by the buildup over the phase
     const currentSpinSpeed = THREE.MathUtils.lerp(
         minSpeed, 
-        maxSpeed * longWaveModulator, // The max speed is varied slowly over t
-        buildUpFactor // The spin only reaches its max over the 0.15 phase duration
+        maxSpeed * longWaveModulator,
+        buildUpFactor
     );
 
-    // Rotation: Apply the modulated speed with complex, odd-axis factors
-    currentMesh.rotation.x += currentSpinSpeed * 1.5 * Math.sin(t * 0.4 + phase) // Dervish tilt X
-    currentMesh.rotation.y += currentSpinSpeed * 2.0 // Main spin axis
-    currentMesh.rotation.z += currentSpinSpeed * 1.0 * Math.cos(t * 0.7 + phase) // Dervish tilt Z
+    // Rotation: Apply the modulated speed with ultra-smooth, graceful movement
+    currentMesh.rotation.x += currentSpinSpeed * 0.5 * Math.sin(t * 0.15 + phase) // Much gentler/slower
+    currentMesh.rotation.y += currentSpinSpeed * 1.0 // Reduced from 1.5
+    currentMesh.rotation.z += currentSpinSpeed * 0.3 * Math.cos(t * 0.2 + phase) // Much gentler/slower
     
-    // Curiosity/Wobble only happens when spin is very slow
-    currentMesh.position.x += Math.sin(t * 10 + phase) * (1 - buildUpFactor) * 0.02;
-    currentMesh.position.y += Math.cos(t * 8 + phase) * (1 - buildUpFactor) * 0.02;
+    // Curiosity/Wobble - ultra subtle
+    currentMesh.position.x += Math.sin(t * 2 + phase) * (1 - buildUpFactor) * 0.005; // Much slower/subtler from t*5, 0.01
+    currentMesh.position.y += Math.cos(t * 1.5 + phase) * (1 - buildUpFactor) * 0.005; // Much slower/subtler from t*4, 0.01
   }
 
   // PHASE 3: Elliptical Recede & Curious Return (35% - 50%)
@@ -658,14 +657,14 @@ case 'alien':
     const ellipseHeight = orbitSize * 0.4;
     
     // Position: Move back (Z-) and swing out in an ellipse (X/Y curve)
-    currentMesh.position.x = originalPosition.x + Math.sin(eased_recede * Math.PI) * maxDashDistance * 0.3; // Curved X-out/in
-    currentMesh.position.y = originalPosition.y + Math.cos(eased_recede * Math.PI) * ellipseHeight;        // Ellipse up/down
-    currentMesh.position.z = originalPosition.z - eased_recede * maxDashDistance * 0.8;                     // Swift recede back
+    currentMesh.position.x = originalPosition.x + Math.sin(eased_recede * Math.PI) * maxDashDistance * 0.15; // Even gentler
+    currentMesh.position.y = originalPosition.y + Math.cos(eased_recede * Math.PI) * ellipseHeight * 0.5;  // Even more reduced
+    currentMesh.position.z = originalPosition.z - eased_recede * maxDashDistance * 0.5;                     // Even closer
 
-    // Rotation: Orient itself to the target of its "curiosity" (the camera/viewer)
-    currentMesh.rotation.x = Math.sin(t * 5 + phase) * 0.1 * (1 - eased_recede); // Subtle wobble on return
-    currentMesh.rotation.y = eased_recede * Math.PI * 2; // Spin as it dashes away
-    currentMesh.rotation.z = Math.cos(t * 3 + phase) * 0.1;
+    // Rotation: Curious movement (50% slower than Phase 2)
+    currentMesh.rotation.x = Math.sin(t * 0.5 + phase) * 0.015 * (1 - eased_recede); // 50% slower
+    currentMesh.rotation.y = eased_recede * Math.PI * 0.6; // 50% of Phase 2's rotation
+    currentMesh.rotation.z = Math.cos(t * 0.4 + phase) * 0.015; // 50% slower
   }
 
   // PHASE 4: Erratic Figure-8 Ellipse Observation (50% - 85%)
@@ -679,12 +678,13 @@ case 'alien':
     const centerZ = -orbitSize * 0.3 
 
     currentMesh.position.x = originalPosition.x + ellipseRadiusX * Math.cos(t_angle) 
-    currentMesh.position.y = originalPosition.y + ellipseRadiusY * Math.sin(t_angle * 2) * Math.sin(t * 3 + phase) * 0.5 + Math.sin(t_figure8 * Math.PI * 4) * 0.5
+    currentMesh.position.y = originalPosition.y + ellipseRadiusY * Math.sin(t_angle * 2) * Math.sin(t * 0.8 + phase) * 0.2 + Math.sin(t_figure8 * Math.PI * 1.5) * 0.2 // Much slower oscillation
     currentMesh.position.z = originalPosition.z + centerZ + ellipseRadiusZ * Math.sin(t_angle)
 
-    currentMesh.rotation.z = Math.sin(t_angle * 0.5) * 0.8
-    currentMesh.rotation.x = Math.cos(t_angle * 0.7) * 0.5
-    currentMesh.rotation.y += (t * 0.5 + phase) * 0.1 
+    // Gentle observation rotations (50% slower than Phase 2)
+    currentMesh.rotation.z = Math.sin(t_angle * 0.5) * 0.125 // 50% of 0.25
+    currentMesh.rotation.x = Math.cos(t_angle * 0.7) * 0.075 // 50% of 0.15
+    currentMesh.rotation.y += (t * 0.075 + phase) * 0.04 // 50% slower time & amplitude 
   }
 
   // PHASE 5: Swift Return & Re-entry (85% - 100%)

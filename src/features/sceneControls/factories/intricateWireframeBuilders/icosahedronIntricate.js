@@ -3,14 +3,14 @@ import * as THREE from "three";
 /**
  * Create intricate hyper-icosahedron wireframe with inner icosahedron and vertex connections
  * @param {THREE.BufferGeometry} geometry - The icosahedron geometry
- * @param {string} intricateWireframeSpiralColor - Color for inner wireframe
- * @param {string} intricateWireframeEdgeColor - Color for connections
+ * @param {string} hyperframeColor - Color for inner wireframe
+ * @param {string} hyperframeLineColor - Color for connections
  * @returns {Object} { centerLines, centerLinesMaterial, curvedLines, curvedLinesMaterial }
  */
 export function createIcosahedronIntricateWireframe(
   geometry,
-  intricateWireframeSpiralColor,
-  intricateWireframeEdgeColor
+  hyperframeColor,
+  hyperframeLineColor
 ) {
   console.log("Creating hyper-icosahedron wireframe for IcosahedronGeometry");
 
@@ -49,7 +49,7 @@ export function createIcosahedronIntricateWireframe(
 
   // 1. Create inner icosahedron wireframe using thick cylinders
   const centerLinesMaterial = new THREE.MeshBasicMaterial({
-    color: intricateWireframeSpiralColor,
+    color: hyperframeColor,
     transparent: false,
     opacity: 1.0,
   });
@@ -90,7 +90,7 @@ export function createIcosahedronIntricateWireframe(
 
   // 2. Create hyper-icosahedron connections (vertex to vertex) using thick cylinders
   const curvedLinesMaterial = new THREE.MeshBasicMaterial({
-    color: intricateWireframeEdgeColor,
+    color: hyperframeLineColor,
     transparent: false,
     opacity: 1.0,
   });
