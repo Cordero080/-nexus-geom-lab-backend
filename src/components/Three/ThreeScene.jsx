@@ -18,9 +18,9 @@ import { DEFAULT_COLOR } from '../../utils/threeConstants';
 function ThreeScene({ 
   // MATERIAL PROPS - How the 3D objects should look
   scale = 1,                 // Current scale value → will update Three.js object scale
-  shininess = 50,           // Current shininess value → will update Three.js material.shininess
+  metalness = 0.5,          // Current metalness value → will update Three.js material.metalness
   specularColor = "#ffffff",       // Current specular color → will update Three.js material.specular
-  specularIntensity = 1,   // Current specular intensity → will update Three.js material.reflectivity
+  emissiveIntensity = 0,   // Current emissive intensity → will update Three.js material.emissiveIntensity
   baseColor = "#4287f5",           // Current base color → will update Three.js material.color
   wireframeIntensity = 30,  // Current wireframe intensity → will update Three.js material.wireframe
   
@@ -250,15 +250,18 @@ function ThreeScene({
       const currentBaseColor = new THREE.Color(baseColor);
       const currentSpecularColor = new THREE.Color(specularColor);
       
+      // Calculate emissive color based on base color and intensity
+      const emissiveColor = new THREE.Color(baseColor).multiplyScalar(emissiveIntensity);
+      
       const material = new THREE.MeshPhongMaterial({
         color: currentBaseColor,
         specular: currentSpecularColor,
-        shininess: shininess,
+        shininess: metalness * 100, // Map metalness 0-1 to shininess 0-100
         wireframe: false,
         transparent: true,
         opacity: 1 - (wireframeIntensity / 100),
         flatShading: false,
-        reflectivity: specularIntensity,
+        emissive: emissiveColor,
       });
 
       // CREATE TWO MESHES - One solid, one wireframe for blending
@@ -274,14 +277,16 @@ function ThreeScene({
           geometry.type === 'TetrahedronGeometry' ||
           geometry.type === 'IcosahedronGeometry') {
         
+        const emissiveColor = new THREE.Color(baseColor).multiplyScalar(emissiveIntensity);
+        
         wireframeMaterial = new THREE.MeshPhongMaterial({
           color: currentBaseColor,
           specular: currentSpecularColor,
-          shininess: shininess,
+          shininess: metalness * 100,
           transparent: true,
           opacity: wireframeIntensity / 100,
           flatShading: false,
-          reflectivity: specularIntensity,
+          emissive: emissiveColor,
         });
         
         // Create thick wireframe group
@@ -325,15 +330,17 @@ function ThreeScene({
         wireframeMesh = wireframeGroup;
       } else {
         // Standard thin wireframe for other geometries
+        const emissiveColor = new THREE.Color(baseColor).multiplyScalar(emissiveIntensity);
+        
         wireframeMaterial = new THREE.MeshPhongMaterial({
           color: currentBaseColor,
           specular: currentSpecularColor,
-          shininess: shininess,
+          shininess: metalness * 100,
           wireframe: true,
           transparent: true,
           opacity: wireframeIntensity / 100,
           flatShading: false,
-          reflectivity: specularIntensity,
+          emissive: emissiveColor,
         });
         
         wireframeMesh = new THREE.Mesh(geometry, wireframeMaterial);
@@ -847,26 +854,33 @@ function ThreeScene({
   }, [wireframeIntensity]);
 
   useEffect(() => {
+    console.log('Updating metalness (mapped to shininess) to:', metalness * 100);
     objectsRef.current.forEach(obj => {
       if (obj.material) {
-        obj.material.shininess = shininess;
+        obj.material.shininess = metalness * 100; // Map 0-1 to 0-100
+        obj.material.needsUpdate = true;
       }
       if (obj.wireframeMaterial) {
-        obj.wireframeMaterial.shininess = shininess;
+        obj.wireframeMaterial.shininess = metalness * 100;
+        obj.wireframeMaterial.needsUpdate = true;
       }
     });
-  }, [shininess]);
+  }, [metalness]);
 
   useEffect(() => {
+    console.log('Updating emissiveIntensity to:', emissiveIntensity);
+    const emissiveColor = new THREE.Color(baseColor).multiplyScalar(emissiveIntensity);
     objectsRef.current.forEach(obj => {
       if (obj.material) {
-        obj.material.reflectivity = specularIntensity;
+        obj.material.emissive = emissiveColor.clone();
+        obj.material.needsUpdate = true;
       }
       if (obj.wireframeMaterial) {
-        obj.wireframeMaterial.reflectivity = specularIntensity;
+        obj.wireframeMaterial.emissive = emissiveColor.clone();
+        obj.wireframeMaterial.needsUpdate = true;
       }
     });
-  }, [specularIntensity]);
+  }, [emissiveIntensity, baseColor]);
 
   useEffect(() => {
     objectsRef.current.forEach(obj => {

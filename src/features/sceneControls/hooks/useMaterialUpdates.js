@@ -8,9 +8,9 @@ import * as THREE from "three";
  * @param {Object} objectsRef - Reference to array of object data
  * @param {Object} materialProps - Material configuration properties
  * @param {number} materialProps.scale - Scale value for all objects
- * @param {number} materialProps.shininess - Shininess value
+ * @param {number} materialProps.metalness - Metalness value (0-1, mapped to shininess 0-100)
  * @param {string} materialProps.specularColor - Specular color hex
- * @param {number} materialProps.specularIntensity - Specular intensity
+ * @param {number} materialProps.emissiveIntensity - Emissive intensity (0-2, multiplied by baseColor)
  * @param {string} materialProps.baseColor - Base color hex
  * @param {number} materialProps.wireframeIntensity - Wireframe opacity (0-100)
  * @param {string} materialProps.intricateWireframeSpiralColor - Spiral color hex
@@ -19,9 +19,9 @@ import * as THREE from "three";
 export function useMaterialUpdates(objectsRef, materialProps) {
   const {
     scale,
-    shininess,
+    metalness,
     specularColor,
-    specularIntensity,
+    emissiveIntensity,
     baseColor,
     wireframeIntensity,
     intricateWireframeSpiralColor,
@@ -44,87 +44,60 @@ export function useMaterialUpdates(objectsRef, materialProps) {
     );
   }, [scale]);
 
-  // SHININESS UPDATER
+  // METALNESS UPDATER (real PBR metalness - adjust lighting to see effect)
   useEffect(() => {
-    console.log("Updating shininess to:", shininess);
+    console.log("Updating metalness to:", metalness);
+
     objectsRef.current.forEach(({ material, wireframeMaterial }, index) => {
       // Update solid material
       if (material) {
-        material.shininess = shininess;
+        material.metalness = metalness;
+        material.roughness = 0.2; // Keep roughness low for shiny metal effect
         material.needsUpdate = true;
-        console.log(`Updated material ${index} shininess to:`, shininess);
+        console.log(`Updated material ${index} metalness to:`, metalness);
       }
       // Update wireframe material
       if (wireframeMaterial) {
-        wireframeMaterial.shininess = shininess;
+        wireframeMaterial.metalness = metalness;
+        wireframeMaterial.roughness = 0.2;
         wireframeMaterial.needsUpdate = true;
-        console.log(
-          `Updated wireframe material ${index} shininess to:`,
-          shininess
-        );
       }
     });
-  }, [shininess]);
+  }, [metalness]);
 
-  // SPECULAR COLOR UPDATER
+  // NOTE: Specular color is not used in MeshStandardMaterial (PBR uses metalness/roughness instead)
+  // Specular color updater removed
+
+  // EMISSIVE INTENSITY UPDATER (creates glow effect using baseColor)
   useEffect(() => {
-    console.log("Updating specular color to:", specularColor);
-    console.log("Number of objects:", objectsRef.current.length);
-
-    if (objectsRef.current.length === 0) {
-      console.log("No objects available for specular update");
-      return;
-    }
-
-    // Convert hex color string to Three.js color number
-    const convertedColor = parseInt(specularColor.replace("#", ""), 16);
-    console.log("Converted color value:", convertedColor);
+    console.log("Updating emissive intensity to:", emissiveIntensity);
+    const emissiveColor = new THREE.Color(baseColor).multiplyScalar(
+      emissiveIntensity
+    );
 
     objectsRef.current.forEach(({ material, wireframeMaterial }, index) => {
       // Update solid material
       if (material) {
-        console.log(`Updating material ${index} specular color`);
-        material.specular.setHex(convertedColor);
-        material.needsUpdate = true;
-      } else {
-        console.log(`Material ${index} is null`);
-      }
-      // Update wireframe material
-      if (wireframeMaterial) {
-        console.log(`Updating wireframe material ${index} specular color`);
-        wireframeMaterial.specular.setHex(convertedColor);
-        wireframeMaterial.needsUpdate = true;
-      }
-    });
-  }, [specularColor]);
-
-  // SPECULAR INTENSITY UPDATER
-  useEffect(() => {
-    console.log("Updating specular intensity to:", specularIntensity);
-
-    objectsRef.current.forEach(({ material, wireframeMaterial }, index) => {
-      // Update solid material
-      if (material) {
-        material.reflectivity = specularIntensity;
+        material.emissive = emissiveColor.clone();
         material.needsUpdate = true;
         console.log(
-          `Updated material ${index} specular intensity to:`,
-          specularIntensity
+          `Updated material ${index} emissive intensity to:`,
+          emissiveIntensity
         );
       } else {
         console.log(`Material ${index} is null`);
       }
       // Update wireframe material
       if (wireframeMaterial) {
-        wireframeMaterial.reflectivity = specularIntensity;
+        wireframeMaterial.emissive = emissiveColor.clone();
         wireframeMaterial.needsUpdate = true;
         console.log(
-          `Updated wireframe material ${index} specular intensity to:`,
-          specularIntensity
+          `Updated wireframe material ${index} emissive intensity to:`,
+          emissiveIntensity
         );
       }
     });
-  }, [specularIntensity]);
+  }, [emissiveIntensity, baseColor]);
 
   // BASE COLOR UPDATER
   useEffect(() => {

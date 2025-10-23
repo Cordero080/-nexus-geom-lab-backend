@@ -17,9 +17,9 @@ const defaultIntricateWireframeEdgeColor = '#00ff00'; // Bright green
 
 function Playground() {
   // MATERIAL PROPERTIES STATE
-  const [shininess, setShininess] = useState(100)
+  const [metalness, setMetalness] = useState(0.5) // 0 = plastic, 1 = full metal
   const [specularColor, setSpecularColor] = useState(defaultSpecularColor)
-  const [specularIntensity, setSpecularIntensity] = useState(1.0)
+  const [emissiveIntensity, setEmissiveIntensity] = useState(0) // 0 = no glow, 2 = bright glow
   const [baseColor, setBaseColor] = useState(defaultBaseColor)
   const [wireframeIntensity, setWireframeIntensity] = useState(50)
   
@@ -54,9 +54,9 @@ function Playground() {
       <NavBar />
       <ThreeScene
         scale={scale}
-        shininess={shininess}
+        metalness={metalness}
         specularColor={specularColor}
-        specularIntensity={specularIntensity}
+        emissiveIntensity={emissiveIntensity}
         baseColor={baseColor}
         wireframeIntensity={wireframeIntensity}
         intricateWireframeSpiralColor={intricateWireframeSpiralColor}
@@ -77,12 +77,12 @@ function Playground() {
       <Controls
         scale={scale}
         onScaleChange={setScale}
-        shininess={shininess}
-        onShininessChange={setShininess}
+        metalness={metalness}
+        onMetalnessChange={setMetalness}
         specularColor={specularColor}
         onSpecularColorChange={setSpecularColor}
-        specularIntensity={specularIntensity}
-        onSpecularIntensityChange={setSpecularIntensity}
+        emissiveIntensity={emissiveIntensity}
+        onEmissiveIntensityChange={setEmissiveIntensity}
         baseColor={baseColor}
         onBaseColorChange={setBaseColor}
         wireframeIntensity={wireframeIntensity}

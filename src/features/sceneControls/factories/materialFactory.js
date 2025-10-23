@@ -5,30 +5,33 @@ import * as THREE from "three";
  * @param {Object} options - Material configuration options
  * @param {string} options.baseColor - Base color hex string
  * @param {string} options.specularColor - Specular highlight color hex string
- * @param {number} options.shininess - Shininess value (0-100)
- * @param {number} options.specularIntensity - Specular intensity/reflectivity (0-1)
+ * @param {number} options.metalness - Metalness value (0-1)
+ * @param {number} options.emissiveIntensity - Emissive intensity (0-2, multiplied by baseColor)
  * @param {number} options.wireframeIntensity - Wireframe intensity (0-100) - used to calculate solid opacity
- * @returns {THREE.MeshPhongMaterial} The solid material
+ * @returns {THREE.MeshStandardMaterial} The solid material with PBR support
  */
 export function createSolidMaterial({
   baseColor,
   specularColor,
-  shininess,
-  specularIntensity,
+  metalness,
+  emissiveIntensity,
   wireframeIntensity,
 }) {
   const currentBaseColor = new THREE.Color(baseColor);
-  const currentSpecularColor = new THREE.Color(specularColor);
+  const emissiveColor = new THREE.Color(baseColor).multiplyScalar(
+    emissiveIntensity
+  );
 
-  return new THREE.MeshPhongMaterial({
+  return new THREE.MeshStandardMaterial({
     color: currentBaseColor,
-    specular: currentSpecularColor,
-    shininess: shininess,
-    wireframe: false, // Solid material is NEVER wireframe
-    transparent: true, // Always transparent for blending
-    opacity: 1 - wireframeIntensity / 100, // Inverse of wireframe intensity
+    metalness: metalness, // Real metalness (0 = plastic, 1 = metal)
+    roughness: 0.2, // Low roughness for shiny reflections
+    wireframe: false,
+    transparent: true,
+    opacity: 1 - wireframeIntensity / 100,
     flatShading: false,
-    reflectivity: specularIntensity,
+    emissive: emissiveColor,
+    emissiveIntensity: 1,
   });
 }
 
@@ -37,32 +40,35 @@ export function createSolidMaterial({
  * @param {Object} options - Material configuration options
  * @param {string} options.baseColor - Base color hex string
  * @param {string} options.specularColor - Specular highlight color hex string
- * @param {number} options.shininess - Shininess value (0-100)
- * @param {number} options.specularIntensity - Specular intensity/reflectivity (0-1)
+ * @param {number} options.metalness - Metalness value (0-1)
+ * @param {number} options.emissiveIntensity - Emissive intensity (0-2, multiplied by baseColor)
  * @param {number} options.wireframeIntensity - Wireframe intensity (0-100) - used as opacity
  * @param {boolean} options.isStandardWireframe - Whether to use standard wireframe mode (for TorusKnot, etc.)
- * @returns {THREE.MeshPhongMaterial} The wireframe material
+ * @returns {THREE.MeshStandardMaterial} The wireframe material with PBR support
  */
 export function createWireframeMaterial({
   baseColor,
   specularColor,
-  shininess,
-  specularIntensity,
+  metalness,
+  emissiveIntensity,
   wireframeIntensity,
   isStandardWireframe = false,
 }) {
   const currentBaseColor = new THREE.Color(baseColor);
-  const currentSpecularColor = new THREE.Color(specularColor);
+  const emissiveColor = new THREE.Color(baseColor).multiplyScalar(
+    emissiveIntensity
+  );
 
-  return new THREE.MeshPhongMaterial({
+  return new THREE.MeshStandardMaterial({
     color: currentBaseColor,
-    specular: currentSpecularColor,
-    shininess: shininess,
-    wireframe: isStandardWireframe, // Only true for standard thin wireframes
+    metalness: metalness,
+    roughness: 0.2,
+    wireframe: isStandardWireframe,
     transparent: true,
     opacity: wireframeIntensity / 100,
     flatShading: false,
-    reflectivity: specularIntensity,
+    emissive: emissiveColor,
+    emissiveIntensity: 1,
   });
 }
 

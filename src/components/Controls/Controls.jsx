@@ -6,9 +6,9 @@ import LightingControls from './LightingControls';
 function Controls({ 
   // MATERIAL PROPERTIES (current values FROM App.jsx + setter functions FROM App.jsx)
   scale, onScaleChange,                            // Current scale value + function to update it
-  shininess, onShininessChange,                    // Current shininess value + function to update it
+  metalness, onMetalnessChange,                    // Current metalness value + function to update it
   specularColor, onSpecularColorChange,            // Current specular color + function to update it
-  specularIntensity, onSpecularIntensityChange,    // Current specular intensity + function to update it
+  emissiveIntensity, onEmissiveIntensityChange,    // Current emissive intensity + function to update it
   baseColor, onBaseColorChange,                    // Current base color + function to update it
   wireframeIntensity, onWireframeIntensityChange,  // Current wireframe intensity + function to update it
   
@@ -59,9 +59,9 @@ function Controls({
    */
   
   // Define handler functions directly
-  const handleShininessChange = (event) => {
-    const newShininess = parseFloat(event.target.value);
-    onShininessChange(newShininess);
+  const handleMetalnessChange = (event) => {
+    const newMetalness = parseFloat(event.target.value);
+    onMetalnessChange(newMetalness);
   };
   
   const handleSpecularColorChange = (event) => {
@@ -73,9 +73,9 @@ function Controls({
     onScaleChange(parseFloat(event.target.value));
   };
   
-  const handleSpecularIntensityChange = (event) => {
+  const handleEmissiveIntensityChange = (event) => {
     const newIntensity = parseFloat(event.target.value);
-    onSpecularIntensityChange(newIntensity);
+    onEmissiveIntensityChange(newIntensity);
   };
   
   const handleBaseColorChange = (event) => {
@@ -185,9 +185,9 @@ function Controls({
           onChange={handleSpecularColorChange}   
         />
 
-        {/* SPECULAR INTENSITY SLIDER: User drags → handleSpecularIntensityChange → App.jsx setState */}
+        {/* EMISSIVE INTENSITY SLIDER: User drags → handleEmissiveIntensityChange → App.jsx setState */}
         <label>
-          Specular Intensity: <span className="value-display">{specularIntensity}</span> {/* Shows current value FROM App.jsx */}
+          Emissive Intensity: <span className="value-display">{emissiveIntensity.toFixed(1)}</span> {/* Shows current value FROM App.jsx */}
         </label>
         {/* This range slider DISPLAYS current value FROM App.jsx and TRIGGERS handler WHEN user drags slider */}
         <input 
@@ -195,21 +195,22 @@ function Controls({
           min="0" 
           max="2" 
           step="0.1"
-          value={specularIntensity}                   
-          onChange={handleSpecularIntensityChange}    
+          value={emissiveIntensity}                   
+          onChange={handleEmissiveIntensityChange}    
         />
         
-        {/* SHININESS SLIDER: User drags → handleShininessChange → App.jsx setState */}
+        {/* METALNESS SLIDER: User drags → handleMetalnessChange → App.jsx setState */}
         <label>
-          Shininess: <span className="value-display">{shininess}</span> {/* Shows current value FROM App.jsx */}
+          Metalness: <span className="value-display">{metalness.toFixed(2)}</span> {/* Shows current value FROM App.jsx */}
         </label>
         {/* This range slider DISPLAYS current value FROM App.jsx and TRIGGERS handler WHEN user drags slider */}
         <input 
           type="range" 
-          min="1" 
-          max="2000" 
-          value={shininess}
-          onChange={handleShininessChange}
+          min="0" 
+          max="1" 
+          step="0.01"
+          value={metalness}
+          onChange={handleMetalnessChange}
         />
 
         {/* Wireframe visibility toggle */}

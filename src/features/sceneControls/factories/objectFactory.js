@@ -30,8 +30,8 @@ import { createIcosahedronIntricateWireframe } from "./intricateWireframeBuilder
  * @param {number} config.objectIndex - Index of this specific object
  * @param {string} config.baseColor - Base color for materials
  * @param {string} config.specularColor - Specular color for materials
- * @param {number} config.shininess - Shininess value for materials
- * @param {number} config.specularIntensity - Specular intensity value
+ * @param {number} config.metalness - Metalness value (0-1)
+ * @param {number} config.emissiveIntensity - Emissive intensity (0-2)
  * @param {number} config.wireframeIntensity - Wireframe opacity intensity
  * @param {string} config.intricateWireframeSpiralColor - Color for spiral center lines
  * @param {string} config.intricateWireframeEdgeColor - Color for edge connections
@@ -44,8 +44,8 @@ export function createSceneObject(config) {
     objectIndex,
     baseColor,
     specularColor,
-    shininess,
-    specularIntensity,
+    metalness,
+    emissiveIntensity,
     wireframeIntensity,
     intricateWireframeSpiralColor,
     intricateWireframeEdgeColor,
@@ -80,8 +80,8 @@ export function createSceneObject(config) {
   const materialConfig = {
     baseColor,
     specularColor,
-    shininess,
-    specularIntensity,
+    metalness,
+    emissiveIntensity,
     wireframeIntensity,
   };
 

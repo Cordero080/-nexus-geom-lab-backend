@@ -24,9 +24,9 @@ import { useMouseTracking, useEnvironmentUpdate } from './hooks/useSceneEffects'
 function ThreeScene({ 
 	// MATERIAL PROPS - How the 3D objects should look (FROM App.jsx state)
 	scale,                 // Current scale value → will update Three.js object scale
-	shininess,           // Current shininess value → will update Three.js material.shininess
+	metalness,           // Current metalness value → will update Three.js material.shininess (mapped 0-1 to 0-100)
 	specularColor,       // Current specular color → will update Three.js material.specular
-	specularIntensity,   // Current specular intensity → will update Three.js material.reflectivity
+	emissiveIntensity,   // Current emissive intensity → will update Three.js material.emissive (multiplied by baseColor)
 	baseColor,           // Current base color → will update Three.js material.color
 	wireframeIntensity,  // Current wireframe intensity → will update Three.js material.wireframe
 	
@@ -53,9 +53,9 @@ function ThreeScene({
 	// DEBUG: Log all props on every render
 	console.log('[ThreeScene] Rendered with props:', {
 		scale,
-		shininess,
+		metalness,
 		specularColor,
-		specularIntensity,
+		emissiveIntensity,
 		baseColor,
 		wireframeIntensity,
 		intricateWireframeSpiralColor,
@@ -109,7 +109,7 @@ function ThreeScene({
 	// Manage object creation and updates
 	useObjectManager(
 		{ sceneRef, objectsRef, materialRef },
-		{ objectCount, objectType, baseColor, specularColor, shininess, specularIntensity, 
+		{ objectCount, objectType, baseColor, specularColor, metalness, emissiveIntensity, 
 		  wireframeIntensity, intricateWireframeSpiralColor, intricateWireframeEdgeColor }
 	);
 
@@ -118,7 +118,7 @@ function ThreeScene({
 
 	// Update material properties
 	useMaterialUpdates(objectsRef, {
-		scale, shininess, specularColor, specularIntensity, baseColor, wireframeIntensity,
+		scale, metalness, specularColor, emissiveIntensity, baseColor, wireframeIntensity,
 		intricateWireframeSpiralColor, intricateWireframeEdgeColor
 	});
 

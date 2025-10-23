@@ -14,8 +14,8 @@ import { createSceneObject } from "../factories/objectFactory";
  * @param {string} objectProps.objectType - Type of geometry
  * @param {string} objectProps.baseColor - Base color hex
  * @param {string} objectProps.specularColor - Specular color hex
- * @param {number} objectProps.shininess - Shininess value
- * @param {number} objectProps.specularIntensity - Specular intensity
+ * @param {number} objectProps.metalness - Metalness value (0-1)
+ * @param {number} objectProps.emissiveIntensity - Emissive intensity (0-2)
  * @param {number} objectProps.wireframeIntensity - Wireframe opacity
  * @param {string} objectProps.intricateWireframeSpiralColor - Spiral color hex
  * @param {string} objectProps.intricateWireframeEdgeColor - Edge color hex
@@ -27,8 +27,8 @@ export function useObjectManager(refs, objectProps) {
     objectType,
     baseColor,
     specularColor,
-    shininess,
-    specularIntensity,
+    metalness,
+    emissiveIntensity,
     wireframeIntensity,
     intricateWireframeSpiralColor,
     intricateWireframeEdgeColor,
@@ -61,8 +61,8 @@ export function useObjectManager(refs, objectProps) {
         objectIndex: i,
         baseColor,
         specularColor,
-        shininess,
-        specularIntensity,
+        metalness,
+        emissiveIntensity,
         wireframeIntensity,
         intricateWireframeSpiralColor,
         intricateWireframeEdgeColor,
@@ -93,8 +93,10 @@ export function useObjectManager(refs, objectProps) {
     if (objectsRef.current.length > 0) {
       materialRef.current = objectsRef.current[0].material;
       console.log(
-        "Set main material reference, specular color:",
-        objectsRef.current[0].material.specular.getHex()
+        "Set main material reference, metalness:",
+        objectsRef.current[0].material.metalness,
+        "roughness:",
+        objectsRef.current[0].material.roughness
       );
     }
 
