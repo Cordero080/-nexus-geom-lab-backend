@@ -1,23 +1,18 @@
 import * as THREE from "three";
+import { createSpectralOrbs, removeSpectralOrbs } from "./spectralOrbs";
 
 export function updateEnvironment(scene, environment) {
   if (!scene) return;
 
   const createEnvironment = (envType) => {
     switch (envType) {
-      case "nebula": {
-        const canvas = document.createElement("canvas");
-        const context = canvas.getContext("2d");
-        canvas.width = 512;
-        canvas.height = 512;
-        const gradient = context.createLinearGradient(0, 0, 0, canvas.height);
-        gradient.addColorStop(0, "#090033ff");
-        gradient.addColorStop(0.3, "#45146bff");
-        gradient.addColorStop(0.7, "#980ae4cd");
-        gradient.addColorStop(1, "#033867ff");
-        context.fillStyle = gradient;
-        context.fillRect(0, 0, canvas.width, canvas.height);
-        scene.background = new THREE.CanvasTexture(canvas);
+      case "nebula":
+      case "matrix": {
+        // Don't set scene.background - let CSS background show through
+        scene.background = null;
+
+        // Add spectral orbs (NO lights, won't affect background)
+        createSpectralOrbs(scene, 8, 4);
         break;
       }
       case "space": {
@@ -38,10 +33,14 @@ export function updateEnvironment(scene, environment) {
         spaceCtx.fillStyle = baseGrad;
         spaceCtx.fillRect(0, 0, spaceCanvas.width, spaceCanvas.height);
         scene.background = new THREE.CanvasTexture(spaceCanvas);
+
+        // Remove orbs from other environments
+        removeSpectralOrbs(scene);
         break;
       }
       default:
-        scene.background = new THREE.Color(0x000000);
+        scene.background = null;
+        removeSpectralOrbs(scene);
     }
   };
 

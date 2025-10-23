@@ -18,7 +18,7 @@ export function initializeScene() {
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.shadowMap.enabled = true;
   renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-  // Set clear color to fully transparent
+  // Set clear color to transparent (but scene.background will override this when set)
   renderer.setClearColor(0x000000, 0);
 
   return { scene, camera, renderer };

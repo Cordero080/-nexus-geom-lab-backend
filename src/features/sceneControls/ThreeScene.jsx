@@ -8,6 +8,8 @@ import { initializeScene } from './sceneSetup';
 import { initializeLighting } from './lightingSetup';
 import { createGeometryByType } from './geometryCreation';
 import { startAnimationLoop } from './animationLoop';
+import { updateMousePosition } from './spectralOrbs';
+import { createSphereWireframe } from './factories/wireframeBuilders/sphereWireframe';
 
 
 
@@ -148,6 +150,25 @@ function ThreeScene({
 	}, []) // Empty dependency array = run once on mount
 
 	// ===============================================
+	// MOUSE TRACKING FOR ORB INTERACTION
+	// ===============================================
+	useEffect(() => {
+		const handleMouseMove = (event) => {
+			if (rendererRef.current && cameraRef.current) {
+				updateMousePosition(event, cameraRef.current, rendererRef.current.domElement);
+			}
+		};
+
+		// Add mouse move listener to the entire window for smooth tracking
+		window.addEventListener('mousemove', handleMouseMove);
+
+		// Cleanup on unmount
+		return () => {
+			window.removeEventListener('mousemove', handleMouseMove);
+		};
+	}, []); // Empty dependency array = run once on mount
+
+	// ===============================================
 	// GEOMETRY CREATION HELPER FUNCTION
 	// ===============================================
 	
@@ -182,10 +203,10 @@ function ThreeScene({
 	}, [scale])
 
 
-	// Remove all canvas background creation. Just set scene.background to null for transparency.
+	// Update environment (sets background and adds/removes orbs)
 	useEffect(() => {
 		if (!sceneRef.current) return;
-		sceneRef.current.background = null;
+		updateEnvironment(sceneRef.current, environment);
 	}, [environment]);
 
 	// ...existing code...
@@ -270,30 +291,7 @@ function ThreeScene({
 					flatShading: false,
 					reflectivity: specularIntensity,
 				})
-				// Create thick wireframe using cylinders for sphere edges
-				const edgesGeometry = new THREE.EdgesGeometry(geometry)
-				const edgeVertices = edgesGeometry.attributes.position.array
-				const sphereWireframeGroup = new THREE.Group()
-				const sphereEdgePairs = []
-				for (let j = 0; j < edgeVertices.length; j += 6) {
-					const start = new THREE.Vector3(edgeVertices[j], edgeVertices[j+1], edgeVertices[j+2])
-					const end = new THREE.Vector3(edgeVertices[j+3], edgeVertices[j+4], edgeVertices[j+5])
-					const distance = start.distanceTo(end)
-					// Create thick cylinder for sphere edge - ADJUST 0.012 TO CHANGE THICKNESS
-					const cylinderGeom = new THREE.CylinderGeometry(0.005, 0.005, distance, 8)
-					const cylinderMesh = new THREE.Mesh(cylinderGeom, wireframeMaterial)
-					cylinderMesh.position.copy(start.clone().add(end).multiplyScalar(0.5))
-					cylinderMesh.lookAt(end)
-					cylinderMesh.rotateX(Math.PI / 2)
-					cylinderMesh.userData.baseLength = distance;
-					const iA_s = nearestVertexIndex(geometry, start);
-					const iB_s = nearestVertexIndex(geometry, end);
-					sphereEdgePairs.push([iA_s, iB_s]);
-					sphereWireframeGroup.add(cylinderMesh)
-				}
-				sphereWireframeGroup.userData.edgePairs = sphereEdgePairs;
-				wireframeMesh = sphereWireframeGroup
-				console.log('Created thick wireframe for sphere with', edgeVertices.length / 6, 'cylinder edges')
+				wireframeMesh = createSphereWireframe(geometry, wireframeMaterial);
 			} else if (geometry.type === 'BoxGeometry') {
 				// CUSTOM THICK WIREFRAME for BoxGeometry
 				wireframeMaterial = new THREE.MeshPhongMaterial({
