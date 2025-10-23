@@ -401,18 +401,58 @@ h1.quantum-title::after {
 
 
 .nav-link {
-  color: #00ffff;
   text-decoration: none;
   font-size: 18px;
   font-family: 'JetBrains Mono', monospace;
   font-weight: 700;
   letter-spacing: 1px;
   position: relative;
-  transition: color 0.2s, background 0.2s, box-shadow 0.2s;
+  transition: all 0.3s ease;
   border: none;
   outline: none;
-  background: none;
   cursor: pointer;
+  background: linear-gradient(45deg, #ff006e, #8338ec, #3a86ff);
+  background-size: 200% 200%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-shadow: 0 0 10px rgba(131, 56, 236, 0.3);
+}
+
+.nav-link:hover {
+  background: #ffffff;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  transform: scale(1.05);
+  text-shadow: 
+    0 0 20px rgba(255, 255, 255, 0.9),
+    0 0 30px rgba(255, 255, 255, 0.6),
+    0 0 40px rgba(255, 255, 255, 0.4);
+}
+
+/* Nav link button styling (for Sign In, Login, Logout) */
+.nav-link-button {
+  background: linear-gradient(45deg, #ff006e, #8338ec, #3a86ff);
+  background-size: 200% 200%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  padding: 0;
+  margin: 0;
+  text-shadow: 0 0 10px rgba(131, 56, 236, 0.3);
+}
+
+.nav-link-button:hover {
+  background: #ffffff;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  transform: scale(1.05);
+  text-shadow: 
+    0 0 20px rgba(255, 255, 255, 0.9),
+    0 0 30px rgba(255, 255, 255, 0.6),
+    0 0 40px rgba(255, 255, 255, 0.4);
 }
 
 .nav-link.quantum-btn {

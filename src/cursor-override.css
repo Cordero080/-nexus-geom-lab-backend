@@ -4,8 +4,18 @@
  */
 
 /* Global base styles - hide cursor on all pages by default */
-html, body {
+html {
   cursor: none !important;
+  overflow-y: scroll; /* Force scrollbar to always show */
+  scrollbar-gutter: stable; /* Reserve space for scrollbar */
+}
+
+body {
+  cursor: none !important;
+  overflow-x: hidden; /* Prevent horizontal scroll */
+  width: 100%;
+  margin: 0;
+  padding: 0;
 }
 
 /* Show regular cursor ONLY in playground */

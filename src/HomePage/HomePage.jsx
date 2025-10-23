@@ -12,8 +12,12 @@ import Scene from './Scene';
 // import './index.css';
 import './Home.css';
 import { BeamScanButton } from '../components/HUD';
+import { Link } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 
 export default function HomePage() {
+  const { isAuthenticated, logout } = useAuth();
+  
   // Quantum Uncertainty UI State (global for parallax)
   const portalWorlds = [
     { colors: ['#ff00cc', '#00fff7', '#1a003a'], label: 'Fractal' },
@@ -173,13 +177,27 @@ export default function HomePage() {
           <div className="logo-particles"></div>
         </div>
         <div className="nav-links">
-          <a href="#reality" className="nav-link" data-dimension="0">// INIT</a>
-          <a href="#probability" className="nav-link" data-dimension="1">// EXEC</a>
-          <a href="#entanglement" className="nav-link" data-dimension="2">// DEBUG</a>
-          <a href="#superposition" className="nav-link" data-dimension="3">// DEPLOY</a>
-          <div className="nav-terminal">
-            <span className="terminal-cursor">[ACTIVE]</span>
-          </div>
+          <a href="#reality" className="nav-link" data-dimension="0">// HOME</a>
+          <Link to="/public-gallery" className="nav-link" data-dimension="1">// GALLERY</Link>
+          <Link to="/showcase" className="nav-link" data-dimension="2">// SHOWCASE</Link>
+          {isAuthenticated && (
+            <div className="nav-terminal">
+              <button 
+                onClick={logout}
+                className="terminal-cursor"
+                style={{ 
+                  background: 'none', 
+                  border: 'none', 
+                  cursor: 'pointer',
+                  fontFamily: 'inherit',
+                  fontSize: 'inherit',
+                  color: '#00ff88'
+                }}
+              >
+                [LOGOUT]
+              </button>
+            </div>
+          )}
         </div>
         <div className="nav-quantum-field"></div>
       </nav>
@@ -258,11 +276,30 @@ export default function HomePage() {
                 <span className="stat-value" data-stat="network">CONNECTED</span>
               </div>
             </div>
-            <BeamScanButton
-              onClick={() => window.location.href = '/playground'}
-              label="Enter Playground"
-              style={{ margin: '32px auto 0', display: 'block' }}
-            />
+            
+            {isAuthenticated ? (
+              <BeamScanButton
+                onClick={() => window.location.href = '/playground'}
+                label="Enter Playground"
+                style={{ margin: '32px auto 0', display: 'block' }}
+              />
+            ) : (
+              <div style={{ display: 'flex', gap: '20px', justifyContent: 'center', margin: '32px auto 0' }}>
+                <Link to="/signup">
+                  <BeamScanButton
+                    label="Sign Up"
+                    style={{ padding: '8px 24px', fontSize: '14px', width: '140px' }}
+                  />
+                </Link>
+                <Link to="/login">
+                  <BeamScanButton
+                    label="Login"
+                    style={{ padding: '8px 24px', fontSize: '14px', width: '140px' }}
+                  />
+                </Link>
+              </div>
+            )}
+            
             <div className="reality-particles"></div>
           </div>
         </section>

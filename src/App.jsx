@@ -5,6 +5,12 @@ import Controls from './components/Controls/Controls';
 import HomePage from './HomePage/HomePage';
 import NavBar from './nav/NavBar';
 import ShowcaseGallery from './Showcase/ShowcaseGallery';
+import MyScenesPage from './pages/MyScenesPage/MyScenesPage';
+import PublicGalleryPage from './pages/PublicGalleryPage/PublicGalleryPage';
+import SignUpPage from './pages/SignUpPage/SignUpPage';
+import LoginPage from './pages/LoginPage/LoginPage';
+import { SceneProvider } from './context/SceneContext';
+import { AuthProvider } from './context/AuthContext';
 import { QuantumCursor } from "./components/Effects";
 import './cursor-override.css';
 
@@ -159,15 +165,22 @@ function App() {
   }, [window.location.pathname, isHomePage]);
   
   return (
-    <>
-      {/* Only render QuantumCursor on the homepage */}
-      {isHomePage && <QuantumCursor />}
-      <Routes>
-        <Route path="/" element={<HomePageWithNav />} />
-        <Route path="/playground" element={<Playground />} />
-        <Route path="/showcase" element={<><NavBar /><ShowcaseGallery /></>} />
-      </Routes>
-    </>
+    <AuthProvider>
+      <SceneProvider>
+        {/* Only render QuantumCursor on the homepage */}
+        {isHomePage && <QuantumCursor />}
+        <Routes>
+          <Route path="/" element={<HomePageWithNav />} />
+          <Route path="/playground" element={<Playground />} />
+          <Route path="/geometry-lab" element={<Playground />} />
+          <Route path="/showcase" element={<><NavBar /><ShowcaseGallery /></>} />
+          <Route path="/my-scenes" element={<><NavBar /><MyScenesPage /></>} />
+          <Route path="/public-gallery" element={<><NavBar /><PublicGalleryPage /></>} />
+          <Route path="/signup" element={<SignUpPage />} />
+          <Route path="/login" element={<LoginPage />} />
+        </Routes>
+      </SceneProvider>
+    </AuthProvider>
   );
 }
 
