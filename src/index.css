@@ -1,5 +1,13 @@
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&family=JetBrains+Mono:wght@300;400;500;600;700&display=swap");
 
+/* Future Z Font */
+@font-face {
+  font-family: 'Future Z';
+  src: url('/fonts/Future Z.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
 /* Highlighted quote in parallax scroll */
 .quote-highlight {
   margin: 180px 0 32px 0;

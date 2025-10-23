@@ -29,6 +29,7 @@
   scroll-snap-type: y mandatory;
   scroll-behavior: smooth;
   position: relative;
+  background: transparent; /* Ensure container doesn't block scene backgrounds */
 }
 
 /* Title overlay */
@@ -41,11 +42,12 @@
   text-align: center;
   pointer-events: none;
   transition: opacity 0.5s ease;
+  will-change: transform;
 }
 
 .showcase-main-title {
-  font-family: 'Future Z', 'Orbitron', 'Rajdhani', sans-serif;
-  font-size: 4rem;
+  font-family: 'Future Z', 'Orbitron', 'Rajdhani', sans-serif !important;
+  font-size: 3.2rem;
   font-weight: normal;
   font-style: normal;
   background: linear-gradient(135deg, #00ffbf 0%, #f61482 60%, #067c76 70%, #ffae00 100%);
@@ -91,6 +93,10 @@
   scroll-snap-align: start;
   position: relative;
   gap: 60px;
+  /* Background is set inline via style prop - no default background here */
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed; /* Optional: creates parallax effect */
 }
 
 /* Center position - first model */
@@ -108,6 +114,7 @@
   text-align: center;
   max-width: 700px;
   margin: 0 auto;
+  margin-top: -20px;
 }
 
 /* Left position - second model */
@@ -180,9 +187,11 @@
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
-  margin-bottom: 12px;
+  margin-bottom: 6px;
   text-transform: uppercase;
   letter-spacing: 3px;
+  transform: perspective(400px) rotateX(15deg);
+  transform-origin: center bottom;
 }
 
 .parallax-animation {

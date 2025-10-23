@@ -46,7 +46,7 @@ export default function ShowcaseGallery() {
     };
   }, [selectedAnimation]);
 
-  // Scroll progress bar
+  // Scroll progress bar and title fade
   useEffect(() => {
     const handleScroll = () => {
       const container = containerRef.current;
@@ -55,6 +55,23 @@ export default function ShowcaseGallery() {
       const progressBar = document.querySelector('.scroll-progress');
       if (progressBar) {
         progressBar.style.width = scrollProgress + '%';
+      }
+      
+      // Fade out title when scrolling
+      const titleOverlay = document.querySelector('.showcase-title-overlay');
+      if (titleOverlay) {
+        const scrollTop = container.scrollTop;
+        const fadeStart = 100; // Start fading after 100px
+        const fadeEnd = 300; // Fully faded by 300px
+        
+        if (scrollTop < fadeStart) {
+          titleOverlay.style.opacity = '1';
+        } else if (scrollTop > fadeEnd) {
+          titleOverlay.style.opacity = '0';
+        } else {
+          const fadeProgress = (scrollTop - fadeStart) / (fadeEnd - fadeStart);
+          titleOverlay.style.opacity = String(1 - fadeProgress);
+        }
       }
     };
 
@@ -87,9 +104,9 @@ export default function ShowcaseGallery() {
     {
       id: 1,
       name: 'Cosmic Entity #001',
-      animation: 'Idle',
+      animation: '',
       variant: 'Cosmic Blue',
-      description: 'A consciousness evolving inside a geometric vessel, suspended in the void between dimensions.',
+      description: 'Digital sentience evolving in a vessel through dance',
       fbxUrl: '/models/blue_robot.fbx',
       scale: 0.001275,
       background: 'linear-gradient(180deg, rgba(10, 0, 21, 0.95) 0%, rgba(8, 141, 236, 0.78) 30%, rgba(214, 67, 243, 0.6) 70%, rgba(0, 102, 255, 0.5) 100%)',
@@ -179,7 +196,7 @@ export default function ShowcaseGallery() {
         <div className="showcase-title-overlay">
           <h1 className="showcase-main-title">Technosentient Nexus</h1>
           <p className="showcase-main-subtitle">
-            A collection of consciousness evolving inside geometric vessels
+            A Museum of Cybergalactic Consciousness
           </p>
         </div>
 
@@ -199,12 +216,13 @@ export default function ShowcaseGallery() {
                 onMouseLeave={() => setHoveredCard(null)}
               >
                 <Canvas
-                  camera={{ position: [0, 1, 7], fov: 50 }}
+                  camera={{ position: [0, 1, 6], fov: 60 }}
                   style={{
                     width: '100%',
                     height: '100%',
                     opacity: modelLoaded[animation.id] ? 1 : 0,
-                    transition: 'opacity 0.7s'
+                    transition: 'opacity 0.7s',
+                    background: animation.background
                   }}
                 >
                   <ambientLight intensity={0.6} />
@@ -224,9 +242,7 @@ export default function ShowcaseGallery() {
                     }
                     preloadedModel={preloadedModels[animation.id]}
                   />
-                </Canvas>
-
-                {/* Loading Spinner */}
+                </Canvas>                {/* Loading Spinner */}
                 {!modelLoaded[animation.id] && (
                   <div className="loader-container">
                     <div className="loader-spinner" />
