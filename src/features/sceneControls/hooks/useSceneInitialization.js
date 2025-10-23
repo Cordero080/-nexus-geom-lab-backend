@@ -1,7 +1,6 @@
 import { useEffect } from "react";
 import { initializeScene } from "../sceneSetup";
 import { initializeLighting } from "../lightingSetup";
-import { startAnimationLoop } from "../animationLoop";
 
 /**
  * Initializes the Three.js scene, camera, renderer, and lighting
@@ -74,10 +73,7 @@ export function useSceneInitialization(refs, lightingProps) {
     scene.add(ambientLight);
     scene.add(directionalLight);
 
-    // 3. START ANIMATION LOOP - Continuously render the scene
-    startAnimationLoop(renderer, scene, camera, animationIdRef);
-
-    // 4. HANDLE WINDOW RESIZE - Keep canvas matching screen size
+    // 3. HANDLE WINDOW RESIZE - Keep canvas matching screen size
     const handleResize = () => {
       camera.aspect = window.innerWidth / window.innerHeight;
       camera.updateProjectionMatrix();
@@ -85,7 +81,7 @@ export function useSceneInitialization(refs, lightingProps) {
     };
     window.addEventListener("resize", handleResize);
 
-    // 5. CLEANUP FUNCTION - Runs when component unmounts
+    // 4. CLEANUP FUNCTION - Runs when component unmounts
     return () => {
       window.removeEventListener("resize", handleResize);
       if (animationIdRef.current) {
