@@ -1488,3 +1488,206 @@ function FBXModel({ url }) {
 ---
 
 **This plan is aggressive but achievable. The frontend complexity is already done - now it's just connecting the dots with a solid backend AND adding your secret sauce showcase gallery. Let's build this! 🚀**
+
+---
+
+## 📋 Next Steps Agenda
+
+### Phase 1: UI Components & User Flow (Current Focus)
+
+**1. Context-Aware Save Button System** 🎯 PRIORITY
+
+- [ ] Create `SaveButton.jsx` component in `/src/components/UI/SaveButton/`
+- [ ] Implement three button states:
+  - Fresh creation: "Save Scene" button
+  - Editing own scene: "Transmute" + "Save As New" buttons
+  - Remixing public scene: "Save Scene" (remix mode)
+- [ ] Add logic to detect current scene context (fresh vs loaded vs remixed)
+- [ ] Style with glassmorphic design + cyan glow for primary button
+- [ ] Add disabled state with tooltip for non-logged-in users
+
+**2. Save Scene Modal**
+
+- [ ] Create `SaveSceneModal.jsx` in `/src/components/Modals/`
+- [ ] Build form with:
+  - Scene name input (required, 3-50 chars)
+  - Description textarea (optional, 0-300 chars)
+  - Public/Private toggle switch
+  - Character count displays
+- [ ] Add form validation
+- [ ] Integrate with context to pre-fill name for "Save As New"
+- [ ] Show "Login required" message if not authenticated
+
+**3. My Scenes Gallery Page**
+
+- [ ] Create `MyScenesPage.jsx` in `/src/pages/`
+- [ ] Build scene card component with:
+  - Thumbnail (placeholder gradient for now)
+  - Public/Private badge
+  - Created date & view count
+  - "Load" button
+  - "Delete" button
+- [ ] Implement responsive grid (4 cols desktop, 2 tablet, 1 mobile)
+- [ ] Add empty state: "No scenes yet. Create your first scene!"
+- [ ] Build filter/sort controls:
+  - Sort: Newest | Oldest | Most Viewed | Name (A-Z)
+  - Filter: All | Public | Private
+
+**4. Delete Confirmation Modal**
+
+- [ ] Create `DeleteConfirmationModal.jsx`
+- [ ] Show warning icon, scene name, confirmation message
+- [ ] "Cancel" and "Delete" buttons (red destructive style)
+- [ ] Implement actual deletion logic (with backend API call)
+
+**5. Public Gallery Page**
+
+- [ ] Create `PublicGalleryPage.jsx`
+- [ ] Similar card grid as My Scenes but with:
+  - Creator attribution (@username)
+  - View count + like count (optional)
+  - "View" button instead of Load/Delete
+- [ ] Add sort controls: Newest | Most Viewed | Most Liked
+
+**6. Scene Viewer (Full-Screen Overlay)**
+
+- [ ] Create `SceneViewer.jsx`
+- [ ] Full-screen dark overlay with close button (X)
+- [ ] 3D canvas area (75% width) with loaded scene
+- [ ] Right sidebar (25%) with:
+  - Scene name, creator, description
+  - View count, like button
+  - **"Remix This"** button (primary CTA)
+- [ ] Enable orbital camera controls
+- [ ] ESC key to close
+
+---
+
+### Phase 2: Authentication System (After UI)
+
+**7. Login/Signup Modals**
+
+- [ ] Create `LoginModal.jsx` and `SignupModal.jsx`
+- [ ] Build forms with validation
+- [ ] Integrate with backend JWT auth
+- [ ] Store token in localStorage
+- [ ] Update navbar based on auth state
+- [ ] Implement "return to previous action" flow (e.g., back to Save Modal)
+
+**8. Auth Context Provider**
+
+- [ ] Create `AuthContext.jsx` for global auth state
+- [ ] Provide: `user`, `login()`, `signup()`, `logout()`, `isAuthenticated`
+- [ ] Persist auth state across page refreshes
+- [ ] Add protected route wrapper for My Scenes page
+
+---
+
+### Phase 3: Backend Integration (After Auth)
+
+**9. Scene API Service**
+
+- [ ] Create `/src/services/sceneApi.js`
+- [ ] Implement API functions:
+  - `saveScene(sceneData, token)`
+  - `updateScene(sceneId, sceneData, token)` (for Transmute)
+  - `getMyScenes(token)`
+  - `getPublicScenes()`
+  - `getSceneById(sceneId)`
+  - `deleteScene(sceneId, token)`
+- [ ] Add error handling and loading states
+
+**10. Scene Loading Logic**
+
+- [ ] Create `loadSceneIntoEditor(sceneConfig)` function
+- [ ] Apply all scene settings to controls:
+  - Object type, animation style, scale
+  - All material properties
+  - Hyperframe colors
+  - Environment settings
+  - Lighting settings
+- [ ] Update 3D canvas to reflect loaded scene
+- [ ] Set context flag for "Transmute" button to appear
+
+---
+
+### Phase 4: Gamification & Polish (Final Touches)
+
+**11. Animation Unlock System**
+
+- [ ] Create `AnimationUnlockToast.jsx`
+- [ ] Implement unlock triggers:
+  - 1st scene → Float unlocked
+  - 3rd scene → Spiral unlocked
+  - 5th scene → Chaos unlocked
+  - 10th scene → Alien unlocked
+- [ ] Slide-in animation from top-right
+- [ ] Celebratory particle effect (optional)
+- [ ] Auto-dismiss after 5 seconds
+
+**12. Loading & Error States**
+
+- [ ] Add loading spinners for:
+  - Scene saving
+  - Gallery loading
+  - Scene viewer loading
+- [ ] Create error toasts for:
+  - Save failed
+  - Network error
+  - Scene not found
+- [ ] Add skeleton loading cards for gallery
+
+**13. Responsive Refinements**
+
+- [ ] Test all pages on mobile/tablet
+- [ ] Collapsible sidebar for Geometry Lab on mobile
+- [ ] Bottom drawer for controls on mobile
+- [ ] Full-screen modals on mobile (not centered)
+
+---
+
+### Development Order (Recommended)
+
+**Week 1:**
+
+1. Save Button component (Scenario A: fresh creation)
+2. Save Scene Modal
+3. My Scenes Page (basic grid, no backend yet)
+4. Delete Confirmation Modal
+
+**Week 2:** 5. Login/Signup Modals + Auth Context 6. Backend API integration for scenes 7. Load scene logic + Transmute/Save As New buttons 8. Public Gallery Page
+
+**Week 3:** 9. Scene Viewer + Remix functionality 10. Animation unlock toasts 11. Loading/error states polish 12. Responsive testing & fixes
+
+---
+
+### Quick Reference: Component Hierarchy
+
+```
+App.jsx
+├── Navbar (with auth state)
+├── Routes:
+│   ├── Landing Page
+│   ├── Geometry Lab
+│   │   └── SaveButton (context-aware)
+│   ├── My Scenes Page (protected)
+│   │   └── SceneCard (with Load/Delete)
+│   ├── Public Gallery
+│   │   └── SceneCard (with View)
+│   └── Transcendence Chamber
+│
+├── Modals (overlays):
+│   ├── LoginModal
+│   ├── SignupModal
+│   ├── SaveSceneModal
+│   ├── DeleteConfirmationModal
+│   └── SceneViewer (full-screen)
+│
+└── Toasts:
+    ├── AnimationUnlockToast
+    └── ErrorToast / SuccessToast
+```
+
+---
+
+**Ready to build! Start with the Save Button component - it's the gateway to everything else.** 🚀

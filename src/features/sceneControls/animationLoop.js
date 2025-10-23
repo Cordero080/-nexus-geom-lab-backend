@@ -10,6 +10,7 @@ const animationStyles = {
       solidMesh,
       wireframeMesh,
       centerLines,
+      curvedLines,
       geometry,
       originalPositions,
     } = objData;
@@ -23,8 +24,10 @@ const animationStyles = {
       geometry.attributes.position.needsUpdate = true;
     }
 
-    // Apply rotation
-    const meshes = [solidMesh, wireframeMesh, centerLines].filter(Boolean);
+    // Apply rotation to ALL components including curvedLines
+    const meshes = [solidMesh, wireframeMesh, centerLines, curvedLines].filter(
+      Boolean
+    );
     meshes.forEach((mesh) => {
       mesh.rotation.x += 0.005;
       mesh.rotation.y += 0.01;
@@ -36,6 +39,7 @@ const animationStyles = {
       solidMesh,
       wireframeMesh,
       centerLines,
+      curvedLines,
       geometry,
       originalPositions,
       originalPosition,
@@ -51,8 +55,10 @@ const animationStyles = {
       geometry.attributes.position.needsUpdate = true;
     }
 
-    // Apply floating motion
-    const meshes = [solidMesh, wireframeMesh, centerLines].filter(Boolean);
+    // Apply floating motion to ALL components including curvedLines
+    const meshes = [solidMesh, wireframeMesh, centerLines, curvedLines].filter(
+      Boolean
+    );
     meshes.forEach((mesh) => {
       mesh.position.y = originalPosition.y + Math.sin((t + phase) * 0.8) * 0.5;
       mesh.rotation.x += 0.003;
@@ -65,6 +71,7 @@ const animationStyles = {
       solidMesh,
       wireframeMesh,
       centerLines,
+      curvedLines,
       geometry,
       originalPositions,
       originalPosition,
@@ -80,10 +87,12 @@ const animationStyles = {
       geometry.attributes.position.needsUpdate = true;
     }
 
-    // Apply spiral motion
+    // Apply spiral motion to ALL components including curvedLines
     const spiralRadius = 2;
     const spiralSpeed = 0.5;
-    const meshes = [solidMesh, wireframeMesh, centerLines].filter(Boolean);
+    const meshes = [solidMesh, wireframeMesh, centerLines, curvedLines].filter(
+      Boolean
+    );
 
     meshes.forEach((mesh) => {
       mesh.position.x =
@@ -102,6 +111,7 @@ const animationStyles = {
       solidMesh,
       wireframeMesh,
       centerLines,
+      curvedLines,
       geometry,
       originalPositions,
       originalPosition,
@@ -117,8 +127,10 @@ const animationStyles = {
       geometry.attributes.position.needsUpdate = true;
     }
 
-    // Apply chaotic motion
-    const meshes = [solidMesh, wireframeMesh, centerLines].filter(Boolean);
+    // Apply chaotic motion to ALL components including curvedLines
+    const meshes = [solidMesh, wireframeMesh, centerLines, curvedLines].filter(
+      Boolean
+    );
     meshes.forEach((mesh) => {
       mesh.position.x =
         originalPosition.x +
@@ -140,6 +152,7 @@ const animationStyles = {
       solidMesh,
       wireframeMesh,
       centerLines,
+      curvedLines,
       geometry,
       originalPositions,
       originalPosition,
@@ -170,8 +183,10 @@ const animationStyles = {
       geometry.computeVertexNormals();
     }
 
-    // Apply rotation
-    const meshes = [solidMesh, wireframeMesh, centerLines].filter(Boolean);
+    // Apply rotation to ALL components including curvedLines
+    const meshes = [solidMesh, wireframeMesh, centerLines, curvedLines].filter(
+      Boolean
+    );
     meshes.forEach((mesh) => {
       mesh.rotation.x += 0.004;
       mesh.rotation.y += 0.008;
