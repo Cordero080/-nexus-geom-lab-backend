@@ -106,6 +106,16 @@
 /* Initial State: Deep Violet/Crimson Space with New Base Gradient */
 
 
+/* Ensure Three.js canvas objects are not affected by environment hue rotation */
+.three-scene-container {
+	position: relative;
+	z-index: 10;
+}
+
+.three-scene-container canvas {
+	filter: none !important;
+}
+
 .bg-gradient-nebula{
   /* Base background: Uses Conic Gradient for a soft, swirling shape */
   background: 

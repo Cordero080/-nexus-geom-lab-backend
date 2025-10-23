@@ -157,39 +157,31 @@ const animationStyles = {
       originalPositions,
       originalPosition,
       phase,
-      magneticPoints,
     } = objData;
 
-    // Apply vertex morphing for alien/omni effect
+    // Reset vertices to original positions (no vertex morphing for omni rotation)
     if (geometry && originalPositions && solidMesh) {
       const positions = geometry.attributes.position.array;
-
-      for (let i = 0; i < positions.length; i += 3) {
-        const x = originalPositions[i];
-        const y = originalPositions[i + 1];
-        const z = originalPositions[i + 2];
-
-        // Multiple wave patterns
-        const wave1 = Math.sin(t * 2 + x * 3 + phase) * 0.15;
-        const wave2 = Math.cos(t * 1.5 + y * 2 + phase) * 0.1;
-        const wave3 = Math.sin(t * 3 + z * 2.5 + phase) * 0.12;
-
-        positions[i] = x + wave1;
-        positions[i + 1] = y + wave2;
-        positions[i + 2] = z + wave3;
+      for (let i = 0; i < positions.length; i++) {
+        positions[i] = originalPositions[i];
       }
-
       geometry.attributes.position.needsUpdate = true;
-      geometry.computeVertexNormals();
     }
 
-    // Apply rotation to ALL components including curvedLines
+    // Omni-directional rotation - multiple rotation axes with different speeds
     const meshes = [solidMesh, wireframeMesh, centerLines, curvedLines].filter(
       Boolean
     );
     meshes.forEach((mesh) => {
-      mesh.rotation.x += 0.004;
-      mesh.rotation.y += 0.008;
+      // Complex multi-axis rotation for omni effect
+      mesh.rotation.x += Math.sin(t * 0.8 + phase) * 0.008;
+      mesh.rotation.y += Math.cos(t * 1.2 + phase) * 0.01;
+      mesh.rotation.z += Math.sin(t * 0.6 + phase) * 0.006;
+
+      // Add oscillating position for omni movement
+      mesh.position.x = originalPosition.x + Math.sin(t * 1.5 + phase) * 0.3;
+      mesh.position.y = originalPosition.y + Math.cos(t * 1.8 + phase) * 0.3;
+      mesh.position.z = originalPosition.z + Math.sin(t * 1.1 + phase) * 0.3;
     });
   },
 };

@@ -220,7 +220,7 @@ export default function ShowcaseGallery() {
                   style={{
                     width: '100%',
                     height: '100%',
-                    opacity: modelLoaded[animation.id] ? 1 : 0,
+                    opacity: 1, // Always visible for debugging
                     transition: 'opacity 0.7s',
                     background: animation.background
                   }}

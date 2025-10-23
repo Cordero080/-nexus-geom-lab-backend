@@ -151,13 +151,31 @@ function ThreeScene({
 	}
 
 	return (
-		<div 
-			className={getBackgroundClass(environment)}
-			style={{
-				filter: `hue-rotate(${environmentHue}deg)`
-			}}
-		>
-			<div ref={mountRef} className="three-scene-container" />
+		<div style={{ position: 'relative', width: '100%', height: '100%' }}>
+			{/* Background layer with hue rotation */}
+			<div 
+				className={getBackgroundClass(environment)}
+				style={{
+					position: 'absolute',
+					top: 0,
+					left: 0,
+					width: '100%',
+					height: '100%',
+					zIndex: 1,
+					filter: `hue-rotate(${environmentHue}deg)`
+				}}
+			/>
+			{/* Three.js canvas layer - no hue rotation */}
+			<div 
+				ref={mountRef} 
+				className="three-scene-container"
+				style={{
+					position: 'relative',
+					zIndex: 2,
+					width: '100%',
+					height: '100%'
+				}}
+			/>
 		</div>
 	);
 }

@@ -277,28 +277,12 @@ export default function HomePage() {
               </div>
             </div>
             
-            {isAuthenticated ? (
-              <BeamScanButton
-                onClick={() => window.location.href = '/playground'}
-                label="Enter Playground"
-                style={{ margin: '32px auto 0', display: 'block' }}
-              />
-            ) : (
-              <div style={{ display: 'flex', gap: '20px', justifyContent: 'center', margin: '32px auto 0' }}>
-                <Link to="/signup">
-                  <BeamScanButton
-                    label="Sign Up"
-                    style={{ padding: '8px 24px', fontSize: '14px', width: '140px' }}
-                  />
-                </Link>
-                <Link to="/login">
-                  <BeamScanButton
-                    label="Login"
-                    style={{ padding: '8px 24px', fontSize: '14px', width: '140px' }}
-                  />
-                </Link>
-              </div>
-            )}
+            {/* Temporarily always show Enter Playground while building */}
+            <BeamScanButton
+              onClick={() => window.location.href = '/playground'}
+              label="Enter Playground"
+              style={{ margin: '32px auto 0', display: 'block' }}
+            />
             
             <div className="reality-particles"></div>
           </div>
