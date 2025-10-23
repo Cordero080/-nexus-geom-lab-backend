@@ -229,6 +229,12 @@ See [WIREFRAME_FIX_DOCUMENTATION.md](./WIREFRAME_FIX_DOCUMENTATION.md) for detai
 **Final:** 199 lines  
 **Removed:** 2501 lines (93% reduction)
 
+**Project Cleanup:**
+
+- ✅ Deleted ~1,500 lines of dead code across 8 unused folders
+- ✅ Removed duplicate components
+- ✅ Streamlined architecture for maximum maintainability
+
 ### Completed Phases ✅
 
 #### Phase 1: Wireframe Builders (246 lines removed)
@@ -339,12 +345,9 @@ See [WIREFRAME_FIX_DOCUMENTATION.md](./WIREFRAME_FIX_DOCUMENTATION.md) for detai
 - ✅ **Maintainability** - Changes to one area don't affect others
 - ✅ **Simplified main file** - ThreeScene.jsx is now a clean composition layer (199 lines!)
 
-**Project Cleanup:**
+---
 
-- ✅ Deleted ~1,500 lines of dead code across 8 unused folders
-- ✅ Removed duplicate components (`/components/Three`, `/Controls`, `/handlers`, `/services`, `/test`, `/styles`, `/components/UI`, `/components/ThreeScene`)
-- ✅ Streamlined import paths and dependencies
-- ✅ Cleaner git history and easier navigation
+## 🔗 Backend Integration Guide
 
 ### Material System Changes (Backend Sync) ⚠️ BREAKING CHANGES
 
@@ -520,9 +523,222 @@ GET /api/scenes/:id (load with new properties)
 ```
 
 **For Backend Developers:**
-Update your Scene model to match these property names. See `/backend/models/Scene.js` for the complete updated schema.
+Update your Scene model to match these property names. See backend documentation below for complete details.
 
-### Benefits Achieved So Far
+---
+
+## 🔌 Backend Updates Summary
+
+### ✅ Scene.js Model Status
+Your backend Scene.js model is already correct with all updated fields:
+- ✅ `metalness` and `emissiveIntensity` (no legacy specular properties)
+- ✅ `hyperframeColor` and `hyperframeLineColor` (renamed from intricate wireframe)
+- ✅ `environmentHue` (0-360° hue adjustment slider)
+
+**No specular properties found** - Schema is clean and matches frontend!
+
+---
+
+### 🐛 Critical Bug Fix in User.js Model
+
+**Line 48 - TYPO FIXED:**
+```javascript
+// BEFORE (BROKEN):
+this.unlockAnimations.push(animationId);  // ❌ Wrong property name!
+
+// AFTER (FIXED):
+this.unlockedAnimations.push(animationId); // ✅ Correct!
+```
+
+**Impact:** This bug prevented animation unlocking from working! The method was pushing to a non-existent array.
+
+---
+
+### 🔧 scenes.js Routes Updates
+
+#### 1. Animation Style Validation Added
+```javascript
+// Valid animations: rotate, float, spiral, chaos, alien, magnetic
+// Removed: liquid, metal, dna (excluded from validation)
+body("config.animationStyle")
+  .optional()
+  .isIn(["rotate", "float", "spiral", "chaos", "alien", "magnetic"])
+  .withMessage("Invalid animation style")
+```
+
+#### 2. Environment Hue Validation
+```javascript
+body("config.environmentHue")
+  .optional()
+  .isFloat({ min: 0, max: 360 })
+  .withMessage("Environment hue must be between 0 and 360")
+```
+
+#### 3. Cleanup
+- Removed duplicate `GET /api/scenes/:id` route
+- Fixed typo in success message ("succesfully" → "successfully")
+- Fixed property assignment typo (scene,isPublic → scene.isPublic)
+
+#### 4. DELETE Route Added ✨
+```javascript
+DELETE /api/scenes/:id - Delete scene (auth required, must own)
+```
+
+**Response (Success):**
+```json
+{
+  "success": true,
+  "message": "Scene deleted successfully"
+}
+```
+
+---
+
+### Complete API Reference
+
+#### Authentication (`/api/auth`)
+```
+POST   /api/auth/signup      - Create account
+POST   /api/auth/login       - Login
+GET    /api/auth/me          - Get profile (auth required)
+```
+
+#### Scenes (`/api/scenes`)
+```
+POST   /api/scenes           - Create scene (auth required)
+GET    /api/scenes           - Get public scenes
+GET    /api/scenes/my-scenes - Get user's scenes (auth required)
+GET    /api/scenes/:id       - Get single scene
+PUT    /api/scenes/:id       - Update scene (auth required, must own)
+DELETE /api/scenes/:id       - Delete scene (auth required, must own)
+```
+
+---
+
+### Database Schema (MongoDB)
+
+**Scene Config Structure:**
+```javascript
+{
+  // Material Properties
+  scale: Number (default: 1),
+  metalness: Number (default: 0.5),           // NEW (replaced shininess)
+  emissiveIntensity: Number (default: 0),     // NEW (replaced specularIntensity)
+  baseColor: String (default: "#ff00ff"),
+  wireframeIntensity: Number (default: 50),
+
+  // Hyperframe (renamed from "Intricate Wireframe")
+  hyperframeColor: String (default: "#ff4500"),        // RENAMED
+  hyperframeLineColor: String (default: "#00ff00"),    // RENAMED
+
+  // Scene Behavior
+  cameraView: String (default: "free"),
+  environment: String (default: "nebula"),
+  environmentHue: Number (default: 0),                 // NEW - 0-360° hue shift
+  objectCount: Number (default: 1),
+  animationStyle: String (default: "rotate"),          // rotate, float, spiral, chaos, alien, magnetic
+  objectType: String (default: "icosahedron"),
+
+  // Lighting
+  ambientLightColor: String (default: "#ffffff"),
+  ambientLightIntensity: Number (default: 0.5),
+  directionalLightColor: String (default: "#ffffff"),
+  directionalLightIntensity: Number (default: 1.0),
+  directionalLightX: Number (default: 10),
+  directionalLightY: Number (default: 10),
+  directionalLightZ: Number (default: 5)
+}
+```
+
+---
+
+### Frontend-Backend Property Mapping
+
+**Send from frontend:**
+
+```javascript
+// Example POST /api/scenes body:
+{
+  "name": "Purple Dream Sphere",
+  "description": "My awesome scene",
+  "isPublic": true,
+  "config": {
+    "scale": 1.5,
+    "metalness": 0.7,              // NOT "shininess"
+    "emissiveIntensity": 0.3,      // NOT "specularIntensity"
+    "baseColor": "#ff00ff",
+    "wireframeIntensity": 75,
+    "hyperframeColor": "#ff4500",       // NOT "intricateWireframeSpiralColor"
+    "hyperframeLineColor": "#00ff00",   // NOT "intricateWireframeEdgeColor"
+    "environment": "nebula",
+    "environmentHue": 180,              // NEW! 0-360 hue adjustment
+    "animationStyle": "alien",          // Valid: rotate, float, spiral, chaos, alien, magnetic
+    "objectType": "icosahedron"
+    // ... lighting properties
+  }
+}
+```
+
+---
+
+### Backend Testing Checklist
+
+#### 1. Test User.js Fix
+```bash
+# Verify animations unlock properly (this was broken before)
+```
+
+#### 2. Test environmentHue Property
+```javascript
+// Save scene with environmentHue: 180
+// Load scene and verify value persists
+```
+
+#### 3. Test Animation Validation
+```javascript
+// Try to save with animationStyle: "liquid"
+// Should get 400 error: "Invalid animation style"
+```
+
+#### 4. Test DELETE Route
+```javascript
+// Delete your own scene → Success (200)
+// Try to delete someone else's scene → Fail (403)
+// Try without auth → Fail (401)
+```
+
+---
+
+### Migration Notes
+
+**No database migration needed!** 🎉
+
+MongoDB (schema-less) automatically handles:
+- Old scenes without `environmentHue` → defaults to 0
+- Old scenes without `metalness`/`emissiveIntensity` → defaults work
+- Old scenes with removed animation types → frontend handles gracefully
+
+---
+
+### Summary of Backend Changes
+
+| Category | Old | New | Status |
+|----------|-----|-----|--------|
+| Material | shininess | metalness | ✅ Done |
+| Material | specularIntensity | emissiveIntensity | ✅ Done |
+| Material | specularColor | _(removed)_ | ✅ Done |
+| Hyperframe | intricateWireframeSpiralColor | hyperframeColor | ✅ Done |
+| Hyperframe | intricateWireframeEdgeColor | hyperframeLineColor | ✅ Done |
+| Environment | _(none)_ | environmentHue | ✅ Done |
+| Animations | liquid, metal, dna | _(removed)_ | ✅ Done |
+| User.js Bug | unlockAnimations | unlockedAnimations | ✅ Fixed |
+| Routes | _(incomplete)_ | DELETE /api/scenes/:id | ✅ Added |
+
+**All backend files synchronized with frontend!** 🚀
+
+---
+
+### Benefits Achieved
 
 ✅ **Better organization** - All creation logic and effects separated into focused modules  
 ✅ **Easier testing** - Each factory and hook can be unit tested independently  
@@ -532,39 +748,9 @@ Update your Scene model to match these property names. See `/backend/models/Scen
 ✅ **Simplified main file** - ThreeScene.jsx now 50% smaller with composition pattern  
 ✅ **Hook reusability** - Material, lighting, and object management can be reused
 
-### Next Session Prompt
-
-When resuming this refactoring work, use this prompt:
-
-```
-Continue refactoring ThreeScene.jsx - we're on Phase 6: Animation/Update Logic (FINAL PHASE)
-
-Progress so far:
-- Phase 1 ✅: Extracted wireframe builders (246 lines removed)
-- Phase 2 ✅: Extracted material factory (49 lines removed)
-- Phase 3 ✅: Extracted intricate wireframe builders (347 lines removed)
-- Phase 4 ✅: Extracted object factory (262 lines removed)
-- Phase 5 ✅: Extracted custom hooks (477 lines removed)
-- Current file: 1362 lines (started at 2700) - 50% reduction
-
-Phase 6 task (FINAL):
-Extract the massive animation loop useEffect into smaller, focused modules:
-- utils/animationHelpers.js - Pure animation calculation functions
-- utils/materialUpdaters.js - Material update utilities
-- Possibly create useAnimationLoop hook to orchestrate everything
-
-The animation loop is the last major block (~800+ lines) remaining in ThreeScene.jsx.
-It handles rotate, float, spiral, liquid, chaos, alien, dna, and magnetic animations.
-
-Expected outcome: Remove ~160 lines, reaching target of ~1,200 lines (55% reduction)
-
-The goal is to make the animation logic testable, maintainable, and reusable while
-keeping ThreeScene.jsx as a clean composition layer that just wires everything together.
-```
-
 ---
 
-## 🚀 Full-Stack Project Plan (3 Week Sprint)
+## 🚀 Full-Stack Integration Plan
 
 ### Project Vision
 
