@@ -12,19 +12,19 @@ export function createBoxIntricateWireframe(
   intricateWireframeSpiralColor,
   intricateWireframeEdgeColor
 ) {
-  console.log('Creating hypercube wireframe for BoxGeometry');
+  console.log("Creating hypercube wireframe for BoxGeometry");
 
   // Get the 8 corners of the outer cube (BoxGeometry 1.5x1.5x1.5)
   const size = 0.75; // Half of 1.5
   const outerCorners = [
     [-size, -size, -size], // 0: bottom-back-left
-    [size, -size, -size],  // 1: bottom-back-right
-    [size, size, -size],   // 2: top-back-right
-    [-size, size, -size],  // 3: top-back-left
-    [-size, -size, size],  // 4: bottom-front-left
-    [size, -size, size],   // 5: bottom-front-right
-    [size, size, size],    // 6: top-front-right
-    [-size, size, size],   // 7: top-front-left
+    [size, -size, -size], // 1: bottom-back-right
+    [size, size, -size], // 2: top-back-right
+    [-size, size, -size], // 3: top-back-left
+    [-size, -size, size], // 4: bottom-front-left
+    [size, -size, size], // 5: bottom-front-right
+    [size, size, size], // 6: top-front-right
+    [-size, size, size], // 7: top-front-left
   ];
 
   // Create inner cube (scaled down to be INSIDE the outer cube)
@@ -56,7 +56,7 @@ export function createBoxIntricateWireframe(
   ];
 
   const centerLinesMaterial = new THREE.MeshBasicMaterial({
-    color: new THREE.Color('#5900ffff'), // Bright purple for inner cube
+    color: new THREE.Color("#5900ffff"), // Bright purple for inner cube
     transparent: false,
     opacity: 1.0,
   });
@@ -81,11 +81,13 @@ export function createBoxIntricateWireframe(
     innerCubeGroup.add(cylinderMesh);
   });
 
-  console.log(`Created hypercube inner cube with ${innerEdges.length} cylinder edges`);
+  console.log(
+    `Created hypercube inner cube with ${innerEdges.length} cylinder edges`
+  );
 
   // 2. Create hypercube connections (corner to corner) using thick cylinders
   const curvedLinesMaterial = new THREE.MeshBasicMaterial({
-    color: new THREE.Color('#00ff00'), // Bright green for connections
+    color: new THREE.Color("#00ff00"), // Bright green for connections
     transparent: false,
     opacity: 1.0,
   });
@@ -111,7 +113,9 @@ export function createBoxIntricateWireframe(
     connectionGroup.add(cylinderMesh);
   }
 
-  console.log(`Created hypercube connections: ${innerEdges.length} thick cylinder connections`);
+  console.log(
+    `Created hypercube connections: ${innerEdges.length} thick cylinder connections`
+  );
 
   return {
     centerLines: innerCubeGroup,

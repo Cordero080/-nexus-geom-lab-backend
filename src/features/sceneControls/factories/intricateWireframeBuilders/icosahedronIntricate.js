@@ -12,7 +12,7 @@ export function createIcosahedronIntricateWireframe(
   intricateWireframeSpiralColor,
   intricateWireframeEdgeColor
 ) {
-  console.log('Creating hyper-icosahedron wireframe for IcosahedronGeometry');
+  console.log("Creating hyper-icosahedron wireframe for IcosahedronGeometry");
 
   // Golden ratio for icosahedron construction
   const phi = (1 + Math.sqrt(5)) / 2;
@@ -112,7 +112,9 @@ export function createIcosahedronIntricateWireframe(
     icosahedronConnectionGroup.add(cylinderMesh);
   }
 
-  console.log(`Created hyper-icosahedron connections: 12 vertex-to-vertex connections`);
+  console.log(
+    `Created hyper-icosahedron connections: 12 vertex-to-vertex connections`
+  );
 
   return {
     centerLines: innerIcosahedronGroup,

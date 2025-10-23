@@ -15,12 +15,12 @@ export function createOctahedronIntricateWireframe(
   // Get the 6 vertices of the octahedron (top, bottom, and 4 around the middle)
   const size = 1.0; // Octahedron radius
   const outerVertices = [
-    [0, size, 0],    // 0: Top vertex
-    [0, -size, 0],   // 1: Bottom vertex
-    [size, 0, 0],    // 2: Right vertex
-    [-size, 0, 0],   // 3: Left vertex
-    [0, 0, size],    // 4: Front vertex
-    [0, 0, -size],   // 5: Back vertex
+    [0, size, 0], // 0: Top vertex
+    [0, -size, 0], // 1: Bottom vertex
+    [size, 0, 0], // 2: Right vertex
+    [-size, 0, 0], // 3: Left vertex
+    [0, 0, size], // 4: Front vertex
+    [0, 0, -size], // 5: Back vertex
   ];
 
   // Create inner octahedron (scaled down)
@@ -108,7 +108,9 @@ export function createOctahedronIntricateWireframe(
     octahedronConnectionGroup.add(cylinderMesh);
   }
 
-  console.log(`Created hyper-octahedron connections: 6 vertex-to-vertex connections`);
+  console.log(
+    `Created hyper-octahedron connections: 6 vertex-to-vertex connections`
+  );
 
   return {
     centerLines: innerOctahedronGroup,

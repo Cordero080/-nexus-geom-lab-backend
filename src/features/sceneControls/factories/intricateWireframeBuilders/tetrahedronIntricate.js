@@ -12,21 +12,23 @@ export function createTetrahedronIntricateWireframe(
   intricateWireframeSpiralColor,
   intricateWireframeEdgeColor
 ) {
-  console.log('*** ENTERING TETRAHEDRON SECTION ***');
-  console.log('Creating hyper-tetrahedron with inner tetrahedron and vertex connections');
+  console.log("*** ENTERING TETRAHEDRON SECTION ***");
+  console.log(
+    "Creating hyper-tetrahedron with inner tetrahedron and vertex connections"
+  );
 
   // Get the 4 vertices from the tetrahedron geometry
   const vertices = geometry.attributes.position.array;
   const outerVertices = [];
   for (let v = 0; v < 4; v++) {
     outerVertices.push([
-      vertices[v * 3],     // x
+      vertices[v * 3], // x
       vertices[v * 3 + 1], // y
       vertices[v * 3 + 2], // z
     ]);
   }
 
-  console.log('Outer tetrahedron vertices:', outerVertices);
+  console.log("Outer tetrahedron vertices:", outerVertices);
 
   // Create inner tetrahedron vertices (scaled down by 0.5 from center)
   const innerVertices = outerVertices.map((vertex) => [
@@ -35,7 +37,7 @@ export function createTetrahedronIntricateWireframe(
     vertex[2] * 0.5,
   ]);
 
-  console.log('Inner tetrahedron vertices:', innerVertices);
+  console.log("Inner tetrahedron vertices:", innerVertices);
 
   // 1. Create inner tetrahedron wireframe using thick cylinders
   const centerLinesMaterial = new THREE.MeshBasicMaterial({
@@ -104,7 +106,9 @@ export function createTetrahedronIntricateWireframe(
     tetrahedronConnectionGroup.add(cylinderMesh);
   }
 
-  console.log(`Created hyper-tetrahedron connections: 4 thick vertex-to-vertex connections`);
+  console.log(
+    `Created hyper-tetrahedron connections: 4 thick vertex-to-vertex connections`
+  );
 
   return {
     centerLines: innerTetrahedronGroup,
