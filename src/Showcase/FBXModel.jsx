@@ -17,6 +17,7 @@ export default function FBXModel({ url, scale = 0.01, rotation = [0, 0, 0], posi
       (fbx) => {
         // Store the model
         modelRef.current = fbx;
+        console.log(`Loading model: ${url}, scale: ${scale}`);
 
         // Scale the model
         fbx.scale.setScalar(scale);
@@ -36,14 +37,23 @@ export default function FBXModel({ url, scale = 0.01, rotation = [0, 0, 0], posi
 
         // Setup animation mixer if animations exist
         if (fbx.animations && fbx.animations.length > 0) {
+          console.log(`Model ${url} has ${fbx.animations.length} animation(s):`, fbx.animations.map(anim => anim.name));
           const mixer = new THREE.AnimationMixer(fbx);
           mixerRef.current = mixer;
 
           // Clone the animation and remove root position tracks to prevent position drift
           const clip = fbx.animations[0].clone();
-          clip.tracks = clip.tracks.filter(track => {
-            // Keep all tracks except root position (removes X and Z position animation)
-            return !track.name.includes('.position');
+          // Remove only the root translation so characters stay centered while limb motion persists
+          clip.tracks = clip.tracks.filter((track) => {
+            const parts = track.name.split('.');
+            const property = parts.length ? parts[parts.length - 1].toLowerCase() : '';
+            if (property !== 'position') {
+              return true;
+            }
+
+            const nodePath = parts.slice(0, -1).join('.').toLowerCase();
+            const isRootPosition = nodePath.endsWith('hips') || nodePath.endsWith('root') || nodePath.endsWith('pelvis');
+            return !isRootPosition;
           });
 
           // Create the action and store it
@@ -54,6 +64,8 @@ export default function FBXModel({ url, scale = 0.01, rotation = [0, 0, 0], posi
           if (isPlaying) {
             action.play();
           }
+        } else {
+          console.log(`Model ${url} has no animations`);
         }
 
         // Add to scene
@@ -94,7 +106,7 @@ export default function FBXModel({ url, scale = 0.01, rotation = [0, 0, 0], posi
         console.error('Error loading FBX:', error);
       }
     );
-    
+
     // Cleanup
     return () => {
       // Stop and dispose animation mixer

@@ -42,9 +42,9 @@ export default function ShowcaseViewer({ animation, onClose }) {
         </button>
       
       <div className="viewer-canvas-container">
-        <Canvas
-          camera={{ position: [0, 0.8, 8], fov: 60 }}
-          style={{ width: '100%', height: '100%' }}
+            <Canvas
+              camera={{ position: [0, 0.8, 8], fov: 60 }}
+              style={{ width: '100%', height: '100%', flex: '1 1 auto' }}
         >
           <ambientLight intensity={0.64} />
           {/* Spectral skylight - colorful lights from above */}

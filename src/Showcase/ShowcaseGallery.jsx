@@ -12,6 +12,7 @@ export default function ShowcaseGallery() {
   const [hoveredCard, setHoveredCard] = useState(null);
   const [preloadedModels, setPreloadedModels] = useState({});
   const [modelLoaded, setModelLoaded] = useState({});
+  const [loadingModels, setLoadingModels] = useState(new Set());
   const location = useLocation();
   const containerRef = useRef(null);
 
@@ -166,33 +167,84 @@ export default function ShowcaseGallery() {
       background: 'linear-gradient(180deg, rgba(5, 5, 15, 0.95) 0%, rgba(139, 0, 0, 0.8) 20%, rgba(220, 20, 60, 0.6) 40%, rgba(178, 34, 34, 0.7) 60%, rgba(25, 25, 112, 0.8) 80%, rgba(0, 0, 0, 0.9) 100%)',
       // Enhanced viewer background (ominous deep space with crimson solar flares)
       viewerBackground: 'linear-gradient(135deg, #000008 0%, #1a0000 15%, #8b0000 30%, #dc143c 50%, #8b0000 70%, #1a0000 85%, #000008 100%)'
+    },
+    {
+      id: 5,
+      name: 'Icarus-X #005',
+      animation: 'Solar Ascension',
+      variant: 'Golden Phoenix',
+      description: 'The Transcendent Seraph...Reborn from Digital Ashes to Touch the Infinite',
+      fbxUrl: '/models/icarus.fbx',
+      scale: 0.02,
+      galleryScale: 0.015,
+      rotation: [0, 0, 0],
+      positionY: -1.8,
+      galleryPositionY: -1.5,
+      offsetX: 0,
+      offsetZ: 0,
+      background: 'linear-gradient(180deg, rgba(15, 5, 0, 0.95) 0%, rgba(255, 140, 0, 0.8) 20%, rgba(255, 215, 0, 0.7) 40%, rgba(255, 165, 0, 0.6) 60%, rgba(255, 69, 0, 0.7) 80%, rgba(139, 69, 19, 0.9) 100%)',
+      // Enhanced viewer background (radiant golden sunrise with warm amber tones)
+      viewerBackground: 'linear-gradient(135deg, #2d1810 0%, #ff8c00 25%, #ffd700 50%`, #ff8c00 75%, #2d1810 100%)'
     }
   ];
 
-  // Preload all FBX models in parallel on mount
+  // Load first model immediately, others on-demand (lazy loading)
   useEffect(() => {
     let isMounted = true;
     const loader = new FBXLoader();
-    const promises = mockAnimations.map((animation) => {
-      return new Promise((resolve, reject) => {
-        loader.load(
-          animation.fbxUrl,
-          (fbx) => resolve({ id: animation.id, fbx }),
-          undefined,
-          (err) => reject(err)
-        );
-      });
-    });
-    Promise.all(promises).then((results) => {
-      if (!isMounted) return;
-      const models = {};
-      results.forEach(({ id, fbx }) => {
-        models[id] = fbx;
-      });
-      setPreloadedModels(models);
-    });
+    // Only preload the first model to avoid initial freeze
+    const firstModel = mockAnimations[0];
+    
+    if (firstModel) {
+      loader.load(
+        firstModel.fbxUrl,
+        (fbx) => {
+          if (!isMounted) return;
+          setPreloadedModels({ [firstModel.id]: fbx });
+        },
+        undefined,
+        (err) => console.error(`Failed to preload first model:`, err)
+      );
+    }
     return () => { isMounted = false; };
   }, []);
+
+  // Load model on demand when user interacts with a card
+  const loadModelOnDemand = (animationId) => {
+    if (preloadedModels[animationId] || loadingModels.has(animationId)) {
+      return; // Already loaded or loading
+    }
+
+    setLoadingModels(prev => new Set(prev).add(animationId));
+    const animation = mockAnimations.find(a => a.id === animationId);
+    
+    if (!animation) return;
+
+    const loader = new FBXLoader();
+    loader.load(
+      animation.fbxUrl,
+      (fbx) => {
+        setPreloadedModels(prev => ({
+          ...prev,
+          [animationId]: fbx
+        }));
+        setLoadingModels(prev => {
+          const newSet = new Set(prev);
+          newSet.delete(animationId);
+          return newSet;
+        });
+      },
+      undefined,
+      (err) => {
+        console.error(`Failed to load model ${animationId}:`, err);
+        setLoadingModels(prev => {
+          const newSet = new Set(prev);
+          newSet.delete(animationId);
+          return newSet;
+        });
+      }
+    );
+  };
 
   // Determine position for each card
   const getCardPosition = (index) => {
@@ -229,8 +281,15 @@ export default function ShowcaseGallery() {
             >
               <div
                 className={`parallax-model-card parallax-model-card-${animation.id}`}
-                onClick={() => setSelectedAnimation(animation)}
-                onMouseEnter={() => setHoveredCard(animation.id)}
+                onClick={() => {
+                  loadModelOnDemand(animation.id);
+                  setSelectedAnimation(animation);
+                }}
+                onMouseEnter={() => {
+                  setHoveredCard(animation.id);
+                  // Preload on hover for smoother experience
+                  loadModelOnDemand(animation.id);
+                }}
                 onMouseLeave={() => setHoveredCard(null)}
               >
                 <Canvas
@@ -254,16 +313,20 @@ export default function ShowcaseGallery() {
                     offsetZ={animation.offsetZ}
                     cubeY={0.3}
                     size={3.4}
-                    isPlaying={hoveredCard === animation.id}
-                    onModelLoaded={() =>
-                      setModelLoaded((prev) => ({ ...prev, [animation.id]: true }))
-                    }
+                    isPlaying={true}
+                    onModelLoaded={() => {
+                      console.log(`Model loaded: ${animation.name} (ID: ${animation.id})`);
+                      setModelLoaded((prev) => ({ ...prev, [animation.id]: true }));
+                    }}
                     preloadedModel={preloadedModels[animation.id]}
                   />
                 </Canvas>                {/* Loading Spinner */}
-                {!modelLoaded[animation.id] && (
+                {(!modelLoaded[animation.id] || loadingModels.has(animation.id)) && (
                   <div className="loader-container">
                     <div className="loader-spinner" />
+                    {loadingModels.has(animation.id) && (
+                      <div className="loading-text">Loading 3D Model...</div>
+                    )}
                   </div>
                 )}
               </div>
