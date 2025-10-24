@@ -3,12 +3,12 @@ const router = express.Router();
 const { body, validationResult } = require("express-validator");
 const Scene = require("../models/Scene");
 const authMiddleware = require("../middleware/auth");
-const checkAndUnlockAnimations = require("../middleware/unlockChecker");
+const checkAndUnlockTechnosentients = require("../middleware/unlockChecker");
 
 /**
  * CREATE SCENE ROUTE
  * POST /api/scenes
- * Saves a new scene + checks for animation unlocks
+ * Saves a new scene + checks for technosentient unlocks
  * Private (requires login)
  */
 router.post(
@@ -24,10 +24,7 @@ router.post(
 
     body("config").isObject().withMessage("Config must be an object"),
     
-    body("config.animationStyle")
-      .optional()
-      .isIn(["rotate", "float", "spiral", "chaos", "alien"])
-      .withMessage("Invalid animation style"),
+    // No animationStyle validation - all visual effects are always available
   ],
 
   async (req, res) => {
@@ -51,15 +48,15 @@ router.post(
 
       await scene.save();
       
-      // Check if this unlocks any animations
-      await checkAndUnlockAnimations(req, res, async () => {
+      // Check if this unlocks any technosentients
+      await checkAndUnlockTechnosentients(req, res, async () => {
         await scene.populate("userId", "username");
 
         res.status(201).json({
           success: true,
           message: "Scene created successfully",
           scene,
-          unlockedAnimations: req.unlockedAnimations || [],
+          unlockedTechnosentients: req.unlockedTechnosentients || [],
         });
       });
     } catch (error) {
@@ -120,10 +117,7 @@ router.put(
       .isObject()
       .withMessage('Config must be an object'),
     
-    body("config.animationStyle")
-      .optional()
-      .isIn(["rotate", "float", "spiral", "chaos", "alien"])
-      .withMessage("Invalid animation style"),
+    // No animationStyle validation - all visual effects are always available
       
     body("config.environmentHue")
       .optional()

@@ -26,10 +26,10 @@ const userSchema = new mongoose.Schema({
     required: true,
     minlength: 6,
   },
-  unlockedAnimations: {
+  unlockedTechnosentients: {
     //FIELD 4
     type: [String],
-    default: ["rotate"], // Everyone starts with "rotate" animation unlocked
+    default: ["blu-khan"], // Everyone starts with Blu-Khan unlocked
   },
   createdAt: {
     //FIELD 5
@@ -54,14 +54,14 @@ userSchema.pre("save", async function (next) {
 userSchema.methods.comparePassword = async function (candidatePassword) {
   return await bcrypt.compare(candidatePassword, this.password);
 };
-// Method to check if animation is unlocked
-userSchema.methods.hasUnlockedAnimation = function (animationName) {
-  return this.unlockedAnimations.includes(animationName);
+// Method to check if technosentient is unlocked
+userSchema.methods.hasUnlockedTechnosentient = function (technosentientName) {
+  return this.unlockedTechnosentients.includes(technosentientName);
 };
-// Method to unlock animation
-userSchema.methods.unlockAnimation = function (animationName) {
-  if (!this.hasUnlockedAnimation(animationName)) {
-    this.unlockedAnimations.push(animationName);
+// Method to unlock technosentient
+userSchema.methods.unlockTechnosentient = function (technosentientName) {
+  if (!this.hasUnlockedTechnosentient(technosentientName)) {
+    this.unlockedTechnosentients.push(technosentientName);
   }
 };
 module.exports = mongoose.model("User", userSchema);

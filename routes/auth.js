@@ -58,7 +58,7 @@ router.post(
         username,
         email,
         password,
-        unlockedAnimations: ["rotate"], // Welcome gift: "rotate" animation unlocked!
+        unlockedTechnosentients: ["blu-khan"], // Welcome gift: Blu-Khan unlocked!
       });
 
       // Save to database
@@ -81,7 +81,7 @@ router.post(
           id: user._id,
           username: user.username,
           email: user.email,
-          unlockedAnimations: user.unlockedAnimations,
+          unlockedTechnosentients: user.unlockedTechnosentients,
         },
       });
     } catch (error) {
@@ -157,8 +157,7 @@ router.post(
         user: {
           id: user._id,
           username: user.username,
-          email: user.email,
-          unlockedAnimations: user.unlockedAnimations, // Shows what they've unlocked!
+          unlockedTechnosentients: user.unlockedTechnosentients, // Shows what they've unlocked!
         },
       });
     } catch (error) {
@@ -187,7 +186,7 @@ router.get("/me", authMiddleware, async (req, res) => {
         id: req.user._id,
         username: req.user.username,
         email: req.user.email,
-        unlockedAnimations: req.user.unlockedAnimations,
+        unlockedTechnosentients: req.user.unlockedTechnosentients,
         createdAt: req.user.createdAt,
       },
     });

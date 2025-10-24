@@ -39,8 +39,8 @@ const sceneSchema = new mongoose.Schema({
     objectCount: { type: Number, default: 1 },
     animationStyle: { 
       type: String, 
-      default: "rotate",
-      enum: ["rotate", "float", "spiral", "chaos", "alien"] // Removed "magnetic"
+      default: "rotate"
+      // No validation - all visual effects are always available
     },
     objectType: { type: String, default: "icosahedron" },
 
