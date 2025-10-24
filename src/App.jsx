@@ -146,34 +146,36 @@ function HomePageWithNav() {
 function App() {
   // Use location hook from react-router-dom to track route changes reliably
   const location = useNavigate();
-  const isHomePage = window.location.pathname === '/' || window.location.pathname === '';
+  const currentPath = window.location.pathname;
+  const isHomePage = currentPath === '/' || currentPath === '';
+  const isPlaygroundPage = currentPath === '/playground' || currentPath === '/geometry-lab';
   
   // Set cursor style and body class based on current route
   useEffect(() => {
-    console.log(`App route change detected - path: ${window.location.pathname}, isHomePage: ${isHomePage}`);
+    console.log(`App route change detected - path: ${currentPath}, isHomePage: ${isHomePage}, isPlaygroundPage: ${isPlaygroundPage}`);
     
-    if (isHomePage) {
-      // On homepage, hide the default cursor to allow quantum cursor to work
-      console.log('Homepage mode active - quantum cursor enabled');
-      document.body.classList.remove('playground-page');
-    } else {
-      // On playground, use default cursor for better control interaction
+    if (isPlaygroundPage) {
+      // On playground/geometry-lab, use default cursor for better control interaction
       document.body.classList.add('playground-page');
       console.log('Playground mode active - normal cursor enabled');
+    } else {
+      // On all other pages, hide the default cursor to allow quantum cursor to work
+      console.log('Quantum cursor mode active - custom cursor enabled');
+      document.body.classList.remove('playground-page');
     }
-  }, [window.location.pathname, isHomePage]);
+  }, [currentPath, isHomePage, isPlaygroundPage]);
   
   return (
     <AuthProvider>
       <SceneProvider>
-        {/* Only render QuantumCursor on the homepage */}
-        {isHomePage && <QuantumCursor />}
+        {/* Render QuantumCursor on all pages EXCEPT playground/geometry-lab */}
+        {!isPlaygroundPage && <QuantumCursor />}
         <Routes>
           <Route path="/" element={<HomePageWithNav />} />
           <Route path="/playground" element={<Playground />} />
           <Route path="/geometry-lab" element={<Playground />} />
           <Route path="/showcase" element={<><NavBar /><ShowcaseGallery /></>} />
-          <Route path="/gallery" element={<><NavBar /><MyScenesPage /></>} />
+          <Route path="/gallery" element={<MyScenesPage />} />
           <Route path="/signup" element={<SignUpPage />} />
           <Route path="/login" element={<LoginPage />} />
         </Routes>

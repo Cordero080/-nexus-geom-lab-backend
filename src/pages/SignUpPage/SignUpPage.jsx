@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { BeamScanButton } from '../../components/HUD';
-import { QuantumCursor } from '../../components/Effects';
 import './SignUpPage.css';
 
 export default function SignUpPage() {
@@ -96,7 +95,6 @@ export default function SignUpPage() {
 
   return (
     <>
-      <QuantumCursor />
       <div className="signup-page">
         {/* Navigation Bar */}
         <nav

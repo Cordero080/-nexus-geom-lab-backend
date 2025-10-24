@@ -1,12 +1,50 @@
 /* My Scenes Page Styles */
 
+/* Parallax Background Layers */
+.parallax-bg-layer,
+.parallax-fg-layer {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 40vh;
+  z-index: -1;
+  pointer-events: none;
+}
+
+.parallax-bg-layer {
+  z-index: -2; /* Behind foreground layer */
+}
+
+.parallax-fg-layer {
+  z-index: -1; /* In front of background layer */
+}
+
+/* Gallery Scene Background with Clip-Path */
+.bg-gallery-reality {
+  background: linear-gradient(120deg, #0a0f1a 60%, #1a2a3a 100%),
+    repeating-linear-gradient(-30deg, #00f0ff22 0 2px, transparent 2px 40px);
+  clip-path: polygon(0 0, 100% 0, 100% 80%, 60% 100%, 0 80%);
+  min-height: 100vh;
+  width: 100vw;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: -3; /* Behind parallax layers */
+}
+
+/* Ensure quantum nav backdrop consistency */
+.my-scenes-page .quantum-nav {
+  backdrop-filter: blur(8px) saturate(150%);
+  background: rgba(0,0,0,0.3);
+}
+
 .my-scenes-page {
   min-height: 100vh;
   width: 100vw;
   max-width: 100%;
   padding: 120px 24px 40px; /* Increased top padding for fixed navbar (100px + 20px spacing) */
-  background: radial-gradient(ellipse at top, #1a0033 0%, #000000 50%);
-  background-attachment: fixed; /* Keep background fixed during scroll */
+  background: transparent; /* Remove background to show clip-path scene background */
   color: #ffffff;
   overflow-x: hidden; /* Prevent horizontal scroll */
   box-sizing: border-box;

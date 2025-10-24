@@ -8,25 +8,161 @@
   font-style: normal;
 }
 
-/* Highlighted quote in parallax scroll */
-.quote-highlight {
-  margin: 180px 0 32px 0;
-  padding: 24px 32px;
-  border: none;
-  border-radius: 18px;
-  font-size: 1.18em;
-  font-style: italic;
-  font-family: 'Orbitron', 'JetBrains Mono', monospace;
+/* Global Styles */
+* {
+  font-family: 'Orbitron', 'JetBrains Mono', monospace !important;
+}
+
+body {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  font-family: "Inter", sans-serif;
+  background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 50%, #16213e 100%);
+  color: #ffffff;
+  overflow-x: hidden;
+  position: relative;
+  cursor: none;
+}
+
+/* Cursor Styles */
+.cursor {
+  position: fixed;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 99999;
+  opacity: 0;
+  background: radial-gradient(circle, #00ffff 0%, #ff00cc 100%);
+  box-shadow: 0 0 30px #00ffff, 0 0 60px #ff00cc;
+  transition: opacity 0.2s;
+}
+
+/* Wormhole Effect */
+.wormhole {
+  position: fixed;
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  pointer-events: none;
+  left: 0;
+  top: 0;
+  opacity: 0;
+  z-index: 9999;
+  background: radial-gradient(circle, #00fff7 0%, #00fff7cc 40%, transparent 80%);
+  box-shadow: 0 0 32px 8px #00fff7cc, 0 0 64px 16px #ff00cc99;
+  transition: opacity 0.2s;
+}
+
+.wormhole.ripple {
+  animation: quantum-ripple 0.7s cubic-bezier(.77,0,.18,1);
+  opacity: 1 !important;
+}
+
+.wormhole::before,
+.wormhole::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  pointer-events: none;
+  opacity: 0.7;
+  z-index: 1;
+}
+
+.wormhole::before {
+  width: 120px;
+  height: 120px;
+  background: conic-gradient(from 0deg, #00fff749 0%, #ff00cc 40%, #ffff00 70%, #00fff74e 100%);
+  filter: blur(8px) brightness(1.2);
+  animation: wormhole-spin 1.2s linear infinite;
+}
+
+.wormhole::after {
+  width: 80px;
+  height: 80px;
+  background: radial-gradient(circle, #ffffff2e 0%, #00fff729 60%, transparent 100%);
+  filter: blur(2px) brightness(1.1);
+  animation: wormhole-pulse 1.2s ease-in-out infinite;
+}
+
+/* Navigation Bar */
+.quantum-nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 100px;
+  background: rgba(0, 0, 0, 0.093);
+  backdrop-filter: blur(30px);
+  border-bottom: 1px solid rgba(0, 255, 255, 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 40px;
+  max-width: 100vw;
+  box-sizing: border-box;
+  z-index: 10000;
+  transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.quantum-nav::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #00ffff, #ff00ff, #ffff00, transparent);
+  animation: navScan 8s ease-in-out infinite;
+  z-index: 10;
+}
+
+.quantum-nav::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #00ffff, #ff00ff, #ffff00, transparent);
+  animation: navScan 8s ease-in-out infinite;
+  z-index: 10;
+}
+
+.quantum-nav .nav-logo {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.logo-text, #myName {
+  font-family: "Future Z", sans-serif !important;
+  font-size: 24px;
   font-weight: 800;
-  background: linear-gradient(135deg, #00ffff72, #ff00668d, #ffff0094, #00ff33, #cc00ff, #ff3300);
-  background-size: 300% 300%;
+  background: linear-gradient(45deg, #ff006e, #8338ec, #07429f);
+  background-size: 200% 200%;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  color: #ffffff;
-  text-shadow: 0 0 20px rgba(45, 86, 86, 0.4);
-  animation: logoGlitch 6s ease-in-out infinite, gradientShift 4s ease-in-out infinite;
-  letter-spacing: 0.01em;
+  color: #fff;
+  text-shadow: none;
+  animation: none;
+  position: relative;
+}
+
+.logo-text::before {
+  content: attr(data-text);
+  position: absolute;
+  top: 0;
+  left: 2px;
+  color: #ff00ff;
   animation: glitchShift1 3s ease-in-out infinite;
   z-index: -1;
   opacity: 0.7;
@@ -46,23 +182,38 @@
 .nav-links {
   display: flex;
   align-items: center;
-  gap: 30px;
+  gap: 20px;
 }
 
 .nav-link {
-  color: #00ffff;
   text-decoration: none;
   font-size: 18px;
   font-family: 'JetBrains Mono', monospace;
   font-weight: 700;
   letter-spacing: 1px;
   position: relative;
-  transition: color 0.2s;
+  transition: all 0.3s ease;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  background: linear-gradient(45deg, #ff006e, #8338ec, #3a86ff);
+  background-size: 200% 200%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-shadow: 0 0 10px rgba(131, 56, 236, 0.3);
 }
 
 .nav-link:hover {
-  color: #ff00cc;
-  text-shadow: 0 0 10px #ff00cc;
+  background: #ffffff;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  transform: scale(1.05);
+  text-shadow: 
+    0 0 20px rgba(255, 255, 255, 0.9),
+    0 0 30px rgba(255, 255, 255, 0.6),
+    0 0 40px rgba(255, 255, 255, 0.4);
 }
 
 .nav-terminal {
@@ -72,30 +223,11 @@
   font-family: 'JetBrains Mono', monospace;
 }
 
-body {
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-  font-family: "Inter", sans-serif;
-  background: 
-    linear-gradient(135deg, #0f0f23 0%, #1a1a2e 50%, #16213e 100%);
-  color: #ffffff;
-  overflow-x: hidden;
-  position: relative;
-  cursor: none;
-}
-
-@keyframes bgGradientShift {
-  0% { background-position: 0% 50%; }
-  100% { background-position: 100% 50%; }
-}
-
+/* Title Styles */
 h1.quantum-title {
-  font-size: clamp(48px, 8vw, 120px);
+  font-size: clamp(46px, 7.6vw, 114px);
   font-weight: 800;
+  font-family: 'Future Z', 'Orbitron', 'Rajdhani', sans-serif !important;
   margin-bottom: 30px;
   perspective: 1000px;
   position: relative;
@@ -125,12 +257,165 @@ h1.quantum-title::after {
   clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
   animation: quantumTitleGlitchBefore 2.7s steps(1, end) infinite;
 }
+
 h1.quantum-title::after {
   color: #ff00ff;
   opacity: 0.5;
   filter: blur(1.2px) brightness(1.1);
   z-index: -2;
   animation: quantumTitleGlitchAfter 2.2s steps(1, end) infinite;
+}
+
+.title-word {
+  display: inline-block;
+  margin: 0 15px;
+  font-family: 'Future Z', 'Orbitron', 'Rajdhani', sans-serif !important;
+  font-weight: 800;
+  background: linear-gradient(135deg, #00ffff, #ff0099, #ffff00, #00ff00, #9900ff);
+  background-size: 200% 200%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: #00ffff;
+  animation: quantumFloat 4s ease-in-out infinite, gradientShift 3s ease-in-out infinite;
+  animation-delay: calc(var(--word-index, 0) * 0.2s);
+  letter-spacing: 2px;
+  position: relative;
+  z-index: 100001;
+}
+
+.zero-char {
+  font-family: 'Orbitron', sans-serif !important;
+  font-weight: 900;
+}
+
+.quantum-subtitle {
+  font-size: 20px;
+  color: #00ffff;
+  margin-bottom: 40px;
+  font-family: 'JetBrains Mono', monospace;
+  letter-spacing: 2px;
+  opacity: 0.8;
+}
+
+/* Quote Styles */
+.quote-highlight {
+  margin: 180px 0 32px 0;
+  padding: 24px 32px;
+  border: none;
+  border-radius: 18px;
+  font-size: 1.18em;
+  font-style: italic;
+  font-family: 'Orbitron', 'JetBrains Mono', monospace;
+  font-weight: 800;
+  background: linear-gradient(135deg, #00ffff72, #ff00668d, #ffff0094, #00ff33, #cc00ff, #ff3300);
+  background-size: 300% 300%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  color: #ffffff;
+  text-shadow: 0 0 20px rgba(45, 86, 86, 0.4);
+  animation: gradientShift 4s ease-in-out infinite;
+  letter-spacing: 0.01em;
+  z-index: -1;
+  opacity: 0.7;
+}
+
+/* Button Styles */
+.beam-btn {
+  position: relative;
+  margin-top: 3rem;
+  display: inline-block;
+  padding: .6rem 2rem;
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #fff;
+  background: linear-gradient(90deg, #00ffff 0%, #ff00cc 100%);
+  border: none;
+  border-radius: 24px;
+  box-shadow: 0 6px 32px #00ffffcc;
+  cursor: pointer;
+  letter-spacing: 0.08em;
+  overflow: hidden;
+  z-index: 1;
+  isolation: isolate;
+}
+
+.beam-btn-label {
+  position: relative;
+  z-index: 2;
+  font-family: 'Orbitron', 'JetBrains Mono', 'Roboto Mono', monospace;
+  letter-spacing: 0.14em;
+  font-weight: 900;
+  text-transform: uppercase;
+  font-size: 1.3rem;
+}
+
+.beam-btn-code {
+  position: absolute;
+  left: 0; top: 0; width: 100%; height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  width: 100%;
+  color: #fff;
+  font-family: 'Roboto Mono', 'JetBrains Mono', monospace;
+  font-size: 1.1rem;
+  font-weight: 900;
+  pointer-events: none;
+  user-select: none;
+  z-index: 3;
+  opacity: 1;
+  -webkit-mask-image: linear-gradient(90deg, transparent 23%, #fff 28%, #fff 98%, transparent 100%);
+  -webkit-mask-size: 300% 100%;
+  -webkit-mask-position: 0 0;
+  mask-image: linear-gradient(90deg, transparent 23%, #fff 28%, #fff 98%, transparent 100%);
+  mask-size: 300% 100%;
+  mask-position: 0 0;
+  animation: code-mask-bar 2.5s cubic-bezier(.77,0,.18,1) infinite;
+}
+
+.beam-btn::after {
+  content: '';
+  position: absolute;
+  left: -50%;
+  top: 0;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent 45%, #fff 49%, #1dedf4 51%, transparent 55%);
+  box-shadow: 0 0 24px 8px #fff, 0 0 48px 16px #ff00f7;
+  opacity: 0.8;
+  z-index: 4;
+  pointer-events: none;
+  animation: beam-bar-move 2.5s cubic-bezier(.77,0,.18,1) infinite;
+}
+
+/* Layout */
+.parallax-container {
+  width: 100vw;
+  margin-top: 70px;
+  overflow-x: hidden;
+}
+
+/* Animations */
+@keyframes navScan {
+  0%, 100% { transform: translateX(-100%); opacity: 0; }
+  20%, 80% { opacity: 1; }
+  50% { transform: translateX(100%); }
+}
+
+@keyframes glitchShift1 {
+  0%, 90%, 100% { transform: translate(0); }
+  91% { transform: translate(-2px, 1px); }
+  92% { transform: translate(2px, -1px); }
+  93% { transform: translate(-1px, 2px); }
+}
+
+@keyframes glitchShift2 {
+  0%, 85%, 100% { transform: translate(0); }
+  86% { transform: translate(1px, -2px); }
+  87% { transform: translate(-2px, 1px); }
+  88% { transform: translate(2px, 2px); }
 }
 
 @keyframes quantumTitleGlitch {
@@ -198,380 +483,6 @@ h1.quantum-title::after {
   }
 }
 
-.quantum-nav::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 2px;
-  background: linear-gradient(90deg, transparent, #00ffff, #ff00ff, #ffff00, transparent);
-  animation: navScan 8s ease-in-out infinite;
-  z-index: 10;
-}
-
-@keyframes navScan {
-  0%, 100% { transform: translateX(-100%); opacity: 0; }
-  20%, 80% { opacity: 1; }
-  50% { transform: translateX(100%); }
-}
-
-.nav-links {
-  display: flex;
-  gap: 30px;
-  align-items: center;
-}
-.nav-link {
-  position: relative;
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 7px;
-  font-weight: 600;
-  color: rgba(255, 255, 255, 0.8);
-  text-decoration: none;
-  padding: 10px 20px;
-  border: 1px solid rgba(0, 255, 255, 0.3);
-  border-radius: 2px;
-  background: rgba(0, 0, 0, 0.4);
-  transition: color 0.3s cubic-bezier(.77,0,.18,1), border-color 0.3s cubic-bezier(.77,0,.18,1), background 0.3s cubic-bezier(.77,0,.18,1), box-shadow 0.3s cubic-bezier(.77,0,.18,1), transform 0.3s cubic-bezier(.77,0,.18,1), text-shadow 0.3s cubic-bezier(.77,0,.18,1);
-  overflow: hidden;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-}
-.nav-link::before {
-  content: '';
-  position: absolute;
-  top: 0; left: -100%;
-  width: 100%; height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(0, 255, 255, 0.2), transparent);
-  transition: left 0.3s cubic-bezier(.77,0,.18,1);
-}
-.nav-link:hover {
-  color: #ffffff;
-  border-color: rgba(0, 255, 255, 0.8);
-  background: rgba(0, 255, 255, 0.1);
-  box-shadow: 0 0 20px rgba(0, 255, 255, 0.4), inset 0 0 20px rgba(0, 255, 255, 0.1);
-  transform: translateY(-1px);
-  text-shadow: 0 0 10px rgba(0, 255, 255, 0.8);
-}
-.nav-link:hover::before {
-  left: 100%;
-}
-
-.logo-text {
-  font-family: 'JetBrains Mono', monospace !important;
-  font-size: 24px;
-  font-weight: 800;
-  background: linear-gradient(45deg, #ff006e, #8338ec, #07429f);
-  background-size: 200% 200%;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  color: #fff;
-  text-shadow: none;
-  animation: none;
-  position: relative;
-}
-.logo-text::before {
-  content: attr(data-text);
-  position: absolute;
-  top: 0;
-  left: 2px;
-  color: #ff00ff;
-  animation: glitchShift1 3s ease-in-out infinite;
-  z-index: -1;
-  opacity: 0.7;
-}
-.logo-text::after {
-  content: attr(data-text);
-  position: absolute;
-  top: 0;
-  left: -2px;
-  color: #00ffff;
-  animation: glitchShift2 4s ease-in-out infinite;
-  z-index: -2;
-  opacity: 0.5;
-}
-@keyframes glitchShift1 {
-  0%, 90%, 100% { transform: translate(0); }
-  91% { transform: translate(-2px, 1px); }
-  92% { transform: translate(2px, -1px); }
-  93% { transform: translate(-1px, 2px); }
-}
-@keyframes glitchShift2 {
-  0%, 85%, 100% { transform: translate(0); }
-  86% { transform: translate(1px, -2px); }
-  87% { transform: translate(-2px, 1px); }
-  88% { transform: translate(2px, 2px); }
-}
-
-* {
-    font-family: 'Orbitron', 'JetBrains Mono', monospace !important;
-}
-
-/* Cursor styles will be handled by cursor-override.css */
-
-.cursor {
-  position: fixed;
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  pointer-events: none;
-  z-index: 99999;
-  opacity: 0;
-  background: radial-gradient(circle, #00ffff 0%, #ff00cc 100%);
-  box-shadow: 0 0 30px #00ffff, 0 0 60px #ff00cc;
-  transition: opacity 0.2s;
-}
-
-/* --- Quantum Nav Bar (VineLayer0-inspired) --- */
-.quantum-nav {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 100px;
-  background: rgba(0, 0, 0, 0.093);
-  backdrop-filter: blur(30px);
-  border-bottom: 1px solid rgba(0, 255, 255, 0.15);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 40px;
-  max-width: 100vw;
-  box-sizing: border-box;
-  z-index: 10000;
-  transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-}
-
-.quantum-nav::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 2px;
-  background: linear-gradient(90deg, transparent, #00ffff, #ff00ff, #ffff00, transparent);
-  animation: navScan 8s ease-in-out infinite;
-  z-index: 10;
-}
-
-.quantum-nav::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 2px;
-  background: linear-gradient(90deg, transparent, #00ffff, #ff00ff, #ffff00, transparent);
-  animation: navScan 8s ease-in-out infinite;
-  z-index: 10;
-}
-
-@keyframes navScan {
-  0%, 100% { transform: translateX(-100%); opacity: 0; }
-  20%, 80% { opacity: 1; }
-  50% { transform: translateX(100%); }
-}
-
-.quantum-nav .nav-logo {
-  position: relative;
-  display: flex;
-  align-items: center;
-}
-
-.logo-text, #myName {
-  font-family: "Future Z", sans-serif !important;
-  font-size: 24px;
-  font-weight: 800;
-  background: linear-gradient(45deg, #ff006e, #8338ec, #07429f);
-  background-size: 200% 200%;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  color: #fff;
-  text-shadow: none;
-  animation: none;
-}
-
-.nav-links {
-  display: flex;
-  align-items: center;
-  gap: 20px;
-}
-
-
-.nav-link {
-  text-decoration: none;
-  font-size: 18px;
-  font-family: 'JetBrains Mono', monospace;
-  font-weight: 700;
-  letter-spacing: 1px;
-  position: relative;
-  transition: all 0.3s ease;
-  border: none;
-  outline: none;
-  cursor: pointer;
-  background: linear-gradient(45deg, #ff006e, #8338ec, #3a86ff);
-  background-size: 200% 200%;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  text-shadow: 0 0 10px rgba(131, 56, 236, 0.3);
-}
-
-.nav-link:hover {
-  background: #ffffff;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  transform: scale(1.05);
-  text-shadow: 
-    0 0 20px rgba(255, 255, 255, 0.9),
-    0 0 30px rgba(255, 255, 255, 0.6),
-    0 0 40px rgba(255, 255, 255, 0.4);
-}
-
-/* Nav link button styling (for Sign In, Login, Logout) */
-.nav-link-button {
-  background: linear-gradient(45deg, #ff006e, #8338ec, #3a86ff);
-  background-size: 200% 200%;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  padding: 0;
-  margin: 0;
-  text-shadow: 0 0 10px rgba(131, 56, 236, 0.3);
-}
-
-.nav-link-button:hover {
-  background: #ffffff;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  transform: scale(1.05);
-  text-shadow: 
-    0 0 20px rgba(255, 255, 255, 0.9),
-    0 0 30px rgba(255, 255, 255, 0.6),
-    0 0 40px rgba(255, 255, 255, 0.4);
-}
-
-.nav-link.quantum-btn {
-  font-size: 1.2rem;
-  font-weight: 700;
-  padding: 1.1rem 2.8rem;
-  margin-top: 32px;
-  border-radius: 16px;
-  background: linear-gradient(90deg, #00ffff 0%, #ff00cc 100%);
-  color: #fff;
-  box-shadow: 0 2px 16px #00ffffcc;
-  letter-spacing: 0.04em;
-  transition: background 0.2s, box-shadow 0.2s, color 0.2s;
-  border: none;
-  outline: none;
-}
-
-.nav-link.quantum-btn:hover {
-  background: linear-gradient(90deg, #ff00cc 0%, #00ffff 100%);
-  color: #fffbe7;
-  box-shadow: 0 4px 32px #ff00cc99;
-}
-
-.subtitle-highlight {
-  color: #ff00cc;
-  font-weight: 600;
-}
-
-.quantum-footer {
-  position: absolute;
-  bottom: 24px;
-  color: #fff8;
-  font-size: 1rem;
-  letter-spacing: 0.03em;
-  width: 100%;
-  text-align: center;
-}
-
-.nav-terminal {
-  font-size: 14px;
-  color: #00ff99;
-  margin-left: 20px;
-  font-family: 'JetBrains Mono', monospace;
-}
-
-.nav-quantum-field {
-  position: absolute;
-  left: 0;
-  bottom: 0;
-  width: 100%;
-  height: 2px;
-  background: linear-gradient(90deg, #00ffff, #ff00cc, #ffff00, #00ff00, #9900ff);
-  opacity: 0.5;
-  filter: blur(1px);
-}
-
-.nav-quantum-field-bottom {
-  position: fixed;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  height: 2px;
-  background: linear-gradient(90deg, transparent, #00ffff, #ff00ff, #ffff00, transparent);
-  animation: navScan 8s ease-in-out infinite;
-  z-index: 20000;
-  pointer-events: none;
-  opacity: 1;
-  filter: none;
-}
-
-.parallax-container {
-  width: 100vw;
-  margin-top: 70px;
-  overflow-x: hidden;
-}
-
-
-.quantum-title {
-  font-size: clamp(48px, 8vw, 120px);
-  font-weight: 800;
-  margin-bottom: 30px;
-  perspective: 1000px;
-  position: relative;
-  z-index: 100000;
-  background: linear-gradient(135deg, #00ffff72, #ff00668d, #ffff0094, #00ff33, #cc00ff, #ff3300);
-  background-size: 300% 300%;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  color: #ffffff;
-  animation: gradientShift 4s ease-in-out infinite;
-}
-
-.title-word {
-  display: inline-block;
-  margin: 0 15px;
-  font-family: 'JetBrains Mono', monospace;
-  font-weight: 800;
-  background: linear-gradient(135deg, #00ffff, #ff0099, #ffff00, #00ff00, #9900ff);
-  background-size: 200% 200%;
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: #00ffff;
-  animation: quantumFloat 4s ease-in-out infinite, gradientShift 3s ease-in-out infinite;
-  animation-delay: calc(var(--word-index, 0) * 0.2s);
-  letter-spacing: 2px;
-  position: relative;
-  z-index: 100001;
-}
-
-.quantum-subtitle {
-  font-size: 20px;
-  color: #00ffff;
-  margin-bottom: 40px;
-  font-family: 'JetBrains Mono', monospace;
-  letter-spacing: 2px;
-  opacity: 0.8;
-}
-
 @keyframes quantumFloat {
   0%, 100% { transform: translateY(0px) rotateX(0deg); }
   50% { transform: translateY(-20px) rotateX(5deg); }
@@ -583,174 +494,14 @@ h1.quantum-title::after {
   100% { background-position: 0% 50%; }
 }
 
-@keyframes logoGlitch {
-  0%, 100% { filter: none; }
-  10% { filter: blur(1px) brightness(1.2); }
-  20% { filter: blur(0.5px) brightness(0.8); }
-  30% { filter: blur(2px) brightness(1.4); }
-  40% { filter: blur(0.5px) brightness(1.1); }
-  50% { filter: none; }
-}
-
-.beam-btn {
-  position: relative;
-  margin-top: 3rem;
-  display: inline-block;
-  padding: .8rem 2rem;
-  font-size: 1.3rem;
-  font-weight: 700;
-  color: #fff;
-  background: linear-gradient(90deg, #00ffff 0%, #ff00cc 100%);
-  border: none;
-  border-radius: 24px;
-  box-shadow: 0 6px 32px #00ffffcc;
-  cursor: pointer;
-  letter-spacing: 0.08em;
-  overflow: hidden;
-  z-index: 1;
-  isolation: isolate;
-}
-.beam-btn-label {
-  position: relative;
-  z-index: 2;
-  font-family: 'Orbitron', 'JetBrains Mono', 'Roboto Mono', monospace;
-  letter-spacing: 0.14em;
-  font-weight: 900;
-  text-transform: uppercase;
-  font-size: 1.3rem;
-}
-.beam-btn-code {
-  position: absolute;
-  left: 0; top: 0; width: 100%; height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  width: 100%;
-  color: #fff;
-  font-family: 'Roboto Mono', 'JetBrains Mono', monospace;
-  font-size: 1.1rem;
-  font-weight: 900;
-  pointer-events: none;
-  user-select: none;
-  z-index: 3;
-  opacity: 1;
-  /* Widen the mask and use hard stops for a sharp, crisp reveal */
-  /* Make the mask even wider and reduce hard stops for full code visibility */
-  -webkit-mask-image: linear-gradient(90deg, transparent 23%, #fff 28%, #fff 98%, transparent 100%);
-  -webkit-mask-size: 300% 100%;
-  -webkit-mask-position: 0 0;
-  mask-image: linear-gradient(90deg, transparent 23%, #fff 28%, #fff 98%, transparent 100%);
-  mask-size: 300% 100%;
-  mask-position: 0 0;
-  animation: code-mask-bar 2.5s cubic-bezier(.77,0,.18,1) infinite;
-}
-.beam-btn::after {
-  content: '';
-  position: absolute;
-  left: -50%;
-  top: 0;
-  width: 50%;
-  height: 100%;
-  background: linear-gradient(90deg, transparent 45%, #fff 49%, #1dedf4 51%, transparent 55%);
-  box-shadow: 0 0 24px 8px #fff, 0 0 48px 16px #ff00f7;
-  opacity: 0.8;
-  z-index: 4;
-  pointer-events: none;
-  animation: beam-bar-move 2.5s cubic-bezier(.77,0,.18,1) infinite;
-}
-@keyframes beam-bar-move {
-  0% { left: -50%; }
-  40% { left: 100%; }
-  100% { left: 100%; }
-}
-@keyframes code-mask-bar {
-  0% { -webkit-mask-position: 0 0; mask-position: 0 0; }
-  40% { -webkit-mask-position: 100% 0; mask-position: 100% 0; }
-  100% { -webkit-mask-position: 100% 0; mask-position: 100% 0; }
-}
-
-.wormhole {
-  position: fixed;
-  width: 170px;
-  height: 170px;
-  border-radius: 50%;
-  pointer-events: none;
-  left: 0;
-  top: 0;
-  opacity: 0;
-  z-index: 9999;
-  background: radial-gradient(circle, #00fff733 0%, #00fff71a 45%, transparent 85%);
-  box-shadow: 0 0 64px 24px #00fff733, 0 0 128px 48px #ff00cc22;
-  filter: blur(8px) brightness(1.08);
-  transition: opacity 0.3s;
-  overflow: visible;
-}
-
-.wormhole::before,
-.wormhole::after {
-  content: '';
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-  border-radius: 50%;
-  pointer-events: none;
-  opacity: 0.7;
-  z-index: 1;
-}
-
-.wormhole::before {
-  width: 120px;
-  height: 120px;
-  background: conic-gradient(from 0deg, #00fff749 0%, #ff00cc 40%, #ffff00 70%, #00fff74e 100%);
-  filter: blur(8px) brightness(1.2);
-  animation: wormhole-spin 1.2s linear infinite;
-}
-
-.wormhole::after {
-  width: 80px;
-  height: 80px;
-  background: radial-gradient(circle, #ffffff2e 0%, #00fff729 60%, transparent 100%);
-  filter: blur(2px) brightness(1.1);
-  animation: wormhole-pulse 1.2s ease-in-out infinite;
-}
-
-
-.wormhole.ripple {
-  animation: quantum-ripple 2.2s cubic-bezier(.77,0,.18,1);
-  opacity: 1 !important;
-}
-
-
 @keyframes wormhole-spin {
   0% { transform: translate(-50%, -50%) rotate(0deg); }
   100% { transform: translate(-50%, -50%) rotate(360deg); }
 }
 
 @keyframes wormhole-pulse {
-  0%, 100% { opacity: 0.7; filter: blur(77px) brightness(1.1) scale(1); }
-  50% { opacity: 1; filter: blur(4px) brightness(1.3) scale(1.12); }
-}
-/* Quantum Ripple Effect for Wormhole */
-.wormhole {
-  position: fixed;
-  width: 150px;
-  height: 150px;
-  border-radius: 50%;
-  pointer-events: none;
-  left: 0;
-  top: 0;
-  opacity: 0;
-  z-index: 9999;
-  background: radial-gradient(circle, #00fff7 0%, #00fff7cc 40%, transparent 80%);
-  box-shadow: 0 0 32px 8px #00fff7cc, 0 0 64px 16px #ff00cc99;
-  transition: opacity 0.2s;
-}
-
-.wormhole.ripple {
-  animation: quantum-ripple 0.7s cubic-bezier(.77,0,.18,1);
-  opacity: 1 !important;
+  0%, 100% { opacity: 0.7; filter: blur(2px) brightness(1.1); }
+  50% { opacity: 1; filter: blur(4px) brightness(1.3); }
 }
 
 @keyframes quantum-ripple {
@@ -764,13 +515,12 @@ h1.quantum-title::after {
     opacity: 0.7;
     box-shadow: 0 0 48px 16px #e1ff00cc, 0 0 6px 32px #ff00cc99;
   }
-
   70% {
     transform: scale(.7);
     opacity: 0.7;
     box-shadow: 0 0 48px 16px #024745cc, 0 0 6px 32px #ff00cc99;
   }
-80% {
+  80% {
     transform: scale(.2);
     opacity: 0.7;
     box-shadow: 0 0 48px 16px #00fff7cc, 0 0 6px 32px #ff00cc99;
@@ -785,4 +535,16 @@ h1.quantum-title::after {
     opacity: 0;
     box-shadow: 0 0 64px 32px #052cf0f2, 0 0 18px 64px #66308544;
   }
+}
+
+@keyframes beam-bar-move {
+  0% { left: -50%; }
+  40% { left: 100%; }
+  100% { left: 100%; }
+}
+
+@keyframes code-mask-bar {
+  0% { -webkit-mask-position: 0 0; mask-position: 0 0; }
+  40% { -webkit-mask-position: 100% 0; mask-position: 100% 0; }
+  100% { -webkit-mask-position: 100% 0; mask-position: 100% 0; }
 }

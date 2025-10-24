@@ -249,9 +249,8 @@ export default function HomePage() {
             </div>
             <h1 className="quantum-title" data-text="MODERN JAVASCRIPT SYNTAX LAB">
               <span className="title-word" data-word="0">N3XUS</span><br></br>
-              <span className="title-word" data-word="1">3D</span>
-              <span className="title-word" data-word="2">GE0M</span>
-              <span className="title-word" data-word="3">STUDI0</span>
+              <span className="title-word" data-word="1">GE<span className="zero-char">0</span>M</span><br></br>
+              <span className="title-word" data-word="2">3D</span>
               {/* Show quantum glyphs globally */}
               
             </h1>
