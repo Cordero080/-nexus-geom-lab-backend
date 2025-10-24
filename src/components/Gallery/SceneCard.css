@@ -23,7 +23,7 @@
 .scene-card__thumbnail {
   position: relative;
   width: 100%;
-  padding-top: 66.67%; /* 3:2 aspect ratio */
+  padding-top: 56.25%; /* 16:9 aspect ratio (was 66.67% for 3:2) */
   overflow: hidden;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
 }
@@ -53,40 +53,14 @@
   opacity: 0.8;
 }
 
-/* Badge */
-.scene-card__badge-container {
-  position: absolute;
-  top: 12px;
-  right: 12px;
-}
-
-.scene-card__badge {
-  display: inline-block;
-  padding: 4px 12px;
-  border-radius: 12px;
-  font-size: 0.75rem;
-  font-weight: 600;
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-}
-
-.scene-card__badge--public {
-  background: rgba(0, 255, 0, 0.15);
-  color: #00ff88;
-}
-
-.scene-card__badge--private {
-  background: rgba(255, 165, 0, 0.15);
-  color: #ffaa00;
-}
-
 /* Info Section */
 .scene-card__info {
-  padding: 16px;
+  padding: 20px;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 16px;
   flex: 1;
+  min-height: 180px; /* Ensure minimum height for content */
 }
 
 .scene-card__title {
@@ -99,6 +73,7 @@
   text-overflow: ellipsis;
   display: -webkit-box;
   -webkit-line-clamp: 2;
+  line-clamp: 2;
   -webkit-box-orient: vertical;
 }
 
@@ -111,6 +86,7 @@
   text-overflow: ellipsis;
   display: -webkit-box;
   -webkit-line-clamp: 2;
+  line-clamp: 2;
   -webkit-box-orient: vertical;
 }
 
@@ -139,22 +115,26 @@
 /* Actions */
 .scene-card__actions {
   display: flex;
-  gap: 8px;
+  gap: 12px;
   margin-top: auto;
-  padding-top: 12px;
+  padding-top: 16px;
   border-top: 1px solid rgba(255, 255, 255, 0.1);
+  flex-wrap: nowrap; /* Keep buttons inline, no wrapping */
+  min-height: 48px; /* Ensure minimum height for buttons */
 }
 
 .scene-card__btn {
   flex: 1;
-  padding: 8px 16px;
+  min-width: 60px; /* Reduced minimum button width for inline layout */
+  padding: 10px 12px; /* Slightly reduced padding for inline fit */
   border: none;
   border-radius: 8px;
-  font-size: 0.875rem;
+  font-size: 0.8rem; /* Slightly smaller font for inline buttons */
   font-weight: 600;
   cursor: pointer;
   transition: all 0.2s ease;
   backdrop-filter: blur(10px);
+  white-space: nowrap; /* Prevent text wrapping */
 }
 
 .scene-card__btn--primary {

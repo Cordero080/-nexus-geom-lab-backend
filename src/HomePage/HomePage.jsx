@@ -178,7 +178,7 @@ export default function HomePage() {
         </div>
         <div className="nav-links">
           <a href="#reality" className="nav-link" data-dimension="0">// HOME</a>
-          <Link to="/public-gallery" className="nav-link" data-dimension="1">// GALLERY</Link>
+          <Link to="/gallery" className="nav-link" data-dimension="1">// GALLERY</Link>
           <Link to="/showcase" className="nav-link" data-dimension="2">// SHOWCASE</Link>
           {isAuthenticated && (
             <div className="nav-terminal">

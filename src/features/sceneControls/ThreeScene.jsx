@@ -2,7 +2,7 @@ import { updateEnvironment } from './environmentSetup';
 import { __UP, __Q, __TMP, __A, __B, __M, __Inv, nearestVertexIndex, updateThickWireframeCylinders } from '../../utils/geometryHelpers';
 import React from 'react';
 import './ThreeScene.css';
-import { use, useEffect, useRef } from 'react';
+import { use, useEffect, useRef, useCallback } from 'react';
 import * as THREE from 'three';
 import { createSceneObject } from './factories/objectFactory';
 import { useSceneInitialization } from './hooks/useSceneInitialization';
@@ -12,6 +12,7 @@ import { useMaterialUpdates } from './hooks/useMaterialUpdates';
 import { useLightingUpdates } from './hooks/useLightingUpdates';
 import { useMouseTracking, useEnvironmentUpdate } from './hooks/useSceneEffects';
 import { useAnimationLoop } from './hooks/useAnimationLoop';
+import { useObjectInteraction } from './hooks/useObjectInteraction';
 
 
 
@@ -129,10 +130,16 @@ function ThreeScene({
 		  directionalLightX, directionalLightY, directionalLightZ }
 	);
 
-	// Start animation loop
+	// Handle object interaction (mouse-over rotation interference)
+	const { getUserRotation, decayUserRotations } = useObjectInteraction(
+		{ sceneRef, cameraRef, rendererRef }
+	);
+
+	// Start animation loop with user rotation support
 	useAnimationLoop(
 		{ rendererRef, sceneRef, cameraRef, animationIdRef, objectsRef },
-		{ animationStyle, cameraView }
+		{ animationStyle, cameraView },
+		{ getUserRotation, decayUserRotations }
 	);
 
 	// ===============================================
@@ -151,8 +158,16 @@ function ThreeScene({
 	}
 
 	return (
-		<div style={{ position: 'relative', width: '100%', height: '100%' }}>
-			{/* Background layer with hue rotation */}
+		<div 
+			className={getBackgroundClass(environment)}
+			style={{
+				position: 'relative',
+				width: '100%',
+				height: '100vh',
+				minHeight: '100vh'
+			}}
+		>
+			{/* Hue-rotated background overlay */}
 			<div 
 				className={getBackgroundClass(environment)}
 				style={{
@@ -162,10 +177,11 @@ function ThreeScene({
 					width: '100%',
 					height: '100%',
 					zIndex: 1,
-					filter: `hue-rotate(${environmentHue}deg)`
+					filter: `hue-rotate(${environmentHue}deg)`,
+					pointerEvents: 'none'
 				}}
 			/>
-			{/* Three.js canvas layer - no hue rotation */}
+			{/* Three.js canvas container */}
 			<div 
 				ref={mountRef} 
 				className="three-scene-container"

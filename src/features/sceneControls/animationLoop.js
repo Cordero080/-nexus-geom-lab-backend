@@ -1,11 +1,27 @@
 import { animateSpectralOrbs } from "./spectralOrbs";
-import * as THREE from "three";
+
+function applyUserRotation(meshes, objectId, interactionFns) {
+  if (!interactionFns || !interactionFns.getUserRotation || !objectId) {
+    return;
+  }
+
+  const rotation = interactionFns.getUserRotation(objectId);
+  if (!rotation) {
+    return;
+  }
+
+  meshes.forEach((mesh) => {
+    mesh.rotation.x += rotation.x;
+    mesh.rotation.y += rotation.y;
+    mesh.rotation.z += rotation.z || 0;
+  });
+}
 
 /**
  * Animation functions for different styles
  */
 const animationStyles = {
-  rotate: (objData, t, index) => {
+  rotate: (objData, t, index, interactionFns = null) => {
     const {
       solidMesh,
       wireframeMesh,
@@ -13,6 +29,7 @@ const animationStyles = {
       curvedLines,
       geometry,
       originalPositions,
+      originalPosition,
     } = objData;
 
     // Reset vertices to original positions
@@ -24,17 +41,28 @@ const animationStyles = {
       geometry.attributes.position.needsUpdate = true;
     }
 
-    // Apply rotation to ALL components including curvedLines
+    const objectId = objData.objectId || (solidMesh && solidMesh.uuid);
+
+    // Apply automatic rotation
     const meshes = [solidMesh, wireframeMesh, centerLines, curvedLines].filter(
       Boolean
     );
     meshes.forEach((mesh) => {
       mesh.rotation.x += 0.005;
       mesh.rotation.y += 0.01;
+      if (originalPosition) {
+        mesh.position.set(
+          originalPosition.x,
+          originalPosition.y,
+          originalPosition.z
+        );
+      }
     });
+
+    applyUserRotation(meshes, objectId, interactionFns);
   },
 
-  float: (objData, t, index) => {
+  float: (objData, t, index, interactionFns = null) => {
     const {
       solidMesh,
       wireframeMesh,
@@ -55,18 +83,26 @@ const animationStyles = {
       geometry.attributes.position.needsUpdate = true;
     }
 
-    // Apply floating motion to ALL components including curvedLines
+    // Gentle floating motion
+    const floatY = Math.sin(t * 0.001 + (phase || 0)) * 0.5;
     const meshes = [solidMesh, wireframeMesh, centerLines, curvedLines].filter(
       Boolean
     );
     meshes.forEach((mesh) => {
-      mesh.position.y = originalPosition.y + Math.sin((t + phase) * 0.8) * 0.5;
-      mesh.rotation.x += 0.003;
-      mesh.rotation.y += 0.006;
+      if (originalPosition) {
+        mesh.position.set(
+          originalPosition.x,
+          originalPosition.y + floatY,
+          originalPosition.z
+        );
+      }
     });
+
+    const objectId = objData.objectId || (solidMesh && solidMesh.uuid);
+    applyUserRotation(meshes, objectId, interactionFns);
   },
 
-  spiral: (objData, t, index) => {
+  spiral: (objData, t, index, interactionFns = null) => {
     const {
       solidMesh,
       wireframeMesh,
@@ -104,9 +140,12 @@ const animationStyles = {
       mesh.rotation.x += 0.01;
       mesh.rotation.y += 0.02;
     });
+
+    const objectId = objData.objectId || (solidMesh && solidMesh.uuid);
+    applyUserRotation(meshes, objectId, interactionFns);
   },
 
-  chaos: (objData, t, index) => {
+  chaos: (objData, t, index, interactionFns = null) => {
     const {
       solidMesh,
       wireframeMesh,
@@ -145,9 +184,12 @@ const animationStyles = {
       mesh.rotation.y += Math.cos(t + phase) * 0.03;
       mesh.rotation.z += Math.sin(t + phase * 2) * 0.015;
     });
+
+    const objectId = objData.objectId || (solidMesh && solidMesh.uuid);
+    applyUserRotation(meshes, objectId, interactionFns);
   },
 
-  alien: (objData, t, index) => {
+  alien: (objData, t, index, interactionFns = null) => {
     const {
       solidMesh,
       wireframeMesh,
@@ -183,6 +225,9 @@ const animationStyles = {
       mesh.position.y = originalPosition.y + Math.cos(t * 1.8 + phase) * 0.3;
       mesh.position.z = originalPosition.z + Math.sin(t * 1.1 + phase) * 0.3;
     });
+
+    const objectId = objData.objectId || (solidMesh && solidMesh.uuid);
+    applyUserRotation(meshes, objectId, interactionFns);
   },
 };
 
@@ -212,7 +257,8 @@ export function startAnimationLoop(
   animationIdRef,
   objectsRef,
   animationStyle,
-  cameraView
+  cameraView,
+  interactionFns = null
 ) {
   let lastTime = performance.now();
 
@@ -231,8 +277,12 @@ export function startAnimationLoop(
     // Animate objects based on animation style
     if (objectsRef.current && animationStyles[animationStyle]) {
       objectsRef.current.forEach((objData, index) => {
-        animationStyles[animationStyle](objData, t, index);
+        animationStyles[animationStyle](objData, t, index, interactionFns);
       });
+    }
+
+    if (interactionFns && interactionFns.decayUserRotations) {
+      interactionFns.decayUserRotations();
     }
 
     // Animate camera

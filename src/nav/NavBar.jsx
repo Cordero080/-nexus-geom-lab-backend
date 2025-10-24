@@ -17,7 +17,7 @@ export default function NavBar() {
   return (
     <nav className="quantum-nav">
       <div className="nav-logo">
-        <span className="logo-text" data-text="Geom Playground">Geom Playground</span>
+        <span className="logo-text" data-text="Geom Lab">Geom Lab</span>
       </div>
       <div className="nav-links">
         <Link to="/" className="nav-link">Home</Link>
@@ -25,11 +25,10 @@ export default function NavBar() {
         {isAuthenticated ? (
           <>
             <Link to="/geometry-lab" className="nav-link">Geom Lab</Link>
-            <Link to="/my-scenes" className="nav-link">My Scenes</Link>
-            <Link to="/public-gallery" className="nav-link">Public Gallery</Link>
+            <Link to="/gallery" className="nav-link">Gallery</Link>
             <Link to="/showcase" className="nav-link">Showcase</Link>
             <button onClick={logout} className="nav-link nav-link-button">
-              Logout ({user?.username})
+              Logout
             </button>
           </>
         ) : (

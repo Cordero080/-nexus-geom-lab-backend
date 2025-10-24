@@ -114,6 +114,7 @@
 
 .three-scene-container canvas {
 	filter: none !important;
+	pointer-events: auto !important; /* Allow mouse events on the canvas */
 }
 
 .bg-gradient-nebula{

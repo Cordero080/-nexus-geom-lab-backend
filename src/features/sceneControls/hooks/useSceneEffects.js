@@ -31,7 +31,7 @@ export function useMouseTracking(rendererRef, cameraRef) {
 }
 
 /**
- * Updates scene environment (background and orbs)
+ * Update environment when environment type or hue changes
  *
  * @param {Object} sceneRef - Reference to the Three.js scene
  * @param {string} environment - Environment type

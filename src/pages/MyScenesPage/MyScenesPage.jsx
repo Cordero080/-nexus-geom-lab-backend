@@ -5,8 +5,8 @@ import SceneCard from "../../components/Gallery/SceneCard";
 import "./MyScenesPage.css";
 
 /**
- * My Scenes Page - User's private gallery
- * Shows all scenes created by the logged-in user (both public and private)
+ * Gallery Page - User's scene collection
+ * Shows all scenes created by the user
  */
 export default function MyScenesPage() {
   const navigate = useNavigate();
@@ -15,7 +15,6 @@ export default function MyScenesPage() {
   const [scenes, setScenes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [sortBy, setSortBy] = useState("newest");
-  const [filterBy, setFilterBy] = useState("all"); // 'all', 'public', 'private'
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [sceneToDelete, setSceneToDelete] = useState(null);
 
@@ -47,7 +46,6 @@ export default function MyScenesPage() {
         userId: currentUser.id,
         name: "Purple Hyperspace",
         description: "An alien oscillating icosahedron in a nebula environment",
-        isPublic: true,
         config: {},
         createdAt: "2025-10-20T10:30:00Z",
         viewCount: 42,
@@ -58,7 +56,6 @@ export default function MyScenesPage() {
         userId: currentUser.id,
         name: "Floating Sphere",
         description: "Gentle floating motion with cyan glow",
-        isPublic: false,
         config: {},
         createdAt: "2025-10-18T15:20:00Z",
         viewCount: 3,
@@ -69,7 +66,6 @@ export default function MyScenesPage() {
         userId: currentUser.id,
         name: "Chaos Cube",
         description: "Chaotic movement with hyperframe visualization",
-        isPublic: true,
         config: {},
         createdAt: "2025-10-15T09:00:00Z",
         viewCount: 128,
@@ -84,39 +80,32 @@ export default function MyScenesPage() {
     }, 100);
   };
 
-  // Filter scenes
-  const getFilteredScenes = () => {
-    let filtered = [...scenes];
-
-    // Apply filter
-    if (filterBy === "public") {
-      filtered = filtered.filter((s) => s.isPublic);
-    } else if (filterBy === "private") {
-      filtered = filtered.filter((s) => !s.isPublic);
-    }
+  // Sort scenes
+  const getSortedScenes = () => {
+    let sorted = [...scenes];
 
     // Apply sort
     switch (sortBy) {
       case "newest":
-        filtered.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+        sorted.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
         break;
       case "oldest":
-        filtered.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
+        sorted.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
         break;
       case "most-viewed":
-        filtered.sort((a, b) => b.viewCount - a.viewCount);
+        sorted.sort((a, b) => b.viewCount - a.viewCount);
         break;
       case "name":
-        filtered.sort((a, b) => a.name.localeCompare(b.name));
+        sorted.sort((a, b) => a.name.localeCompare(b.name));
         break;
       default:
         break;
     }
 
-    return filtered;
+    return sorted;
   };
 
-  const filteredScenes = getFilteredScenes();
+  const sortedScenes = getSortedScenes();
 
   // Load scene into editor
   const handleLoad = (scene) => {
@@ -163,28 +152,14 @@ export default function MyScenesPage() {
     <div className="my-scenes-page">
       {/* Header */}
       <div className="my-scenes-page__header">
-        <h1 className="my-scenes-page__title">My Scenes</h1>
+        <h1 className="my-scenes-page__title">Gallery</h1>
         <p className="my-scenes-page__subtitle">
-          Your personal collection of geometric creations
+          Your collection of geometric creations
         </p>
       </div>
 
       {/* Controls */}
       <div className="my-scenes-page__controls">
-        {/* Filter */}
-        <div className="my-scenes-page__control-group">
-          <label>Filter:</label>
-          <select
-            value={filterBy}
-            onChange={(e) => setFilterBy(e.target.value)}
-            className="my-scenes-page__select"
-          >
-            <option value="all">All Scenes</option>
-            <option value="public">Public Only</option>
-            <option value="private">Private Only</option>
-          </select>
-        </div>
-
         {/* Sort */}
         <div className="my-scenes-page__control-group">
           <label>Sort:</label>
@@ -210,7 +185,7 @@ export default function MyScenesPage() {
       )}
 
       {/* Empty State */}
-      {!loading && filteredScenes.length === 0 && (
+      {!loading && sortedScenes.length === 0 && (
         <div className="my-scenes-page__empty">
           <span className="my-scenes-page__empty-icon">🌌</span>
           <h2>No scenes yet</h2>
@@ -225,9 +200,9 @@ export default function MyScenesPage() {
       )}
 
       {/* Scene Grid */}
-      {!loading && filteredScenes.length > 0 && (
+      {!loading && sortedScenes.length > 0 && (
         <div className="my-scenes-page__grid">
-          {filteredScenes.map((scene) => (
+          {sortedScenes.map((scene) => (
             <SceneCard
               key={scene.id}
               scene={scene}

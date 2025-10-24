@@ -1,0 +1,171 @@
+import { useRef, useCallback, useEffect } from "react";
+import * as THREE from "three";
+
+/**
+ * Hook for handling object rotation interference on mouse-over (no click required)
+ */
+export function useObjectInteraction(refs) {
+  const { sceneRef, cameraRef, rendererRef } = refs;
+
+  const hoveredObject = useRef(null);
+  const raycaster = useRef(new THREE.Raycaster());
+  const mouse = useRef(new THREE.Vector2());
+  // Store user rotation offsets for each object
+  const objectRotations = useRef(new Map());
+
+  // Get user rotation for an object
+  const getUserRotation = useCallback((objectId) => {
+    return objectRotations.current.get(objectId) || { x: 0, y: 0, z: 0 };
+  }, []);
+
+  // Set user rotation for an object
+  const setUserRotation = useCallback((objectId, rotation) => {
+    objectRotations.current.set(objectId, rotation);
+  }, []);
+
+  const decayUserRotations = useCallback(() => {
+    const damping = 0.92;
+    const epsilon = 0.0001;
+    objectRotations.current.forEach((rotation, objectId) => {
+      const decayed = {
+        x: rotation.x * damping,
+        y: rotation.y * damping,
+        z: rotation.z * damping,
+      };
+
+      if (
+        Math.abs(decayed.x) < epsilon &&
+        Math.abs(decayed.y) < epsilon &&
+        Math.abs(decayed.z) < epsilon
+      ) {
+        objectRotations.current.delete(objectId);
+      } else {
+        objectRotations.current.set(objectId, decayed);
+      }
+    });
+  }, []);
+
+  // Setup event listeners (listen on window to avoid pointer-event issues)
+  useEffect(() => {
+    const scene = sceneRef.current;
+    const camera = cameraRef.current;
+    const renderer = rendererRef.current;
+
+    if (!scene || !camera || !renderer || !renderer.domElement) {
+      return;
+    }
+
+    const canvas = renderer.domElement;
+    canvas.style.pointerEvents = "auto";
+
+    const collectInteractiveMeshes = () => {
+      const meshes = [];
+      scene.traverse((child) => {
+        if (
+          child.isMesh &&
+          !child.userData.isSpectralOrb &&
+          !child.userData.isEnvironment &&
+          child.userData.objectId &&
+          child.visible
+        ) {
+          meshes.push(child);
+        }
+      });
+      return meshes;
+    };
+
+    let lastClientX = null;
+    let lastClientY = null;
+
+    const handleMouseMove = (event) => {
+      const currentScene = sceneRef.current;
+      const currentCamera = cameraRef.current;
+      const currentRenderer = rendererRef.current;
+
+      if (!currentScene || !currentCamera || !currentRenderer) {
+        return;
+      }
+
+      const rect = currentRenderer.domElement.getBoundingClientRect();
+      const insideCanvas =
+        event.clientX >= rect.left &&
+        event.clientX <= rect.right &&
+        event.clientY >= rect.top &&
+        event.clientY <= rect.bottom;
+
+      if (!insideCanvas) {
+        hoveredObject.current = null;
+        currentRenderer.domElement.style.cursor = "default";
+        lastClientX = event.clientX;
+        lastClientY = event.clientY;
+        return;
+      }
+
+      mouse.current.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
+      mouse.current.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
+
+      raycaster.current.setFromCamera(mouse.current, currentCamera);
+
+      const interactiveMeshes = collectInteractiveMeshes();
+      const intersects = raycaster.current.intersectObjects(
+        interactiveMeshes,
+        false
+      );
+
+      if (intersects.length === 0) {
+        hoveredObject.current = null;
+        currentRenderer.domElement.style.cursor = "default";
+        lastClientX = event.clientX;
+        lastClientY = event.clientY;
+        return;
+      }
+
+      const intersectedObject = intersects[0].object;
+      hoveredObject.current = intersectedObject;
+      currentRenderer.domElement.style.cursor = "pointer";
+
+      const rotationSensitivity = 0.001;
+
+      // Clamp rotation injection so spins stay smooth
+      const clampDelta = (value, limit = 0.05) => {
+        return Math.max(-limit, Math.min(limit, value));
+      };
+
+      const deltaY =
+        lastClientX === null
+          ? 0
+          : clampDelta((event.clientX - lastClientX) * rotationSensitivity);
+      const deltaX =
+        lastClientY === null
+          ? 0
+          : clampDelta((event.clientY - lastClientY) * rotationSensitivity);
+
+      lastClientX = event.clientX;
+      lastClientY = event.clientY;
+
+      const objectId =
+        intersectedObject.userData.objectId || intersectedObject.uuid;
+      const currentRotation = getUserRotation(objectId);
+
+      const newRotation = {
+        x: currentRotation.x + deltaX,
+        y: currentRotation.y + deltaY,
+        z: currentRotation.z,
+      };
+
+      setUserRotation(objectId, newRotation);
+    };
+
+    window.addEventListener("mousemove", handleMouseMove);
+
+    return () => {
+      window.removeEventListener("mousemove", handleMouseMove);
+    };
+  }, [sceneRef, cameraRef, rendererRef, getUserRotation, setUserRotation]);
+
+  return {
+    getUserRotation,
+    decayUserRotations,
+    hoveredObject: hoveredObject.current,
+  };
+}

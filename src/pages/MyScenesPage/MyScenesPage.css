@@ -21,6 +21,7 @@
 }
 
 .my-scenes-page__title {
+  font-family: 'Future Z', 'Arial Black', Arial, sans-serif !important;
   font-size: 3rem;
   font-weight: 700;
   margin: 0 0 12px;
@@ -173,8 +174,8 @@
   max-width: 1400px;
   margin: 0 auto;
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 24px;
+  grid-template-columns: repeat(3, 1fr); /* Changed from 4 to 3 columns for larger cards */
+  gap: 32px; /* Increased gap */
   animation: fadeIn 0.5s ease-in;
 }
 
@@ -282,7 +283,7 @@
 /* Responsive */
 @media (max-width: 1200px) {
   .my-scenes-page__grid {
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(2, 1fr); /* Changed from 3 to 2 */
   }
 }
 

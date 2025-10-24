@@ -6,31 +6,23 @@ import "./SceneCard.css";
  * SceneCard - Reusable card component for scene galleries
  * 
  * Props:
- * - scene: Scene object with id, name, description, isPublic, userId, createdAt, viewCount
- * - showLoadButton: Show "Load" button (for own scenes)
- * - showEditButton: Show "Edit" button (for own scenes)
- * - showDeleteButton: Show "Delete" button (for own scenes)
- * - showViewButton: Show "View" button (for public scenes)
- * - showRemixButton: Show "Remix" button (for public scenes)
+ * - scene: Scene object with id, name, description, userId, createdAt, viewCount
+ * - showLoadButton: Show "Load" button
+ * - showEditButton: Show "Edit" button
+ * - showDeleteButton: Show "Delete" button
  * - onLoad: Callback when Load clicked
  * - onEdit: Callback when Edit clicked
  * - onDelete: Callback when Delete clicked
- * - onView: Callback when View clicked
- * - onRemix: Callback when Remix clicked
- * - creatorName: Username of creator (optional, for public gallery)
+ * - creatorName: Username of creator (optional)
  */
 export default function SceneCard({
   scene,
   showLoadButton = false,
   showEditButton = false,
   showDeleteButton = false,
-  showViewButton = false,
-  showRemixButton = false,
   onLoad,
   onEdit,
   onDelete,
-  onView,
-  onRemix,
   creatorName = null,
 }) {
   const [imageError, setImageError] = useState(false);
@@ -81,19 +73,6 @@ export default function SceneCard({
             <span className="scene-card__icon">🌌</span>
           </div>
         )}
-
-        {/* Public/Private Badge */}
-        <div className="scene-card__badge-container">
-          {scene.isPublic ? (
-            <span className="scene-card__badge scene-card__badge--public">
-              🌐 Public
-            </span>
-          ) : (
-            <span className="scene-card__badge scene-card__badge--private">
-              🔒 Private
-            </span>
-          )}
-        </div>
       </div>
 
       {/* Info */}
@@ -115,7 +94,7 @@ export default function SceneCard({
 
         {/* Actions */}
         <div className="scene-card__actions">
-          {/* Load Button (Own Scenes) */}
+          {/* Load Button */}
           {showLoadButton && (
             <ScrambleButton
               variant="primary"
@@ -125,7 +104,7 @@ export default function SceneCard({
             </ScrambleButton>
           )}
 
-          {/* Edit Button (Own Scenes) */}
+          {/* Edit Button */}
           {showEditButton && (
             <ScrambleButton
               variant="secondary"
@@ -135,27 +114,7 @@ export default function SceneCard({
             </ScrambleButton>
           )}
 
-          {/* View Button (Public Scenes) */}
-          {showViewButton && (
-            <ScrambleButton
-              variant="primary"
-              onClick={() => onView?.(scene)}
-            >
-              View
-            </ScrambleButton>
-          )}
-
-          {/* Remix Button (Public Scenes) */}
-          {showRemixButton && (
-            <ScrambleButton
-              variant="secondary"
-              onClick={() => onRemix?.(scene)}
-            >
-              Remix
-            </ScrambleButton>
-          )}
-
-          {/* Delete Button (Own Scenes) */}
+          {/* Delete Button */}
           {showDeleteButton && (
             <ScrambleButton
               variant="danger"

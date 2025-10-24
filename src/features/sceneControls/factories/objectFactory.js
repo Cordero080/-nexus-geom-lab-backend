@@ -89,6 +89,12 @@ export function createSceneObject(config) {
   // ========================================
   const solidMesh = new THREE.Mesh(geometry, solidMaterial);
 
+  // Generate unique object ID for interaction
+  const objectId = `object_${objectIndex}_${Date.now()}`;
+
+  // Add userData for identification
+  solidMesh.userData.objectId = objectId;
+
   // ========================================
   // 4. WIREFRAME CREATION (GEOMETRY-SPECIFIC)
   // ========================================
@@ -118,6 +124,11 @@ export function createSceneObject(config) {
       isStandardWireframe: true,
     });
     wireframeMesh = createCommonWireframe(geometry, wireframeMaterial);
+  }
+
+  // Add userData to wireframe mesh for interaction
+  if (wireframeMesh) {
+    wireframeMesh.userData.objectId = objectId;
   }
 
   // ========================================
@@ -206,6 +217,7 @@ export function createSceneObject(config) {
   // 8. RETURN COMPLETE OBJECT DATA
   // ========================================
   return {
+    objectId, // Use the generated objectId
     solidMesh,
     wireframeMesh,
     centerLines,

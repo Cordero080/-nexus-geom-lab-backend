@@ -136,6 +136,7 @@ export function createSpectralOrbs(
 
     // Store data for biomorphic animation
     orb.userData = {
+      isSpectralOrb: true, // Flag for easy identification
       geometry: geometry,
       originalPositions: originalPositions,
       angle: angle,
@@ -206,6 +207,7 @@ export function createSpectralOrbs(
 
     // Store data for animation (simpler than main orbs)
     smallOrb.userData = {
+      isSpectralOrb: true, // Flag for easy identification
       geometry: geometry,
       originalPositions: originalPositions,
       angle: angle,
@@ -397,6 +399,59 @@ export function removeSpectralOrbs(scene) {
     orbGroup = null;
     orbs = [];
   }
+}
+
+/**
+ * Update spectral orb colors without recreating them (prevents jerking)
+ * @param {THREE.Scene} scene - The Three.js scene containing the orbs
+ * @param {number} hueShift - Hue rotation in degrees (0-360)
+ */
+export function updateSpectralOrbHue(scene, hueShift = 0) {
+  if (!scene) return;
+
+  // Find all spectral orbs in the scene
+  const sceneOrbs = [];
+  scene.traverse((child) => {
+    if (child.userData && child.userData.isSpectralOrb) {
+      sceneOrbs.push(child);
+    }
+  });
+
+  if (sceneOrbs.length === 0) return;
+
+  // Base spectral colors
+  const baseColors = [
+    0xff00ff, // Magenta
+    0x00ffff, // Cyan
+    0xff0066, // Hot Pink
+    0x0080ff, // Electric Blue
+    0xff6600, // Orange
+    0x80ff00, // Lime
+    0x8000ff, // Purple
+    0xffff00, // Yellow
+  ];
+
+  // Update each orb's color with new hue
+  sceneOrbs.forEach((orb, index) => {
+    const baseColorIndex = index % baseColors.length;
+    const threeColor = new THREE.Color(baseColors[baseColorIndex]);
+    threeColor.offsetHSL(hueShift / 360, 0, 0); // Convert degrees to 0-1 range for THREE.js
+
+    // Update main orb material
+    if (orb.material) {
+      orb.material.color.copy(threeColor);
+      orb.material.emissive.copy(threeColor).multiplyScalar(0.3);
+    }
+
+    // Update glow materials
+    if (orb.userData.glow && orb.userData.glow.material) {
+      orb.userData.glow.material.color.copy(threeColor);
+    }
+
+    if (orb.userData.innerGlow && orb.userData.innerGlow.material) {
+      orb.userData.innerGlow.material.color.copy(threeColor);
+    }
+  });
 }
 
 /**

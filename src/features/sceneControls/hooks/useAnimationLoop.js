@@ -13,8 +13,11 @@ import { startAnimationLoop } from "../animationLoop";
  * @param {Object} settings - Animation settings
  * @param {string} settings.animationStyle - Current animation style
  * @param {string} settings.cameraView - Current camera view
+ * @param {Object} interactionFns - Functions for user interaction (rotation overrides)
+ * @param {Function} interactionFns.getUserRotation - Returns rotation offset for objectId
+ * @param {Function} interactionFns.decayUserRotations - Decays stored rotation offsets each frame
  */
-export function useAnimationLoop(refs, settings) {
+export function useAnimationLoop(refs, settings, interactionFns = {}) {
   const { rendererRef, sceneRef, cameraRef, animationIdRef, objectsRef } = refs;
   const { animationStyle, cameraView } = settings;
 
@@ -29,7 +32,8 @@ export function useAnimationLoop(refs, settings) {
       animationIdRef,
       objectsRef,
       animationStyle,
-      cameraView
+      cameraView,
+      interactionFns
     );
 
     // Cleanup - Cancel animation when effect re-runs or component unmounts
@@ -38,5 +42,5 @@ export function useAnimationLoop(refs, settings) {
         cancelAnimationFrame(animationIdRef.current);
       }
     };
-  }, [animationStyle, cameraView]); // Re-run when animation style or camera view changes
+  }, [animationStyle, cameraView, interactionFns]);
 }
