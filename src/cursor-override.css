@@ -28,6 +28,14 @@ body * {
   cursor: inherit;
 }
 
+/* Force cursor visibility on canvas and all playground elements */
+body.playground-page *,
+body.playground-page canvas,
+body.playground-page .three-scene-container,
+body.playground-page .three-scene-container * {
+  cursor: auto !important;
+}
+
 /* Specialized controls in playground */
 body.playground-page .controls * {
   cursor: auto !important;
