@@ -24,6 +24,7 @@ Server runs on: `http://localhost:3000`
 **Purpose:** Full-stack bootcamp capstone project
 
 ### What Users Can Do
+
 - Create and authenticate user accounts
 - Save 3D geometry scenes with full configuration
 - Load and edit their personal scenes
@@ -31,6 +32,7 @@ Server runs on: `http://localhost:3000`
 - **Unlock animations** by saving more scenes (gamification)
 
 ### What This Backend Does NOT Include
+
 - ❌ Public gallery (removed)
 - ❌ Social features (likes, views, sharing)
 - ❌ Scene remixing from other users
@@ -61,21 +63,25 @@ backend/
 ### Critical Issues Resolved:
 
 1. **Animation System Overhaul**
+
    - ✅ Changed from numeric IDs (1,2,3) to string names ("rotate", "float", "spiral", "chaos", "alien")
    - ✅ Updated User model methods: `hasUnlockedAnimation()`, `unlockAnimation()`
    - ✅ Fixed default unlocked animations: `["rotate"]` instead of `[1]`
 
 2. **Animation Unlock Thresholds Corrected**
+
    - ✅ Fixed unlock logic in `unlockChecker.js`
    - ✅ New thresholds: 1 scene→"float", 3→"spiral", 5→"chaos", 10→"alien"
    - ✅ Everyone starts with "rotate" unlocked
 
 3. **Removed Public Gallery Features**
+
    - ✅ Removed `isPublic`, `views`, `likes` fields from Scene model
    - ✅ Removed public gallery routes
    - ✅ Users only see their own scenes
 
 4. **Config Update Logic Fixed**
+
    - ✅ PUT route now **merges** config instead of replacing wholesale
    - ✅ Prevents data loss during partial updates
 
@@ -86,6 +92,7 @@ backend/
 ## 🗃 Database Models
 
 ### User Model
+
 ```javascript
 {
   username: String (required, unique, 3-30 chars),
@@ -97,11 +104,13 @@ backend/
 ```
 
 **Methods:**
+
 - `hasUnlockedAnimation(animationName)` - Check if animation is unlocked
 - `unlockAnimation(animationName)` - Add animation to unlocked array
 - `comparePassword(candidatePassword)` - Verify password
 
 ### Scene Model
+
 ```javascript
 {
   name: String (required, max 100 chars),
@@ -114,11 +123,11 @@ backend/
     emissiveIntensity: Number,
     baseColor: String (hex color),
     wireframeIntensity: Number,
-    
+
     // Hyperframe
     hyperframeColor: String (hex color),
     hyperframeLineColor: String (hex color),
-    
+
     // Scene Behavior
     cameraView: String,
     environment: String,
@@ -126,7 +135,7 @@ backend/
     objectCount: Number,
     animationStyle: String (enum: "rotate", "float", "spiral", "chaos", "alien"),
     objectType: String,
-    
+
     // Lighting
     ambientLightColor: String,
     ambientLightIntensity: Number,
@@ -146,6 +155,7 @@ backend/
 ### Authentication Routes
 
 **POST `/api/auth/signup`**
+
 ```json
 Request:
 {
@@ -168,6 +178,7 @@ Response:
 ```
 
 **POST `/api/auth/login`**
+
 ```json
 Request:
 {
@@ -188,6 +199,7 @@ Response:
 ```
 
 **GET `/api/auth/me`** (Protected)
+
 ```json
 Headers: Authorization: Bearer {token}
 
@@ -207,6 +219,7 @@ Response:
 ### Scene Routes (All Protected)
 
 **POST `/api/scenes`** - Create Scene
+
 ```json
 Headers: Authorization: Bearer {token}
 
@@ -232,6 +245,7 @@ Response:
 ```
 
 **GET `/api/scenes/my-scenes`** - Get User's Scenes
+
 ```json
 Headers: Authorization: Bearer {token}
 
@@ -253,6 +267,7 @@ Response:
 ```
 
 **PUT `/api/scenes/:id`** - Update Scene
+
 ```json
 Headers: Authorization: Bearer {token}
 
@@ -274,6 +289,7 @@ Response:
 ```
 
 **DELETE `/api/scenes/:id`** - Delete Scene
+
 ```json
 Headers: Authorization: Bearer {token}
 
@@ -287,15 +303,18 @@ Response:
 ## 🎮 Animation Unlock System
 
 ### Default Unlocked
+
 - **"rotate"** - Everyone starts with this animation
 
 ### Unlock Thresholds
+
 - **1 scene saved** → Unlock "float"
-- **3 scenes saved** → Unlock "spiral"  
+- **3 scenes saved** → Unlock "spiral"
 - **5 scenes saved** → Unlock "chaos"
 - **10 scenes saved** → Unlock "alien"
 
 ### How It Works
+
 1. User creates/saves a scene
 2. `unlockChecker.js` middleware counts their total scenes
 3. If threshold reached, animation is added to `user.unlockedAnimations`
@@ -305,6 +324,7 @@ Response:
 ## 🔧 Environment Variables
 
 Create a `.env` file:
+
 ```env
 MONGODB_URI=mongodb+srv://username:password@cluster.mongodb.net/nexus-geom
 JWT_SECRET=your-secret-key-here
@@ -334,6 +354,7 @@ PORT=3000
 ## 🧪 Testing the API
 
 ### Using curl:
+
 ```bash
 # Health check
 curl http://localhost:3000/
@@ -360,11 +381,13 @@ curl -X GET http://localhost:3000/api/scenes/my-scenes \
 ```
 
 ### Using Browser:
+
 Visit `http://localhost:3000/` to see the health check response.
 
 ## 🚀 Deployment
 
 **For production:**
+
 - Use MongoDB Atlas (free tier)
 - Deploy to Railway, Render, or Heroku
 - Set environment variables on hosting platform
@@ -373,7 +396,7 @@ Visit `http://localhost:3000/` to see the health check response.
 ## 🔒 Security Features
 
 - ✅ Password hashing with bcrypt
-- ✅ JWT token authentication  
+- ✅ JWT token authentication
 - ✅ Input validation with express-validator
 - ✅ CORS protection
 - ✅ Ownership verification for scene operations
