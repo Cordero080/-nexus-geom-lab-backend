@@ -103,10 +103,10 @@ export default function ShowcaseGallery() {
   const mockAnimations = [
     {
       id: 1,
-      name: 'Cosmic Entity #001',
+      name: 'Blu-Khan #001',
       animation: '',
       variant: 'Cosmic Blue',
-      description: 'Digital sentience evolving in a vessel through dance',
+      description: 'The Cyber-Sentient Known As ',
       fbxUrl: '/models/blue_robot.fbx',
       scale: 0.001275,
       background: 'linear-gradient(180deg, rgba(10, 0, 21, 0.95) 0%, rgba(8, 141, 236, 0.78) 30%, rgba(214, 67, 243, 0.6) 70%, rgba(0, 102, 255, 0.5) 100%)',
@@ -115,10 +115,10 @@ export default function ShowcaseGallery() {
     },
     {
       id: 2,
-      name: 'Tech Feline #002',
+      name: 'Prismia #002',
       animation: 'Break Dance',
-      variant: 'Arctic White',
-      description: 'A technological guardian frozen in digital meditation, awaiting its next command.',
+      variant: 'Spectral',
+      description: 'The Iridescent Anomaly Woven from Pure Hologram',
       fbxUrl: '/models/white-cat-break-1.fbx',
       scale: 0.00024,
       galleryScale: 0.000147,
@@ -133,10 +133,10 @@ export default function ShowcaseGallery() {
     },
     {
       id: 3,
-      name: 'Fire-Tech Warrior #003',
+      name: 'Magna-tek #003',
       animation: 'Combat Stance',
       variant: 'Crimson Flame',
-      description: 'A battle-hardened entity radiating pure kinetic energy, ready to strike.',
+      description: 'Fiery Radiance Made Manifest...The Mythic Sentinel of Sector 080',
       fbxUrl: '/models/red-tech-cat.fbx',
       scale: 0.02375,
       galleryScale: 0.01425,
@@ -148,6 +148,24 @@ export default function ShowcaseGallery() {
       background: 'linear-gradient(180deg, rgba(0, 255, 255, 0.5) 0%, rgba(255, 51, 0, 0.7) 30%, rgba(214, 67, 243, 0.6) 70%, rgba(96, 4, 46, 0.8) 100%)',
       // Enhanced viewer background (brighter fire-themed background for this model)
       viewerBackground: 'linear-gradient(135deg, #300a00 0%, #ff3000 50%, #300a00 100%)'
+    },
+    {
+      id: 4,
+      name: 'Nexus-Prime #004',
+      animation: 'Warrior Flip',
+      variant: 'Shadow Striker',
+      description: 'The Quantum Architect of the Digital Nexus...Master of Dimensional Combat',
+      fbxUrl: '/models/alien_front_flip.fbx',
+      scale: 0.0023,
+      galleryScale: 0.002,
+      rotation: [0, 0, 0],
+      positionY: -2.8,
+      galleryPositionY: -2.0,
+      offsetX: 0.2,
+      offsetZ: -0.1,
+      background: 'linear-gradient(180deg, rgba(5, 5, 15, 0.95) 0%, rgba(139, 0, 0, 0.8) 20%, rgba(220, 20, 60, 0.6) 40%, rgba(178, 34, 34, 0.7) 60%, rgba(25, 25, 112, 0.8) 80%, rgba(0, 0, 0, 0.9) 100%)',
+      // Enhanced viewer background (ominous deep space with crimson solar flares)
+      viewerBackground: 'linear-gradient(135deg, #000008 0%, #1a0000 15%, #8b0000 30%, #dc143c 50%, #8b0000 70%, #1a0000 85%, #000008 100%)'
     }
   ];
 
