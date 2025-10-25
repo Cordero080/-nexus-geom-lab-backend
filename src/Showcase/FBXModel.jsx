@@ -73,31 +73,23 @@ export default function FBXModel({ url, scale = 0.01, rotation = [0, 0, 0], posi
           groupRef.current.add(fbx);
         }
 
-        // Wait for all textures to load before calling onModelLoaded
-        const imagePromises = [];
+        // Call onModelLoaded immediately - don't wait for textures
+        // This makes the model appear faster in the gallery
+        if (onModelLoaded) onModelLoaded();
+
+        // Optimize textures for faster rendering (optional background task)
         fbx.traverse((child) => {
           if (child.isMesh && child.material) {
             const materials = Array.isArray(child.material) ? child.material : [child.material];
             materials.forEach((mat) => {
-              if (mat.map && mat.map.image) {
-                const img = mat.map.image;
-                if (!img.complete) {
-                  imagePromises.push(new Promise((resolve) => {
-                    img.addEventListener('load', resolve, { once: true });
-                  }));
-                }
+              // Reduce texture quality for gallery view
+              if (mat.map) {
+                mat.map.minFilter = THREE.LinearFilter;
+                mat.map.generateMipmaps = false;
               }
             });
           }
         });
-
-        if (imagePromises.length > 0) {
-          Promise.all(imagePromises).then(() => {
-            if (onModelLoaded) onModelLoaded();
-          });
-        } else {
-          if (onModelLoaded) onModelLoaded();
-        }
       },
       (xhr) => {
         console.log((xhr.loaded / xhr.total * 100) + '% loaded');

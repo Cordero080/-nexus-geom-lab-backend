@@ -188,6 +188,16 @@
   height: 580px;
 }
 
+.parallax-model-card-4 {
+  height: 1000px;
+  width: 700px;
+}
+
+.parallax-model-card-5 {
+  height: 700px;
+  width: 700px;
+}
+
 /* Info panel styling */
 .parallax-info {
   color: white;

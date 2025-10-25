@@ -13,6 +13,7 @@ export default function ShowcaseGallery() {
   const [preloadedModels, setPreloadedModels] = useState({});
   const [modelLoaded, setModelLoaded] = useState({});
   const [loadingModels, setLoadingModels] = useState(new Set());
+  const [visibleCards, setVisibleCards] = useState(new Set([1])); // Only render first card initially
   const location = useLocation();
   const containerRef = useRef(null);
 
@@ -88,17 +89,22 @@ export default function ShowcaseGallery() {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
             entry.target.classList.add('parallax-info-visible');
+            // Extract card ID from data attribute and mark as visible
+            const cardId = parseInt(entry.target.dataset.cardId);
+            if (cardId) {
+              setVisibleCards(prev => new Set(prev).add(cardId));
+            }
           }
         });
       },
-      { threshold: 0.3 }
+      { threshold: 0.05, rootMargin: '800px' } // Start loading 800px before visible (about 1 screen ahead)
     );
 
-    const infoElements = document.querySelectorAll('.parallax-info');
+    const infoElements = document.querySelectorAll('.parallax-scene');
     infoElements.forEach((el) => observer.observe(el));
 
     return () => observer.disconnect();
-  }, [modelLoaded]);
+  }, []);
 
   // Mock data
   const mockAnimations = [
@@ -108,8 +114,14 @@ export default function ShowcaseGallery() {
       animation: '',
       variant: 'Cosmic Blue',
       description: 'The Cyber-Sentient Known As ',
-      fbxUrl: '/models/blue_robot.fbx',
-      scale: 0.001275,
+      fbxUrl: '/models/blu-khan-break.fbx',
+      scale: 0.0015,
+      galleryScale: 0.001275,
+      rotation: [0, 0, 0],
+      positionY: -.7,
+      galleryPositionY: -0.6,
+      offsetX: 0,
+      offsetZ: 0,
       background: 'linear-gradient(180deg, rgba(10, 0, 21, 0.95) 0%, rgba(8, 141, 236, 0.78) 30%, rgba(214, 67, 243, 0.6) 70%, rgba(0, 102, 255, 0.5) 100%)',
       // Enhanced viewer background (brighter version specifically for this model)
       viewerBackground: 'linear-gradient(135deg, #1c0038 0%, #3b78ff 50%, #1c0038 100%)'
@@ -120,9 +132,9 @@ export default function ShowcaseGallery() {
       animation: 'Break Dance',
       variant: 'Spectral',
       description: 'The Iridescent Anomaly Woven from Pure Hologram',
-      fbxUrl: '/models/white-cat-break-1.fbx',
-      scale: 0.00024,
-      galleryScale: 0.000147,
+      fbxUrl: '/models/prismia-break.fbx',
+      scale: 0.02,
+      galleryScale: 0.015,
       rotation: [0, 0, 0],
       positionY: -2.2,
       galleryPositionY: -1.5,
@@ -138,7 +150,7 @@ export default function ShowcaseGallery() {
       animation: 'Combat Stance',
       variant: 'Crimson Flame',
       description: 'Fiery Radiance Made Manifest...The Mythic Sentinel of Sector 080',
-      fbxUrl: '/models/red-tech-cat.fbx',
+      fbxUrl: '/models/red-tech-2.fbx',
       scale: 0.02375,
       galleryScale: 0.01425,
       rotation: [0, 0, 0],
@@ -156,12 +168,12 @@ export default function ShowcaseGallery() {
       animation: 'Warrior Flip',
       variant: 'Shadow Striker',
       description: 'The Quantum Architect of the Digital Nexus...Master of Dimensional Combat',
-      fbxUrl: '/models/alien_front_flip.fbx',
+      fbxUrl: '/models/nexus-prime.fbx',
       scale: 0.0023,
-      galleryScale: 0.002,
+      galleryScale: 0.0018,
       rotation: [0, 0, 0],
       positionY: -2.8,
-      galleryPositionY: -2.0,
+      galleryPositionY: -1.8,
       offsetX: 0.2,
       offsetZ: -0.1,
       background: 'linear-gradient(180deg, rgba(5, 5, 15, 0.95) 0%, rgba(139, 0, 0, 0.8) 20%, rgba(220, 20, 60, 0.6) 40%, rgba(178, 34, 34, 0.7) 60%, rgba(25, 25, 112, 0.8) 80%, rgba(0, 0, 0, 0.9) 100%)',
@@ -174,7 +186,7 @@ export default function ShowcaseGallery() {
       animation: 'Solar Ascension',
       variant: 'Golden Phoenix',
       description: 'The Transcendent Seraph...Reborn from Digital Ashes to Touch the Infinite',
-      fbxUrl: '/models/icarus.fbx',
+      fbxUrl: '/models/icarus-2.fbx',
       scale: 0.02,
       galleryScale: 0.015,
       rotation: [0, 0, 0],
@@ -273,11 +285,14 @@ export default function ShowcaseGallery() {
         {/* Parallax Scenes */}
         {mockAnimations.map((animation, index) => {
           const position = getCardPosition(index);
+          const isVisible = visibleCards.has(animation.id);
+          
           return (
             <div
               key={animation.id}
               className={`parallax-scene parallax-scene-${position} scene-${animation.id}`}
               style={animation.background ? { background: animation.background } : {}}
+              data-card-id={animation.id}
             >
               <div
                 className={`parallax-model-card parallax-model-card-${animation.id}`}
@@ -292,36 +307,50 @@ export default function ShowcaseGallery() {
                 }}
                 onMouseLeave={() => setHoveredCard(null)}
               >
-                <Canvas
-                  camera={{ position: [0, 1, 6], fov: 60 }}
-                  style={{
+                {isVisible ? (
+                  <Canvas
+                    camera={{ position: [0, 1, 6], fov: 60 }}
+                    style={{
+                      width: '100%',
+                      height: '100%',
+                      opacity: 1,
+                      transition: 'opacity 0.7s',
+                      background: animation.background
+                    }}
+                  >
+                    <ambientLight intensity={0.6} />
+                    <directionalLight position={[5, 5, 5]} intensity={1.2} color="#ffffff" />
+                    <RotatingCube
+                      fbxUrl={animation.fbxUrl}
+                      scale={animation.galleryScale || animation.scale}
+                      rotation={animation.rotation}
+                      positionY={animation.galleryPositionY || animation.positionY}
+                      offsetX={animation.offsetX}
+                      offsetZ={animation.offsetZ}
+                      cubeY={0.3}
+                      size={3.4}
+                      isPlaying={hoveredCard === animation.id}
+                      onModelLoaded={() => {
+                        console.log(`Model loaded: ${animation.name} (ID: ${animation.id})`);
+                        setModelLoaded((prev) => ({ ...prev, [animation.id]: true }));
+                      }}
+                      preloadedModel={preloadedModels[animation.id]}
+                    />
+                  </Canvas>
+                ) : (
+                  <div style={{
                     width: '100%',
                     height: '100%',
-                    opacity: 1, // Always visible for debugging
-                    transition: 'opacity 0.7s',
-                    background: animation.background
-                  }}
-                >
-                  <ambientLight intensity={0.6} />
-                  <directionalLight position={[5, 5, 5]} intensity={1.2} color="#ffffff" />
-                  <RotatingCube
-                    fbxUrl={animation.fbxUrl}
-                    scale={animation.galleryScale || animation.scale}
-                    rotation={animation.rotation}
-                    positionY={animation.galleryPositionY || animation.positionY}
-                    offsetX={animation.offsetX}
-                    offsetZ={animation.offsetZ}
-                    cubeY={0.3}
-                    size={3.4}
-                    isPlaying={true}
-                    onModelLoaded={() => {
-                      console.log(`Model loaded: ${animation.name} (ID: ${animation.id})`);
-                      setModelLoaded((prev) => ({ ...prev, [animation.id]: true }));
-                    }}
-                    preloadedModel={preloadedModels[animation.id]}
-                  />
-                </Canvas>                {/* Loading Spinner */}
-                {(!modelLoaded[animation.id] || loadingModels.has(animation.id)) && (
+                    background: animation.background,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center'
+                  }}>
+                    <div className="loader-spinner" />
+                  </div>
+                )}
+                {/* Loading Spinner */}
+                {isVisible && (!modelLoaded[animation.id] || loadingModels.has(animation.id)) && (
                   <div className="loader-container">
                     <div className="loader-spinner" />
                     {loadingModels.has(animation.id) && (
