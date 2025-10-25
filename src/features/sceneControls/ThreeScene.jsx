@@ -159,7 +159,6 @@ function ThreeScene({
 
 	return (
 		<div 
-			className={getBackgroundClass(environment)}
 			style={{
 				position: 'relative',
 				width: '100%',
@@ -167,21 +166,16 @@ function ThreeScene({
 				minHeight: '100vh'
 			}}
 		>
-			{/* Hue-rotated background overlay */}
+			{/* Background overlay with hue shift */}
 			<div 
 				className={getBackgroundClass(environment)}
 				style={{
-					position: 'absolute',
-					top: 0,
-					left: 0,
-					width: '100%',
-					height: '100%',
-					zIndex: 1,
-					filter: `hue-rotate(${environmentHue}deg)`,
-					pointerEvents: 'none'
+					pointerEvents: 'none',
+					'--hue-shift': `${environmentHue}deg`,
+					filter: environment === 'matrix' ? 'none' : `hue-rotate(${environmentHue}deg)`
 				}}
 			/>
-			{/* Three.js canvas container */}
+			{/* Three.js canvas container - NOT affected by hue shift */}
 			<div 
 				ref={mountRef} 
 				className="three-scene-container"
