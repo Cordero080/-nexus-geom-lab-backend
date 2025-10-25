@@ -39,6 +39,7 @@ export function useMouseTracking(rendererRef, cameraRef) {
  */
 export function useEnvironmentUpdate(sceneRef, environment, environmentHue) {
   useEffect(() => {
+    console.log('[useEnvironmentUpdate] Updating environment:', environment, 'hue:', environmentHue);
     if (!sceneRef.current) return;
     updateEnvironment(sceneRef.current, environment, environmentHue);
   }, [environment, environmentHue]);
