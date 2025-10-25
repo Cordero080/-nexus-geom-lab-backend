@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useScene } from "../../context/SceneContext";
 import { useAuth } from "../../context/AuthContext";
-import SceneCard from "../../components/Gallery/SceneCard";
+import SceneCard from "../../components/Scenes/SceneCard"; // Corrected import path to Scenes
 import CustomSelect from "../../components/CustomSelect/CustomSelect";
 import "./MyScenesPage.css";
 
