@@ -15,6 +15,7 @@
   transform: translateZ(0px) scale(1);
   transition: transform 1.2s cubic-bezier(0.4,0,0.2,1), opacity 1.2s, filter 1.2s;
 }
+
 .parallax-holo.animate {
   opacity: 0;
   filter: blur(8px) brightness(2.2) saturate(2.5);
@@ -104,7 +105,7 @@
   padding: 24px 32px;
   border: none;
   border-radius: 18px;
-  font-size: 1.18em;
+  font-size: 1.5em;
   font-style: italic;
   font-family: 'Orbitron', 'JetBrains Mono', monospace;
   font-weight: 800;

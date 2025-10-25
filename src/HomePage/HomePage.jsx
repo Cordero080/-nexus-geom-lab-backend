@@ -259,11 +259,11 @@ export default function HomePage() {
             </p>
             <div className="hero-stats">
               <div className="stat-item">
-                <span className="stat-label">MODULES LOADED</span>
-                <span className="stat-value" data-stat="modules">003</span>
+                <span className="stat-label">MODULES LOADED-</span>
+                <span className="stat-value" data-stat="modules">080</span>
               </div>
               <div className="stat-item">
-                <span className="stat-label">QUANTUM STATE</span>
+                <span className="stat-label">QUANTUM STATE-</span>
                 <span className="stat-value" data-stat="state" style={{
                   color: portalState.colors[0],
                   textShadow: `0 0 8px ${portalState.colors[1]}, 0 0 2px ${portalState.colors[2]}`,
@@ -271,15 +271,15 @@ export default function HomePage() {
                 }}>{portalState.label.toUpperCase()}</span>
               </div>
               <div className="stat-item">
-                <span className="stat-label">NETWORK STATUS</span>
-                <span className="stat-value" data-stat="network">CONNECTED</span>
+                <span className="stat-label">NETWORK  STATUS</span>
+                <span className="stat-value" data-stat="network">-CONNECTED</span>
               </div>
             </div>
             
             {/* Temporarily always show Enter Playground while building */}
             <BeamScanButton
               onClick={() => window.location.href = '/playground'}
-              label="Enter Playground"
+              label="3nter Playgr0und"
               style={{ margin: '32px auto 0', display: 'block' }}
             />
             
@@ -299,7 +299,7 @@ export default function HomePage() {
             <div className="code-snippets">
               <div className="floating-code">import name from './exportingFile.js';</div>
               <div className="floating-code">console.future(identity);</div>
-              <div className="floating-code">PABLO DANIEL CORDERO</div>
+              <div className="floating-code">PABLO D C0RDER0</div>
               <Quote />
               
       
