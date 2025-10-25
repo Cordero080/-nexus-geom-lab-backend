@@ -95,3 +95,120 @@ if (objData.thickCylinders && objData.edgePairs && geometry) {
 
 - `5283b50` - Fix wireframe disconnection in alien animation - synchronize transforms
 - `8d6f4cb` - Fix wireframe disconnection for structured geometries in all animations
+
+---
+
+# Compound Icosahedron Hyperframe Connection Fix
+
+## Problem
+
+When implementing the compound icosahedron (merkaba/stella octangula) by merging two rotated icosahedrons, the hyperframe connection lines (vertex-to-vertex connections from outer shell to inner core) were:
+
+1. Rendering gradually/inconsistently during rotation
+2. Not properly aligned with actual vertex positions
+3. Sticking out to incorrect positions in space
+
+## Root Cause Analysis
+
+### Attempt 1: Canonical Vertex Calculation Issue
+Initially, connections used mathematically calculated canonical icosahedron vertices based on the golden ratio formula:
+```javascript
+const phi = (1 + Math.sqrt(5)) / 2;
+const rawVertices = [[-1, phi, 0], [1, phi, 0], ...];
+```
+
+**Problem**: THREE.IcosahedronGeometry doesn't use exactly these normalized positions. The merged geometry had vertices at different positions than the canonical calculation.
+
+### Attempt 2: Reading Merged Geometry Positions
+Tried reading vertex positions directly from `geometry.attributes.position.array`:
+```javascript
+const idx = i * 3;
+const start = new THREE.Vector3(positions[idx], positions[idx+1], positions[idx+2]);
+```
+
+**Problem**: The merged geometry's vertex array order didn't match the canonical vertex index order, causing misaligned connections.
+
+### Attempt 3: Frustum Culling & Matrix Updates
+Added `frustumCulled = false` and manual matrix updates thinking it was a rendering issue:
+```javascript
+cylinderMesh.frustumCulled = false;
+cylinderMesh.updateMatrix();
+```
+
+**Problem**: This didn't address the root cause - the vertex position mismatch.
+
+## Solution: Nearest Vertex Matching
+
+The final solution matches each canonical calculated vertex to its closest actual vertex in the merged geometry:
+
+```javascript
+// Extract all actual vertices from merged geometry
+const actualVertices = [];
+for (let i = 0; i < vertexCount; i++) {
+  const idx = i * 3;
+  actualVertices.push(new THREE.Vector3(
+    positions[idx],
+    positions[idx + 1],
+    positions[idx + 2]
+  ));
+}
+
+// Match each canonical vertex to closest actual vertex
+const matchVertex = (canonical) => {
+  const canonicalVec = new THREE.Vector3(...canonical);
+  let closest = actualVertices[0];
+  let minDist = canonicalVec.distanceTo(closest);
+  
+  for (let i = 1; i < actualVertices.length; i++) {
+    const dist = canonicalVec.distanceTo(actualVertices[i]);
+    if (dist < minDist) {
+      minDist = dist;
+      closest = actualVertices[i];
+    }
+  }
+  return closest;
+};
+
+// Use matched vertices for connections
+const start = matchVertex(outerVertices[i]);
+const end = new THREE.Vector3(...innerVertices[i]);
+```
+
+## How It Works
+
+1. **Extract Actual Vertices**: Read all vertex positions from the merged BufferGeometry
+2. **Canonical Calculation**: Use golden ratio formula to generate expected vertex positions
+3. **Nearest Neighbor Search**: For each canonical vertex, find the closest actual vertex in the geometry
+4. **Create Connections**: Connect matched actual vertices to the calculated inner vertices
+
+## Results
+
+- ✅ Hyperframe connection lines render immediately and consistently
+- ✅ All 24 connections (12 per icosahedron) align perfectly with vertex positions
+- ✅ No "sticking out" or misalignment during rotation
+- ✅ Stable rendering throughout all animation styles
+
+## Key Insights
+
+1. **Geometry Abstraction Gap**: Mathematical ideals don't always match Three.js implementation
+2. **Merged Geometry Complexity**: Merged geometries reorder/deduplicate vertices
+3. **Spatial Matching**: When index-based matching fails, use distance-based nearest neighbor
+4. **Compound Structures**: Each component needs independent vertex matching
+
+## Technical Details
+
+### Compound Icosahedron Creation
+- Two `THREE.IcosahedronGeometry()` instances
+- Second rotated: `rotateX(Math.PI/2)` then `rotateY(Math.PI/6)`
+- Merged using `BufferGeometryUtils.mergeGeometries()`
+- Metadata: `userData.isCompound = true`, `userData.baseType = "IcosahedronGeometry"`
+
+### Intricate Wireframe Components
+1. **Inner Wireframes**: Two scaled-down icosahedrons (0.5x scale)
+2. **Edge Cylinders**: Connect inner icosahedron vertices
+3. **Hyperframe Connections**: Connect outer vertices to inner vertices (24 total)
+
+## Related Commits
+
+- Latest commit - Fix compound icosahedron hyperframe connections to align with actual vertex positions
+````
