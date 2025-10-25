@@ -1,10 +1,7 @@
 import { updateEnvironment } from './environmentSetup';
 import { __UP, __Q, __TMP, __A, __B, __M, __Inv, nearestVertexIndex, updateThickWireframeCylinders } from '../../utils/geometryHelpers';
-import React from 'react';
+import React, { useRef } from 'react';
 import './ThreeScene.css';
-import { use, useEffect, useRef, useCallback } from 'react';
-import * as THREE from 'three';
-import { createSceneObject } from './factories/objectFactory';
 import { useSceneInitialization } from './hooks/useSceneInitialization';
 import { useObjectManager } from './hooks/useObjectManager';
 import { useCameraController } from './hooks/useCameraController';
@@ -52,28 +49,6 @@ function ThreeScene({
 	directionalLightY,       // Current light Y position → will position directional light
 	directionalLightZ        // Current light Z position → will position directional light
 }) {
-	// DEBUG: Log all props on every render
-	console.log('[ThreeScene] Rendered with props:', {
-		scale,
-		metalness,
-		emissiveIntensity,
-		baseColor,
-		wireframeIntensity,
-		hyperframeColor,
-		hyperframeLineColor,
-		cameraView,
-		environment,
-		objectCount,
-		animationStyle,
-		objectType,
-		ambientLightColor,
-		ambientLightIntensity,
-		directionalLightColor,
-		directionalLightIntensity,
-		directionalLightX,
-		directionalLightY,
-		directionalLightZ
-	});
 	// ========================================
 	// REFS - STORING THREE.JS OBJECTS
 	// ========================================

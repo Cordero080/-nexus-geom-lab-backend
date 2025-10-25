@@ -13,7 +13,6 @@ export function useCameraController(cameraRef, cameraView) {
     const camera = cameraRef.current;
 
     // DEBUG: Log cameraView changes and camera position
-    console.log("[ThreeScene] cameraView effect:", cameraView);
 
     // POSITION CAMERA based on cameraView prop
     switch (cameraView) {
@@ -38,6 +37,5 @@ export function useCameraController(cameraRef, cameraView) {
         break;
     }
 
-    console.log("[ThreeScene] camera position after update:", camera.position);
   }, [cameraView]); // Run when cameraView prop changes
 }

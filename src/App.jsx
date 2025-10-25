@@ -46,11 +46,6 @@ function GeomLab() {
   const [directionalLightIntensity, setDirectionalLightIntensity] = useState(1.0)
   const [directionalLightX, setDirectionalLightX] = useState(10)
   const [directionalLightY, setDirectionalLightY] = useState(10)
-
-  // Debug: log when directionalLightY changes
-  React.useEffect(() => {
-    console.log('[App] directionalLightY state changed:', directionalLightY);
-  }, [directionalLightY]);
   const [directionalLightZ, setDirectionalLightZ] = useState(5)
   const [scale, setScale] = useState(1)
 
@@ -153,11 +148,8 @@ function GeomLab() {
 function HomePageWithNav() {
   const navigate = useNavigate();
   
-  console.log('HomePageWithNav rendered, navigate:', navigate);
-  
   // Direct navigation handler
   const handleEnter = () => {
-    console.log('Navigating to /geom-lab');
     navigate('/geom-lab');
   };
   
@@ -178,15 +170,11 @@ function App() {
   
   // Set cursor style and body class based on current route
   useEffect(() => {
-    console.log(`App route change detected - path: ${currentPath}, isHomePage: ${isHomePage}, isGeomLabPage: ${isGeomLabPage}`);
-    
     if (isGeomLabPage) {
       // On geom-lab, use default cursor for better control interaction
       document.body.classList.add('geom-lab-page');
-      console.log('Geom Lab mode active - normal cursor enabled');
     } else {
       // On all other pages, hide the default cursor to allow quantum cursor to work
-      console.log('Quantum cursor mode active - custom cursor enabled');
       document.body.classList.remove('geom-lab-page');
     }
   }, [currentPath, isHomePage, isGeomLabPage]);

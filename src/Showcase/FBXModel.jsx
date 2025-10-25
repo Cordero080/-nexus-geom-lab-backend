@@ -17,7 +17,6 @@ export default function FBXModel({ url, scale = 0.01, rotation = [0, 0, 0], posi
       (fbx) => {
         // Store the model
         modelRef.current = fbx;
-        console.log(`Loading model: ${url}, scale: ${scale}`);
 
         // Scale the model
         fbx.scale.setScalar(scale);
@@ -37,7 +36,6 @@ export default function FBXModel({ url, scale = 0.01, rotation = [0, 0, 0], posi
 
         // Setup animation mixer if animations exist
         if (fbx.animations && fbx.animations.length > 0) {
-          console.log(`Model ${url} has ${fbx.animations.length} animation(s):`, fbx.animations.map(anim => anim.name));
           const mixer = new THREE.AnimationMixer(fbx);
           mixerRef.current = mixer;
 
@@ -64,8 +62,6 @@ export default function FBXModel({ url, scale = 0.01, rotation = [0, 0, 0], posi
           if (isPlaying) {
             action.play();
           }
-        } else {
-          console.log(`Model ${url} has no animations`);
         }
 
         // Add to scene
@@ -91,9 +87,7 @@ export default function FBXModel({ url, scale = 0.01, rotation = [0, 0, 0], posi
           }
         });
       },
-      (xhr) => {
-        console.log((xhr.loaded / xhr.total * 100) + '% loaded');
-      },
+      undefined, // Progress callback
       (error) => {
         console.error('Error loading FBX:', error);
       }

@@ -50,7 +50,6 @@ export function SceneProvider({ children }) {
   const saveScene = useCallback(
     async (sceneData, userId, token) => {
       // TODO: Replace with actual API call when backend is ready
-      console.log("💾 Saving scene:", sceneData);
 
       // Simulate API call
       const mockSavedScene = {
@@ -110,8 +109,6 @@ export function SceneProvider({ children }) {
    * @param {string} currentUserId - ID of logged-in user (null if not logged in)
    */
   const loadScene = useCallback((scene, currentUserId = null) => {
-    console.log("📂 Loading scene:", scene);
-
     setCurrentSceneId(scene.id);
     setSceneOwner(scene.userId);
     setSceneName(scene.name);
@@ -134,7 +131,6 @@ export function SceneProvider({ children }) {
    */
   const deleteScene = useCallback(async (sceneId, token) => {
     // TODO: Replace with actual API call when backend is ready
-    console.log("🗑️ Deleting scene:", sceneId);
 
     // If deleting current scene, reset context
     if (sceneId === currentSceneId) {
@@ -165,8 +161,6 @@ export function SceneProvider({ children }) {
    * Reset to fresh state (new scene)
    */
   const resetScene = useCallback(() => {
-    console.log("🆕 Resetting to fresh scene");
-
     setCurrentSceneId(null);
     setSceneOwner(null);
     setSceneName("");

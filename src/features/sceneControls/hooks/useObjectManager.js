@@ -72,16 +72,6 @@ export function useObjectManager(refs, objectProps) {
       scene.add(centerLines);
       scene.add(curvedLines);
 
-      console.log(`Added object ${i} to scene:`, {
-        solidMesh: solidMesh.type,
-        wireframeMesh: wireframeMesh.type,
-        centerLines: centerLines ? centerLines.type : "NULL",
-        curvedLines: curvedLines ? curvedLines.type : "NULL",
-        centerLinesChildren: centerLines ? centerLines.children?.length : "N/A",
-        curvedLinesChildren: curvedLines ? curvedLines.children?.length : "N/A",
-        position: solidMesh.position,
-      });
-
       // Store object data for animations and updates
       objectsRef.current.push(objectData);
     }
@@ -89,17 +79,7 @@ export function useObjectManager(refs, objectProps) {
     // Store first material as main reference for debugging
     if (objectsRef.current.length > 0) {
       materialRef.current = objectsRef.current[0].material;
-      console.log(
-        "Set main material reference, metalness:",
-        objectsRef.current[0].material.metalness,
-        "roughness:",
-        objectsRef.current[0].material.roughness
-      );
     }
-
-    console.log(
-      `Created ${objectsRef.current.length} objects with current React state values`
-    );
   }, [objectCount, baseColor, objectType]);
   // Effect runs when these props change
 }

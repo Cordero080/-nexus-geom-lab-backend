@@ -10,8 +10,6 @@ export default function QuantumCursor() {
   const universeRef = useRef(null);
   
   useEffect(() => {
-    console.log("QuantumCursor mounted - initializing universe");
-    
     // Ensure proper body classes for homepage cursor styling
     document.body.classList.remove('geom-lab-page');
     
@@ -25,8 +23,6 @@ export default function QuantumCursor() {
     
     // Cleanup function to remove particles and restore cursor
     return () => {
-      console.log("QuantumCursor unmounted - cleaning up");
-      
       // Remove any created particles when component unmounts
       if (universeRef.current) {
         // Clean up particles

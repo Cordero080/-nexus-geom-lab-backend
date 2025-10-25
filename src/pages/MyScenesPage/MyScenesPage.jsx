@@ -158,13 +158,9 @@ export default function MyScenesPage() {
    */
   useEffect(() => {
     const handleQuantumCollapse = () => {
-      console.log('🌀 Quantum collapse triggered!'); // Debug: Collapse event fired
-      
       // Collapse quantum superposition into definite states
       const newPortalState = quantumCollapse(portalWorlds);
       const newGlyphState = quantumCollapse(glyphSets);
-      
-      console.log('🎨 New portal state:', newPortalState.label); // Debug: New dimension
       
       // Update React state to trigger UI re-render with new colors
       setPortalState(newPortalState);
@@ -172,14 +168,12 @@ export default function MyScenesPage() {
     };
     
     const handleClickCollapse = () => {
-      console.log('🖱️ Click quantum collapse triggered!'); // Debug: Click event
       handleQuantumCollapse();
     };
 
     // Attach quantum collapse to user interaction events
     window.addEventListener('scroll', handleQuantumCollapse);
     window.addEventListener('click', handleClickCollapse);
-    console.log('📡 Quantum event listeners initialized'); // Debug: Setup complete
     
     return () => {
       window.removeEventListener('scroll', handleQuantumCollapse);
@@ -278,7 +272,6 @@ export default function MyScenesPage() {
 
   // Load scene into editor
   const handleLoad = (scene) => {
-    console.log("Loading scene into editor:", scene);
     loadScene(scene, currentUser.id);
     navigate("/geometry-lab"); // Navigate to editor
   };

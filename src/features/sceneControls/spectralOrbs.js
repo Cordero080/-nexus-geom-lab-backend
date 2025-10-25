@@ -407,7 +407,6 @@ export function removeSpectralOrbs(scene) {
  * @param {number} hueShift - Hue rotation in degrees (0-360)
  */
 export function updateSpectralOrbHue(scene, hueShift = 0) {
-  console.log("[updateSpectralOrbHue] Called with hueShift:", hueShift);
   if (!scene) return;
 
   // Find all spectral orbs in the scene
@@ -418,7 +417,6 @@ export function updateSpectralOrbHue(scene, hueShift = 0) {
     }
   });
 
-  console.log("[updateSpectralOrbHue] Found", sceneOrbs.length, "orbs");
   if (sceneOrbs.length === 0) return;
 
   // Base spectral colors
@@ -450,25 +448,9 @@ export function updateSpectralOrbHue(scene, hueShift = 0) {
         baseColors[(index + 2) % baseColors.length]
       );
 
-      if (index === 0) {
-        console.log(
-          "[updateSpectralOrbHue] Before hue shift:",
-          color1.getHexString()
-        );
-      }
-
       color1.offsetHSL(hueShift / 360, 0, 0);
       color2.offsetHSL(hueShift / 360, 0, 0);
       color3.offsetHSL(hueShift / 360, 0, 0);
-
-      if (index === 0) {
-        console.log(
-          "[updateSpectralOrbHue] After hue shift (",
-          hueShift,
-          "deg):",
-          color1.getHexString()
-        );
-      }
 
       // Update vertex colors
       const positionAttribute = orb.geometry.attributes.position;
@@ -487,14 +469,6 @@ export function updateSpectralOrbHue(scene, hueShift = 0) {
         }
 
         colorAttribute.setXYZ(j, finalColor.r, finalColor.g, finalColor.b);
-      }
-
-      if (index === 0) {
-        console.log(
-          "[updateSpectralOrbHue] Updated",
-          positionAttribute.count,
-          "vertices"
-        );
       }
 
       colorAttribute.needsUpdate = true;

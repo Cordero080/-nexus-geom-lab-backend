@@ -44,15 +44,12 @@ export function useMaterialUpdates(objectsRef, materialProps) {
 
   // METALNESS UPDATER (real PBR metalness - adjust lighting to see effect)
   useEffect(() => {
-    console.log("Updating metalness to:", metalness);
-
     objectsRef.current.forEach(({ material, wireframeMaterial }, index) => {
       // Update solid material
       if (material) {
         material.metalness = metalness;
         material.roughness = 0.2; // Keep roughness low for shiny metal effect
         material.needsUpdate = true;
-        console.log(`Updated material ${index} metalness to:`, metalness);
       }
       // Update wireframe material
       if (wireframeMaterial) {
@@ -68,7 +65,6 @@ export function useMaterialUpdates(objectsRef, materialProps) {
 
   // EMISSIVE INTENSITY UPDATER (creates glow effect using baseColor)
   useEffect(() => {
-    console.log("Updating emissive intensity to:", emissiveIntensity);
     const emissiveColor = new THREE.Color(baseColor).multiplyScalar(
       emissiveIntensity
     );
@@ -78,74 +74,47 @@ export function useMaterialUpdates(objectsRef, materialProps) {
       if (material) {
         material.emissive = emissiveColor.clone();
         material.needsUpdate = true;
-        console.log(
-          `Updated material ${index} emissive intensity to:`,
-          emissiveIntensity
-        );
-      } else {
-        console.log(`Material ${index} is null`);
       }
       // Update wireframe material
       if (wireframeMaterial) {
         wireframeMaterial.emissive = emissiveColor.clone();
         wireframeMaterial.needsUpdate = true;
-        console.log(
-          `Updated wireframe material ${index} emissive intensity to:`,
-          emissiveIntensity
-        );
       }
     });
   }, [emissiveIntensity, baseColor]);
 
   // BASE COLOR UPDATER
   useEffect(() => {
-    console.log("Updating base color to:", baseColor);
     // Convert hex color string to Three.js color number
     const convertedColor = parseInt(baseColor.replace("#", ""), 16);
-    console.log("Converted base color value:", convertedColor);
 
     objectsRef.current.forEach(({ material, wireframeMaterial }, index) => {
       // Update solid material
       if (material) {
         material.color.setHex(convertedColor);
         material.needsUpdate = true;
-        console.log(`Updated material ${index} base color`);
       }
       // Update wireframe material
       if (wireframeMaterial) {
         wireframeMaterial.color.setHex(convertedColor);
         wireframeMaterial.needsUpdate = true;
-        console.log(`Updated wireframe material ${index} base color`);
       }
     });
   }, [baseColor]);
 
   // BASE COLOR DEBUGGER (duplicate for debugging)
   useEffect(() => {
-    console.log("Base color change detected:", baseColor);
-    console.log("Objects in objectsRef:", objectsRef.current);
-
     const convertedColor = parseInt(baseColor.replace("#", ""), 16);
-    console.log("Converted base color value:", convertedColor);
 
     objectsRef.current.forEach(({ material, wireframeMaterial }, index) => {
       if (material) {
         material.color.setHex(convertedColor);
         material.needsUpdate = true;
-        console.log(`Updated material ${index} base color to:`, material.color);
-      } else {
-        console.log(`Material ${index} is null`);
       }
 
       if (wireframeMaterial) {
         wireframeMaterial.color.setHex(convertedColor);
         wireframeMaterial.needsUpdate = true;
-        console.log(
-          `Updated wireframe material ${index} base color to:`,
-          wireframeMaterial.color
-        );
-      } else {
-        console.log(`Wireframe material ${index} is null`);
       }
     });
   }, [baseColor]);
@@ -153,10 +122,6 @@ export function useMaterialUpdates(objectsRef, materialProps) {
   // WIREFRAME INTENSITY UPDATER
   useEffect(() => {
     const intensity = wireframeIntensity / 100; // Convert 0-100 range to 0-1 range
-
-    console.log(
-      `Updating wireframe intensity to ${wireframeIntensity}% (${intensity}) for ${objectsRef.current.length} objects`
-    );
 
     objectsRef.current.forEach(
       (
@@ -168,13 +133,6 @@ export function useMaterialUpdates(objectsRef, materialProps) {
         },
         index
       ) => {
-        console.log(`Updating object ${index}:`, {
-          hasMaterial: !!material,
-          hasWireframeMaterial: !!wireframeMaterial,
-          hasCenterLinesMaterial: !!centerLinesMaterial,
-          hasCurvedLinesMaterial: !!curvedLinesMaterial,
-        });
-
         if (material && wireframeMaterial) {
           // DUAL-MESH BLENDING: Smooth transition between solid and wireframe
           if (intensity === 0) {
@@ -210,10 +168,6 @@ export function useMaterialUpdates(objectsRef, materialProps) {
 
           material.needsUpdate = true;
           wireframeMaterial.needsUpdate = true;
-
-          console.log(
-            `Wireframe intensity ${wireframeIntensity}%: solid opacity = ${material.opacity}, wireframe opacity = ${wireframeMaterial.opacity}`
-          );
         } else if (material) {
           // Legacy single-mesh fallback (old wireframe behavior)
           if (intensity === 0) {
@@ -233,34 +187,24 @@ export function useMaterialUpdates(objectsRef, materialProps) {
 
   // INTRICATE WIREFRAME SPIRAL COLOR UPDATER
   useEffect(() => {
-    console.log(
-      "Updating intricate wireframe spiral color to:",
-      hyperframeColor
-    );
     const convertedColor = new THREE.Color(hyperframeColor);
 
     objectsRef.current.forEach(({ centerLinesMaterial }, index) => {
       if (centerLinesMaterial) {
         centerLinesMaterial.color.copy(convertedColor);
         centerLinesMaterial.needsUpdate = true;
-        console.log(`Updated center lines material ${index} color`);
       }
     });
   }, [hyperframeColor]);
 
   // INTRICATE WIREFRAME EDGE COLOR UPDATER
   useEffect(() => {
-    console.log(
-      "Updating intricate wireframe edge color to:",
-      hyperframeLineColor
-    );
     const convertedColor = new THREE.Color(hyperframeLineColor);
 
     objectsRef.current.forEach(({ curvedLinesMaterial }, index) => {
       if (curvedLinesMaterial) {
         curvedLinesMaterial.color.copy(convertedColor);
         curvedLinesMaterial.needsUpdate = true;
-        console.log(`Updated curved lines material ${index} color`);
       }
     });
   }, [hyperframeLineColor]);

@@ -192,8 +192,8 @@ export default function ShowcaseGallery() {
       rotation: [0, 0, 0],
       positionY: -2.8,
       galleryPositionY: -1.5,
-      offsetX: 0,
-      offsetZ: 0,
+      offsetX: -0.2,
+      offsetZ: 0.15,
       background: 'linear-gradient(180deg, rgba(15, 5, 0, 0.95) 0%, rgba(255, 140, 0, 0.8) 20%, rgba(255, 215, 0, 0.7) 40%, rgba(255, 165, 0, 0.6) 60%, rgba(255, 69, 0, 0.7) 80%, rgba(139, 69, 19, 0.9) 100%)',
       // Enhanced viewer background (radiant golden sunrise with warm amber tones)
       viewerBackground: 'linear-gradient(135deg, #2d1810 0%, #ff8c00 25%, #ffd700 50%`, #ff8c00 75%, #2d1810 100%)'
@@ -331,7 +331,6 @@ export default function ShowcaseGallery() {
                       size={3.4}
                       isPlaying={hoveredCard === animation.id}
                       onModelLoaded={() => {
-                        console.log(`Model loaded: ${animation.name} (ID: ${animation.id})`);
                         setModelLoaded((prev) => ({ ...prev, [animation.id]: true }));
                       }}
                       preloadedModel={preloadedModels[animation.id]}

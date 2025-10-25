@@ -35,11 +35,6 @@ export function useLightingUpdates(refs, lightingProps) {
       const convertedColor = parseInt(ambientLightColor.replace("#", ""), 16);
       ambientLightRef.current.color.setHex(convertedColor);
       ambientLightRef.current.intensity = ambientLightIntensity;
-      console.log(
-        "Updated ambient light:",
-        ambientLightColor,
-        ambientLightIntensity
-      );
     }
   }, [ambientLightColor, ambientLightIntensity]);
 
@@ -62,17 +57,6 @@ export function useLightingUpdates(refs, lightingProps) {
       directionalLightRef.current.intensity = safeIntensity;
       // Position the light using clamped coordinates
       directionalLightRef.current.position.set(safeX, safeY, safeZ);
-      console.log(
-        "[ThreeScene] Updated directional light:",
-        directionalLightColor,
-        safeIntensity,
-        "position:",
-        safeX,
-        safeY,
-        safeZ,
-        "| prop Y:",
-        directionalLightY
-      );
     }
   }, [
     directionalLightColor,

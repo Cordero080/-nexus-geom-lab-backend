@@ -109,7 +109,6 @@ function Controls({
   
   const handleEnvironmentHueChange = (event) => {
     const newHue = parseInt(event.target.value, 10);
-    console.log('[Controls] Hue slider changed to:', newHue);
     onEnvironmentHueChange(newHue);
   };
   
