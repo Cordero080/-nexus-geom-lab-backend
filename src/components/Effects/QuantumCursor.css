@@ -23,19 +23,6 @@
   transform: translate(-50%, -50%);
 }
 
-.wormhole {
-  position: fixed;
-  width: 15px;
-  height: 15px;
-  border-radius: 50%;
-  background: radial-gradient(circle, #200052 0%, #00ffff 30%, #ff00cc 60%, transparent 100%);
-  pointer-events: none;
-  z-index: 99995;
-  opacity: 0;
-  transition: opacity 0.2s;
-  transform: translate(-50%, -50%);
-}
-
 .dimensional-rift {
   position: fixed;
   width: 30px;
@@ -73,19 +60,4 @@
   pointer-events: none;
   z-index: 99996;
   opacity: 0.5;
-}
-
-.wormhole.ripple {
-  animation: wormhole-ripple 0.1s ease-out;
-}
-
-@keyframes wormhole-ripple {
-  0% {
-    transform: translate(-50%, -50%) scale(0.3);
-    opacity: 0.8;
-  }
-  100% {
-    transform: translate(-50%, -50%) scale(2);
-    opacity: 0;
-  }
 }

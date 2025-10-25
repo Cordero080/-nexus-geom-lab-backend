@@ -27,10 +27,7 @@ function Controls({
   ambientLightColor, onAmbientLightColorChange,
   ambientLightIntensity, onAmbientLightIntensityChange,
   directionalLightColor, onDirectionalLightColorChange,
-  directionalLightIntensity, onDirectionalLightIntensityChange,
-  directionalLightX, onDirectionalLightXChange,
-  directionalLightY, onDirectionalLightYChange,
-  directionalLightZ, onDirectionalLightZChange
+  directionalLightIntensity, onDirectionalLightIntensityChange
 }) {
   
   // LOCAL STATE - These are managed by Controls component itself (NOT from App.jsx)
@@ -266,8 +263,6 @@ function Controls({
         <select value={animationStyle} onChange={handleAnimationStyleChange}>
           <option value="rotate">Simple Rotation</option>
           <option value="float">Floating Dance</option>
-          <option value="spiral">Spiral Motion</option>
-          <option value="chaos">Chaotic Movement</option>
           <option value="omniIntel">Omni-Intel</option>
         </select>
       </div>
@@ -303,8 +298,6 @@ function Controls({
           <option value="free">Free Camera</option>
           <option value="orbit">Orbit View</option>
           <option value="top">Top Down</option>
-          <option value="side">Side View</option>
-          <option value="cinematic">Cinematic</option>
         </select>
 
         {/* Environment Control */}
@@ -362,12 +355,6 @@ function Controls({
           onDirectionalLightColorChange={onDirectionalLightColorChange}
           directionalLightIntensity={directionalLightIntensity}
           onDirectionalLightIntensityChange={onDirectionalLightIntensityChange}
-          directionalLightX={directionalLightX}
-          onDirectionalLightXChange={onDirectionalLightXChange}
-          directionalLightY={directionalLightY}
-          onDirectionalLightYChange={onDirectionalLightYChange}
-          directionalLightZ={directionalLightZ}
-          onDirectionalLightZChange={onDirectionalLightZChange}
         />
       )}
       </div>

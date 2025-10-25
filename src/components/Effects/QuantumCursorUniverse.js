@@ -7,7 +7,6 @@ export default class QuantumCursorUniverse {
   constructor() {
     this.cursor = document.getElementById("cursor");
     this.gravityField = document.getElementById("gravity-field");
-    this.wormhole = document.getElementById("wormhole");
     this.dimensionalRift = document.getElementById("dimensional-rift");
 
     this.mouseX = 0;
@@ -23,7 +22,6 @@ export default class QuantumCursorUniverse {
     this.isMouseMoving = false;
     this.moveTimeout = null;
     this.quantumState = 0;
-    this.wormholeActive = false;
     this.dimensionalTear = false;
     this.isOverControl = false; // Track if mouse is over a control element
 
@@ -38,10 +36,7 @@ export default class QuantumCursorUniverse {
 
     document.addEventListener("mousemove", (e) => this.updateMousePosition(e));
     document.addEventListener("click", (e) => {
-      // Disable wormhole effect in the geom-lab route and over controls
-      if (!this.isInGeomLab() && !this.isOverControl) {
-        this.createWormhole();
-      }
+      // Wormhole ripple effect removed
     });
     document.addEventListener("mousedown", (e) => {
       // Disable dimensional rift effect in the geom-lab route and over controls
@@ -141,40 +136,6 @@ export default class QuantumCursorUniverse {
       particle.life = particle.maxLife;
       particle.hue = Math.random() * 360;
     }
-  }
-
-  createWormhole() {
-    this.wormholeActive = true;
-    if (this.wormhole) {
-      this.wormhole.style.opacity = "1";
-      this.wormhole.style.left = this.mouseX - 75 + "px";
-      this.wormhole.style.top = this.mouseY - 75 + "px";
-
-      // Trigger ripple animation
-      this.wormhole.classList.remove("ripple");
-      void this.wormhole.offsetWidth;
-      this.wormhole.classList.add("ripple");
-    }
-
-    // Suck in nearby particles
-    this.particles.forEach((particle) => {
-      const dx = this.mouseX - particle.x;
-      const dy = this.mouseY - particle.y;
-      const distance = Math.sqrt(dx * dx + dy * dy);
-
-      if (distance < 150) {
-        particle.vx += dx * 0.1;
-        particle.vy += dy * 0.1;
-      }
-    });
-
-    setTimeout(() => {
-      this.wormholeActive = false;
-      if (this.wormhole) {
-        this.wormhole.style.opacity = "0";
-        this.wormhole.classList.remove("ripple");
-      }
-    }, 700);
   }
 
   createDimensionalRift() {

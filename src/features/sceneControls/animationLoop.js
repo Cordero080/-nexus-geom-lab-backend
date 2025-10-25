@@ -103,93 +103,6 @@ const animationStyles = {
     applyUserRotation(meshes, objectId, interactionFns);
   },
 
-  spiral: (objData, t, index, interactionFns = null) => {
-    const {
-      solidMesh,
-      wireframeMesh,
-      centerLines,
-      curvedLines,
-      geometry,
-      originalPositions,
-      originalPosition,
-      phase,
-    } = objData;
-
-    // Reset vertices to original positions
-    if (geometry && originalPositions && solidMesh) {
-      const positions = geometry.attributes.position.array;
-      for (let i = 0; i < positions.length; i++) {
-        positions[i] = originalPositions[i];
-      }
-      geometry.attributes.position.needsUpdate = true;
-    }
-
-    // Apply spiral motion to ALL components including curvedLines
-    const spiralRadius = 2;
-    const spiralSpeed = 0.5;
-    const meshes = [solidMesh, wireframeMesh, centerLines, curvedLines].filter(
-      Boolean
-    );
-
-    meshes.forEach((mesh) => {
-      mesh.position.x =
-        originalPosition.x + Math.cos((t + phase) * spiralSpeed) * spiralRadius;
-      mesh.position.z =
-        originalPosition.z + Math.sin((t + phase) * spiralSpeed) * spiralRadius;
-      mesh.position.y =
-        originalPosition.y + Math.sin((t + phase) * spiralSpeed * 2) * 1;
-      mesh.rotation.x += 0.01;
-      mesh.rotation.y += 0.02;
-    });
-
-    const objectId = objData.objectId || (solidMesh && solidMesh.uuid);
-    applyUserRotation(meshes, objectId, interactionFns);
-  },
-
-  chaos: (objData, t, index, interactionFns = null) => {
-    const {
-      solidMesh,
-      wireframeMesh,
-      centerLines,
-      curvedLines,
-      geometry,
-      originalPositions,
-      originalPosition,
-      phase,
-    } = objData;
-
-    // Reset vertices to original positions
-    if (geometry && originalPositions && solidMesh) {
-      const positions = geometry.attributes.position.array;
-      for (let i = 0; i < positions.length; i++) {
-        positions[i] = originalPositions[i];
-      }
-      geometry.attributes.position.needsUpdate = true;
-    }
-
-    // Apply chaotic motion to ALL components including curvedLines
-    const meshes = [solidMesh, wireframeMesh, centerLines, curvedLines].filter(
-      Boolean
-    );
-    meshes.forEach((mesh) => {
-      mesh.position.x =
-        originalPosition.x +
-        Math.sin((t + phase) * 2.3) * Math.cos((t + phase) * 1.1) * 1.5;
-      mesh.position.y =
-        originalPosition.y +
-        Math.cos((t + phase) * 1.7) * Math.sin((t + phase) * 2.2) * 1.5;
-      mesh.position.z =
-        originalPosition.z +
-        Math.sin((t + phase) * 1.4) * Math.cos((t + phase) * 3.1) * 1.5;
-      mesh.rotation.x += Math.sin(t + phase) * 0.02;
-      mesh.rotation.y += Math.cos(t + phase) * 0.03;
-      mesh.rotation.z += Math.sin(t + phase * 2) * 0.015;
-    });
-
-    const objectId = objData.objectId || (solidMesh && solidMesh.uuid);
-    applyUserRotation(meshes, objectId, interactionFns);
-  },
-
   omniIntel: (objData, t, index, interactionFns = null) => {
     const {
       solidMesh,
@@ -231,24 +144,24 @@ const animationStyles = {
     // Set speed parameters based on emotional state
     switch (speedVariation) {
       case 0: // Reflective & Smooth (Emotion: Curiosity)
-        cycleTime = 30;
+        cycleTime = 60;
         orbitSize = 3;
-        reactionSpeed = 10;
+        reactionSpeed = 5;
         break;
       case 1: // Observational & Measured (Emotion: Calm Intelligence)
-        cycleTime = 22;
+        cycleTime = 44;
         orbitSize = 4.5;
-        reactionSpeed = 15;
+        reactionSpeed = 7.5;
         break;
       case 2: // Focused & Intense (Emotion: Determination/Aversion)
-        cycleTime = 16;
+        cycleTime = 32;
         orbitSize = 6;
-        reactionSpeed = 20;
+        reactionSpeed = 10;
         break;
       case 3: // Erratic & Unpredictable (Emotion: Disturbed/Agitated)
-        cycleTime = 18 + Math.sin(t * 0.5 + phase) * 3;
-        orbitSize = 5 + Math.cos(t * 0.3 + phase) * 1.5;
-        reactionSpeed = 18 + Math.sin(t * 0.7 + phase) * 5;
+        cycleTime = 36 + Math.sin(t * 0.25 + phase) * 3;
+        orbitSize = 5 + Math.cos(t * 0.15 + phase) * 1.5;
+        reactionSpeed = 9 + Math.sin(t * 0.35 + phase) * 5;
         break;
     }
 
@@ -259,17 +172,17 @@ const animationStyles = {
       const hoverIntensity = 0.15 + speedVariation * 0.05;
 
       solidMesh.position.x =
-        originalPosition.x + Math.sin(t * 3 + phase) * hoverIntensity * 1.2;
+        originalPosition.x + Math.sin(t * 1.5 + phase) * hoverIntensity * 1.2;
       solidMesh.position.y =
-        originalPosition.y + Math.cos(t * 4 + phase) * hoverIntensity;
+        originalPosition.y + Math.cos(t * 2 + phase) * hoverIntensity;
       solidMesh.position.z =
-        originalPosition.z + Math.sin(t * 2 + phase) * hoverIntensity * 0.5;
+        originalPosition.z + Math.sin(t * 1 + phase) * hoverIntensity * 0.5;
 
-      solidMesh.rotation.y = t * 0.3 + phase;
-      solidMesh.rotation.x = Math.sin(t * 0.7 + phase) * 0.3;
-      solidMesh.rotation.z = Math.cos(t * 0.4 + phase) * 0.2;
+      solidMesh.rotation.y = t * 0.15 + phase;
+      solidMesh.rotation.x = Math.sin(t * 0.35 + phase) * 0.3;
+      solidMesh.rotation.z = Math.cos(t * 0.2 + phase) * 0.2;
 
-      solidMesh.scale.setScalar(1 + Math.sin(t * 2 + phase) * 0.03);
+      solidMesh.scale.setScalar(1 + Math.sin(t * 1 + phase) * 0.03);
     }
 
     // PHASE 2: Symphonic Pause & Dervish Dance (20% - 35%)
@@ -293,7 +206,7 @@ const animationStyles = {
         eased_pos * 0.5
       );
 
-      const longWaveModulator = Math.sin(t * 0.5 + phase * 2) * 0.5 + 0.5;
+      const longWaveModulator = Math.sin(t * 0.25 + phase * 2) * 0.5 + 0.5;
       const buildUpFactor = easeInOutQuint(t_spin);
       const minSpeed = 0.05 + speedVariation * 0.05;
       const maxSpeed = reactionSpeed * 0.05;
@@ -305,15 +218,15 @@ const animationStyles = {
       );
 
       solidMesh.rotation.x +=
-        currentSpinSpeed * 1.5 * Math.sin(t * 0.4 + phase);
-      solidMesh.rotation.y += currentSpinSpeed * 2.0;
+        currentSpinSpeed * 0.375 * Math.sin(t * 0.2 + phase);
+      solidMesh.rotation.y += currentSpinSpeed * 0.5;
       solidMesh.rotation.z +=
-        currentSpinSpeed * 1.0 * Math.cos(t * 0.7 + phase);
+        currentSpinSpeed * 0.25 * Math.cos(t * 0.35 + phase);
 
       solidMesh.position.x +=
-        Math.sin(t * 10 + phase) * (1 - buildUpFactor) * 0.02;
+        Math.sin(t * 5 + phase) * (1 - buildUpFactor) * 0.02;
       solidMesh.position.y +=
-        Math.cos(t * 8 + phase) * (1 - buildUpFactor) * 0.02;
+        Math.cos(t * 4 + phase) * (1 - buildUpFactor) * 0.02;
     }
 
     // PHASE 3: Elliptical Recede & Curious Return (35% - 50%)
@@ -332,9 +245,10 @@ const animationStyles = {
       solidMesh.position.z =
         originalPosition.z - eased_recede * maxDashDistance * 0.8;
 
-      solidMesh.rotation.x = Math.sin(t * 5 + phase) * 0.1 * (1 - eased_recede);
+      solidMesh.rotation.x =
+        Math.sin(t * 2.5 + phase) * 0.1 * (1 - eased_recede);
       solidMesh.rotation.y = eased_recede * Math.PI * 2;
-      solidMesh.rotation.z = Math.cos(t * 3 + phase) * 0.1;
+      solidMesh.rotation.z = Math.cos(t * 1.5 + phase) * 0.1;
     }
 
     // PHASE 4: Erratic Figure-8 Ellipse Observation (50% - 85%)
@@ -350,14 +264,17 @@ const animationStyles = {
         originalPosition.x + ellipseRadiusX * Math.cos(t_angle);
       solidMesh.position.y =
         originalPosition.y +
-        ellipseRadiusY * Math.sin(t_angle * 2) * Math.sin(t * 3 + phase) * 0.5 +
+        ellipseRadiusY *
+          Math.sin(t_angle * 2) *
+          Math.sin(t * 1.5 + phase) *
+          0.5 +
         Math.sin(t_figure8 * Math.PI * 4) * 0.5;
       solidMesh.position.z =
         originalPosition.z + centerZ + ellipseRadiusZ * Math.sin(t_angle);
 
       solidMesh.rotation.z = Math.sin(t_angle * 0.5) * 0.8;
       solidMesh.rotation.x = Math.cos(t_angle * 0.7) * 0.5;
-      solidMesh.rotation.y += (t * 0.5 + phase) * 0.1;
+      solidMesh.rotation.y += (t * 0.25 + phase) * 0.1;
     }
 
     // PHASE 5: Swift Return & Re-entry (85% - 100%)
@@ -439,10 +356,6 @@ function animateCamera(camera, cameraView, t) {
     const orbitRadius = 8;
     camera.position.x = Math.cos(t * 0.3) * orbitRadius;
     camera.position.z = Math.sin(t * 0.3) * orbitRadius;
-    camera.lookAt(0, 0, 0);
-  } else if (cameraView === "cinematic") {
-    camera.position.x = -3 + Math.sin(t * 0.1) * 1;
-    camera.position.y = 2 + Math.cos(t * 0.15) * 0.5;
     camera.lookAt(0, 0, 0);
   }
 }

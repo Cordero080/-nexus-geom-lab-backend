@@ -3,42 +3,32 @@ import { nearestVertexIndex } from "../../utils/geometryHelpers";
 
 /**
  * Create a thick wireframe for TetrahedronGeometry using cylinders
+ * Uses EdgesGeometry to automatically extract all edges from compound geometry
  * @param {THREE.BufferGeometry} geometry - The tetrahedron geometry
  * @param {THREE.Material} wireframeMaterial - Material for the wireframe
  * @returns {THREE.Group} The wireframe group with edge pairs in userData
  */
 export function createTetrahedronWireframe(geometry, wireframeMaterial) {
+  // Use EdgesGeometry to reliably get all edges (6 for simple, 12 for compound)
+  const edgesGeometry = new THREE.EdgesGeometry(geometry);
+  const edgeVertices = edgesGeometry.attributes.position.array;
   const tetrahedronWireframeGroup = new THREE.Group();
   const tetraEdgePairs = [];
 
-  // Get the 4 vertices from the tetrahedron geometry
-  const vertices = geometry.attributes.position.array;
-  const tetraVertices = [];
-  for (let v = 0; v < 4; v++) {
-    tetraVertices.push([
-      vertices[v * 3],
-      vertices[v * 3 + 1],
-      vertices[v * 3 + 2],
-    ]);
-  }
-
-  // Define the 6 edges of the tetrahedron
-  const tetrahedronMainEdges = [
-    [0, 1],
-    [0, 2],
-    [0, 3], // From vertex 0 to others
-    [1, 2],
-    [1, 3], // From vertex 1 to remaining
-    [2, 3], // From vertex 2 to 3
-  ];
-
-  // Create cylinder for each main tetrahedron edge
-  tetrahedronMainEdges.forEach(([i, j]) => {
-    const start = new THREE.Vector3(...tetraVertices[i]);
-    const end = new THREE.Vector3(...tetraVertices[j]);
+  for (let j = 0; j < edgeVertices.length; j += 6) {
+    const start = new THREE.Vector3(
+      edgeVertices[j],
+      edgeVertices[j + 1],
+      edgeVertices[j + 2]
+    );
+    const end = new THREE.Vector3(
+      edgeVertices[j + 3],
+      edgeVertices[j + 4],
+      edgeVertices[j + 5]
+    );
     const distance = start.distanceTo(end);
 
-    // Create thick cylinder for main tetrahedron edge
+    // Create thick cylinder for tetrahedron edge
     const cylinderGeom = new THREE.CylinderGeometry(0.011, 0.011, distance, 8);
     const cylinderMesh = new THREE.Mesh(cylinderGeom, wireframeMaterial);
 
@@ -52,13 +42,13 @@ export function createTetrahedronWireframe(geometry, wireframeMaterial) {
     const iB_t = nearestVertexIndex(geometry, end);
     tetraEdgePairs.push([iA_t, iB_t]);
     tetrahedronWireframeGroup.add(cylinderMesh);
-  });
+  }
 
   tetrahedronWireframeGroup.userData.edgePairs = tetraEdgePairs;
 
   console.log(
     "Created thick wireframe for tetrahedron with",
-    tetrahedronMainEdges.length,
+    edgeVertices.length / 6,
     "cylinder edges"
   );
 

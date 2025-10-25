@@ -3,51 +3,32 @@ import { nearestVertexIndex } from "../../utils/geometryHelpers";
 
 /**
  * Create a thick wireframe for OctahedronGeometry using cylinders
+ * Uses EdgesGeometry to automatically extract all edges from compound geometry
  * @param {THREE.BufferGeometry} geometry - The octahedron geometry
  * @param {THREE.Material} wireframeMaterial - Material for the wireframe
  * @returns {THREE.Group} The wireframe group with edge pairs in userData
  */
 export function createOctahedronWireframe(geometry, wireframeMaterial) {
-  // Create thick wireframe using cylinders for octahedron edges
+  // Use EdgesGeometry to reliably get all edges (12 for simple, 24 for compound)
+  const edgesGeometry = new THREE.EdgesGeometry(geometry);
+  const edgeVertices = edgesGeometry.attributes.position.array;
   const octahedronWireframeGroup = new THREE.Group();
   const octaEdgePairs = [];
 
-  // Use canonical octahedron vertices for consistent wireframe
-  const octaVertices = [
-    [0, 1, 0], // 0: Top vertex
-    [0, -1, 0], // 1: Bottom vertex
-    [1, 0, 0], // 2: Right vertex
-    [-1, 0, 0], // 3: Left vertex
-    [0, 0, 1], // 4: Front vertex
-    [0, 0, -1], // 5: Back vertex
-  ];
-
-  // Define the 12 edges of the octahedron
-  const octahedronMainEdges = [
-    // Top pyramid edges
-    [0, 2],
-    [0, 3],
-    [0, 4],
-    [0, 5],
-    // Bottom pyramid edges
-    [1, 2],
-    [1, 3],
-    [1, 4],
-    [1, 5],
-    // Middle ring edges
-    [2, 4],
-    [4, 3],
-    [3, 5],
-    [5, 2],
-  ];
-
-  // Create cylinder for each octahedron edge
-  octahedronMainEdges.forEach(([i, j]) => {
-    const start = new THREE.Vector3(...octaVertices[i]);
-    const end = new THREE.Vector3(...octaVertices[j]);
+  for (let j = 0; j < edgeVertices.length; j += 6) {
+    const start = new THREE.Vector3(
+      edgeVertices[j],
+      edgeVertices[j + 1],
+      edgeVertices[j + 2]
+    );
+    const end = new THREE.Vector3(
+      edgeVertices[j + 3],
+      edgeVertices[j + 4],
+      edgeVertices[j + 5]
+    );
     const distance = start.distanceTo(end);
 
-    // Create thick cylinder for octahedron edge - ADJUST 0.012 TO CHANGE MAIN WIREFRAME THICKNESS
+    // Create thick cylinder for octahedron edge
     const cylinderGeom = new THREE.CylinderGeometry(0.012, 0.012, distance, 8);
     const cylinderMesh = new THREE.Mesh(cylinderGeom, wireframeMaterial);
 
@@ -61,13 +42,13 @@ export function createOctahedronWireframe(geometry, wireframeMaterial) {
     const iB_o = nearestVertexIndex(geometry, end);
     octaEdgePairs.push([iA_o, iB_o]);
     octahedronWireframeGroup.add(cylinderMesh);
-  });
+  }
 
   octahedronWireframeGroup.userData.edgePairs = octaEdgePairs;
 
   console.log(
     "Created thick wireframe for octahedron with",
-    octahedronMainEdges.length,
+    edgeVertices.length / 6,
     "cylinder edges"
   );
 

@@ -8,13 +8,7 @@ function LightingControls({
   directionalLightColor,
   onDirectionalLightColorChange,
   directionalLightIntensity,
-  onDirectionalLightIntensityChange,
-  directionalLightX,
-  onDirectionalLightXChange,
-  directionalLightY,
-  onDirectionalLightYChange,
-  directionalLightZ,
-  onDirectionalLightZChange
+  onDirectionalLightIntensityChange
 }) {
   // Defensive: ensure all values are numbers before using toFixed
   const safeNumber = (val, digits = 1, fallback = '0') => {
@@ -66,43 +60,6 @@ function LightingControls({
         step="0.5"
         value={directionalLightIntensity}
         onChange={(event) => onDirectionalLightIntensityChange(parseFloat(event.target.value))}
-      />
-
-      {/* Directional Light Position Controls */}
-      <label>
-        Directional Light X: <span className="value-display">{safeNumber(directionalLightX, 1)}</span>
-      </label>
-      <input 
-        type="range" 
-        min="-20" 
-        max="20" 
-        step="0.5"
-        value={directionalLightX}
-        onChange={(event) => onDirectionalLightXChange(parseFloat(event.target.value))}
-      />
-
-      <label>
-        Directional Light Y: <span className="value-display">{safeNumber(directionalLightY, 1)}</span>
-      </label>
-      <input 
-        type="range" 
-        min="-20" 
-        max="20" 
-        step="0.5"
-        value={directionalLightY}
-        onChange={(event) => onDirectionalLightYChange(parseFloat(event.target.value))}
-      />
-
-      <label>
-        Directional Light Z: <span className="value-display">{safeNumber(directionalLightZ, 1)}</span>
-      </label>
-      <input 
-        type="range" 
-        min="-20" 
-        max="20" 
-        step="0.5"
-        value={directionalLightZ}
-        onChange={(event) => onDirectionalLightZChange(parseFloat(event.target.value))}
       />
     </div>
   );
