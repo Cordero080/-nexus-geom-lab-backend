@@ -84,23 +84,19 @@ const animationStyles = {
       geometry.attributes.position.needsUpdate = true;
     }
 
-    // Gentle floating motion with gentle rotation
-    const floatY = Math.sin(t * 0.5 + (phase || 0)) * 0.8;
-    const floatX = Math.cos(t * 0.3 + (phase || 0)) * 0.3;
+    // Gentle floating motion
+    const floatY = Math.sin(t * 0.001 + (phase || 0)) * 0.5;
     const meshes = [solidMesh, wireframeMesh, centerLines, curvedLines].filter(
       Boolean
     );
     meshes.forEach((mesh) => {
       if (originalPosition) {
         mesh.position.set(
-          originalPosition.x + floatX,
+          originalPosition.x,
           originalPosition.y + floatY,
           originalPosition.z
         );
       }
-      // Add gentle rotation
-      mesh.rotation.y += 0.002;
-      mesh.rotation.x = Math.sin(t * 0.2) * 0.1;
     });
 
     const objectId = objData.objectId || (solidMesh && solidMesh.uuid);

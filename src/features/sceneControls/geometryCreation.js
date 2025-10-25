@@ -1,9 +1,24 @@
 import * as THREE from "three";
+import { mergeGeometries } from "three/examples/jsm/utils/BufferGeometryUtils.js";
 
 export function createGeometryByType(type) {
   switch (type) {
     case "icosahedron":
-      return new THREE.IcosahedronGeometry();
+      // Create compound icosahedron - two merged together
+      const ico1 = new THREE.IcosahedronGeometry();
+      const ico2 = new THREE.IcosahedronGeometry();
+
+      // Rotate second icosahedron to create stella octangula / merkaba effect
+      ico2.rotateX(Math.PI / 2);
+      ico2.rotateY(Math.PI / 6);
+
+      // Merge the two geometries
+      const mergedIco = mergeGeometries([ico1, ico2]);
+      // Mark it as compound for wireframe builders
+      mergedIco.userData.isCompound = true;
+      mergedIco.userData.baseType = "IcosahedronGeometry";
+
+      return mergedIco;
     case "sphere":
       return new THREE.SphereGeometry(1, 16, 16);
     case "box":

@@ -114,7 +114,10 @@ export function createSceneObject(config) {
   } else if (geometry.type === "TetrahedronGeometry") {
     wireframeMaterial = createWireframeMaterial(materialConfig);
     wireframeMesh = createTetrahedronWireframe(geometry, wireframeMaterial);
-  } else if (geometry.type === "IcosahedronGeometry") {
+  } else if (
+    geometry.type === "IcosahedronGeometry" ||
+    (geometry.userData && geometry.userData.baseType === "IcosahedronGeometry")
+  ) {
     wireframeMaterial = createWireframeMaterial(materialConfig);
     wireframeMesh = createIcosahedronWireframe(geometry, wireframeMaterial);
   } else {
@@ -163,7 +166,10 @@ export function createSceneObject(config) {
     );
     ({ centerLines, centerLinesMaterial, curvedLines, curvedLinesMaterial } =
       result);
-  } else if (geometry.type === "IcosahedronGeometry") {
+  } else if (
+    geometry.type === "IcosahedronGeometry" ||
+    (geometry.userData && geometry.userData.baseType === "IcosahedronGeometry")
+  ) {
     const result = createIcosahedronIntricateWireframe(
       geometry,
       hyperframeColor,
