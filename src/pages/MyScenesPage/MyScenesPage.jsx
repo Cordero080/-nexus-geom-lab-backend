@@ -3,6 +3,7 @@ import { useNavigate, Link } from "react-router-dom";
 import { useScene } from "../../context/SceneContext";
 import { useAuth } from "../../context/AuthContext";
 import SceneCard from "../../components/Gallery/SceneCard";
+import CustomSelect from "../../components/CustomSelect/CustomSelect";
 import "./MyScenesPage.css";
 
 /**
@@ -37,7 +38,7 @@ const portalWorlds = [
   { colors: ['#ffea00', '#7300ffff', '#003a2a'], label: 'Nebula' },   // ☄️ Cosmic yellow/purple  
   { colors: ['#ff3300', '#cc00ff', '#0a0f1a'], label: 'Inferno' },    // 🔥 Volcanic red/magenta
   { colors: ['#00ff33', '#00aaff', '#003a3a'], label: 'Emerald' },    // 💎 Crystalline green/blue
-  { colors: ['#fff', '#00fff7', '#0a0f1a'], label: 'Singularity' },   // ⭐ Stellar white/cyan
+  { colors: ['#cfccbeff', '#056864ff', '#210205ff'], label: 'Singularity' },   // ⭐ Stellar white/cyan
 ];
 
 /**
@@ -181,8 +182,8 @@ export default function MyScenesPage() {
     console.log('📡 Quantum event listeners initialized'); // Debug: Setup complete
     
     return () => {
-      window.removeEventListener('scroll', handle);
-      window.removeEventListener('click', handleClick);
+      window.removeEventListener('scroll', handleQuantumCollapse);
+      window.removeEventListener('click', handleClickCollapse);
     };
   }, []);
 
@@ -331,14 +332,14 @@ export default function MyScenesPage() {
         <div className="nav-logo">
           <span
             className="logo-text"
-            data-text="GALLERY_V2.0"
+            data-text="Scenes_v2.0"
             style={{
               color: '#fff',
               filter: `drop-shadow(0 0 4px ${portalState.colors[1]}66)`,
               transition: 'filter 1.2s'
             }}
           >
-            GALLERY_V2.0
+            Scenes_V2.0
           </span>
           {/* Subtle quantum glyphs in navbar */}
           <span style={{
@@ -357,7 +358,7 @@ export default function MyScenesPage() {
         </div>
         <div className="nav-links">
           <Link to="/" className="nav-link" data-dimension="0">// HOME</Link>
-          <Link to="/gallery" className="nav-link" data-dimension="1">// GALLERY</Link>
+          <Link to="/scenes" className="nav-link" data-dimension="1">// SCENES</Link>
           <Link to="/showcase" className="nav-link" data-dimension="2">// SHOWCASE</Link>
           {isAuthenticated && (
             <div className="nav-terminal">
@@ -370,7 +371,7 @@ export default function MyScenesPage() {
                   cursor: 'pointer',
                   fontFamily: 'inherit',
                   fontSize: 'inherit',
-                  color: '#00ff88'
+                  color: '#14fbc2ff'
                 }}
               >
                 [LOGOUT]
@@ -425,16 +426,16 @@ export default function MyScenesPage() {
         {/* Sort */}
         <div className="my-scenes-page__control-group">
           <label>Sort:</label>
-          <select
+          <CustomSelect
             value={sortBy}
-            onChange={(e) => setSortBy(e.target.value)}
-            className="my-scenes-page__select"
-          >
-            <option value="newest">Newest First</option>
-            <option value="oldest">Oldest First</option>
-            <option value="most-viewed">Most Viewed</option>
-            <option value="name">Name (A-Z)</option>
-          </select>
+            onChange={setSortBy}
+            options={[
+              { value: 'newest', label: 'Newest First' },
+              { value: 'oldest', label: 'Oldest First' },
+              { value: 'most-viewed', label: 'Most Viewed' },
+              { value: 'name', label: 'Name (A-Z)' }
+            ]}
+          />
         </div>
       </div>
 

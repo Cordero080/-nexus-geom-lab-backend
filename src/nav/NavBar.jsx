@@ -25,7 +25,7 @@ export default function NavBar() {
         {isAuthenticated ? (
           <>
             <Link to="/geometry-lab" className="nav-link">Geom Lab</Link>
-            <Link to="/gallery" className="nav-link">Gallery</Link>
+            <Link to="/scenes" className="nav-link">Scenes</Link>
             <Link to="/showcase" className="nav-link">Showcase</Link>
             <button onClick={logout} className="nav-link nav-link-button">
               Logout

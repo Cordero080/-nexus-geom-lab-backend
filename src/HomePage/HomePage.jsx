@@ -178,7 +178,7 @@ export default function HomePage() {
         </div>
         <div className="nav-links">
           <a href="#reality" className="nav-link" data-dimension="0">// HOME</a>
-          <Link to="/gallery" className="nav-link" data-dimension="1">// GALLERY</Link>
+          <Link to="/scenes" className="nav-link" data-dimension="1">// SCENES</Link>
           <Link to="/showcase" className="nav-link" data-dimension="2">// SHOWCASE</Link>
           {isAuthenticated && (
             <div className="nav-terminal">
@@ -276,10 +276,10 @@ export default function HomePage() {
               </div>
             </div>
             
-            {/* Temporarily always show Enter Playground while building */}
+            {/* Temporarily always show Enter Geom Lab while building */}
             <BeamScanButton
-              onClick={() => window.location.href = '/playground'}
-              label="3nter Playgr0und"
+              onClick={() => window.location.href = '/geom-lab'}
+              label="Enter GE0M LAB"
               style={{ margin: '32px auto 0', display: 'block' }}
             />
             

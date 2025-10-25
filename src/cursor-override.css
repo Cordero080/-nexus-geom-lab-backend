@@ -18,8 +18,8 @@ body {
   padding: 0;
 }
 
-/* Show regular cursor ONLY in playground */
-body.playground-page {
+/* Show regular cursor ONLY in geom-lab */
+body.geom-lab-page {
   cursor: auto !important;
 }
 
@@ -28,30 +28,30 @@ body * {
   cursor: inherit;
 }
 
-/* Force cursor visibility on canvas and all playground elements */
-body.playground-page *,
-body.playground-page canvas,
-body.playground-page .three-scene-container,
-body.playground-page .three-scene-container * {
+/* Force cursor visibility on canvas and all geom-lab elements */
+body.geom-lab-page *,
+body.geom-lab-page canvas,
+body.geom-lab-page .three-scene-container,
+body.geom-lab-page .three-scene-container * {
   cursor: auto !important;
 }
 
-/* Specialized controls in playground */
-body.playground-page .controls * {
+/* Specialized controls in geom-lab */
+body.geom-lab-page .controls * {
   cursor: auto !important;
 }
 
-/* Input fields should show text cursor in playground */
-body.playground-page input, 
-body.playground-page select,
-body.playground-page textarea {
+/* Input fields should show text cursor in geom-lab */
+body.geom-lab-page input, 
+body.geom-lab-page select,
+body.geom-lab-page textarea {
   cursor: text !important;
 }
 
-/* Buttons, links, etc. should show pointer in playground */
-body.playground-page button,
-body.playground-page a,
-body.playground-page [role="button"],
-body.playground-page .section-header {
+/* Buttons, links, etc. should show pointer in geom-lab */
+body.geom-lab-page button,
+body.geom-lab-page a,
+body.geom-lab-page [role="button"],
+body.geom-lab-page .section-header {
   cursor: pointer !important;
 }

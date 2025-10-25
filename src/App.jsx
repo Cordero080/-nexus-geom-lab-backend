@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Routes, Route, useNavigate } from 'react-router-dom';
 import ThreeScene from './features/sceneControls/ThreeScene';
 import Controls from './components/Controls/Controls';
+import SaveButton from './components/Controls/SaveButton/SaveButton';
 import HomePage from './HomePage/HomePage';
 import NavBar from './nav/NavBar';
 import ShowcaseGallery from './Showcase/ShowcaseGallery';
@@ -19,7 +20,7 @@ const defaultWireframeColor = '#ffff00'; // Bright yellow
 const defaultHyperframeColor = '#ff4500'; // Vivid orange-red
 const defaultHyperframeLineColor = '#00ff00'; // Bright green
 
-function Playground() {
+function GeomLab() {
   // MATERIAL PROPERTIES STATE
   const [metalness, setMetalness] = useState(0.5) // 0 = plastic, 1 = full metal
   const [emissiveIntensity, setEmissiveIntensity] = useState(0) // 0 = no glow, 2 = bright glow
@@ -53,9 +54,34 @@ function Playground() {
   const [directionalLightZ, setDirectionalLightZ] = useState(5)
   const [scale, setScale] = useState(1)
 
+  // Create sceneConfig object for SaveButton
+  const sceneConfig = {
+    metalness,
+    emissiveIntensity,
+    baseColor,
+    wireframeIntensity,
+    hyperframeColor,
+    hyperframeLineColor,
+    cameraView,
+    environment,
+    environmentHue,
+    objectCount,
+    animationStyle,
+    objectType,
+    ambientLightColor,
+    ambientLightIntensity,
+    directionalLightColor,
+    directionalLightIntensity,
+    directionalLightX,
+    directionalLightY,
+    directionalLightZ,
+    scale
+  };
+
   return (
     <>
       <NavBar />
+      <SaveButton sceneConfig={sceneConfig} />
       <ThreeScene
         scale={scale}
         metalness={metalness}
@@ -131,8 +157,8 @@ function HomePageWithNav() {
   
   // Direct navigation handler
   const handleEnter = () => {
-    console.log('Navigating to /playground');
-    navigate('/playground');
+    console.log('Navigating to /geom-lab');
+    navigate('/geom-lab');
   };
   
   return (
@@ -148,34 +174,34 @@ function App() {
   const location = useNavigate();
   const currentPath = window.location.pathname;
   const isHomePage = currentPath === '/' || currentPath === '';
-  const isPlaygroundPage = currentPath === '/playground' || currentPath === '/geometry-lab';
+  const isGeomLabPage = currentPath === '/geom-lab';
   
   // Set cursor style and body class based on current route
   useEffect(() => {
-    console.log(`App route change detected - path: ${currentPath}, isHomePage: ${isHomePage}, isPlaygroundPage: ${isPlaygroundPage}`);
+    console.log(`App route change detected - path: ${currentPath}, isHomePage: ${isHomePage}, isGeomLabPage: ${isGeomLabPage}`);
     
-    if (isPlaygroundPage) {
-      // On playground/geometry-lab, use default cursor for better control interaction
-      document.body.classList.add('playground-page');
-      console.log('Playground mode active - normal cursor enabled');
+    if (isGeomLabPage) {
+      // On geom-lab, use default cursor for better control interaction
+      document.body.classList.add('geom-lab-page');
+      console.log('Geom Lab mode active - normal cursor enabled');
     } else {
       // On all other pages, hide the default cursor to allow quantum cursor to work
       console.log('Quantum cursor mode active - custom cursor enabled');
-      document.body.classList.remove('playground-page');
+      document.body.classList.remove('geom-lab-page');
     }
-  }, [currentPath, isHomePage, isPlaygroundPage]);
+  }, [currentPath, isHomePage, isGeomLabPage]);
   
   return (
     <AuthProvider>
       <SceneProvider>
-        {/* Render QuantumCursor on all pages EXCEPT playground/geometry-lab */}
-        {!isPlaygroundPage && <QuantumCursor />}
+        {/* Render QuantumCursor on all pages EXCEPT geom-lab */}
+        {!isGeomLabPage && <QuantumCursor />}
         <Routes>
           <Route path="/" element={<HomePageWithNav />} />
-          <Route path="/playground" element={<Playground />} />
-          <Route path="/geometry-lab" element={<Playground />} />
+          <Route path="/geom-lab" element={<GeomLab />} />
+          <Route path="/geometry-lab" element={<GeomLab />} />
           <Route path="/showcase" element={<><NavBar /><ShowcaseGallery /></>} />
-          <Route path="/gallery" element={<MyScenesPage />} />
+          <Route path="/scenes" element={<MyScenesPage />} />
           <Route path="/signup" element={<SignUpPage />} />
           <Route path="/login" element={<LoginPage />} />
         </Routes>

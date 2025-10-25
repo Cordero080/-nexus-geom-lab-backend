@@ -80,8 +80,8 @@ const LoginPage = () => {
       // Call login from AuthContext
       await login(formData.email, formData.password);
       
-      // Redirect to playground on success
-      navigate('/playground');
+      // Redirect to geom-lab on success
+      navigate('/geom-lab');
     } catch (error) {
       setErrors({ submit: error.message || 'Login failed. Please try again.' });
     } finally {

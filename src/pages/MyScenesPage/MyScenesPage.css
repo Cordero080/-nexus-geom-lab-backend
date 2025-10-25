@@ -102,23 +102,61 @@
   padding: 8px 16px;
   border-radius: 8px;
   border: 1px solid rgba(255, 255, 255, 0.2);
-  background: rgba(255, 255, 255, 0.05);
+  background: rgba(10, 15, 26, 0.7);
   backdrop-filter: blur(10px);
   color: #ffffff;
+  font-family: 'Orbitron', 'JetBrains Mono', monospace;
   font-size: 0.875rem;
   font-weight: 500;
   cursor: pointer;
   transition: all 0.2s ease;
+  position: relative;
+  box-shadow: 
+    0 2px 8px rgba(0, 255, 255, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
 }
 
 .my-scenes-page__select:hover {
   border-color: rgba(0, 255, 255, 0.4);
-  background: rgba(255, 255, 255, 0.08);
+  background: rgba(10, 15, 26, 0.85);
+  box-shadow: 
+    0 4px 16px rgba(0, 255, 255, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
 }
 
 .my-scenes-page__select:focus {
   outline: none;
   border-color: rgba(0, 255, 255, 0.6);
+  box-shadow: 
+    0 0 0 3px rgba(0, 255, 255, 0.1),
+    0 4px 16px rgba(0, 255, 255, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.15);
+}
+
+/* Style dropdown options */
+.my-scenes-page__select option {
+  background: rgba(10, 15, 26, 0.98);
+  color: #ffffff;
+  padding: 8px 16px;
+  border: none;
+  font-family: 'Orbitron', 'JetBrains Mono', monospace;
+  font-weight: 500;
+  transition: all 0.15s ease;
+}
+
+.my-scenes-page__select option:hover {
+  background: linear-gradient(90deg, 
+    rgba(0, 255, 255, 0.15) 0%, 
+    rgba(255, 0, 255, 0.1) 100%);
+  color: #00ffff;
+}
+
+.my-scenes-page__select option:checked {
+  background: linear-gradient(90deg, 
+    rgba(0, 255, 255, 0.2) 0%, 
+    rgba(255, 0, 255, 0.15) 100%);
+  color: #00ffff;
+  font-weight: 600;
 }
 
 /* Loading State */

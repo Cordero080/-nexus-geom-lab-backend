@@ -70,7 +70,6 @@ export default function SceneCard({
           />
         ) : (
           <div className="scene-card__placeholder">
-            <span className="scene-card__icon">🌌</span>
           </div>
         )}
       </div>

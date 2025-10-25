@@ -13,7 +13,7 @@ export default function QuantumCursor() {
     console.log("QuantumCursor mounted - initializing universe");
     
     // Ensure proper body classes for homepage cursor styling
-    document.body.classList.remove('playground-page');
+    document.body.classList.remove('geom-lab-page');
     
     // Force cursor to be hidden with !important
     document.documentElement.style.setProperty('cursor', 'none', 'important');

@@ -9,11 +9,11 @@
 }
 
 /* Apply cursor:none with !important on homepage only */
-body:not(.playground-page) {
+body:not(.geom-lab-page) {
   cursor: none !important;
 }
 
-/* Explicitly show cursor in playground */
-body.playground-page {
+/* Explicitly show cursor in geom-lab */
+body.geom-lab-page {
   cursor: auto !important;
 }

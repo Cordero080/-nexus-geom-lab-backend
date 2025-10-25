@@ -38,14 +38,14 @@ export default class QuantumCursorUniverse {
 
     document.addEventListener("mousemove", (e) => this.updateMousePosition(e));
     document.addEventListener("click", (e) => {
-      // Disable wormhole effect in the playground route and over controls
-      if (!this.isInPlayground() && !this.isOverControl) {
+      // Disable wormhole effect in the geom-lab route and over controls
+      if (!this.isInGeomLab() && !this.isOverControl) {
         this.createWormhole();
       }
     });
     document.addEventListener("mousedown", (e) => {
-      // Disable dimensional rift effect in the playground route and over controls
-      if (!this.isInPlayground() && !this.isOverControl) {
+      // Disable dimensional rift effect in the geom-lab route and over controls
+      if (!this.isInGeomLab() && !this.isOverControl) {
         this.createDimensionalRift();
       }
     });
@@ -54,9 +54,9 @@ export default class QuantumCursorUniverse {
     this.animate();
   }
 
-  // Helper method to check if we're currently in the playground route
-  isInPlayground() {
-    return window.location.pathname.includes("/playground");
+  // Helper method to check if we're currently in the geom-lab route
+  isInGeomLab() {
+    return window.location.pathname.includes("/geom-lab");
   }
 
   updateMousePosition(e) {
@@ -75,8 +75,8 @@ export default class QuantumCursorUniverse {
 
     // Show/hide cursor based on our context
     if (this.cursor) {
-      // Completely hide cursor in playground or when over controls
-      if (this.isInPlayground() || this.isOverControl) {
+      // Completely hide cursor in geom-lab or when over controls
+      if (this.isInGeomLab() || this.isOverControl) {
         this.cursor.style.opacity = "0"; // Completely hide
       } else {
         this.cursor.style.opacity = "1"; // Only show on homepage and not over controls
@@ -89,8 +89,8 @@ export default class QuantumCursorUniverse {
       this.isMouseMoving = false;
     }, 100);
 
-    // Only create particles when not in playground and not over controls
-    if (!this.isInPlayground() && !this.isOverControl) {
+    // Only create particles when not in geom-lab and not over controls
+    if (!this.isInGeomLab() && !this.isOverControl) {
       this.createQuantumParticles();
     }
   }
@@ -210,8 +210,8 @@ export default class QuantumCursorUniverse {
       this.gravityField.style.left = this.mouseX - 90 + "px";
       this.gravityField.style.top = this.mouseY - 90 + "px";
 
-      // Hide gravity field entirely in playground or when over controls
-      if (this.isInPlayground() || this.isOverControl) {
+      // Hide gravity field entirely in geom-lab or when over controls
+      if (this.isInGeomLab() || this.isOverControl) {
         this.gravityField.style.opacity = "0";
       } else {
         this.gravityField.style.opacity = "0.7";

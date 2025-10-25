@@ -84,8 +84,8 @@ export default function SignUpPage() {
       // Call signup from AuthContext
       await signup(formData.username, formData.email, formData.password);
       
-      // Redirect to playground on success
-      navigate('/playground');
+      // Redirect to geom-lab on success
+      navigate('/geom-lab');
     } catch (error) {
       setErrors({ submit: error.message || 'Sign up failed. Please try again.' });
     } finally {
