@@ -42,7 +42,7 @@ export function useObjectManager(refs, objectProps) {
       // Remove solid and wireframe meshes
       if (obj.solidMesh) scene.remove(obj.solidMesh);
       if (obj.wireframeMesh) scene.remove(obj.wireframeMesh);
-      // Remove intricate wireframe elements
+      // Remove hyperframe elements
       if (obj.centerLines) scene.remove(obj.centerLines);
       if (obj.curvedLines) scene.remove(obj.curvedLines);
       // Handle legacy single mesh objects

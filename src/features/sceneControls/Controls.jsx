@@ -45,7 +45,7 @@ function Controls({
 	baseColor, onBaseColorChange,                    // Current base color + function to update it
 	wireframeIntensity, onWireframeIntensityChange,  // Current wireframe intensity + function to update it
   
-	// INTRICATE WIREFRAME PROPERTIES (current values FROM App.jsx + setter functions FROM App.jsx)
+	// HYPERFRAME PROPERTIES (current values FROM App.jsx + setter functions FROM App.jsx)
 	hyperframeColor, onHyperframeColorChange,    // Current spiral color + function to update it
 	hyperframeLineColor, onHyperframeLineColorChange,        // Current edge color + function to update it
   

@@ -1,27 +1,29 @@
 import * as THREE from "three";
-import { createGeometryByType } from "../geometryCreation";
+import { createGeometry } from "../geometryCreation";
 import {
   createSolidMaterial,
   createWireframeMaterial,
 } from "./materialFactory";
 import { createSphereWireframe } from "./wireframeBuilders/sphereWireframe";
 import { createBoxWireframe } from "./wireframeBuilders/boxWireframe";
+import { createCpdTesseractWireframe } from "./wireframeBuilders/cpdTesseractWireframe";
 import { createOctahedronWireframe } from "./wireframeBuilders/octahedronWireframe";
 import {
   createTetrahedronWireframe,
   createIcosahedronWireframe,
   createCommonWireframe,
 } from "./wireframeBuilders/commonWireframe";
-import { createTetrahedronIntricateWireframe } from "./intricateWireframeBuilders/tetrahedronIntricate";
-import { createBoxIntricateWireframe } from "./intricateWireframeBuilders/boxIntricate";
-import { createOctahedronIntricateWireframe } from "./intricateWireframeBuilders/octahedronIntricate";
-import { createIcosahedronIntricateWireframe } from "./intricateWireframeBuilders/icosahedronIntricate";
+import { createTetrahedronHyperframe } from "./hyperframeBuilders/tetrahedronHyperframe";
+import { createBoxHyperframe } from "./hyperframeBuilders/boxHyperframe";
+import { createOctahedronHyperframe } from "./hyperframeBuilders/octahedronHyperframe";
+import { createIcosahedronHyperframe } from "./hyperframeBuilders/icosahedronHyperframe";
+import { createCpdTesseractHyperframe } from "./hyperframeBuilders/cpdTesseractHyperframe";
 
 /**
  * Creates a complete 3D object with all components:
  * - Solid mesh
  * - Thick wireframe cylinders
- * - Intricate inner wireframes (center lines)
+ * - Hyperframes (inner dimensional frameworks)
  * - Connecting rods (curved lines)
  *
  * @param {Object} config - Configuration object
@@ -55,7 +57,7 @@ export function createSceneObject(config) {
   let geometry;
   if (objectCount === 1) {
     // Single object: use the selected objectType
-    geometry = createGeometryByType(objectType);
+    geometry = createGeometry(objectType);
   } else {
     // Multiple objects: cycle through different types for variety
     const geometryTypes = [
@@ -105,13 +107,28 @@ export function createSceneObject(config) {
   if (geometry.type === "SphereGeometry") {
     wireframeMaterial = createWireframeMaterial(materialConfig);
     wireframeMesh = createSphereWireframe(geometry, wireframeMaterial);
-  } else if (geometry.type === "BoxGeometry") {
-    wireframeMaterial = createWireframeMaterial(materialConfig);
-    wireframeMesh = createBoxWireframe(geometry, wireframeMaterial);
-  } else if (geometry.type === "OctahedronGeometry") {
+  } else if (
+    geometry.type === "BoxGeometry" ||
+    (geometry.userData && geometry.userData.baseType === "BoxGeometry")
+  ) {
+    // Check if it's a compound tesseract
+    if (geometry.userData && geometry.userData.isCpdTesseract) {
+      wireframeMaterial = createWireframeMaterial(materialConfig);
+      wireframeMesh = createCpdTesseractWireframe(geometry, wireframeMaterial);
+    } else {
+      wireframeMaterial = createWireframeMaterial(materialConfig);
+      wireframeMesh = createBoxWireframe(geometry, wireframeMaterial);
+    }
+  } else if (
+    geometry.type === "OctahedronGeometry" ||
+    (geometry.userData && geometry.userData.baseType === "OctahedronGeometry")
+  ) {
     wireframeMaterial = createWireframeMaterial(materialConfig);
     wireframeMesh = createOctahedronWireframe(geometry, wireframeMaterial);
-  } else if (geometry.type === "TetrahedronGeometry") {
+  } else if (
+    geometry.type === "TetrahedronGeometry" ||
+    (geometry.userData && geometry.userData.baseType === "TetrahedronGeometry")
+  ) {
     wireframeMaterial = createWireframeMaterial(materialConfig);
     wireframeMesh = createTetrahedronWireframe(geometry, wireframeMaterial);
   } else if (
@@ -135,31 +152,49 @@ export function createSceneObject(config) {
   }
 
   // ========================================
-  // 5. INTRICATE WIREFRAME CREATION
+  // 5. HYPERFRAME CREATION
   // ========================================
   let centerLines, centerLinesMaterial, curvedLines, curvedLinesMaterial;
 
   if (
     geometry.type === "TetrahedronGeometry" ||
-    geometry.constructor.name === "TetrahedronGeometry"
+    geometry.constructor.name === "TetrahedronGeometry" ||
+    (geometry.userData && geometry.userData.baseType === "TetrahedronGeometry")
   ) {
-    const result = createTetrahedronIntricateWireframe(
+    const result = createTetrahedronHyperframe(
       geometry,
       hyperframeColor,
       hyperframeLineColor
     );
     ({ centerLines, centerLinesMaterial, curvedLines, curvedLinesMaterial } =
       result);
-  } else if (geometry.type === "BoxGeometry") {
-    const result = createBoxIntricateWireframe(
-      geometry,
-      hyperframeColor,
-      hyperframeLineColor
-    );
-    ({ centerLines, centerLinesMaterial, curvedLines, curvedLinesMaterial } =
-      result);
-  } else if (geometry.type === "OctahedronGeometry") {
-    const result = createOctahedronIntricateWireframe(
+  } else if (
+    geometry.type === "BoxGeometry" ||
+    (geometry.userData && geometry.userData.baseType === "BoxGeometry")
+  ) {
+    // Check if it's a compound tesseract (two interpenetrating 4D hypercubes) or regular tesseract (single 4D hypercube)
+    if (geometry.userData && geometry.userData.isCpdTesseract) {
+      const result = createCpdTesseractHyperframe(
+        geometry,
+        hyperframeColor,
+        hyperframeLineColor
+      );
+      ({ centerLines, centerLinesMaterial, curvedLines, curvedLinesMaterial } =
+        result);
+    } else {
+      const result = createBoxHyperframe(
+        geometry,
+        hyperframeColor,
+        hyperframeLineColor
+      );
+      ({ centerLines, centerLinesMaterial, curvedLines, curvedLinesMaterial } =
+        result);
+    }
+  } else if (
+    geometry.type === "OctahedronGeometry" ||
+    (geometry.userData && geometry.userData.baseType === "OctahedronGeometry")
+  ) {
+    const result = createOctahedronHyperframe(
       geometry,
       hyperframeColor,
       hyperframeLineColor
@@ -170,7 +205,7 @@ export function createSceneObject(config) {
     geometry.type === "IcosahedronGeometry" ||
     (geometry.userData && geometry.userData.baseType === "IcosahedronGeometry")
   ) {
-    const result = createIcosahedronIntricateWireframe(
+    const result = createIcosahedronHyperframe(
       geometry,
       hyperframeColor,
       hyperframeLineColor
@@ -178,8 +213,8 @@ export function createSceneObject(config) {
     ({ centerLines, centerLinesMaterial, curvedLines, curvedLinesMaterial } =
       result);
   } else {
-    // OTHER GEOMETRIES: Create generic intricate wireframes
-    const result = createGenericIntricateWireframe(
+    // OTHER GEOMETRIES: Create generic hyperframes
+    const result = createGenericHyperframe(
       geometry,
       hyperframeColor,
       hyperframeLineColor
@@ -274,10 +309,10 @@ export function createSceneObject(config) {
 }
 
 /**
- * Creates generic intricate wireframes for non-standard geometries (TorusKnot, etc.)
+ * Creates generic hyperframes for non-standard geometries (TorusKnot, etc.)
  * Includes spiral center lines and edge connections
  */
-function createGenericIntricateWireframe(geometry, spiralColor, edgeColor) {
+function createGenericHyperframe(geometry, spiralColor, edgeColor) {
   const edgesGeometry = new THREE.EdgesGeometry(geometry);
   const edgeVertices = edgesGeometry.attributes.position.array;
 

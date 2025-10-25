@@ -27,7 +27,7 @@ function GeomLab() {
   const [baseColor, setBaseColor] = useState(defaultBaseColor)
   const [wireframeIntensity, setWireframeIntensity] = useState(50)
   
-  // INTRICATE WIREFRAME STATE
+  // HYPERFRAME STATE
   const [hyperframeColor, setHyperframeColor] = useState(defaultHyperframeColor)
   const [hyperframeLineColor, setHyperframeLineColor] = useState(defaultHyperframeLineColor)
   

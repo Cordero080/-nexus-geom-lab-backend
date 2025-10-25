@@ -1,19 +1,19 @@
 import * as THREE from "three";
 
 /**
- * Create intricate compound icosahedron (merkaba) wireframe with dual inner icosahedrons and vertex connections
+ * Create hyperframe for compound icosahedron (merkaba) with dual inner icosahedrons and vertex connections
  * Always creates two overlapping wireframe sets for sacred geometry pattern
  * @param {THREE.BufferGeometry} geometry - The compound icosahedron geometry
  * @param {string} hyperframeColor - Color for inner wireframe
  * @param {string} hyperframeLineColor - Color for connections
  * @returns {Object} { centerLines, centerLinesMaterial, curvedLines, curvedLinesMaterial }
  */
-export function createIcosahedronIntricateWireframe(
+export function createIcosahedronHyperframe(
   geometry,
   hyperframeColor,
   hyperframeLineColor
 ) {
-  console.log("Creating compound icosahedron (merkaba) wireframe");
+  console.log("Creating compound icosahedron (merkaba) hyperframe");
 
   // Golden ratio for icosahedron construction
   const phi = (1 + Math.sqrt(5)) / 2;
@@ -119,12 +119,7 @@ export function createIcosahedronIntricateWireframe(
     const end = new THREE.Vector3(...innerVertices2[j]);
     const distance = start.distanceTo(end);
 
-    const cylinderGeom = new THREE.CylinderGeometry(
-      0.004,
-      0.004,
-      distance,
-      8
-    );
+    const cylinderGeom = new THREE.CylinderGeometry(0.004, 0.004, distance, 8);
     const cylinderMesh = new THREE.Mesh(cylinderGeom, centerLinesMaterial);
 
     cylinderMesh.position.copy(start.clone().add(end).multiplyScalar(0.5));
@@ -150,24 +145,22 @@ export function createIcosahedronIntricateWireframe(
   // Extract actual vertex positions from the merged geometry
   const positions = geometry.attributes.position.array;
   const vertexCount = positions.length / 3;
-  
+
   // Extract unique vertices from merged geometry
   const actualVertices = [];
   for (let i = 0; i < vertexCount; i++) {
     const idx = i * 3;
-    actualVertices.push(new THREE.Vector3(
-      positions[idx],
-      positions[idx + 1],
-      positions[idx + 2]
-    ));
+    actualVertices.push(
+      new THREE.Vector3(positions[idx], positions[idx + 1], positions[idx + 2])
+    );
   }
-  
+
   // Match each canonical outer vertex to its closest actual vertex
   const matchVertex = (canonical) => {
     const canonicalVec = new THREE.Vector3(...canonical);
     let closest = actualVertices[0];
     let minDist = canonicalVec.distanceTo(closest);
-    
+
     for (let i = 1; i < actualVertices.length; i++) {
       const dist = canonicalVec.distanceTo(actualVertices[i]);
       if (dist < minDist) {
@@ -177,7 +170,7 @@ export function createIcosahedronIntricateWireframe(
     }
     return closest;
   };
-  
+
   // First icosahedron connections
   for (let i = 0; i < 12; i++) {
     const start = matchVertex(outerVertices[i]);

@@ -33,7 +33,7 @@ export function useMaterialUpdates(objectsRef, materialProps) {
         // Handle dual-mesh objects
         if (solidMesh) solidMesh.scale.setScalar(scale);
         if (wireframeMesh) wireframeMesh.scale.setScalar(scale);
-        // Handle intricate wireframe elements
+        // Handle hyperframe elements
         if (centerLines) centerLines.scale.setScalar(scale);
         if (curvedLines) curvedLines.scale.setScalar(scale);
         // Handle legacy single mesh objects
@@ -155,7 +155,7 @@ export function useMaterialUpdates(objectsRef, materialProps) {
             wireframeMaterial.opacity = intensity; // Wireframe fades in as intensity increases
           }
 
-          // UPDATE INTRICATE WIREFRAME ELEMENTS
+          // UPDATE HYPERFRAME ELEMENTS
           if (centerLinesMaterial) {
             centerLinesMaterial.opacity = 0.8; // Keep bright red lines visible
             centerLinesMaterial.needsUpdate = true;
@@ -185,7 +185,7 @@ export function useMaterialUpdates(objectsRef, materialProps) {
     );
   }, [wireframeIntensity]);
 
-  // INTRICATE WIREFRAME SPIRAL COLOR UPDATER
+  // HYPERFRAME SPIRAL COLOR UPDATER
   useEffect(() => {
     const convertedColor = new THREE.Color(hyperframeColor);
 
@@ -197,7 +197,7 @@ export function useMaterialUpdates(objectsRef, materialProps) {
     });
   }, [hyperframeColor]);
 
-  // INTRICATE WIREFRAME EDGE COLOR UPDATER
+  // HYPERFRAME EDGE COLOR UPDATER
   useEffect(() => {
     const convertedColor = new THREE.Color(hyperframeLineColor);
 

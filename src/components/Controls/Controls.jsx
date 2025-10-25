@@ -11,7 +11,7 @@ function Controls({
   baseColor, onBaseColorChange,                    // Current base color + function to update it
   wireframeIntensity, onWireframeIntensityChange,  // Current wireframe intensity + function to update it
   
-  // INTRICATE WIREFRAME PROPERTIES (current values FROM App.jsx + setter functions FROM App.jsx)
+  // HYPERFRAME PROPERTIES (current values FROM App.jsx + setter functions FROM App.jsx)
   hyperframeColor, onHyperframeColorChange,    // Current spiral color + function to update it
   hyperframeLineColor, onHyperframeLineColorChange,        // Current edge color + function to update it
   
@@ -250,11 +250,12 @@ function Controls({
           Object Type:
         </label>
         <select value={objectType} onChange={handleObjectTypeChange}>
-          <option value="icosahedron">💎 Icosahedron</option>
+          <option value="icosahedron">🔯 Cpd-Icosahedron</option>
           <option value="sphere">⚪ Sphere</option>
-          <option value="box">📦 Box</option>
-          <option value="octahedron">🔷 Octahedron</option>
-          <option value="tetrahedron">🔺 Tetrahedron</option>
+          <option value="box">📦 Hypercube</option>
+          <option value="cpdtesseract">� Cpd-Tesseract</option>
+          <option value="octahedron">🔸 Cpd-Octahedron</option>
+          <option value="tetrahedron">🔻 Cpd-Tetrahedron</option>
           <option value="torusknot">🌀 Torus Knot</option>
         </select>
 

@@ -30,6 +30,7 @@ export function createSolidMaterial({
     flatShading: false,
     emissive: emissiveColor,
     emissiveIntensity: 1,
+    side: THREE.DoubleSide, // Render both sides for compound geometries
   });
 }
 

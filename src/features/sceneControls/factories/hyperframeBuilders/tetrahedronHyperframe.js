@@ -1,19 +1,19 @@
 import * as THREE from "three";
 
 /**
- * Create intricate compound tetrahedron wireframe with dual inner tetrahedrons and vertex connections
+ * Create hyperframe for compound tetrahedron with dual inner tetrahedrons and vertex connections
  * Always creates two overlapping wireframe sets for compound geometry pattern
  * @param {THREE.BufferGeometry} geometry - The compound tetrahedron geometry
  * @param {string} hyperframeColor - Color for inner wireframe
  * @param {string} hyperframeLineColor - Color for connections
  * @returns {Object} { centerLines, centerLinesMaterial, curvedLines, curvedLinesMaterial }
  */
-export function createTetrahedronIntricateWireframe(
+export function createTetrahedronHyperframe(
   geometry,
   hyperframeColor,
   hyperframeLineColor
 ) {
-  console.log("Creating compound tetrahedron wireframe");
+  console.log("Creating compound tetrahedron hyperframe");
 
   // Canonical vertices for tetrahedron (4 vertices forming a pyramid)
   // Use Three.js standard tetrahedron vertex calculation

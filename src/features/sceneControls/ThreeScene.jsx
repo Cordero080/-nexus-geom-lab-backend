@@ -28,9 +28,9 @@ function ThreeScene({
 	baseColor,           // Current base color → will update Three.js material.color
 	wireframeIntensity,  // Current wireframe intensity → will update Three.js material.wireframe
 	
-	// INTRICATE WIREFRAME PROPS - How the intricate wireframe should look (FROM App.jsx state)
-	hyperframeColor,  // Current spiral color → will update intricate wireframe spiral lines
-	hyperframeLineColor,    // Current edge color → will update intricate wireframe edge connections
+	// HYPERFRAME PROPS - How the hyperframe should look (FROM App.jsx state)
+	hyperframeColor,  // Current spiral color → will update hyperframe spiral lines
+	hyperframeLineColor,    // Current edge color → will update hyperframe edge connections
 	
 	// SCENE BEHAVIOR PROPS - How the scene should behave (FROM App.jsx state)
 	cameraView,          // Current camera view → will position/animate camera

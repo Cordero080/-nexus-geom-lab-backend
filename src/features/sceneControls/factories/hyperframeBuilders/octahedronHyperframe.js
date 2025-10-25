@@ -1,86 +1,84 @@
 import * as THREE from "three";
 
 /**
- * Create intricate compound box (stella octangula) wireframe with dual inner cubes and vertex connections
- * Always creates two overlapping wireframe sets for 3D star pattern
- * @param {THREE.BufferGeometry} geometry - The compound box geometry
+ * Create hyperframe for compound octahedron with dual inner octahedrons and vertex connections
+ * Always creates two overlapping wireframe sets for compound geometry pattern
+ * @param {THREE.BufferGeometry} geometry - The compound octahedron geometry
  * @param {string} hyperframeColor - Color for inner wireframe
  * @param {string} hyperframeLineColor - Color for connections
  * @returns {Object} { centerLines, centerLinesMaterial, curvedLines, curvedLinesMaterial }
  */
-export function createBoxIntricateWireframe(
+export function createOctahedronHyperframe(
   geometry,
   hyperframeColor,
   hyperframeLineColor
 ) {
-  console.log("Creating compound box (stella octangula) wireframe");
+  console.log("Creating compound octahedron hyperframe");
 
-  // Cube vertices for first box (8 corners)
-  const size = 0.75; // Half of 1.5
-  const cmpCubeOuterCorners1 = [
-    [-size, -size, -size],
-    [size, -size, -size],
-    [size, size, -size],
-    [-size, size, -size],
-    [-size, -size, size],
-    [size, -size, size],
-    [size, size, size],
-    [-size, size, size],
+  // Canonical vertices for octahedron (6 vertices: ±1 on each axis)
+  const rawVertices = [
+    [1, 0, 0], // +X
+    [-1, 0, 0], // -X
+    [0, 1, 0], // +Y (top)
+    [0, -1, 0], // -Y (bottom)
+    [0, 0, 1], // +Z
+    [0, 0, -1], // -Z
   ];
+
+  // Already normalized to radius 1
+  const outerVertices = rawVertices;
 
   // Create rotated second set for compound geometry (45° on Y axis)
   const rotationMatrix = new THREE.Matrix4();
   rotationMatrix.makeRotationY(Math.PI / 4);
 
-  const cmpCubeOuterCorners2 = cmpCubeOuterCorners1.map((v) => {
+  const outerVertices2 = rawVertices.map((v) => {
     const vec = new THREE.Vector3(...v);
     vec.applyMatrix4(rotationMatrix);
     return vec.toArray();
   });
 
-  // Create inner cubes (scaled down)
+  // Create inner octahedrons (scaled down)
   const innerScale = 0.5;
-  const cmpCubeInnerCorners1 = cmpCubeOuterCorners1.map((corner) => [
-    corner[0] * innerScale,
-    corner[1] * innerScale,
-    corner[2] * innerScale,
+  const innerVertices = outerVertices.map((vertex) => [
+    vertex[0] * innerScale,
+    vertex[1] * innerScale,
+    vertex[2] * innerScale,
   ]);
 
-  const cmpCubeInnerCorners2 = cmpCubeOuterCorners2.map((corner) => [
-    corner[0] * innerScale,
-    corner[1] * innerScale,
-    corner[2] * innerScale,
+  const innerVertices2 = outerVertices2.map((vertex) => [
+    vertex[0] * innerScale,
+    vertex[1] * innerScale,
+    vertex[2] * innerScale,
   ]);
 
-  // 1. Create inner cube wireframes using thick cylinders
+  // 1. Create inner octahedron wireframe using thick cylinders
   const centerLinesMaterial = new THREE.MeshBasicMaterial({
     color: hyperframeColor,
     transparent: false,
     opacity: 1.0,
   });
 
-  const innerCmpCubeGroup = new THREE.Group();
+  const innerOctahedronGroup = new THREE.Group();
 
-  // Cube edges (12 edges connecting 8 vertices)
-  const cmpCubeEdges = [
-    [0, 1],
-    [1, 2],
-    [2, 3],
-    [3, 0], // back face
-    [4, 5],
-    [5, 6],
-    [6, 7],
-    [7, 4], // front face
-    [0, 4],
-    [1, 5],
-    [2, 6],
-    [3, 7], // connecting edges
-  ];
+  // Octahedron edges: each vertex connects to 4 others (all except opposite)
+  // Distance between connected vertices is √2 ≈ 1.414
+  const edgeThreshold = 1.5;
+  let octahedronEdges = [];
+  for (let i = 0; i < innerVertices.length; i++) {
+    for (let j = i + 1; j < innerVertices.length; j++) {
+      const v1 = new THREE.Vector3(...innerVertices[i]);
+      const v2 = new THREE.Vector3(...innerVertices[j]);
+      const dist = v1.distanceTo(v2);
+      if (dist > 0.1 && dist < edgeThreshold) {
+        octahedronEdges.push([i, j]);
+      }
+    }
+  }
 
-  // First inner cube edges
-  cmpCubeEdges.forEach(([i, j]) => {
-    const start = new THREE.Vector3(...cmpCubeInnerCorners1[i]);
-    const end = new THREE.Vector3(...cmpCubeInnerCorners1[j]);
+  octahedronEdges.forEach(([i, j]) => {
+    const start = new THREE.Vector3(...innerVertices[i]);
+    const end = new THREE.Vector3(...innerVertices[j]);
     const distance = start.distanceTo(end);
 
     const cylinderGeom = new THREE.CylinderGeometry(0.004, 0.004, distance, 8);
@@ -90,13 +88,25 @@ export function createBoxIntricateWireframe(
     cylinderMesh.lookAt(end);
     cylinderMesh.rotateX(Math.PI / 2);
 
-    innerCmpCubeGroup.add(cylinderMesh);
+    innerOctahedronGroup.add(cylinderMesh);
   });
 
-  // Second inner cube edges
-  cmpCubeEdges.forEach(([i, j]) => {
-    const start = new THREE.Vector3(...cmpCubeInnerCorners2[i]);
-    const end = new THREE.Vector3(...cmpCubeInnerCorners2[j]);
+  // Add second octahedron wireframe
+  let octahedronEdges2 = [];
+  for (let i = 0; i < innerVertices2.length; i++) {
+    for (let j = i + 1; j < innerVertices2.length; j++) {
+      const v1 = new THREE.Vector3(...innerVertices2[i]);
+      const v2 = new THREE.Vector3(...innerVertices2[j]);
+      const dist = v1.distanceTo(v2);
+      if (dist > 0.1 && dist < edgeThreshold) {
+        octahedronEdges2.push([i, j]);
+      }
+    }
+  }
+
+  octahedronEdges2.forEach(([i, j]) => {
+    const start = new THREE.Vector3(...innerVertices2[i]);
+    const end = new THREE.Vector3(...innerVertices2[j]);
     const distance = start.distanceTo(end);
 
     const cylinderGeom = new THREE.CylinderGeometry(0.004, 0.004, distance, 8);
@@ -106,11 +116,11 @@ export function createBoxIntricateWireframe(
     cylinderMesh.lookAt(end);
     cylinderMesh.rotateX(Math.PI / 2);
 
-    innerCmpCubeGroup.add(cylinderMesh);
+    innerOctahedronGroup.add(cylinderMesh);
   });
 
   console.log(
-    `Created compound box inner wireframes with ${cmpCubeEdges.length} x2 cylinder edges`
+    `Created compound octahedron inner wireframes with ${octahedronEdges.length} x2 cylinder edges`
   );
 
   // 2. Create vertex-to-core connections using thick cylinders
@@ -120,7 +130,7 @@ export function createBoxIntricateWireframe(
     opacity: 1.0,
   });
 
-  const cmpCubeConnectionGroup = new THREE.Group();
+  const octahedronConnectionGroup = new THREE.Group();
 
   // Extract actual vertex positions from the merged geometry
   const positions = geometry.attributes.position.array;
@@ -151,10 +161,10 @@ export function createBoxIntricateWireframe(
     return closest;
   };
 
-  // First box connections (8 vertices)
-  for (let i = 0; i < 8; i++) {
-    const start = matchVertex(cmpCubeOuterCorners1[i]);
-    const end = new THREE.Vector3(...cmpCubeInnerCorners1[i]);
+  // First octahedron connections (6 vertices)
+  for (let i = 0; i < 6; i++) {
+    const start = matchVertex(outerVertices[i]);
+    const end = new THREE.Vector3(...innerVertices[i]);
     const distance = start.distanceTo(end);
 
     const cylinderGeom = new THREE.CylinderGeometry(0.003, 0.003, distance, 6);
@@ -164,13 +174,13 @@ export function createBoxIntricateWireframe(
     cylinderMesh.lookAt(end);
     cylinderMesh.rotateX(Math.PI / 2);
 
-    cmpCubeConnectionGroup.add(cylinderMesh);
+    octahedronConnectionGroup.add(cylinderMesh);
   }
 
-  // Second box connections (8 vertices)
-  for (let i = 0; i < 8; i++) {
-    const start = matchVertex(cmpCubeOuterCorners2[i]);
-    const end = new THREE.Vector3(...cmpCubeInnerCorners2[i]);
+  // Second octahedron connections (6 vertices)
+  for (let i = 0; i < 6; i++) {
+    const start = matchVertex(outerVertices2[i]);
+    const end = new THREE.Vector3(...innerVertices2[i]);
     const distance = start.distanceTo(end);
 
     const cylinderGeom = new THREE.CylinderGeometry(0.003, 0.003, distance, 6);
@@ -180,17 +190,17 @@ export function createBoxIntricateWireframe(
     cylinderMesh.lookAt(end);
     cylinderMesh.rotateX(Math.PI / 2);
 
-    cmpCubeConnectionGroup.add(cylinderMesh);
+    octahedronConnectionGroup.add(cylinderMesh);
   }
 
   console.log(
-    `Created compound box connections: 16 vertex-to-core connections`
+    `Created compound octahedron connections: 12 vertex-to-core connections (6 per octahedron)`
   );
 
   return {
-    centerLines: innerCmpCubeGroup,
+    centerLines: innerOctahedronGroup,
     centerLinesMaterial,
-    curvedLines: cmpCubeConnectionGroup,
+    curvedLines: octahedronConnectionGroup,
     curvedLinesMaterial,
   };
 }
