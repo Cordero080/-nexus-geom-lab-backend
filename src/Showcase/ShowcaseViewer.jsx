@@ -33,8 +33,8 @@ export default function ShowcaseViewer({ animation, onClose }) {
           opacity: mounted ? 1 : 0
         }}
       >
-        <button className="viewer-back-button" onClick={onClose}>
-          ← Back to Gallery
+        <button className="viewer-back-button-bottom" onClick={onClose}>
+          ← Back
         </button>
         
         <button className="viewer-close" onClick={onClose}>

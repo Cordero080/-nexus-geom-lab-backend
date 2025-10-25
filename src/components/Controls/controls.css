@@ -6,9 +6,9 @@
 /* Simple control panel for Step 1 */
 .controls {
     position: absolute;
-    top: 220px;
+    top: 140px; /* Reduced from 220px */
     left: 20px;
-    width: 230px;
+    width: 220px; /* Reduced from 224px */
     max-height: 75vh;
     /* Futuristic gel-like background with multiple layers */
     background: 

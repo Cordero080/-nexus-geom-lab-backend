@@ -28,11 +28,7 @@
    CHARACTER-SPECIFIC VIEWER BACKGROUNDS
    ======================================== */
 
-/* Animation 1 - Cosmic Entity #001 (Purple-Blue) */
-/* .viewer-overlay-1 {
-  background: linear-gradient(135deg, #1c0038 0%, #3373fdbf 50%, #1c0038 100%);
-} */
-
+/* Animation 1 - Blu-Khan #001 (Purple-Blue) */
 .viewer-overlay-1 {
   background: 
     radial-gradient(ellipse at 20% 20%, rgba(0, 102, 255, 0.34) 0%, transparent 50%),
@@ -41,14 +37,16 @@
     linear-gradient(
       180deg,
       rgba(10, 0, 30, 1) 0%,
-      rgba(3, 33, 92, 0.95) 20%,
-      rgba(75, 0, 130, 0.9) 50%,
-      rgba(138, 43, 226, 0.85) 80%,
-      rgba(100, 50, 200, 0.8) 100%
+      rgba(60, 20, 100, 0.95) 20%,
+      rgba(255, 225, 0, 0.621) 38%,
+      rgba(110, 35, 190, 0.92) 45%,
+      rgba(85, 50, 190, 0.9) 55%,
+      rgba(0, 102, 255, 0.876) 80%,
+      rgba(0, 150, 255, 0.9) 100%
     );
 }
 
-/* Animation 2 - Tech Feline #002 (Cyan-Teal) */
+/* Animation 2 - Tech Feline #002 (Cycan-Teal) */
 .viewer-overlay-2 {
   background: 
     radial-gradient(ellipse at 20% 25%, rgba(175, 6, 170, 0.8) 0%, transparent 50%),
@@ -164,34 +162,40 @@
   }
 }
 
-
-
-.viewer-back-button {
-  position: absolute;
-  top: 20px;
-  left: 20px;
-  color: #00ffff; /* Cyan theme - fits Animation 2 best */
+.viewer-back-button-bottom {
+  position: fixed;
+  bottom: 30px;
+  left: 30px;
+  color: #00ffff;
   text-decoration: none;
   font-size: 1rem;
-  font-weight: 500;
-  padding: 12px 24px;
-  border: 2px solid rgba(0, 255, 255, 0.4);
+  font-weight: 600;
+  padding: 14px 28px;
+  border: 2px solid transparent;
   border-radius: 8px;
-  background: rgba(0, 255, 255, 0.1);
+  background: 
+    linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)) padding-box,
+    linear-gradient(135deg, #00ffff, #ff00ff) border-box;
   transition: all 0.3s ease;
   display: inline-flex;
   align-items: center;
   gap: 8px;
   z-index: 1200;
-  backdrop-filter: blur(10px);
+  backdrop-filter: blur(15px);
   cursor: pointer;
+  box-shadow: 0 4px 20px rgba(0, 255, 255, 0.3);
+  text-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
 }
 
-.viewer-back-button:hover {
-  background: rgba(0, 255, 255, 0.2);
-  border-color: rgba(0, 255, 255, 0.8);
-  transform: translateX(-5px);
-  box-shadow: 0 4px 25px rgba(0, 255, 255, 0.4);
+.viewer-back-button-bottom:hover {
+  background: 
+    linear-gradient(rgba(0, 255, 255, 0.15), rgba(255, 0, 255, 0.1)) padding-box,
+    linear-gradient(135deg, #00ffff, #ff00ff) border-box;
+  transform: translateX(-8px) scale(1.05);
+  box-shadow: 
+    0 6px 30px rgba(0, 255, 255, 0.5),
+    0 0 40px rgba(255, 0, 255, 0.3);
+  text-shadow: 0 0 15px rgba(0, 255, 255, 0.8);
 }
 
 .viewer-close {
@@ -242,6 +246,192 @@
   box-shadow: 0 -5px 30px rgba(255, 100, 0, 0.3);
   position: relative;
   z-index: 10;
+}
+
+/* Blu-Khan #001 - Navbar Glass Theme */
+.viewer-overlay-1 .viewer-info {
+  background: 
+    radial-gradient(ellipse at top left, rgba(149, 212, 208, 0.133) 0%, transparent 50%),
+    radial-gradient(ellipse at bottom right, rgba(173, 174, 207, 0.153) 0%, transparent 50%),
+    linear-gradient(135deg, rgba(81, 68, 124, 0.3) 0%, rgba(64, 81, 149, 0.4) 50%, rgba(81, 68, 124, 0.5) 100%);
+  border-top: 1px solid rgba(136, 197, 233, 0.3);
+  backdrop-filter: blur(12px) saturate(180%);
+  box-shadow: 
+    0 -8px 32px rgba(78, 205, 196, 0.25),
+    0 -4px 16px rgba(136, 197, 233, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.1);
+}
+
+.viewer-overlay-1 .viewer-title {
+  background: linear-gradient(135deg, #4ecdc4, #88c5e9, #95d4d0);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: 0 0 20px rgba(78, 205, 196, 0.5);
+  font-family: inherit; /* Default: Orbitron */
+}
+
+.viewer-overlay-1 .viewer-description {
+  color: rgba(255, 255, 255, 0.9);
+  font-family: inherit; /* Default: system font */
+}
+
+.viewer-overlay-1 .meta-tag {
+  background: rgba(78, 205, 196, 0.15);
+  border: 1px solid rgba(136, 197, 233, 0.3);
+  color: #88c5e9;
+  box-shadow: 0 2px 8px rgba(78, 205, 196, 0.2);
+  font-family: inherit; /* Default: system font */
+}
+
+.viewer-overlay-1 .meta-tag:hover {
+  background: rgba(78, 205, 196, 0.25);
+  box-shadow: 0 2px 12px rgba(78, 205, 196, 0.3);
+}
+
+/* Prismia #002 - Default Orange/Red Theme */
+.viewer-overlay-2 .viewer-info {
+  background: linear-gradient(180deg, rgba(215, 28, 134, 0.256) 0%, rgba(255, 0, 100, 0.35) 100%);
+  border-top: 2px solid rgba(255, 140, 70, 0.5);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 -5px 30px rgba(255, 100, 0, 0.3);
+}
+
+.viewer-overlay-2 .viewer-title {
+  background: linear-gradient(235deg, #21aef9, #ff00b7, #ffcc00);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: 0 0 15px rgba(2, 25, 40, 0.4);
+  font-family: inherit; /* Default: Orbitron */
+}
+
+.viewer-overlay-2 .viewer-description {
+  color: rgba(251, 248, 248, 0.59);
+  text-shadow: 0 0 10px rgba(255, 100, 0, 0.5);
+  font-family: inherit; /* Default: system font */
+}
+
+.viewer-overlay-2 .meta-tag {
+  background: rgba(255, 100, 0, 0.15);
+  border: 1px solid rgba(255, 234, 0, 0.4);
+  color: #033a3fe6;
+  box-shadow: 0 2px 8px rgba(255, 60, 0, 0.2);
+  font-family: inherit; /* Default: system font */
+}
+
+.viewer-overlay-2 .meta-tag:hover {
+  background: rgba(255, 100, 0, 0.25);
+  box-shadow: 0 2px 12px rgba(255, 60, 0, 0.3);
+}
+
+/* Magna-tek #003 - Default Orange/Red Theme */
+.viewer-overlay-3 .viewer-info {
+  background: linear-gradient(180deg, rgba(255, 100, 0, 0.25) 0%, rgba(255, 0, 100, 0.35) 100%);
+  border-top: 2px solid rgba(255, 140, 70, 0.5);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 -5px 30px rgba(255, 100, 0, 0.3);
+}
+
+.viewer-overlay-3 .viewer-title {
+  background: linear-gradient(360deg, #ffcc00fb, #ff2b00, #ffc400c6, #ff2f00);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: 0 0 15px rgba(3, 109, 67, 0.4);
+  font-family: inherit; /* Default: Orbitron */
+}
+
+.viewer-overlay-3 .viewer-description {
+  color: rgba(255, 255, 255, 0.9);
+  text-shadow: 0 0 10px rgba(255, 100, 0, 0.5);
+  font-family: inherit; /* Default: system font */
+}
+
+.viewer-overlay-3 .meta-tag {
+  background: rgba(255, 100, 0, 0.15);
+  border: 1px solid rgba(255, 80, 0, 0.4);
+  color: #ff7700;
+  box-shadow: 0 2px 8px rgba(255, 60, 0, 0.2);
+  font-family: inherit; /* Default: system font */
+}
+
+.viewer-overlay-3 .meta-tag:hover {
+  background: rgba(255, 100, 0, 0.25);
+  box-shadow: 0 2px 12px rgba(255, 60, 0, 0.3);
+}
+
+/* Nexus-Prime #004 - Default Orange/Red Theme */
+.viewer-overlay-4 .viewer-info {
+  background: linear-gradient(180deg, rgba(255, 100, 0, 0.25) 0%, rgba(255, 0, 100, 0.35) 100%);
+  border-top: 2px solid rgba(255, 140, 70, 0.5);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 -5px 30px rgba(255, 100, 0, 0.3);
+}
+
+.viewer-overlay-4 .viewer-title {
+  background: linear-gradient(135deg, #ff6a00, #ff2b00, #ffcc00);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: 0 0 15px rgba(255, 100, 0, 0.4);
+  font-family: inherit; /* Default: Orbitron */
+}
+
+.viewer-overlay-4 .viewer-description {
+  color: rgba(255, 255, 255, 0.9);
+  text-shadow: 0 0 10px rgba(255, 100, 0, 0.5);
+  font-family: inherit; /* Default: system font */
+}
+
+.viewer-overlay-4 .meta-tag {
+  background: rgba(255, 100, 0, 0.15);
+  border: 1px solid rgba(255, 80, 0, 0.4);
+  color: #ff7700;
+  box-shadow: 0 2px 8px rgba(255, 60, 0, 0.2);
+  font-family: inherit; /* Default: system font */
+}
+
+.viewer-overlay-4 .meta-tag:hover {
+  background: rgba(255, 100, 0, 0.25);
+  box-shadow: 0 2px 12px rgba(255, 60, 0, 0.3);
+}
+
+/* Icarus-X #005 - Default Orange/Red Theme */
+.viewer-overlay-5 .viewer-info {
+  background: linear-gradient(180deg, rgba(255, 100, 0, 0.25) 0%, rgba(255, 0, 100, 0.35) 100%);
+  border-top: 2px solid rgba(255, 140, 70, 0.5);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 -5px 30px rgba(255, 100, 0, 0.3);
+}
+
+.viewer-overlay-5 .viewer-title {
+  background: linear-gradient(135deg, #ff6a00, #ff2b00, #ffcc00);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: 0 0 15px rgba(255, 100, 0, 0.4);
+  font-family: inherit; /* Default: Orbitron */
+}
+
+.viewer-overlay-5 .viewer-description {
+  color: rgba(255, 255, 255, 0.9);
+  text-shadow: 0 0 10px rgba(255, 100, 0, 0.5);
+  font-family: inherit; /* Default: system font */
+}
+
+.viewer-overlay-5 .meta-tag {
+  background: rgba(255, 100, 0, 0.15);
+  border: 1px solid rgba(255, 80, 0, 0.4);
+  color: #ff7700;
+  box-shadow: 0 2px 8px rgba(255, 60, 0, 0.2);
+  font-family: inherit; /* Default: system font */
+}
+
+.viewer-overlay-5 .meta-tag:hover {
+  background: rgba(255, 100, 0, 0.25);
+  box-shadow: 0 2px 12px rgba(255, 60, 0, 0.3);
 }
 
 /* 

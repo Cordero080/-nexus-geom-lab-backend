@@ -39,11 +39,20 @@
 .parallax-showcase-container {
   width: 100vw;
   height: 100vh;
+  overflow-x: hidden; /* Prevent horizontal scrollbar */
   overflow-y: scroll;
   scroll-snap-type: y mandatory;
   scroll-behavior: smooth;
   position: relative;
   background: transparent; /* Ensure container doesn't block scene backgrounds */
+  /* Hide scrollbar completely for immersive experience */
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE/Edge */
+}
+
+/* Hide scrollbar for Chrome, Safari, Opera */
+.parallax-showcase-container::-webkit-scrollbar {
+  display: none;
 }
 
 /* Title overlay */
@@ -99,6 +108,7 @@
 
 .parallax-scene {
   width: 100vw;
+  max-width: 100%; /* Prevent content from exceeding viewport */
   height: 100vh;
   display: flex;
   align-items: center;
@@ -107,10 +117,42 @@
   scroll-snap-align: start;
   position: relative;
   gap: 60px;
+  overflow-x: hidden; /* Prevent horizontal overflow */
   /* Background is set inline via style prop - no default background here */
   background-size: cover;
   background-position: center;
   background-attachment: fixed; /* Optional: creates parallax effect */
+}
+
+/* Smooth transition overlay between scenes */
+.parallax-scene::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 20%;
+  background: linear-gradient(180deg, 
+    rgba(0, 0, 0, 0.8) 0%, 
+    rgba(0, 0, 0, 0) 100%
+  );
+  pointer-events: none;
+  z-index: 1;
+}
+
+.parallax-scene::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 20%;
+  background: linear-gradient(0deg, 
+    rgba(0, 0, 0, 0.8) 0%, 
+    rgba(0, 0, 0, 0) 100%
+  );
+  pointer-events: none;
+  z-index: 1;
 }
 
 /* Center position - first model */
@@ -173,6 +215,7 @@
   cursor: pointer;
   transition: all 0.3s ease;
   position: relative;
+  z-index: 2; /* Above transition overlays */
 }
 
 .parallax-model-card:hover {
@@ -184,24 +227,19 @@
 /* Specific heights for all models - consistent sizing */
 .parallax-model-card-1,
 .parallax-model-card-2,
-.parallax-model-card-3 {
-  height: 580px;
-}
-
-.parallax-model-card-4 {
-  height: 1000px;
-  width: 700px;
-}
-
+.parallax-model-card-3,
+.parallax-model-card-4,
 .parallax-model-card-5 {
-  height: 700px;
-  width: 700px;
+  height: 580px;
+  width: 600px;
 }
 
 /* Info panel styling */
 .parallax-info {
   color: white;
   padding: 20px;
+  z-index: 2; /* Above transition overlays */
+  position: relative;
 }
 
 .parallax-title {

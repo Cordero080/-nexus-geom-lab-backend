@@ -190,7 +190,7 @@ const animationStyles = {
     applyUserRotation(meshes, objectId, interactionFns);
   },
 
-  alien: (objData, t, index, interactionFns = null) => {
+  omniIntel: (objData, t, index, interactionFns = null) => {
     const {
       solidMesh,
       wireframeMesh,
@@ -203,7 +203,7 @@ const animationStyles = {
     } = objData;
 
     // ============================================
-    // ALIEN INTELLIGENCE V4.0 - SENTIENT SYMPHONY
+    // OMNI-INTEL V4.0 - SENTIENT SYMPHONY
     // ============================================
 
     const speedVariation = index % 4;
