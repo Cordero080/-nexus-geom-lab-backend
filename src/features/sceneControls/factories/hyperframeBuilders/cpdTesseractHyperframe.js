@@ -374,10 +374,105 @@ export function createCpdTesseractHyperframe(
     connectionsGroup.add(cylinderMesh);
   });
 
+  // === DENSE WEB HYPERFRAME (like compound icosahedron) ===
+  // Connect each middle cube vertex to multiple nearby vertices for dense internal web
+
+  const allMiddleVertices = [
+    ...cube1Inner.map((v) => new THREE.Vector3(...v)),
+    ...cube2Inner.map((v) => new THREE.Vector3(...v)),
+  ];
+
+  const allTinyVertices = [
+    ...cube1Tiny.map((v) => new THREE.Vector3(...v)),
+    ...cube2Tiny.map((v) => new THREE.Vector3(...v)),
+  ];
+
+  // Dense connections: Connect each vertex to nearby vertices within threshold distance
+  const webThreshold = 0.8; // Connect vertices within this distance
+  const webLineRadius = 0.0018; // Very thin for dense web effect
+
+  // Connect middle cube vertices to each other (dense web)
+  for (let i = 0; i < allMiddleVertices.length; i++) {
+    for (let j = i + 1; j < allMiddleVertices.length; j++) {
+      const v1 = allMiddleVertices[i];
+      const v2 = allMiddleVertices[j];
+      const distance = v1.distanceTo(v2);
+
+      // Only connect if within threshold (creates web, not everything to everything)
+      if (distance > 0.01 && distance < webThreshold) {
+        const cylinderGeom = new THREE.CylinderGeometry(
+          webLineRadius,
+          webLineRadius,
+          distance,
+          4
+        );
+        const cylinderMesh = new THREE.Mesh(cylinderGeom, centerLinesMaterial);
+
+        cylinderMesh.position.copy(v1.clone().add(v2).multiplyScalar(0.5));
+        cylinderMesh.lookAt(v2);
+        cylinderMesh.rotateX(Math.PI / 2);
+
+        innerCubesGroup.add(cylinderMesh);
+      }
+    }
+  }
+
+  // Connect tiny cube vertices to each other (dense internal web)
+  const tinyWebThreshold = 0.4;
+  for (let i = 0; i < allTinyVertices.length; i++) {
+    for (let j = i + 1; j < allTinyVertices.length; j++) {
+      const v1 = allTinyVertices[i];
+      const v2 = allTinyVertices[j];
+      const distance = v1.distanceTo(v2);
+
+      if (distance > 0.01 && distance < tinyWebThreshold) {
+        const cylinderGeom = new THREE.CylinderGeometry(
+          webLineRadius * 0.8,
+          webLineRadius * 0.8,
+          distance,
+          4
+        );
+        const cylinderMesh = new THREE.Mesh(cylinderGeom, centerLinesMaterial);
+
+        cylinderMesh.position.copy(v1.clone().add(v2).multiplyScalar(0.5));
+        cylinderMesh.lookAt(v2);
+        cylinderMesh.rotateX(Math.PI / 2);
+
+        innerCubesGroup.add(cylinderMesh);
+      }
+    }
+  }
+
+  // Connect middle vertices to nearby tiny vertices (bridging layers)
+  const bridgeThreshold = 0.5;
+  for (let i = 0; i < allMiddleVertices.length; i++) {
+    for (let j = 0; j < allTinyVertices.length; j++) {
+      const v1 = allMiddleVertices[i];
+      const v2 = allTinyVertices[j];
+      const distance = v1.distanceTo(v2);
+
+      if (distance > 0.01 && distance < bridgeThreshold) {
+        const cylinderGeom = new THREE.CylinderGeometry(
+          webLineRadius,
+          webLineRadius,
+          distance,
+          4
+        );
+        const cylinderMesh = new THREE.Mesh(cylinderGeom, centerLinesMaterial);
+
+        cylinderMesh.position.copy(v1.clone().add(v2).multiplyScalar(0.5));
+        cylinderMesh.lookAt(v2);
+        cylinderMesh.rotateX(Math.PI / 2);
+
+        innerCubesGroup.add(cylinderMesh);
+      }
+    }
+  }
+
   console.log(
-    `Created complete compound tesseract hyperframe:
-    - ${innerCubesGroup.children.length} aqua/red lines (cubes + recursion + face diagonals + cross-connections)
-    - ${connectionsGroup.children.length} orange lines (outer→middle + space diagonals)`
+    `Created DENSE compound tesseract hyperframe web:
+    - ${innerCubesGroup.children.length} aqua/red lines (dense internal web + structure)
+    - ${connectionsGroup.children.length} orange lines (outer projections)`
   );
 
   return {
