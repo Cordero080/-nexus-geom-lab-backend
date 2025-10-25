@@ -18,6 +18,7 @@ import { createBoxHyperframe } from "./hyperframeBuilders/boxHyperframe";
 import { createOctahedronHyperframe } from "./hyperframeBuilders/octahedronHyperframe";
 import { createIcosahedronHyperframe } from "./hyperframeBuilders/icosahedronHyperframe";
 import { createCpdTesseractHyperframe } from "./hyperframeBuilders/cpdTesseractHyperframe";
+import { createMegaTesseractHyperframe } from "./hyperframeBuilders/megaTesseractHyperframe";
 
 /**
  * Creates a complete 3D object with all components:
@@ -174,11 +175,22 @@ export function createSceneObject(config) {
   ) {
     // Check if it's a compound tesseract (two interpenetrating 4D hypercubes) or regular tesseract (single 4D hypercube)
     if (geometry.userData && geometry.userData.isCpdTesseract) {
-      const result = createCpdTesseractHyperframe(
-        geometry,
-        hyperframeColor,
-        hyperframeLineColor
-      );
+      // Use Mega-Tesseract hyperframe (with stellations) if objectType is "cpdtesseract"
+      // Otherwise use regular Cpd-Tesseract hyperframe (simple version)
+      const isMegaTesseract = objectType === "cpdtesseract";
+      
+      const result = isMegaTesseract
+        ? createMegaTesseractHyperframe(
+            geometry,
+            hyperframeColor,
+            hyperframeLineColor
+          )
+        : createCpdTesseractHyperframe(
+            geometry,
+            hyperframeColor,
+            hyperframeLineColor
+          );
+      
       ({ centerLines, centerLinesMaterial, curvedLines, curvedLinesMaterial } =
         result);
     } else {

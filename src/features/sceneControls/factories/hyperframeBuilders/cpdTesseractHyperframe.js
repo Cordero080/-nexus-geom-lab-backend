@@ -5,255 +5,385 @@ export function createCpdTesseractHyperframe(
   hyperframeColor,
   hyperframeLineColor
 ) {
-  console.log("✨ IMPROVED: Proper 4D compound tesseract with complete faces");
+  console.log("Creating compound tesseract hyperframe with recursive nesting");
 
   const outerSize = 0.75;
   const innerSize = 0.375;
-  const innerInnerSize = 0.2;
-  const tinySize = 0.1;
+  const tinySize = 0.1875; // Half of inner size - recursive nesting
 
-  // Helper: Create compound tesseract (two rotated cubes)
-  const createCompoundTesseract = (size) => {
-    const cube1 = [
-      [-size, -size, -size], [size, -size, -size],
-      [size, size, -size], [-size, size, -size],
-      [-size, -size, size], [size, -size, size],
-      [size, size, size], [-size, size, size],
-    ];
-    
-    const rotationMatrix = new THREE.Matrix4().makeRotationY(Math.PI / 4);
-    const cube2 = cube1.map((v) => {
-      const vec = new THREE.Vector3(...v);
-      vec.applyMatrix4(rotationMatrix);
-      return [vec.x, vec.y, vec.z];
-    });
-    
-    return { cube1, cube2 };
-  };
+  const cube1Outer = [
+    [-outerSize, -outerSize, -outerSize],
+    [outerSize, -outerSize, -outerSize],
+    [outerSize, outerSize, -outerSize],
+    [-outerSize, outerSize, -outerSize],
+    [-outerSize, -outerSize, outerSize],
+    [outerSize, -outerSize, outerSize],
+    [outerSize, outerSize, outerSize],
+    [-outerSize, outerSize, outerSize],
+  ];
 
-  // Create nested 4D layers
-  const outer = createCompoundTesseract(outerSize);
-  const inner = createCompoundTesseract(innerSize);
-  const innerInner = createCompoundTesseract(innerInnerSize);
-  const tiny = createCompoundTesseract(tinySize);
+  const cube1Inner = [
+    [-innerSize, -innerSize, -innerSize],
+    [innerSize, -innerSize, -innerSize],
+    [innerSize, innerSize, -innerSize],
+    [-innerSize, innerSize, -innerSize],
+    [-innerSize, -innerSize, innerSize],
+    [innerSize, -innerSize, innerSize],
+    [innerSize, innerSize, innerSize],
+    [-innerSize, innerSize, innerSize],
+  ];
 
-  const hyperframeMaterial = new THREE.MeshBasicMaterial({
+  const cube1Tiny = [
+    [-tinySize, -tinySize, -tinySize],
+    [tinySize, -tinySize, -tinySize],
+    [tinySize, tinySize, -tinySize],
+    [-tinySize, tinySize, -tinySize],
+    [-tinySize, -tinySize, tinySize],
+    [tinySize, -tinySize, tinySize],
+    [tinySize, tinySize, tinySize],
+    [-tinySize, tinySize, tinySize],
+  ];
+
+  const rotationMatrix = new THREE.Matrix4();
+  rotationMatrix.makeRotationY(Math.PI / 4);
+
+  const cube2Outer = cube1Outer.map((v) => {
+    const vec = new THREE.Vector3(...v);
+    vec.applyMatrix4(rotationMatrix);
+    return [vec.x, vec.y, vec.z];
+  });
+
+  const cube2Inner = cube1Inner.map((v) => {
+    const vec = new THREE.Vector3(...v);
+    vec.applyMatrix4(rotationMatrix);
+    return [vec.x, vec.y, vec.z];
+  });
+
+  const cube2Tiny = cube1Tiny.map((v) => {
+    const vec = new THREE.Vector3(...v);
+    vec.applyMatrix4(rotationMatrix);
+    return [vec.x, vec.y, vec.z];
+  });
+
+  const centerLinesMaterial = new THREE.MeshBasicMaterial({
     color: hyperframeColor,
     transparent: false,
     opacity: 1.0,
   });
 
-  const edgeLinesMaterial = new THREE.MeshBasicMaterial({
+  const innerCubesGroup = new THREE.Group();
+
+  const cubeEdges = [
+    [0, 1],
+    [1, 2],
+    [2, 3],
+    [3, 0],
+    [4, 5],
+    [5, 6],
+    [6, 7],
+    [7, 4],
+    [0, 4],
+    [1, 5],
+    [2, 6],
+    [3, 7],
+  ];
+
+  cubeEdges.forEach(([i, j]) => {
+    const start = new THREE.Vector3(...cube1Inner[i]);
+    const end = new THREE.Vector3(...cube1Inner[j]);
+    const distance = start.distanceTo(end);
+
+    const cylinderGeom = new THREE.CylinderGeometry(0.004, 0.004, distance, 8);
+    const cylinderMesh = new THREE.Mesh(cylinderGeom, centerLinesMaterial);
+
+    cylinderMesh.position.copy(start.clone().add(end).multiplyScalar(0.5));
+    cylinderMesh.lookAt(end);
+    cylinderMesh.rotateX(Math.PI / 2);
+
+    innerCubesGroup.add(cylinderMesh);
+  });
+
+  cubeEdges.forEach(([i, j]) => {
+    const start = new THREE.Vector3(...cube2Inner[i]);
+    const end = new THREE.Vector3(...cube2Inner[j]);
+    const distance = start.distanceTo(end);
+
+    const cylinderGeom = new THREE.CylinderGeometry(0.004, 0.004, distance, 8);
+    const cylinderMesh = new THREE.Mesh(cylinderGeom, centerLinesMaterial);
+
+    cylinderMesh.position.copy(start.clone().add(end).multiplyScalar(0.5));
+    cylinderMesh.lookAt(end);
+    cylinderMesh.rotateX(Math.PI / 2);
+
+    innerCubesGroup.add(cylinderMesh);
+  });
+
+  const curvedLinesMaterial = new THREE.MeshBasicMaterial({
     color: hyperframeLineColor,
     transparent: false,
     opacity: 1.0,
   });
 
-  const hyperframeGroup = new THREE.Group();
-  const edgeLinesGroup = new THREE.Group();
+  const connectionsGroup = new THREE.Group();
 
-  const cubeEdges = [
-    [0, 1], [1, 2], [2, 3], [3, 0],
-    [4, 5], [5, 6], [6, 7], [7, 4],
-    [0, 4], [1, 5], [2, 6], [3, 7],
-  ];
+  const positions = geometry.attributes.position.array;
+  const vertexCount = positions.length / 3;
 
-  // Helper: Add cylinder
-  const addCylinder = (start, end, radius, material, group) => {
+  const actualVertices = [];
+  for (let i = 0; i < vertexCount; i++) {
+    const idx = i * 3;
+    actualVertices.push(
+      new THREE.Vector3(positions[idx], positions[idx + 1], positions[idx + 2])
+    );
+  }
+
+  // DON'T search geometry - outer cube corners don't exist as vertices (frustums replace them)
+  // Just use the canonical mathematical positions directly
+
+  // First tesseract: 8 connections from outer corners to inner corners
+  for (let i = 0; i < 8; i++) {
+    const outerVertex = new THREE.Vector3(...cube1Outer[i]); // Use canonical position directly
+    const innerVertex = new THREE.Vector3(...cube1Inner[i]);
+    const distance = outerVertex.distanceTo(innerVertex);
+
+    const cylinderGeom = new THREE.CylinderGeometry(0.006, 0.006, distance, 6);
+    const cylinderMesh = new THREE.Mesh(cylinderGeom, curvedLinesMaterial);
+
+    cylinderMesh.position.copy(
+      outerVertex.clone().add(innerVertex).multiplyScalar(0.5)
+    );
+    cylinderMesh.lookAt(innerVertex);
+    cylinderMesh.rotateX(Math.PI / 2);
+
+    connectionsGroup.add(cylinderMesh);
+  }
+
+  // First tesseract RECURSIVE: 8 connections from inner (middle) corners to tiny inner corners
+  for (let i = 0; i < 8; i++) {
+    const middleVertex = new THREE.Vector3(...cube1Inner[i]);
+    const tinyVertex = new THREE.Vector3(...cube1Tiny[i]);
+    const distance = middleVertex.distanceTo(tinyVertex);
+
+    const cylinderGeom = new THREE.CylinderGeometry(0.005, 0.005, distance, 6);
+    const cylinderMesh = new THREE.Mesh(cylinderGeom, centerLinesMaterial);
+
+    cylinderMesh.position.copy(
+      middleVertex.clone().add(tinyVertex).multiplyScalar(0.5)
+    );
+    cylinderMesh.lookAt(tinyVertex);
+    cylinderMesh.rotateX(Math.PI / 2);
+
+    innerCubesGroup.add(cylinderMesh);
+  }
+
+  // First tesseract: Add tiny inner cube edges (recursive innermost structure)
+  cubeEdges.forEach(([i, j]) => {
+    const start = new THREE.Vector3(...cube1Tiny[i]);
+    const end = new THREE.Vector3(...cube1Tiny[j]);
     const distance = start.distanceTo(end);
-    if (distance < 0.001) return;
-    
-    const cylinderGeom = new THREE.CylinderGeometry(radius, radius, distance, 6);
-    const cylinderMesh = new THREE.Mesh(cylinderGeom, material);
+
+    const cylinderGeom = new THREE.CylinderGeometry(0.003, 0.003, distance, 6);
+    const cylinderMesh = new THREE.Mesh(cylinderGeom, centerLinesMaterial);
+
     cylinderMesh.position.copy(start.clone().add(end).multiplyScalar(0.5));
     cylinderMesh.lookAt(end);
     cylinderMesh.rotateX(Math.PI / 2);
-    group.add(cylinderMesh);
-  };
 
-  // Helper: Complete square face (4 edges + 2 diagonals)
-  const createCompleteSquareFace = (v0, v1, v2, v3, radius, material, group) => {
-    addCylinder(v0, v1, radius, material, group);
-    addCylinder(v1, v2, radius, material, group);
-    addCylinder(v2, v3, radius, material, group);
-    addCylinder(v3, v0, radius, material, group);
-    addCylinder(v0, v2, radius * 0.8, material, group);
-    addCylinder(v1, v3, radius * 0.8, material, group);
-  };
-
-  // Helper: All 6 cube faces
-  const createCompleteCubeFaces = (cubeVerts, radius, material, group) => {
-    const faces = [
-      [0, 1, 2, 3], // bottom
-      [4, 5, 6, 7], // top
-      [0, 1, 5, 4], // front
-      [3, 2, 6, 7], // back
-      [0, 3, 7, 4], // left
-      [1, 2, 6, 5], // right
-    ];
-    faces.forEach(([a, b, c, d]) => {
-      createCompleteSquareFace(
-        new THREE.Vector3(...cubeVerts[a]),
-        new THREE.Vector3(...cubeVerts[b]),
-        new THREE.Vector3(...cubeVerts[c]),
-        new THREE.Vector3(...cubeVerts[d]),
-        radius, material, group
-      );
-    });
-  };
-
-  // === HYPERFRAME: DENSE 4D CORE ===
-  
-  // 1. Tiny tesseract
-  createCompleteCubeFaces(tiny.cube1, 0.0015, hyperframeMaterial, hyperframeGroup);
-  createCompleteCubeFaces(tiny.cube2, 0.0015, hyperframeMaterial, hyperframeGroup);
-  
-  [[0,6],[1,7],[2,4],[3,5]].forEach(([i,j]) => {
-    addCylinder(new THREE.Vector3(...tiny.cube1[i]), new THREE.Vector3(...tiny.cube1[j]), 0.0012, hyperframeMaterial, hyperframeGroup);
-    addCylinder(new THREE.Vector3(...tiny.cube2[i]), new THREE.Vector3(...tiny.cube2[j]), 0.0012, hyperframeMaterial, hyperframeGroup);
+    innerCubesGroup.add(cylinderMesh);
   });
-  
+
+  // Second tesseract: 8 connections from outer corners to inner corners
   for (let i = 0; i < 8; i++) {
-    addCylinder(new THREE.Vector3(...tiny.cube1[i]), new THREE.Vector3(...tiny.cube2[i]), 0.0015, hyperframeMaterial, hyperframeGroup);
+    const outerVertex = new THREE.Vector3(...cube2Outer[i]); // Use canonical position directly
+    const innerVertex = new THREE.Vector3(...cube2Inner[i]);
+    const distance = outerVertex.distanceTo(innerVertex);
+
+    const cylinderGeom = new THREE.CylinderGeometry(0.006, 0.006, distance, 6);
+    const cylinderMesh = new THREE.Mesh(cylinderGeom, curvedLinesMaterial);
+
+    cylinderMesh.position.copy(
+      outerVertex.clone().add(innerVertex).multiplyScalar(0.5)
+    );
+    cylinderMesh.lookAt(innerVertex);
+    cylinderMesh.rotateX(Math.PI / 2);
+
+    connectionsGroup.add(cylinderMesh);
   }
 
-  // 2. InnerInner tesseract
-  createCompleteCubeFaces(innerInner.cube1, 0.002, hyperframeMaterial, hyperframeGroup);
-  createCompleteCubeFaces(innerInner.cube2, 0.002, hyperframeMaterial, hyperframeGroup);
-  
-  [[0,6],[1,7],[2,4],[3,5]].forEach(([i,j]) => {
-    addCylinder(new THREE.Vector3(...innerInner.cube1[i]), new THREE.Vector3(...innerInner.cube1[j]), 0.0018, hyperframeMaterial, hyperframeGroup);
-    addCylinder(new THREE.Vector3(...innerInner.cube2[i]), new THREE.Vector3(...innerInner.cube2[j]), 0.0018, hyperframeMaterial, hyperframeGroup);
-  });
-  
+  // Second tesseract RECURSIVE: 8 connections from inner (middle) corners to tiny inner corners
   for (let i = 0; i < 8; i++) {
-    addCylinder(new THREE.Vector3(...innerInner.cube1[i]), new THREE.Vector3(...innerInner.cube2[i]), 0.002, hyperframeMaterial, hyperframeGroup);
-    addCylinder(new THREE.Vector3(...tiny.cube1[i]), new THREE.Vector3(...innerInner.cube1[i]), 0.0018, hyperframeMaterial, hyperframeGroup);
-    addCylinder(new THREE.Vector3(...tiny.cube2[i]), new THREE.Vector3(...innerInner.cube2[i]), 0.0018, hyperframeMaterial, hyperframeGroup);
+    const middleVertex = new THREE.Vector3(...cube2Inner[i]);
+    const tinyVertex = new THREE.Vector3(...cube2Tiny[i]);
+    const distance = middleVertex.distanceTo(tinyVertex);
+
+    const cylinderGeom = new THREE.CylinderGeometry(0.005, 0.005, distance, 6);
+    const cylinderMesh = new THREE.Mesh(cylinderGeom, centerLinesMaterial);
+
+    cylinderMesh.position.copy(
+      middleVertex.clone().add(tinyVertex).multiplyScalar(0.5)
+    );
+    cylinderMesh.lookAt(tinyVertex);
+    cylinderMesh.rotateX(Math.PI / 2);
+
+    innerCubesGroup.add(cylinderMesh);
   }
 
-  // 3. Main inner tesseract
-  createCompleteCubeFaces(inner.cube1, 0.0025, hyperframeMaterial, hyperframeGroup);
-  createCompleteCubeFaces(inner.cube2, 0.0025, hyperframeMaterial, hyperframeGroup);
-  
-  [[0,6],[1,7],[2,4],[3,5]].forEach(([i,j]) => {
-    addCylinder(new THREE.Vector3(...inner.cube1[i]), new THREE.Vector3(...inner.cube1[j]), 0.0022, hyperframeMaterial, hyperframeGroup);
-    addCylinder(new THREE.Vector3(...inner.cube2[i]), new THREE.Vector3(...inner.cube2[j]), 0.0022, hyperframeMaterial, hyperframeGroup);
-  });
-  
-  for (let i = 0; i < 8; i++) {
-    addCylinder(new THREE.Vector3(...inner.cube1[i]), new THREE.Vector3(...inner.cube2[i]), 0.003, hyperframeMaterial, hyperframeGroup);
-    addCylinder(new THREE.Vector3(...innerInner.cube1[i]), new THREE.Vector3(...inner.cube1[i]), 0.0025, hyperframeMaterial, hyperframeGroup);
-    addCylinder(new THREE.Vector3(...innerInner.cube2[i]), new THREE.Vector3(...inner.cube2[i]), 0.0025, hyperframeMaterial, hyperframeGroup);
-  }
+  // Second tesseract: Add tiny inner cube edges (recursive innermost structure)
+  cubeEdges.forEach(([i, j]) => {
+    const start = new THREE.Vector3(...cube2Tiny[i]);
+    const end = new THREE.Vector3(...cube2Tiny[j]);
+    const distance = start.distanceTo(end);
 
-  // 4. Dense web
-  const allInnerVerts = [
-    ...inner.cube1.map(v => new THREE.Vector3(...v)),
-    ...inner.cube2.map(v => new THREE.Vector3(...v)),
-    ...innerInner.cube1.map(v => new THREE.Vector3(...v)),
-    ...innerInner.cube2.map(v => new THREE.Vector3(...v)),
+    const cylinderGeom = new THREE.CylinderGeometry(0.003, 0.003, distance, 6);
+    const cylinderMesh = new THREE.Mesh(cylinderGeom, centerLinesMaterial);
+
+    cylinderMesh.position.copy(start.clone().add(end).multiplyScalar(0.5));
+    cylinderMesh.lookAt(end);
+    cylinderMesh.rotateX(Math.PI / 2);
+
+    innerCubesGroup.add(cylinderMesh);
+  });
+
+  // === ADDITIONAL 4D STRUCTURE VISUALIZATION ===
+
+  // 1. Face diagonals on middle cubes (showing 4D face collapse) - AQUA
+  const faceDiagonals = [
+    // Front face (z-)
+    [0, 2],
+    [1, 3],
+    // Back face (z+)
+    [4, 6],
+    [5, 7],
+    // Top face (y+)
+    [2, 6],
+    [3, 7],
+    // Bottom face (y-)
+    [0, 4],
+    [1, 5],
+    // Left face (x-)
+    [0, 7],
+    [3, 4],
+    // Right face (x+)
+    [1, 6],
+    [2, 5],
   ];
 
-  for (let i = 0; i < allInnerVerts.length; i++) {
-    for (let j = i + 1; j < allInnerVerts.length; j++) {
-      const dist = allInnerVerts[i].distanceTo(allInnerVerts[j]);
-      if (dist > 0.01 && dist < innerSize * 1.3) {
-        addCylinder(allInnerVerts[i], allInnerVerts[j], 0.0012, hyperframeMaterial, hyperframeGroup);
-      }
-    }
-  }
+  // First tesseract face diagonals
+  faceDiagonals.forEach(([i, j]) => {
+    const start = new THREE.Vector3(...cube1Inner[i]);
+    const end = new THREE.Vector3(...cube1Inner[j]);
+    const distance = start.distanceTo(end);
 
-  // 5. Intermediate faces
-  [0.3, 0.6].forEach((depth) => {
-    const interpVerts1 = [];
-    const interpVerts2 = [];
-    
-    for (let i = 0; i < 8; i++) {
-      interpVerts1.push(new THREE.Vector3(...tiny.cube1[i]).lerp(new THREE.Vector3(...inner.cube1[i]), depth));
-      interpVerts2.push(new THREE.Vector3(...tiny.cube2[i]).lerp(new THREE.Vector3(...inner.cube2[i]), depth));
-    }
-    
-    [[0,1,2,3],[4,5,6,7]].forEach(face => {
-      createCompleteSquareFace(interpVerts1[face[0]], interpVerts1[face[1]], interpVerts1[face[2]], interpVerts1[face[3]], 0.0015, hyperframeMaterial, hyperframeGroup);
-      createCompleteSquareFace(interpVerts2[face[0]], interpVerts2[face[1]], interpVerts2[face[2]], interpVerts2[face[3]], 0.0015, hyperframeMaterial, hyperframeGroup);
-    });
+    const cylinderGeom = new THREE.CylinderGeometry(0.002, 0.002, distance, 6);
+    const cylinderMesh = new THREE.Mesh(cylinderGeom, centerLinesMaterial);
+
+    cylinderMesh.position.copy(start.clone().add(end).multiplyScalar(0.5));
+    cylinderMesh.lookAt(end);
+    cylinderMesh.rotateX(Math.PI / 2);
+
+    innerCubesGroup.add(cylinderMesh);
   });
 
-  // 6. Cross-tesseract faces
-  for (let i = 0; i < 4; i++) {
-    const v1a = new THREE.Vector3(...inner.cube1[i]);
-    const v1b = new THREE.Vector3(...inner.cube1[(i + 1) % 4]);
-    const v2a = new THREE.Vector3(...inner.cube2[i]);
-    const v2b = new THREE.Vector3(...inner.cube2[(i + 1) % 4]);
-    createCompleteSquareFace(v1a, v2a, v2b, v1b, 0.002, hyperframeMaterial, hyperframeGroup);
-    
-    const v1c = new THREE.Vector3(...inner.cube1[i + 4]);
-    const v1d = new THREE.Vector3(...inner.cube1[((i + 1) % 4) + 4]);
-    const v2c = new THREE.Vector3(...inner.cube2[i + 4]);
-    const v2d = new THREE.Vector3(...inner.cube2[((i + 1) % 4) + 4]);
-    createCompleteSquareFace(v1c, v2c, v2d, v1d, 0.002, hyperframeMaterial, hyperframeGroup);
-  }
+  // Second tesseract face diagonals
+  faceDiagonals.forEach(([i, j]) => {
+    const start = new THREE.Vector3(...cube2Inner[i]);
+    const end = new THREE.Vector3(...cube2Inner[j]);
+    const distance = start.distanceTo(end);
 
-  // === EDGE LINES: RADIAL SPOKES ===
-  
-  // 1. Direct spokes
+    const cylinderGeom = new THREE.CylinderGeometry(0.002, 0.002, distance, 6);
+    const cylinderMesh = new THREE.Mesh(cylinderGeom, centerLinesMaterial);
+
+    cylinderMesh.position.copy(start.clone().add(end).multiplyScalar(0.5));
+    cylinderMesh.lookAt(end);
+    cylinderMesh.rotateX(Math.PI / 2);
+
+    innerCubesGroup.add(cylinderMesh);
+  });
+
+  // 2. Cross-connections between the two middle cubes (showing compound intersection) - AQUA
+  // Connect corresponding vertices where the two tesseracts share space
   for (let i = 0; i < 8; i++) {
-    addCylinder(new THREE.Vector3(...inner.cube1[i]), new THREE.Vector3(...outer.cube1[i]), 0.004, edgeLinesMaterial, edgeLinesGroup);
-    addCylinder(new THREE.Vector3(...inner.cube2[i]), new THREE.Vector3(...outer.cube2[i]), 0.004, edgeLinesMaterial, edgeLinesGroup);
+    const vertex1 = new THREE.Vector3(...cube1Inner[i]);
+    const vertex2 = new THREE.Vector3(...cube2Inner[i]);
+    const distance = vertex1.distanceTo(vertex2);
+
+    const cylinderGeom = new THREE.CylinderGeometry(
+      0.0025,
+      0.0025,
+      distance,
+      6
+    );
+    const cylinderMesh = new THREE.Mesh(cylinderGeom, centerLinesMaterial);
+
+    cylinderMesh.position.copy(
+      vertex1.clone().add(vertex2).multiplyScalar(0.5)
+    );
+    cylinderMesh.lookAt(vertex2);
+    cylinderMesh.rotateX(Math.PI / 2);
+
+    innerCubesGroup.add(cylinderMesh);
   }
 
-  // 2. Diagonal star pattern
-  const diagonalConnections = [
-    [0,6],[1,7],[2,4],[3,5],
-    [0,2],[1,3],[4,6],[5,7],
-    [0,5],[1,4],[2,7],[3,6],
+  // 3. Space diagonals from outer corners through center (showing 4D depth) - ORANGE
+  const spaceDiagonalPairs = [
+    [0, 6], // Bottom-left-back to top-right-front
+    [1, 7], // Bottom-right-back to top-left-front
+    [2, 4], // Top-left-back to bottom-right-front
+    [3, 5], // Top-right-back to bottom-left-front
   ];
 
-  diagonalConnections.forEach(([innerIdx, outerIdx]) => {
-    addCylinder(new THREE.Vector3(...inner.cube1[innerIdx]), new THREE.Vector3(...outer.cube1[outerIdx]), 0.003, edgeLinesMaterial, edgeLinesGroup);
-    addCylinder(new THREE.Vector3(...inner.cube2[innerIdx]), new THREE.Vector3(...outer.cube2[outerIdx]), 0.003, edgeLinesMaterial, edgeLinesGroup);
+  // First tesseract space diagonals
+  spaceDiagonalPairs.forEach(([i, j]) => {
+    const start = new THREE.Vector3(...cube1Outer[i]);
+    const end = new THREE.Vector3(...cube1Outer[j]);
+    const distance = start.distanceTo(end);
+
+    const cylinderGeom = new THREE.CylinderGeometry(
+      0.0015,
+      0.0015,
+      distance,
+      6
+    );
+    const cylinderMesh = new THREE.Mesh(cylinderGeom, curvedLinesMaterial);
+
+    cylinderMesh.position.copy(start.clone().add(end).multiplyScalar(0.5));
+    cylinderMesh.lookAt(end);
+    cylinderMesh.rotateX(Math.PI / 2);
+
+    connectionsGroup.add(cylinderMesh);
   });
 
-  // 3. Outer space diagonals
-  [[0,6],[1,7],[2,4],[3,5]].forEach(([i,j]) => {
-    addCylinder(new THREE.Vector3(...outer.cube1[i]), new THREE.Vector3(...outer.cube1[j]), 0.002, edgeLinesMaterial, edgeLinesGroup);
-    addCylinder(new THREE.Vector3(...outer.cube2[i]), new THREE.Vector3(...outer.cube2[j]), 0.002, edgeLinesMaterial, edgeLinesGroup);
-  });
+  // Second tesseract space diagonals
+  spaceDiagonalPairs.forEach(([i, j]) => {
+    const start = new THREE.Vector3(...cube2Outer[i]);
+    const end = new THREE.Vector3(...cube2Outer[j]);
+    const distance = start.distanceTo(end);
 
-  // 4. Intermediate layers
-  [0.25, 0.5, 0.75].forEach((depth) => {
-    for (let i = 0; i < 8; i++) {
-      const inter1 = new THREE.Vector3(...inner.cube1[i]).lerp(new THREE.Vector3(...outer.cube1[i]), depth);
-      const inter2 = new THREE.Vector3(...inner.cube2[i]).lerp(new THREE.Vector3(...outer.cube2[i]), depth);
-      addCylinder(inter1, inter2, 0.0025, edgeLinesMaterial, edgeLinesGroup);
-    }
-    
-    cubeEdges.forEach(([i, j]) => {
-      const inter1i = new THREE.Vector3(...inner.cube1[i]).lerp(new THREE.Vector3(...outer.cube1[i]), depth);
-      const inter1j = new THREE.Vector3(...inner.cube1[j]).lerp(new THREE.Vector3(...outer.cube1[j]), depth);
-      addCylinder(inter1i, inter1j, 0.002, edgeLinesMaterial, edgeLinesGroup);
-      
-      const inter2i = new THREE.Vector3(...inner.cube2[i]).lerp(new THREE.Vector3(...outer.cube2[i]), depth);
-      const inter2j = new THREE.Vector3(...inner.cube2[j]).lerp(new THREE.Vector3(...outer.cube2[j]), depth);
-      addCylinder(inter2i, inter2j, 0.002, edgeLinesMaterial, edgeLinesGroup);
-    });
-  });
+    const cylinderGeom = new THREE.CylinderGeometry(
+      0.0015,
+      0.0015,
+      distance,
+      6
+    );
+    const cylinderMesh = new THREE.Mesh(cylinderGeom, curvedLinesMaterial);
 
-  // 5. Deep radial spokes
-  for (let i = 0; i < 8; i++) {
-    addCylinder(new THREE.Vector3(...innerInner.cube1[i]), new THREE.Vector3(...outer.cube1[i]), 0.0025, edgeLinesMaterial, edgeLinesGroup);
-    addCylinder(new THREE.Vector3(...innerInner.cube2[i]), new THREE.Vector3(...outer.cube2[i]), 0.0025, edgeLinesMaterial, edgeLinesGroup);
-  }
+    cylinderMesh.position.copy(start.clone().add(end).multiplyScalar(0.5));
+    cylinderMesh.lookAt(end);
+    cylinderMesh.rotateX(Math.PI / 2);
+
+    connectionsGroup.add(cylinderMesh);
+  });
 
   console.log(
-    `✅ Proper compound tesseract: ${hyperframeGroup.children.length} hyperframe + ${edgeLinesGroup.children.length} edge lines`
+    `Created complete compound tesseract hyperframe:
+    - ${innerCubesGroup.children.length} aqua/red lines (cubes + recursion + face diagonals + cross-connections)
+    - ${connectionsGroup.children.length} orange lines (outer→middle + space diagonals)`
   );
 
   return {
-    centerLines: hyperframeGroup,
-    centerLinesMaterial: hyperframeMaterial,
-    curvedLines: edgeLinesGroup,
-    curvedLinesMaterial: edgeLinesMaterial,
+    centerLines: innerCubesGroup,
+    centerLinesMaterial,
+    curvedLines: connectionsGroup,
+    curvedLinesMaterial,
   };
 }

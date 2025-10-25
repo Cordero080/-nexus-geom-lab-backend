@@ -123,31 +123,9 @@ export function createGeometry(type = "icosahedron") {
     case "sphere":
       return new THREE.SphereGeometry(1, 16, 16);
     case "box":
-      // Create hypercube (tesseract projection) - outer cube + inner cube with 8 connecting edges
-      const outerCube = new THREE.BoxGeometry(1.5, 1.5, 1.5);
-      const innerCube = new THREE.BoxGeometry(0.75, 0.75, 0.75); // 0.5x scale for tesseract projection
-
-      // No rotation - inner cube is concentric with outer cube (proper hypercube projection)
-
-      // Slight vertical offset to prevent z-fighting on overlapping faces
-      innerCube.translate(0, 0.02, 0);
-
-      // Merge the two geometries
-      const mergedBox = mergeGeometries([outerCube, innerCube], false);
-
-      // Recompute normals for proper lighting
-      mergedBox.computeVertexNormals();
-
-      // Mark it as compound hypercube for wireframe builders
-      mergedBox.userData.isCompound = true;
-      mergedBox.userData.baseType = "BoxGeometry";
-      mergedBox.userData.isHypercube = true; // Flag for tesseract-style connections
-
-      return mergedBox;
-    case "cpdtesseract":
-      // Create compound tesseract - two 4D hypercubes (tesseracts) interpenetrating
+      // COMPOUND TESSERACT (was "hypercube") - two 4D hypercubes interpenetrating
       // Each tesseract has outer cube, inner cube, AND 6 connecting frustum faces
-      // This makes the 4D structure more apparent
+      // Second tesseract rotated 45° to create compound 4D structure
 
       // First tesseract with connecting faces
       const tesseract1 = createTesseractWithFaces(1.5, 0.75, null);
@@ -171,6 +149,22 @@ export function createGeometry(type = "icosahedron") {
       mergedCpdTesseract.userData.isCpdTesseract = true; // Flag for compound tesseract
 
       return mergedCpdTesseract;
+    case "hypercube":
+      // OLD HYPERCUBE (simple concentric cubes) - kept for reference
+      // Use "box" for the new compound tesseract instead
+      const outerCube = new THREE.BoxGeometry(1.5, 1.5, 1.5);
+      const innerCube = new THREE.BoxGeometry(0.75, 0.75, 0.75);
+      innerCube.translate(0, 0.02, 0);
+      const mergedBox = mergeGeometries([outerCube, innerCube], false);
+      mergedBox.computeVertexNormals();
+      mergedBox.userData.isCompound = true;
+      mergedBox.userData.baseType = "BoxGeometry";
+      mergedBox.userData.isHypercube = true;
+      return mergedBox;
+    case "cpdtesseract":
+      // ALIAS to "box" case - keeping for backward compatibility
+      // Just return the same compound tesseract structure
+      return createGeometry("box");
     case "octahedron":
       // Create compound octahedron - two merged at 45° rotation
       const oct1 = new THREE.OctahedronGeometry();
