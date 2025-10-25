@@ -178,7 +178,7 @@ export function createSceneObject(config) {
       // Use Mega-Tesseract hyperframe (with stellations) if objectType is "cpdtesseract"
       // Otherwise use regular Cpd-Tesseract hyperframe (simple version)
       const isMegaTesseract = objectType === "cpdtesseract";
-      
+
       const result = isMegaTesseract
         ? createMegaTesseractHyperframe(
             geometry,
@@ -190,7 +190,7 @@ export function createSceneObject(config) {
             hyperframeColor,
             hyperframeLineColor
           );
-      
+
       ({ centerLines, centerLinesMaterial, curvedLines, curvedLinesMaterial } =
         result);
     } else {
