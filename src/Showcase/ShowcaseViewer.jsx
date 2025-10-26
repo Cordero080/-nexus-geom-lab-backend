@@ -92,7 +92,7 @@ export default function ShowcaseViewer({ animation, onClose }) {
           <pointLight position={[0, 0, -5]} intensity={0.8} color="#ffff00" />
           
           {/* Big cube - pass size as prop */}
-          <RotatingCube size={4.5} fbxUrl={animation?.fbxUrl} scale={animation?.scale} rotation={animation?.rotation} positionY={animation?.positionY} offsetX={animation?.offsetX} offsetZ={animation?.offsetZ} cubeY={-0.1} />
+          <RotatingCube size={4.5} fbxUrl={animation?.fbxUrl} scale={animation?.scale} rotation={animation?.rotation} positionY={animation?.positionY} offsetX={animation?.offsetX} offsetZ={animation?.offsetZ} cubeY={-0.1} allowNaturalYMovement={animation?.allowNaturalYMovement} />
           
           {/* OrbitControls lets user rotate with mouse */}
           <OrbitControls 

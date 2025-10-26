@@ -148,7 +148,7 @@ export default function ShowcaseGallery() {
       animation: 'Warrior Flip',
       variant: 'Shadow Striker',
       description: 'The Quantum Architect of the Digital Nexus...Master of Dimensional Combat',
-      fbxUrl: '/models/iron-man.fbx',
+      fbxUrl: '/models/iron-man-2.fbx',
       scale: 0.0230,
       galleryScale: 0.0180,
       rotation: [0, 0, 0],
@@ -295,6 +295,7 @@ export default function ShowcaseGallery() {
                         setModelLoaded((prev) => ({ ...prev, [animation.id]: true }));
                       }}
                       preloadedModel={preloadedModels[animation.id]}
+                      allowNaturalYMovement={animation.allowNaturalYMovement}
                     />
                   </Canvas>
                 ) : (

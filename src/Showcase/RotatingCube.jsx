@@ -3,7 +3,7 @@ import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 import FBXModel from './FBXModel';
 
-export default function RotatingCube({ size = 3, fbxUrl = null, scale = 0.001275, rotation = [0, 0, 0], positionY = -1.8, offsetX = 0, offsetZ = 0, cubeY = -0.5, isPlaying = true, onModelLoaded, preloadedModel = null }) {
+export default function RotatingCube({ size = 3, fbxUrl = null, scale = 0.001275, rotation = [0, 0, 0], positionY = -1.8, offsetX = 0, offsetZ = 0, cubeY = -0.5, isPlaying = true, onModelLoaded, preloadedModel = null, allowNaturalYMovement = false }) {
   const cubeRef = useRef();
   const innerLightRef = useRef();
   const edgeMaterialRef = useRef();
@@ -531,7 +531,7 @@ export default function RotatingCube({ size = 3, fbxUrl = null, scale = 0.001275
       
       {/* FBX Model or placeholder sphere */}
       {fbxUrl ? (
-        <FBXModel url={fbxUrl} scale={scale} rotation={rotation} positionY={positionY} offsetX={offsetX} offsetZ={offsetZ} isPlaying={isPlaying} onModelLoaded={onModelLoaded} preloadedModel={preloadedModel} />
+        <FBXModel url={fbxUrl} scale={scale} rotation={rotation} positionY={positionY} offsetX={offsetX} offsetZ={offsetZ} isPlaying={isPlaying} onModelLoaded={onModelLoaded} preloadedModel={preloadedModel} allowNaturalYMovement={allowNaturalYMovement} />
       ) : (
         <mesh position={[0, 0, 0]}>
           <sphereGeometry args={[sphereRadius, 32, 32]} />

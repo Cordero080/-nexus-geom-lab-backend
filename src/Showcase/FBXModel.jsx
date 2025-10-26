@@ -3,7 +3,7 @@ import { useFrame } from '@react-three/fiber';
 import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader';
 import * as THREE from 'three';
 
-export default function FBXModel({ url, scale = 0.01, rotation = [0, 0, 0], positionY = -1.8, offsetX = 0, offsetZ = 0, isPlaying = true, onModelLoaded }) {
+export default function FBXModel({ url, scale = 0.01, rotation = [0, 0, 0], positionY = -1.8, offsetX = 0, offsetZ = 0, isPlaying = true, onModelLoaded, allowNaturalYMovement = false }) {
   const groupRef = useRef();
   const mixerRef = useRef();
   const modelRef = useRef();
@@ -51,6 +51,13 @@ export default function FBXModel({ url, scale = 0.01, rotation = [0, 0, 0], posi
 
             const nodePath = parts.slice(0, -1).join('.').toLowerCase();
             const isRootPosition = nodePath.endsWith('hips') || nodePath.endsWith('root') || nodePath.endsWith('pelvis');
+            
+            // If allowNaturalYMovement is true, keep Y position for root
+            if (allowNaturalYMovement && isRootPosition) {
+              // Keep only Y-axis movement, remove X and Z
+              return track.name.includes('.position');
+            }
+            
             return !isRootPosition;
           });
 

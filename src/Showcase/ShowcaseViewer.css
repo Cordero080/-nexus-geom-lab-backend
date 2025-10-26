@@ -28,33 +28,60 @@
    CHARACTER-SPECIFIC VIEWER BACKGROUNDS
    ======================================== */
 
-/* Animation 1 - Blu-Khan #001 (Purple-Blue) */
+/* Animation 1 - Icarus-X #001 (Golden Phoenix - Solar Ascension) */
 .viewer-overlay-1 {
   background: 
-    radial-gradient(ellipse at 20% 20%, rgba(0, 102, 255, 0.34) 0%, transparent 50%),
-    radial-gradient(ellipse at 80% 80%, rgba(138, 43, 226, 0.5) 0%, transparent 50%),
-    radial-gradient(ellipse at 50% 50%, rgba(255, 20, 147, 0.3) 0%, transparent 60%),
+    /* 1. Primary Light Source: Concentrated Golden/White Core */
+    radial-gradient(circle at 50% 50%, rgba(255, 255, 200, 0.4) 0%, transparent 15%),
+    
+    /* 2. Secondary Light: Surrounding Magenta/Violet Glow */
+    radial-gradient(circle at 50% 50%, rgba(255, 0, 147, 0.2) 0%, transparent 40%),
+    
+    /* 3. Main Gradient: Ascension from Deep Blue to Golden Peak */
     linear-gradient(
-      180deg,
-      rgba(10, 0, 30, 1) 0%,
-      rgba(60, 20, 100, 0.95) 20%,
-      rgba(255, 225, 0, 0.621) 38%,
-      rgba(110, 35, 190, 0.92) 45%,
-      rgba(85, 50, 190, 0.9) 55%,
-      rgba(0, 102, 255, 0.876) 80%,
-      rgba(0, 150, 255, 0.9) 100%
+      180deg, /* Vertical Ascension */
+      #00000a 0%,         /* Deep Cosmic Black */
+      #000050 20%,        /* Abyss Blue */
+      #4b0082 40%,        /* Royal/Indigo Purple */
+      #ffda33 48%,        /* Brilliant Golden Yellow (The Sun/Phoenix Core) */
+      #4b0082 55%,        /* Royal Purple returns */
+      #000050 80%,        /* Abyss Blue */
+      #00000a 100%        /* Deep Cosmic Black (Horizon) */
     );
+  
+  /* Retain the high-contrast lighting for a transcendent feel */
+  animation: transcendentGlow 3s ease-in-out infinite alternate;
 }
 
-/* Animation 2 - Tech Feline #002 (Cycan-Teal) */
+@keyframes transcendentGlow {
+  0% {
+    filter: brightness(1) contrast(1.1) saturate(1.2);
+  }
+  50% {
+    /* Peak of the "Solar Recension" / Golden Phoenix flare */
+    filter: brightness(1.5) contrast(1.5) saturate(1.1) hue-rotate(5deg);
+  }
+  100% {
+    filter: brightness(1.1) contrast(1.2) saturate(1.3);
+  }
+}
+/* Animation 2 - Vectra #002 (Dark Radial with Contained Glow) */
 .viewer-overlay-2 {
   background: 
-    radial-gradient(ellipse at 20% 25%, rgba(175, 6, 170, 0.8) 0%, transparent 50%),
-    radial-gradient(ellipse at 80% 75%, rgba(5, 107, 118, 0.8) 0%, transparent 50%),
-    radial-gradient(ellipse at 60% 40%, rgba(255, 0, 200, 0.4) 0%, transparent 40%),
-    radial-gradient(ellipse at 40% 60%, rgba(0, 200, 255, 0.4) 0%, transparent 40%),
-    linear-gradient(135deg, #0c043e 0%, #056b76 50%, #af06aad5 100%);
-  animation: cosmicPulse 8s ease-in-out infinite;
+    radial-gradient(circle at center, 
+      #2a2a2a 0%, 
+      #6a00fffc 12%, 
+       #02213427 25%,
+       #061a19af 20%,  
+      #092cc8b1 17.5%, 
+      #1a1a1a 35%,
+      #ff00ff5a 60%,
+      #03021e6a 65%,
+      #3c526bab 70%,
+      #080809a7 75%,
+      #ff0088 105%,
+      #040114 100%
+    );
 }
 
 @keyframes cosmicPulse {
@@ -89,44 +116,58 @@
 }
 
 /* Animation 4 - Nexus-Prime #004 (Deep Space with Crimson Solar Flares) */
-.viewer-overlay-4 {
+.viewer-overlay-3 {
   background: 
-    radial-gradient(ellipse at 15% 20%, rgba(63, 13, 154, 0.734) 0%, transparent 40%),
-    radial-gradient(ellipse at 85% 80%, rgba(12, 53, 77, 0.8) 0%, transparent 50%),
-    radial-gradient(ellipse at 70% 30%, rgba(178, 34, 34, 0.4) 0%, transparent 35%),
-    radial-gradient(ellipse at 30% 70%, rgba(25, 25, 112, 0.3) 0%, transparent 60%),
-    linear-gradient(135deg, #000008 0%, #1a0000 15%, #0a135a 30%, #ec0364f2 50%, #044680 70%, #1a0000 85%, #000008 100%);
-  animation: solarFlare 7s ease-in-out infinite;
+    /* 1. Subtle Radial Glow (for a centered focal point) */
+    radial-gradient(circle at 50% 50%, rgba(255, 69, 0, 0.2) 0%, transparent 25%),
+    /* 2. Primary Angular, Fiery Diamond Gradient (Conic) */
+    conic-gradient(
+      at 50% 50%,
+      #ff7700f5 0deg,      /* Lava Orange (Center) */
+      #ee072a5d 30deg,     /* Fire Engine Red */
+      #b3000063 60deg,     /* Ember Crimson */
+      #34025da8 90deg,     /* Obsidian/Deep Violet (Sharp Edge) */
+      #2c011f 270deg,      /* Black continues */
+      #b3000098 300deg,
+      #ff0090a1 330deg,
+      #ff8c00c5 360deg
+    );
+  
+  /* Missing lines start here: */
+  background-color: #000000;
+  animation: digitalSurge 8s ease-in-out infinite alternate;
 }
 
-@keyframes solarFlare {
-  0%, 100% {
-    filter: brightness(1.0) saturate(1.1);
-  }
-  25% {
-    filter: brightness(1.3) saturate(1.4) hue-rotate(10deg);
+@keyframes digitalSurge {
+  0% {
+    /* Baseline: Sharp, highly contrasted metallic look */
+    filter: brightness(1.0) contrast(1.2) saturate(1.1);
+    transform: scale(1.0);
   }
   50% {
-    filter: brightness(1.1) saturate(1.2) hue-rotate(-5deg);
+    /* Midpoint: Intense flare with a deep color shift */
+    filter: brightness(1.6) contrast(1.8) saturate(1.6) hue-rotate(15deg);
+    transform: scale(1.01); /* Subtle zoom effect */
   }
-  75% {
-    filter: brightness(1.4) saturate(1.5) hue-rotate(15deg);
+  100% {
+    /* End State: Slightly cooled-off state */
+    filter: brightness(1.2) contrast(1.4) saturate(1.3) hue-rotate(-10deg);
+    transform: scale(1.0);
   }
 }
-
 /* Animation 5 - Icarus-X #005 (Code Breaker Geometry Matrix) */
-.viewer-overlay-5 {
+.viewer-overlay-1 {
   background: 
     radial-gradient(ellipse at 55% 25%, rgba(255, 217, 0, 0.2) 0%, transparent 40%),
-    radial-gradient(ellipse at 75% 75%, rgba(0, 255, 255, 0.15) 0%, transparent 35%),
+    radial-gradient(ellipse at 75% 75%, #00ffff26 0%, transparent 35%),
     radial-gradient(ellipse at 60% 20%, rgba(255, 140, 0, 0.18) 0%, transparent 45%),
-    linear-gradient(235deg, #0a0a0a 0%, #2d1810 25%, #2f00ff 50%, #2d1810 75%, #0a0a0a 100%);
+    linear-gradient(235deg, #0a0a0a 0%, #2d1810 25%, #370fe7 50%, #2d1810 75%, #0a0a0a 100%);
   animation: cosmicGlow 6s ease-in-out infinite;
 }
 
 @keyframes cosmicGlow {
   0%, 100% {
-    filter: brightness(1.0) saturate(1.2);
+    filter: brightness(1.0) saturate(2.2);
   }
   50% {
     filter: brightness(1.3) saturate(1.5) hue-rotate(10deg);
@@ -248,7 +289,7 @@
   z-index: 10;
 }
 
-/* Blu-Khan #001 - Navbar Glass Theme */
+/* Icarus-X #001 - Golden/Amber Theme */
 .viewer-overlay-1 .viewer-info {
   background: 
     radial-gradient(ellipse at top left, rgba(149, 212, 208, 0.133) 0%, transparent 50%),
@@ -326,7 +367,7 @@
   box-shadow: 0 2px 12px rgba(255, 60, 0, 0.3);
 }
 
-/* Magna-tek #003 - Default Orange/Red Theme */
+/* Nexus-Prime #003 - Crimson/Red Theme */
 .viewer-overlay-3 .viewer-info {
   background: linear-gradient(180deg, rgba(255, 100, 0, 0.25) 0%, rgba(255, 0, 100, 0.35) 100%);
   border-top: 2px solid rgba(255, 140, 70, 0.5);
@@ -358,78 +399,6 @@
 }
 
 .viewer-overlay-3 .meta-tag:hover {
-  background: rgba(255, 100, 0, 0.25);
-  box-shadow: 0 2px 12px rgba(255, 60, 0, 0.3);
-}
-
-/* Nexus-Prime #004 - Default Orange/Red Theme */
-.viewer-overlay-4 .viewer-info {
-  background: linear-gradient(180deg, rgba(255, 100, 0, 0.25) 0%, rgba(255, 0, 100, 0.35) 100%);
-  border-top: 2px solid rgba(255, 140, 70, 0.5);
-  backdrop-filter: blur(10px);
-  box-shadow: 0 -5px 30px rgba(255, 100, 0, 0.3);
-}
-
-.viewer-overlay-4 .viewer-title {
-  background: linear-gradient(135deg, #ff6a00, #ff2b00, #ffcc00);
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-  text-shadow: 0 0 15px rgba(255, 100, 0, 0.4);
-  font-family: inherit; /* Default: Orbitron */
-}
-
-.viewer-overlay-4 .viewer-description {
-  color: rgba(255, 255, 255, 0.9);
-  text-shadow: 0 0 10px rgba(255, 100, 0, 0.5);
-  font-family: inherit; /* Default: system font */
-}
-
-.viewer-overlay-4 .meta-tag {
-  background: rgba(255, 100, 0, 0.15);
-  border: 1px solid rgba(255, 80, 0, 0.4);
-  color: #ff7700;
-  box-shadow: 0 2px 8px rgba(255, 60, 0, 0.2);
-  font-family: inherit; /* Default: system font */
-}
-
-.viewer-overlay-4 .meta-tag:hover {
-  background: rgba(255, 100, 0, 0.25);
-  box-shadow: 0 2px 12px rgba(255, 60, 0, 0.3);
-}
-
-/* Icarus-X #005 - Default Orange/Red Theme */
-.viewer-overlay-5 .viewer-info {
-  background: linear-gradient(180deg, rgba(255, 100, 0, 0.25) 0%, rgba(255, 0, 100, 0.35) 100%);
-  border-top: 2px solid rgba(255, 140, 70, 0.5);
-  backdrop-filter: blur(10px);
-  box-shadow: 0 -5px 30px rgba(255, 100, 0, 0.3);
-}
-
-.viewer-overlay-5 .viewer-title {
-  background: linear-gradient(135deg, #ff6a00, #ff2b00, #ffcc00);
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-  text-shadow: 0 0 15px rgba(255, 100, 0, 0.4);
-  font-family: inherit; /* Default: Orbitron */
-}
-
-.viewer-overlay-5 .viewer-description {
-  color: rgba(255, 255, 255, 0.9);
-  text-shadow: 0 0 10px rgba(255, 100, 0, 0.5);
-  font-family: inherit; /* Default: system font */
-}
-
-.viewer-overlay-5 .meta-tag {
-  background: rgba(255, 100, 0, 0.15);
-  border: 1px solid rgba(255, 80, 0, 0.4);
-  color: #ff7700;
-  box-shadow: 0 2px 8px rgba(255, 60, 0, 0.2);
-  font-family: inherit; /* Default: system font */
-}
-
-.viewer-overlay-5 .meta-tag:hover {
   background: rgba(255, 100, 0, 0.25);
   box-shadow: 0 2px 12px rgba(255, 60, 0, 0.3);
 }
@@ -541,3 +510,4 @@ Animation 3 (Fire-Tech Warrior #003):
     padding: 6px 16px;
   }
 }
+
