@@ -110,83 +110,11 @@ export default function ShowcaseGallery() {
   const mockAnimations = [
     {
       id: 1,
-      name: 'Blu-Khan #001',
-      animation: '',
-      variant: 'Cosmic Blue',
-      description: 'The Cyber-Sentient Known As ',
-      fbxUrl: '/models/blu-khan-break.fbx',
-      scale: 0.0015,
-      galleryScale: 0.001275,
-      rotation: [0, 0, 0],
-      positionY: -.7,
-      galleryPositionY: -0.6,
-      offsetX: 0,
-      offsetZ: 0,
-      background: 'linear-gradient(180deg, rgba(10, 0, 21, 0.95) 0%, rgba(8, 141, 236, 0.78) 30%, rgba(214, 67, 243, 0.6) 70%, rgba(0, 102, 255, 0.5) 100%)',
-      // Enhanced viewer background (brighter version specifically for this model)
-      viewerBackground: 'linear-gradient(135deg, #1c0038 0%, #3b78ff 50%, #1c0038 100%)'
-    },
-    {
-      id: 2,
-      name: 'Prismia #002',
-      animation: 'Break Dance',
-      variant: 'Spectral',
-      description: 'The Iridescent Anomaly Woven from Pure Hologram',
-      fbxUrl: '/models/prismia-break.fbx',
-      scale: 0.02,
-      galleryScale: 0.015,
-      rotation: [0, 0, 0],
-      positionY: -2.2,
-      galleryPositionY: -1.5,
-      offsetX: 0.05,
-      offsetZ: 0,
-      background: 'linear-gradient(180deg, rgba(0, 102, 255, 0.5) 0%, rgba(117, 250, 217, 0.7) 30%, rgba(214, 67, 243, 0.6) 70%, rgba(0, 255, 255, 0.5) 100%)',
-      // Enhanced viewer background (brighter cyan-themed background for this model)
-      viewerBackground: 'linear-gradient(135deg, #003045 0%, #00e5ff 50%, #003045 100%)'
-    },
-    {
-      id: 3,
-      name: 'Magna-tek #003',
-      animation: 'Combat Stance',
-      variant: 'Crimson Flame',
-      description: 'Fiery Radiance Made Manifest...The Mythic Sentinel of Sector 080',
-      fbxUrl: '/models/red-tech-2.fbx',
-      scale: 0.02375,
-      galleryScale: 0.01425,
-      rotation: [0, 0, 0],
-      positionY: -2.2,
-      galleryPositionY: -1.5,
-      offsetX: -0.4,
-      offsetZ: 0.1,
-      background: 'linear-gradient(180deg, rgba(0, 255, 255, 0.5) 0%, rgba(255, 51, 0, 0.7) 30%, rgba(214, 67, 243, 0.6) 70%, rgba(96, 4, 46, 0.8) 100%)',
-      // Enhanced viewer background (brighter fire-themed background for this model)
-      viewerBackground: 'linear-gradient(135deg, #300a00 0%, #ff3000 50%, #300a00 100%)'
-    },
-    {
-      id: 4,
-      name: 'Nexus-Prime #004',
-      animation: 'Warrior Flip',
-      variant: 'Shadow Striker',
-      description: 'The Quantum Architect of the Digital Nexus...Master of Dimensional Combat',
-      fbxUrl: '/models/nexus-prime.fbx',
-      scale: 0.0023,
-      galleryScale: 0.0018,
-      rotation: [0, 0, 0],
-      positionY: -2.8,
-      galleryPositionY: -1.8,
-      offsetX: 0.2,
-      offsetZ: -0.1,
-      background: 'linear-gradient(180deg, rgba(5, 5, 15, 0.95) 0%, rgba(139, 0, 0, 0.8) 20%, rgba(220, 20, 60, 0.6) 40%, rgba(178, 34, 34, 0.7) 60%, rgba(25, 25, 112, 0.8) 80%, rgba(0, 0, 0, 0.9) 100%)',
-      // Enhanced viewer background (ominous deep space with crimson solar flares)
-      viewerBackground: 'linear-gradient(135deg, #000008 0%, #1a0000 15%, #8b0000 30%, #dc143c 50%, #8b0000 70%, #1a0000 85%, #000008 100%)'
-    },
-    {
-      id: 5,
-      name: 'Icarus-X #005',
+      name: 'Icarus-X #001',
       animation: 'Solar Ascension',
       variant: 'Golden Phoenix',
       description: 'The Transcendent Seraph...Reborn from Digital Ashes to Touch the Infinite',
-      fbxUrl: '/models/icarus-ninja.fbx',
+      fbxUrl: '/models/icarus-bangs.fbx',
       scale: 0.023,
       galleryScale: 0.015,
       rotation: [0, 0, 0],
@@ -195,8 +123,41 @@ export default function ShowcaseGallery() {
       offsetX: -0.2,
       offsetZ: 0.15,
       background: 'linear-gradient(180deg, rgba(15, 5, 0, 0.95) 0%, rgba(255, 140, 0, 0.8) 20%, rgba(255, 215, 0, 0.7) 40%, rgba(255, 165, 0, 0.6) 60%, rgba(255, 69, 0, 0.7) 80%, rgba(139, 69, 19, 0.9) 100%)',
-      // Enhanced viewer background (radiant golden sunrise with warm amber tones)
-      viewerBackground: 'linear-gradient(135deg, #2d1810 0%, #ff8c00 25%, #ffd700 50%`, #ff8c00 75%, #2d1810 100%)'
+      viewerBackground: 'linear-gradient(135deg, #2d1810 0%, #ff8c00 25%, #ffd700 50%, #ff8c00 75%, #2d1810 100%)'
+    },
+    {
+      id: 2,
+      name: 'Vectra APEX #002',
+      animation: 'Break Dance',
+      variant: 'Spectral',
+      description: 'The Ominous Anomaly Woven from Pure Hologram',
+      fbxUrl: '/models/diabla-roja.fbx',
+      scale: 0.025,
+      galleryScale: 0.018,
+      rotation: [0, 0, 0],
+      positionY: -2.3,
+      galleryPositionY: -1.5,
+      offsetX: 0,
+      offsetZ: 0,
+      allowNaturalYMovement: true,
+      background: 'linear-gradient(180deg, rgba(0, 102, 255, 0.5) 0%, rgba(117, 250, 217, 0.7) 30%, rgba(214, 67, 243, 0.6) 70%, rgba(0, 255, 255, 0.5) 100%)'
+    },
+    {
+      id: 3,
+      name: 'Nexus-Prime #003',
+      animation: 'Warrior Flip',
+      variant: 'Shadow Striker',
+      description: 'The Quantum Architect of the Digital Nexus...Master of Dimensional Combat',
+      fbxUrl: '/models/iron-man.fbx',
+      scale: 0.0230,
+      galleryScale: 0.0180,
+      rotation: [0, 0, 0],
+      positionY: -2.6,
+      galleryPositionY: -1.8,
+      offsetX: 0.2,
+      offsetZ: -0.1,
+      background: 'linear-gradient(180deg, rgba(5, 5, 15, 0.95) 0%, rgba(139, 0, 0, 0.8) 20%, rgba(220, 20, 60, 0.6) 40%, rgba(178, 34, 34, 0.7) 60%, rgba(25, 25, 112, 0.8) 80%, rgba(0, 0, 0, 0.9) 100%)',
+      viewerBackground: 'linear-gradient(135deg, #000008 0%, #1a0000 15%, #8b0000 30%, #dc143c 50%, #8b0000 70%, #1a0000 85%, #000008 100%)'
     }
   ];
 
