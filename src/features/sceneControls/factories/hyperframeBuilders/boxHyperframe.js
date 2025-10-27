@@ -320,6 +320,296 @@ export function createBoxHyperframe(
 
   console.log("Added rotated compound hypercube (edges + connections)");
 
+  // ========================================
+  // 3B. DUPLICATE: Symmetric -45° Y-rotated hypercube
+  // ========================================
+  const rotNeg = new THREE.Matrix4().makeRotationY(-Math.PI / 4);
+  const scaleNeg = 0.98;
+  const RSN = (x, y, z) =>
+    new THREE.Vector3(x, y, z).applyMatrix4(rotNeg).multiplyScalar(scaleNeg);
+
+  const outerCornersRotNeg = [
+    RSN(-outerSize, -outerSize, -outerSize),
+    RSN(outerSize, -outerSize, -outerSize),
+    RSN(outerSize, outerSize, -outerSize),
+    RSN(-outerSize, outerSize, -outerSize),
+    RSN(-outerSize, -outerSize, outerSize),
+    RSN(outerSize, -outerSize, outerSize),
+    RSN(outerSize, outerSize, outerSize),
+    RSN(-outerSize, outerSize, outerSize),
+  ];
+  const innerCornersRotNeg = [
+    RSN(-innerSize, -innerSize, -innerSize),
+    RSN(innerSize, -innerSize, -innerSize),
+    RSN(innerSize, innerSize, -innerSize),
+    RSN(-innerSize, innerSize, -innerSize),
+    RSN(-innerSize, -innerSize, innerSize),
+    RSN(innerSize, -innerSize, innerSize),
+    RSN(innerSize, innerSize, innerSize),
+    RSN(-innerSize, innerSize, innerSize),
+  ];
+  const tinyCornersRotNeg = [
+    RSN(-tinySize, -tinySize, -tinySize),
+    RSN(tinySize, -tinySize, -tinySize),
+    RSN(tinySize, tinySize, -tinySize),
+    RSN(-tinySize, tinySize, -tinySize),
+    RSN(-tinySize, -tinySize, tinySize),
+    RSN(tinySize, -tinySize, tinySize),
+    RSN(tinySize, tinySize, tinySize),
+    RSN(-tinySize, tinySize, tinySize),
+  ];
+
+  const addCubeEdgesNeg = (verts, radius = 0.004) => {
+    const edges = [
+      [0, 1],
+      [1, 2],
+      [2, 3],
+      [3, 0],
+      [4, 5],
+      [5, 6],
+      [6, 7],
+      [7, 4],
+      [0, 4],
+      [1, 5],
+      [2, 6],
+      [3, 7],
+    ];
+    edges.forEach(([i, j]) => {
+      const v1 = verts[i];
+      const v2 = verts[j];
+      const dist = v1.distanceTo(v2);
+      const cyl = new THREE.CylinderGeometry(radius, radius, dist, 8);
+      const mesh = new THREE.Mesh(cyl, centerLinesMaterial);
+      mesh.position.copy(v1.clone().add(v2).multiplyScalar(0.5));
+      mesh.lookAt(v2);
+      mesh.rotateX(Math.PI / 2);
+      innerCubeGroup.add(mesh);
+    });
+  };
+
+  // Rotated (-45°) inner cube edges
+  addCubeEdgesNeg(innerCornersRotNeg);
+  // Rotated (-45°) tiny cube edges
+  addCubeEdgesNeg(tinyCornersRotNeg, 0.003);
+
+  // Rotated (-45°) tesseract connections: outer→inner
+  for (let i = 0; i < 8; i++) {
+    const outerV = outerCornersRotNeg[i];
+    const innerV = innerCornersRotNeg[i];
+    const d = outerV.distanceTo(innerV);
+    const cyl = new THREE.CylinderGeometry(0.003, 0.003, d, 6);
+    const mesh = new THREE.Mesh(cyl, curvedLinesMaterial);
+    mesh.position.copy(outerV.clone().add(innerV).multiplyScalar(0.5));
+    mesh.lookAt(innerV);
+    mesh.rotateX(Math.PI / 2);
+    tesseractConnectionGroup.add(mesh);
+  }
+
+  // Rotated (-45°) nested connections: inner→tiny
+  for (let i = 0; i < 8; i++) {
+    const innerV = innerCornersRotNeg[i];
+    const tinyV = tinyCornersRotNeg[i];
+    const d = innerV.distanceTo(tinyV);
+    const cyl = new THREE.CylinderGeometry(0.0025, 0.0025, d, 6);
+    const mesh = new THREE.Mesh(cyl, curvedLinesMaterial);
+    mesh.position.copy(innerV.clone().add(tinyV).multiplyScalar(0.5));
+    mesh.lookAt(tinyV);
+    mesh.rotateX(Math.PI / 2);
+    tesseractConnectionGroup.add(mesh);
+  }
+
+  console.log("Added symmetric -45° rotated hypercube (edges + connections)");
+
+  // ========================================
+  // 3C. DUPLICATE: +45° X-rotated hypercube
+  // ========================================
+  const rotX = new THREE.Matrix4().makeRotationX(Math.PI / 4);
+  const scaleX = 0.98;
+  const RSX = (x, y, z) =>
+    new THREE.Vector3(x, y, z).applyMatrix4(rotX).multiplyScalar(scaleX);
+
+  const outerCornersRotX = [
+    RSX(-outerSize, -outerSize, -outerSize),
+    RSX(outerSize, -outerSize, -outerSize),
+    RSX(outerSize, outerSize, -outerSize),
+    RSX(-outerSize, outerSize, -outerSize),
+    RSX(-outerSize, -outerSize, outerSize),
+    RSX(outerSize, -outerSize, outerSize),
+    RSX(outerSize, outerSize, outerSize),
+    RSX(-outerSize, outerSize, outerSize),
+  ];
+  const innerCornersRotX = [
+    RSX(-innerSize, -innerSize, -innerSize),
+    RSX(innerSize, -innerSize, -innerSize),
+    RSX(innerSize, innerSize, -innerSize),
+    RSX(-innerSize, innerSize, -innerSize),
+    RSX(-innerSize, -innerSize, innerSize),
+    RSX(innerSize, -innerSize, innerSize),
+    RSX(innerSize, innerSize, innerSize),
+    RSX(-innerSize, innerSize, innerSize),
+  ];
+  const tinyCornersRotX = [
+    RSX(-tinySize, -tinySize, -tinySize),
+    RSX(tinySize, -tinySize, -tinySize),
+    RSX(tinySize, tinySize, -tinySize),
+    RSX(-tinySize, tinySize, -tinySize),
+    RSX(-tinySize, -tinySize, tinySize),
+    RSX(tinySize, -tinySize, tinySize),
+    RSX(tinySize, tinySize, tinySize),
+    RSX(-tinySize, tinySize, tinySize),
+  ];
+
+  const addCubeEdgesX = (verts, radius = 0.004) => {
+    const edges = [
+      [0, 1],
+      [1, 2],
+      [2, 3],
+      [3, 0],
+      [4, 5],
+      [5, 6],
+      [6, 7],
+      [7, 4],
+      [0, 4],
+      [1, 5],
+      [2, 6],
+      [3, 7],
+    ];
+    edges.forEach(([i, j]) => {
+      const v1 = verts[i];
+      const v2 = verts[j];
+      const dist = v1.distanceTo(v2);
+      const cyl = new THREE.CylinderGeometry(radius, radius, dist, 8);
+      const mesh = new THREE.Mesh(cyl, centerLinesMaterial);
+      mesh.position.copy(v1.clone().add(v2).multiplyScalar(0.5));
+      mesh.lookAt(v2);
+      mesh.rotateX(Math.PI / 2);
+      innerCubeGroup.add(mesh);
+    });
+  };
+
+  addCubeEdgesX(innerCornersRotX);
+  addCubeEdgesX(tinyCornersRotX, 0.003);
+
+  for (let i = 0; i < 8; i++) {
+    const outerV = outerCornersRotX[i];
+    const innerV = innerCornersRotX[i];
+    const d = outerV.distanceTo(innerV);
+    const cyl = new THREE.CylinderGeometry(0.003, 0.003, d, 6);
+    const mesh = new THREE.Mesh(cyl, curvedLinesMaterial);
+    mesh.position.copy(outerV.clone().add(innerV).multiplyScalar(0.5));
+    mesh.lookAt(innerV);
+    mesh.rotateX(Math.PI / 2);
+    tesseractConnectionGroup.add(mesh);
+  }
+  for (let i = 0; i < 8; i++) {
+    const innerV = innerCornersRotX[i];
+    const tinyV = tinyCornersRotX[i];
+    const d = innerV.distanceTo(tinyV);
+    const cyl = new THREE.CylinderGeometry(0.0025, 0.0025, d, 6);
+    const mesh = new THREE.Mesh(cyl, curvedLinesMaterial);
+    mesh.position.copy(innerV.clone().add(tinyV).multiplyScalar(0.5));
+    mesh.lookAt(tinyV);
+    mesh.rotateX(Math.PI / 2);
+    tesseractConnectionGroup.add(mesh);
+  }
+
+  console.log("Added +45° X rotated hypercube (edges + connections)");
+
+  // ========================================
+  // 3D. DUPLICATE: +45° Z-rotated hypercube
+  // ========================================
+  const rotZ = new THREE.Matrix4().makeRotationZ(Math.PI / 4);
+  const scaleZ = 0.98;
+  const RSZ = (x, y, z) =>
+    new THREE.Vector3(x, y, z).applyMatrix4(rotZ).multiplyScalar(scaleZ);
+
+  const outerCornersRotZ = [
+    RSZ(-outerSize, -outerSize, -outerSize),
+    RSZ(outerSize, -outerSize, -outerSize),
+    RSZ(outerSize, outerSize, -outerSize),
+    RSZ(-outerSize, outerSize, -outerSize),
+    RSZ(-outerSize, -outerSize, outerSize),
+    RSZ(outerSize, -outerSize, outerSize),
+    RSZ(outerSize, outerSize, outerSize),
+    RSZ(-outerSize, outerSize, outerSize),
+  ];
+  const innerCornersRotZ = [
+    RSZ(-innerSize, -innerSize, -innerSize),
+    RSZ(innerSize, -innerSize, -innerSize),
+    RSZ(innerSize, innerSize, -innerSize),
+    RSZ(-innerSize, innerSize, -innerSize),
+    RSZ(-innerSize, -innerSize, innerSize),
+    RSZ(innerSize, -innerSize, innerSize),
+    RSZ(innerSize, innerSize, innerSize),
+    RSZ(-innerSize, innerSize, innerSize),
+  ];
+  const tinyCornersRotZ = [
+    RSZ(-tinySize, -tinySize, -tinySize),
+    RSZ(tinySize, -tinySize, -tinySize),
+    RSZ(tinySize, tinySize, -tinySize),
+    RSZ(-tinySize, tinySize, -tinySize),
+    RSZ(-tinySize, -tinySize, tinySize),
+    RSZ(tinySize, -tinySize, tinySize),
+    RSZ(tinySize, tinySize, tinySize),
+    RSZ(-tinySize, tinySize, tinySize),
+  ];
+
+  const addCubeEdgesZ = (verts, radius = 0.004) => {
+    const edges = [
+      [0, 1],
+      [1, 2],
+      [2, 3],
+      [3, 0],
+      [4, 5],
+      [5, 6],
+      [6, 7],
+      [7, 4],
+      [0, 4],
+      [1, 5],
+      [2, 6],
+      [3, 7],
+    ];
+    edges.forEach(([i, j]) => {
+      const v1 = verts[i];
+      const v2 = verts[j];
+      const dist = v1.distanceTo(v2);
+      const cyl = new THREE.CylinderGeometry(radius, radius, dist, 8);
+      const mesh = new THREE.Mesh(cyl, centerLinesMaterial);
+      mesh.position.copy(v1.clone().add(v2).multiplyScalar(0.5));
+      mesh.lookAt(v2);
+      mesh.rotateX(Math.PI / 2);
+      innerCubeGroup.add(mesh);
+    });
+  };
+
+  addCubeEdgesZ(innerCornersRotZ);
+  addCubeEdgesZ(tinyCornersRotZ, 0.003);
+
+  for (let i = 0; i < 8; i++) {
+    const outerV = outerCornersRotZ[i];
+    const innerV = innerCornersRotZ[i];
+    const d = outerV.distanceTo(innerV);
+    const cyl = new THREE.CylinderGeometry(0.003, 0.003, d, 6);
+    const mesh = new THREE.Mesh(cyl, curvedLinesMaterial);
+    mesh.position.copy(outerV.clone().add(innerV).multiplyScalar(0.5));
+    mesh.lookAt(innerV);
+    mesh.rotateX(Math.PI / 2);
+    tesseractConnectionGroup.add(mesh);
+  }
+  for (let i = 0; i < 8; i++) {
+    const innerV = innerCornersRotZ[i];
+    const tinyV = tinyCornersRotZ[i];
+    const d = innerV.distanceTo(tinyV);
+    const cyl = new THREE.CylinderGeometry(0.0025, 0.0025, d, 6);
+    const mesh = new THREE.Mesh(cyl, curvedLinesMaterial);
+    mesh.position.copy(innerV.clone().add(tinyV).multiplyScalar(0.5));
+    mesh.lookAt(tinyV);
+    mesh.rotateX(Math.PI / 2);
+    tesseractConnectionGroup.add(mesh);
+  }
+
+  console.log("Added +45° Z rotated hypercube (edges + connections)");
+
   return {
     centerLines: innerCubeGroup,
     centerLinesMaterial,

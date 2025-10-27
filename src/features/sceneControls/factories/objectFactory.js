@@ -99,7 +99,8 @@ export function createSceneObject(config) {
 
   // If this is a standard Box hypercube (not compound tesseract), add a rotated duplicate solid cube
   if (
-    (geometry.type === "BoxGeometry" || (geometry.userData && geometry.userData.baseType === "BoxGeometry")) &&
+    (geometry.type === "BoxGeometry" ||
+      (geometry.userData && geometry.userData.baseType === "BoxGeometry")) &&
     !(geometry.userData && geometry.userData.isCpdTesseract)
   ) {
     const rotatedGeom = geometry.clone();
@@ -110,6 +111,33 @@ export function createSceneObject(config) {
     rotatedSolid.castShadow = true;
     rotatedSolid.receiveShadow = true;
     solidMesh.add(rotatedSolid);
+
+    // Add symmetric -45° rotated third solid for a balanced triple-merge
+    const rotatedGeomNeg = geometry.clone();
+    const rotatedSolidNeg = new THREE.Mesh(rotatedGeomNeg, solidMaterial);
+    rotatedSolidNeg.rotation.y = -Math.PI / 4;
+    rotatedSolidNeg.scale.setScalar(0.98);
+    rotatedSolidNeg.castShadow = true;
+    rotatedSolidNeg.receiveShadow = true;
+    solidMesh.add(rotatedSolidNeg);
+
+    // Add +45° rotated around X-axis
+    const rotatedGeomX = geometry.clone();
+    const rotatedSolidX = new THREE.Mesh(rotatedGeomX, solidMaterial);
+    rotatedSolidX.rotation.x = Math.PI / 4;
+    rotatedSolidX.scale.setScalar(0.98);
+    rotatedSolidX.castShadow = true;
+    rotatedSolidX.receiveShadow = true;
+    solidMesh.add(rotatedSolidX);
+
+    // Add +45° rotated around Z-axis
+    const rotatedGeomZ = geometry.clone();
+    const rotatedSolidZ = new THREE.Mesh(rotatedGeomZ, solidMaterial);
+    rotatedSolidZ.rotation.z = Math.PI / 4;
+    rotatedSolidZ.scale.setScalar(0.98);
+    rotatedSolidZ.castShadow = true;
+    rotatedSolidZ.receiveShadow = true;
+    solidMesh.add(rotatedSolidZ);
   }
 
   // Generate unique object ID for interaction

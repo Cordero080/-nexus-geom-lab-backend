@@ -192,5 +192,160 @@ export function createBoxWireframe(geometry, wireframeMaterial) {
 
   console.log("Added rotated compound cube wireframe to group");
 
+  // === DUPLICATE 2: Symmetric -45° Y-rotation for balanced triple-merge ===
+  const rotNeg = new THREE.Matrix4().makeRotationY(-Math.PI / 4);
+  const scaleNeg = 0.98;
+  const rotateScaleNeg = (v) =>
+    v.clone().applyMatrix4(rotNeg).multiplyScalar(scaleNeg);
+
+  // Rotated edges (-45°)
+  cubeEdges.forEach(([i, j]) => {
+    const start = rotateScaleNeg(new THREE.Vector3(...cubeCorners[i]));
+    const end = rotateScaleNeg(new THREE.Vector3(...cubeCorners[j]));
+    const distance = start.distanceTo(end);
+
+    const cylinderGeom = new THREE.CylinderGeometry(
+      MAIN_RADIUS,
+      MAIN_RADIUS,
+      distance,
+      8
+    );
+    const cylinderMesh = new THREE.Mesh(cylinderGeom, wireframeMaterial);
+    cylinderMesh.position.copy(start.clone().add(end).multiplyScalar(0.5));
+    cylinderMesh.lookAt(end);
+    cylinderMesh.rotateX(Math.PI / 2);
+
+    // Add halo for the rotated edge as well
+    const haloGeom = new THREE.CylinderGeometry(
+      MAIN_RADIUS * HALO_RADIUS_FACTOR,
+      MAIN_RADIUS * HALO_RADIUS_FACTOR,
+      distance,
+      8
+    );
+    const haloMesh = new THREE.Mesh(haloGeom, haloMaterial);
+    haloMesh.name = "edgeHalo";
+    haloMesh.position.set(0, 0, 0);
+    haloMesh.rotation.set(0, 0, 0);
+    cylinderMesh.add(haloMesh);
+    cubeWireframeGroup.add(cylinderMesh);
+  });
+
+  // Rotated vertex nodes (instanced) for -45°
+  const instancesRotNeg = new THREE.InstancedMesh(
+    sphereGeom,
+    nodeMaterial,
+    cubeCorners.length
+  );
+  instancesRotNeg.name = "vertexNodesRotatedNeg";
+  for (let idx = 0; idx < cubeCorners.length; idx++) {
+    const v = rotateScaleNeg(new THREE.Vector3(...cubeCorners[idx]));
+    m.makeTranslation(v.x, v.y, v.z);
+    instancesRotNeg.setMatrixAt(idx, m);
+  }
+  instancesRotNeg.instanceMatrix.needsUpdate = true;
+  nodesGroup.add(instancesRotNeg);
+
+  console.log("Added symmetric -45° rotated cube wireframe to group");
+
+  // === DUPLICATE 3: +45° X-rotation ===
+  const rotX = new THREE.Matrix4().makeRotationX(Math.PI / 4);
+  const scaleX = 0.98;
+  const rotateScaleX = (v) => v.clone().applyMatrix4(rotX).multiplyScalar(scaleX);
+
+  cubeEdges.forEach(([i, j]) => {
+    const start = rotateScaleX(new THREE.Vector3(...cubeCorners[i]));
+    const end = rotateScaleX(new THREE.Vector3(...cubeCorners[j]));
+    const distance = start.distanceTo(end);
+
+    const cylinderGeom = new THREE.CylinderGeometry(
+      MAIN_RADIUS,
+      MAIN_RADIUS,
+      distance,
+      8
+    );
+    const cylinderMesh = new THREE.Mesh(cylinderGeom, wireframeMaterial);
+    cylinderMesh.position.copy(start.clone().add(end).multiplyScalar(0.5));
+    cylinderMesh.lookAt(end);
+    cylinderMesh.rotateX(Math.PI / 2);
+
+    const haloGeom = new THREE.CylinderGeometry(
+      MAIN_RADIUS * HALO_RADIUS_FACTOR,
+      MAIN_RADIUS * HALO_RADIUS_FACTOR,
+      distance,
+      8
+    );
+    const haloMesh = new THREE.Mesh(haloGeom, haloMaterial);
+    haloMesh.name = "edgeHalo";
+    haloMesh.position.set(0, 0, 0);
+    haloMesh.rotation.set(0, 0, 0);
+    cylinderMesh.add(haloMesh);
+    cubeWireframeGroup.add(cylinderMesh);
+  });
+
+  const instancesRotX = new THREE.InstancedMesh(
+    sphereGeom,
+    nodeMaterial,
+    cubeCorners.length
+  );
+  instancesRotX.name = "vertexNodesRotatedX";
+  for (let idx = 0; idx < cubeCorners.length; idx++) {
+    const v = rotateScaleX(new THREE.Vector3(...cubeCorners[idx]));
+    m.makeTranslation(v.x, v.y, v.z);
+    instancesRotX.setMatrixAt(idx, m);
+  }
+  instancesRotX.instanceMatrix.needsUpdate = true;
+  nodesGroup.add(instancesRotX);
+
+  // === DUPLICATE 4: +45° Z-rotation ===
+  const rotZ = new THREE.Matrix4().makeRotationZ(Math.PI / 4);
+  const scaleZ = 0.98;
+  const rotateScaleZ = (v) => v.clone().applyMatrix4(rotZ).multiplyScalar(scaleZ);
+
+  cubeEdges.forEach(([i, j]) => {
+    const start = rotateScaleZ(new THREE.Vector3(...cubeCorners[i]));
+    const end = rotateScaleZ(new THREE.Vector3(...cubeCorners[j]));
+    const distance = start.distanceTo(end);
+
+    const cylinderGeom = new THREE.CylinderGeometry(
+      MAIN_RADIUS,
+      MAIN_RADIUS,
+      distance,
+      8
+    );
+    const cylinderMesh = new THREE.Mesh(cylinderGeom, wireframeMaterial);
+    cylinderMesh.position.copy(start.clone().add(end).multiplyScalar(0.5));
+    cylinderMesh.lookAt(end);
+    cylinderMesh.rotateX(Math.PI / 2);
+
+    const haloGeom = new THREE.CylinderGeometry(
+      MAIN_RADIUS * HALO_RADIUS_FACTOR,
+      MAIN_RADIUS * HALO_RADIUS_FACTOR,
+      distance,
+      8
+    );
+    const haloMesh = new THREE.Mesh(haloGeom, haloMaterial);
+    haloMesh.name = "edgeHalo";
+    haloMesh.position.set(0, 0, 0);
+    haloMesh.rotation.set(0, 0, 0);
+    cylinderMesh.add(haloMesh);
+    cubeWireframeGroup.add(cylinderMesh);
+  });
+
+  const instancesRotZ = new THREE.InstancedMesh(
+    sphereGeom,
+    nodeMaterial,
+    cubeCorners.length
+  );
+  instancesRotZ.name = "vertexNodesRotatedZ";
+  for (let idx = 0; idx < cubeCorners.length; idx++) {
+    const v = rotateScaleZ(new THREE.Vector3(...cubeCorners[idx]));
+    m.makeTranslation(v.x, v.y, v.z);
+    instancesRotZ.setMatrixAt(idx, m);
+  }
+  instancesRotZ.instanceMatrix.needsUpdate = true;
+  nodesGroup.add(instancesRotZ);
+
+  console.log("Added +45° X and +45° Z rotated cube wireframes to group");
+
   return cubeWireframeGroup;
 }
