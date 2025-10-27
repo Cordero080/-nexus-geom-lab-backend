@@ -1,5 +1,6 @@
 import React, { useRef } from 'react';
 import './BeamScanButton.css';
+import '../../../styles/shared.css';
 
 // Example code to reveal on hover
 const RAW_CODE = `function quantumLeap() {
@@ -22,7 +23,7 @@ export default function BeamScanButton({ onClick, label = 'Enter Playground', co
   return (
     <button
       ref={btnRef}
-      className="beam-scan-btn beam-btn"
+      className="beam-scan-btn beam-btn angled-corners"
       onClick={onClick}
       tabIndex={0}
     >

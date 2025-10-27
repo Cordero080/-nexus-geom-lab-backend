@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import './controls.css';
 import LightingControls from './LightingControls';
+import SaveButton from './SaveButton/SaveButton';
 
 // PROPS RECEIVED FROM App.jsx - These are the data connections
 function Controls({ 

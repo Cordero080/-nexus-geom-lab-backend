@@ -237,9 +237,9 @@ export default function ShowcaseGallery() {
       >
         {/* Fixed Title Overlay */}
         <div className="showcase-title-overlay">
-          <h1 className="showcase-main-title">Technosentient Nexus</h1>
+          <h1 className="showcase-main-title"> Machina Animus NEXUS</h1> 
           <p className="showcase-main-subtitle">
-            A Museum of Cybergalactic Consciousness
+            The Noetech Digitla Pantheon
           </p>
         </div>
 

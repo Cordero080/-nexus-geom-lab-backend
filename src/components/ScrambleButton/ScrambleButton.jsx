@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { getScrambledText, scrambleText } from '../../utils/textScrambler';
 import './ScrambleButton.css';
+import '../../styles/shared.css';
 
 const ScrambleButton = ({ 
   children, 
@@ -108,7 +109,7 @@ const ScrambleButton = ({
   return (
     <button
       ref={buttonRef}
-      className={`scramble-button ${variant} ${className}`}
+      className={`scramble-button angled-corners ${variant} ${className}`}
       onMouseEnter={() => setIsHovering(true)}
       onMouseLeave={() => setIsHovering(false)}
       onMouseMove={handleMouseMove}

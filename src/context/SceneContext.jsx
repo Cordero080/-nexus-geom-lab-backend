@@ -24,6 +24,7 @@ export function SceneProvider({ children }) {
   const [sceneName, setSceneName] = useState("");
   const [sceneDescription, setSceneDescription] = useState("");
   const [isPublic, setIsPublic] = useState(true);
+  const [loadedConfig, setLoadedConfig] = useState(null); // Store loaded scene config
   
   // Scene mode: 'fresh', 'loaded', 'remixed'
   const [sceneMode, setSceneMode] = useState("fresh");
@@ -107,13 +108,17 @@ export function SceneProvider({ children }) {
    * Load scene into editor
    * @param {Object} scene - Scene data from API
    * @param {string} currentUserId - ID of logged-in user (null if not logged in)
+   * @returns {Object} - The scene config to be applied
    */
   const loadScene = useCallback((scene, currentUserId = null) => {
-    setCurrentSceneId(scene.id);
+    console.log('🎬 Loading scene:', scene);
+    
+    setCurrentSceneId(scene.id || scene._id);
     setSceneOwner(scene.userId);
     setSceneName(scene.name);
     setSceneDescription(scene.description || "");
     setIsPublic(scene.isPublic);
+    setLoadedConfig(scene.config); // Store the config!
 
     // Determine scene mode
     if (currentUserId && scene.userId === currentUserId) {
@@ -121,6 +126,11 @@ export function SceneProvider({ children }) {
     } else {
       setSceneMode("remixed"); // User is remixing someone else's scene
     }
+
+    console.log('✅ Scene config loaded:', scene.config);
+    
+    // Return the config so caller can apply it
+    return scene.config || {};
   }, []);
 
   /**
@@ -166,6 +176,7 @@ export function SceneProvider({ children }) {
     setSceneName("");
     setSceneDescription("");
     setIsPublic(true);
+    setLoadedConfig(null);
     setSceneMode("fresh");
   }, []);
 
@@ -177,6 +188,7 @@ export function SceneProvider({ children }) {
     sceneDescription,
     isPublic,
     sceneMode,
+    loadedConfig, // Export loaded config
 
     // Computed
     isOwnScene,

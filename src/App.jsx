@@ -1,18 +1,20 @@
 import React, { useState, useEffect } from 'react';
-import { Routes, Route, useNavigate } from 'react-router-dom';
+import { Routes, Route, useNavigate, Navigate, useLocation } from 'react-router-dom';
 import ThreeScene from './features/sceneControls/ThreeScene';
 import Controls from './components/Controls/Controls';
 import SaveButton from './components/Controls/SaveButton/SaveButton';
+import ExitButton from './components/Controls/ExitButton/ExitButton';
 import HomePage from './HomePage/HomePage';
 import NavBar from './nav/NavBar';
 import ShowcaseGallery from './Showcase/ShowcaseGallery';
 import MyScenesPage from './pages/MyScenesPage/MyScenesPage';
 import SignUpPage from './pages/SignUpPage/SignUpPage';
 import LoginPage from './pages/LoginPage/LoginPage';
-import { SceneProvider } from './context/SceneContext';
-import { AuthProvider } from './context/AuthContext';
+import { SceneProvider, useScene } from './context/SceneContext';
+import { AuthProvider, useAuth } from './context/AuthContext';
 import { QuantumCursor } from "./components/Effects";
 import './cursor-override.css';
+import './styles/shared.css';
 
 // Updated default colors for psychedelic theme
 const defaultBaseColor = '#ff00ff'; // Vibrant magenta
@@ -21,6 +23,17 @@ const defaultHyperframeColor = '#ff4500'; // Vivid orange-red
 const defaultHyperframeLineColor = '#00ff00'; // Bright green
 
 function GeomLab() {
+  const { loadedConfig, resetScene } = useScene(); // Get loaded config from context
+  const { token, isAuthenticated } = useAuth(); // Get auth for save functionality
+  const navigate = useNavigate(); // For navigation
+  const location = useLocation(); // Current location
+  
+  // Save prompt modal state
+  const [showSavePrompt, setShowSavePrompt] = useState(false);
+  const [nextPath, setNextPath] = useState(null);
+  const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
+  const [allowNavigation, setAllowNavigation] = useState(false);
+  
   // MATERIAL PROPERTIES STATE
   const [metalness, setMetalness] = useState(0.5) // 0 = plastic, 1 = full metal
   const [emissiveIntensity, setEmissiveIntensity] = useState(0) // 0 = no glow, 2 = bright glow
@@ -49,6 +62,173 @@ function GeomLab() {
   const [directionalLightZ, setDirectionalLightZ] = useState(5)
   const [scale, setScale] = useState(1)
 
+  // Track changes to mark as unsaved
+  useEffect(() => {
+    setHasUnsavedChanges(true);
+  }, [metalness, emissiveIntensity, baseColor, wireframeIntensity, hyperframeColor,
+      hyperframeLineColor, cameraView, environment, environmentHue, objectCount,
+      animationStyle, objectType, ambientLightColor, ambientLightIntensity,
+      directionalLightColor, directionalLightIntensity, directionalLightX,
+      directionalLightY, directionalLightZ, scale]);
+
+  // Intercept link clicks for navigation blocking
+  useEffect(() => {
+    const handleClick = (e) => {
+      if (!hasUnsavedChanges || allowNavigation) return;
+      
+      const link = e.target.closest('a');
+      if (link && link.href) {
+        const url = new URL(link.href);
+        const targetPath = url.pathname;
+        
+        // Only block internal navigation to different routes
+        if (targetPath !== location.pathname && url.origin === window.location.origin) {
+          e.preventDefault();
+          e.stopPropagation();
+          setNextPath(targetPath);
+          setShowSavePrompt(true);
+        }
+      }
+    };
+
+    // Use capture phase to intercept before React Router
+    document.addEventListener('click', handleClick, true);
+    return () => document.removeEventListener('click', handleClick, true);
+  }, [hasUnsavedChanges, allowNavigation, location.pathname]);
+
+  // Execute pending navigation after user approves
+  useEffect(() => {
+    if (allowNavigation && nextPath) {
+      navigate(nextPath);
+      setAllowNavigation(false);
+      setNextPath(null);
+    }
+  }, [allowNavigation, nextPath, navigate]);
+
+  // Apply loaded config when it changes
+  useEffect(() => {
+    if (loadedConfig) {
+      console.log('🎨 Applying loaded config:', loadedConfig);
+      
+      // Apply material properties
+      if (loadedConfig.metalness !== undefined) setMetalness(loadedConfig.metalness);
+      if (loadedConfig.emissiveIntensity !== undefined) setEmissiveIntensity(loadedConfig.emissiveIntensity);
+      if (loadedConfig.baseColor) setBaseColor(loadedConfig.baseColor);
+      if (loadedConfig.wireframeIntensity !== undefined) setWireframeIntensity(loadedConfig.wireframeIntensity);
+      
+      // Apply hyperframe
+      if (loadedConfig.hyperframeColor) setHyperframeColor(loadedConfig.hyperframeColor);
+      if (loadedConfig.hyperframeLineColor) setHyperframeLineColor(loadedConfig.hyperframeLineColor);
+      
+      // Apply scene behavior
+      if (loadedConfig.cameraView) setCameraView(loadedConfig.cameraView);
+      if (loadedConfig.environment) setEnvironment(loadedConfig.environment);
+      if (loadedConfig.environmentHue !== undefined) setEnvironmentHue(loadedConfig.environmentHue);
+      if (loadedConfig.objectCount !== undefined) setObjectCount(loadedConfig.objectCount);
+      if (loadedConfig.animationStyle) setAnimationStyle(loadedConfig.animationStyle);
+      if (loadedConfig.objectType) setObjectType(loadedConfig.objectType);
+      
+      // Apply lighting
+      if (loadedConfig.ambientLightColor) setAmbientLightColor(loadedConfig.ambientLightColor);
+      if (loadedConfig.ambientLightIntensity !== undefined) setAmbientLightIntensity(loadedConfig.ambientLightIntensity);
+      if (loadedConfig.directionalLightColor) setDirectionalLightColor(loadedConfig.directionalLightColor);
+      if (loadedConfig.directionalLightIntensity !== undefined) setDirectionalLightIntensity(loadedConfig.directionalLightIntensity);
+      if (loadedConfig.directionalLightX !== undefined) setDirectionalLightX(loadedConfig.directionalLightX);
+      if (loadedConfig.directionalLightY !== undefined) setDirectionalLightY(loadedConfig.directionalLightY);
+      if (loadedConfig.directionalLightZ !== undefined) setDirectionalLightZ(loadedConfig.directionalLightZ);
+      if (loadedConfig.scale !== undefined) setScale(loadedConfig.scale);
+      
+      console.log('✅ Config applied successfully');
+      
+      // Clear the loaded config so it doesn't re-apply
+      // We'll do this after a short delay to ensure it's applied
+      setTimeout(() => resetScene, 100);
+    }
+  }, [loadedConfig]);
+
+  // Prevent browser navigation (close tab, refresh, back button)
+  useEffect(() => {
+    const handleBeforeUnload = (e) => {
+      if (hasUnsavedChanges && !allowNavigation) {
+        e.preventDefault();
+        e.returnValue = '';
+      }
+    };
+
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    return () => window.removeEventListener('beforeunload', handleBeforeUnload);
+  }, [hasUnsavedChanges, allowNavigation]);
+
+  // Remove old blocker effect
+  // useEffect(() => {
+  //   if (blocker.state === "blocked") {
+  //     setShowSavePrompt(true);
+  //     setPendingNavigation(blocker.location.pathname);
+  //   }
+  // }, [blocker]);
+
+  // Prevent user from leaving page without saving (browser tab/window close, refresh, etc.)
+  // useEffect(() => {
+  //   const handleBeforeUnload = (e) => {
+  //     if (!allowNavigation) {
+  //       // Show browser's default confirmation dialog
+  //       e.preventDefault();
+  //       e.returnValue = ''; // Chrome requires returnValue to be set
+  //       return ''; // Some browsers use return value
+  //     }
+  //   };
+
+  //   // Add event listener when component mounts
+  //   window.addEventListener('beforeunload', handleBeforeUnload);
+
+  //   // Cleanup: remove event listener when component unmounts
+  //   return () => {
+  //     window.removeEventListener('beforeunload', handleBeforeUnload);
+  //   };
+  // }, [allowNavigation]);
+
+  // Handle save from modal
+  const handleSaveFromModal = async () => {
+    const name = prompt('Name your masterpiece:');
+    
+    if (name && name.trim() !== '') {
+      try {
+        const { saveScene } = await import('./services/sceneApi');
+        
+        const sceneData = {
+          name: name.trim(),
+          description: '',
+          config: sceneConfig
+        };
+        
+        await saveScene(sceneData, token);
+        alert(`"${name}" saved successfully!`);
+        setHasUnsavedChanges(false); // Mark as saved
+      } catch (error) {
+        alert(`Failed to save scene: ${error.message}`);
+      }
+    }
+    
+    // Close modal and allow navigation
+    setShowSavePrompt(false);
+    setAllowNavigation(true);
+  };
+
+  // Handle exit without saving from modal
+  const handleExitWithoutSaving = () => {
+    setShowSavePrompt(false);
+    setAllowNavigation(true);
+    setHasUnsavedChanges(false);
+  };
+
+  // Handle cancel exit from modal
+  const handleCancelExit = () => {
+    setShowSavePrompt(false);
+    setNextPath(null);
+  };
+
+  // Handle exit button click
+
   // Create sceneConfig object for SaveButton
   const sceneConfig = {
     metalness,
@@ -73,10 +253,265 @@ function GeomLab() {
     scale
   };
 
+  // Handle exit with save prompt
+  const handleExit = async () => {
+    setShowSavePrompt(true);
+    setPendingNavigation('/');
+  };
+
   return (
     <>
       <NavBar />
-      <SaveButton sceneConfig={sceneConfig} />
+      <SaveButton sceneConfig={sceneConfig} textColor="#ccffff" />
+      <ExitButton onClick={handleExit} textColor="#ffccdd" />
+      
+      {/* Save Prompt Modal */}
+      {showSavePrompt && (
+        <div 
+          style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            width: '100vw',
+            height: '100vh',
+            background: 'rgba(0, 0, 0, 0.65)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            zIndex: 10000,
+            backdropFilter: 'blur(12px) saturate(180%)'
+          }}
+          onClick={handleCancelExit}
+        >
+          <div 
+            style={{
+              background: `
+                radial-gradient(ellipse at top left, rgba(78, 205, 196, 0.15) 0%, transparent 50%),
+                radial-gradient(ellipse at bottom right, rgba(136, 197, 233, 0.15) 0%, transparent 50%),
+                linear-gradient(135deg, rgba(81, 68, 124, 0.35) 0%, rgba(64, 81, 149, 0.45) 50%, rgba(81, 68, 124, 0.55) 100%)
+              `,
+              padding: '40px 50px',
+              border: '1px solid rgba(78, 205, 196, 0.4)',
+              boxShadow: `
+                0 8px 32px rgba(78, 205, 196, 0.3),
+                0 4px 16px rgba(136, 197, 233, 0.25),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2),
+                inset 0 -1px 0 rgba(0, 0, 0, 0.1),
+                inset 0 0 40px rgba(78, 205, 196, 0.1)
+              `,
+              backdropFilter: 'blur(12px) saturate(180%)',
+              clipPath: `polygon(
+                14px 0,
+                100% 0,
+                100% calc(100% - 14px),
+                calc(100% - 14px) 100%,
+                0 100%,
+                0 14px
+              )`,
+              maxWidth: '500px',
+              textAlign: 'center'
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <h2 style={{
+              color: 'rgba(255, 255, 255, 0.95)',
+              fontSize: '20px',
+              marginBottom: '15px',
+              fontWeight: '600',
+              letterSpacing: '0.1rem',
+              fontFamily: "'JetBrains Mono', monospace",
+              textTransform: 'uppercase'
+            }}>
+              Save Scene?
+            </h2>
+            
+            <p style={{
+              color: 'rgba(255, 255, 255, 0.7)',
+              fontSize: '14px',
+              marginBottom: '30px',
+              lineHeight: '1.5',
+              fontFamily: "'JetBrains Mono', monospace"
+            }}>
+              Your creation hasn't been saved yet.
+            </p>
+            
+            <div style={{ display: 'flex', gap: '12px', justifyContent: 'center', flexWrap: 'wrap' }}>
+              <button
+                onClick={handleSaveFromModal}
+                className="angled-corners"
+                style={{
+                  padding: '0.7rem 1.4rem',
+                  fontSize: '13px',
+                  fontWeight: '600',
+                  letterSpacing: '0.1rem',
+                  background: `
+                    radial-gradient(ellipse at top left, rgba(0, 255, 255, 0.15) 0%, transparent 50%),
+                    radial-gradient(ellipse at bottom right, rgba(255, 0, 204, 0.15) 0%, transparent 50%),
+                    linear-gradient(135deg, rgba(81, 68, 124, 0.35) 0%, rgba(64, 81, 149, 0.45) 50%, rgba(81, 68, 124, 0.55) 100%)
+                  `,
+                  boxShadow: `
+                    0 8px 32px rgba(0, 255, 255, 0.25),
+                    0 4px 16px rgba(255, 0, 204, 0.2),
+                    inset 0 1px 0 rgba(255, 255, 255, 0.2),
+                    inset 0 -1px 0 rgba(0, 0, 0, 0.1),
+                    inset 0 0 40px rgba(0, 255, 255, 0.08)
+                  `,
+                  border: '1px solid rgba(0, 255, 255, 0.35)',
+                  backdropFilter: 'blur(12px) saturate(180%)',
+                  color: '#00ffff',
+                  cursor: 'pointer',
+                  transition: 'all 0.2s',
+                  fontFamily: "'JetBrains Mono', monospace",
+                  textTransform: 'uppercase'
+                }}
+                onMouseEnter={(e) => {
+                  e.target.style.background = `
+                    radial-gradient(ellipse at top left, rgba(0, 255, 255, 0.25) 0%, transparent 50%),
+                    radial-gradient(ellipse at bottom right, rgba(255, 0, 204, 0.25) 0%, transparent 50%),
+                    linear-gradient(135deg, rgba(81, 68, 124, 0.5) 0%, rgba(64, 81, 149, 0.6) 50%, rgba(81, 68, 124, 0.7) 100%)
+                  `;
+                  e.target.style.color = '#ffffff';
+                  e.target.style.textShadow = '0 0 10px rgba(0, 255, 255, 0.8)';
+                  e.target.style.boxShadow = '0 12px 48px rgba(0, 255, 255, 0.35)';
+                }}
+                onMouseLeave={(e) => {
+                  e.target.style.background = `
+                    radial-gradient(ellipse at top left, rgba(0, 255, 255, 0.15) 0%, transparent 50%),
+                    radial-gradient(ellipse at bottom right, rgba(255, 0, 204, 0.15) 0%, transparent 50%),
+                    linear-gradient(135deg, rgba(81, 68, 124, 0.35) 0%, rgba(64, 81, 149, 0.45) 50%, rgba(81, 68, 124, 0.55) 100%)
+                  `;
+                  e.target.style.color = '#00ffff';
+                  e.target.style.textShadow = 'none';
+                  e.target.style.boxShadow = `
+                    0 8px 32px rgba(0, 255, 255, 0.25),
+                    0 4px 16px rgba(255, 0, 204, 0.2),
+                    inset 0 1px 0 rgba(255, 255, 255, 0.2),
+                    inset 0 -1px 0 rgba(0, 0, 0, 0.1),
+                    inset 0 0 40px rgba(0, 255, 255, 0.08)
+                  `;
+                }}
+              >
+                Save & Exit
+              </button>
+              
+              <button
+                onClick={handleExitWithoutSaving}
+                className="angled-corners"
+                style={{
+                  padding: '0.7rem 1.4rem',
+                  fontSize: '13px',
+                  fontWeight: '600',
+                  letterSpacing: '0.1rem',
+                  background: `
+                    radial-gradient(ellipse at top left, rgba(255, 51, 102, 0.15) 0%, transparent 50%),
+                    radial-gradient(ellipse at bottom right, rgba(255, 0, 102, 0.15) 0%, transparent 50%),
+                    linear-gradient(135deg, rgba(81, 68, 124, 0.35) 0%, rgba(64, 81, 149, 0.45) 50%, rgba(81, 68, 124, 0.55) 100%)
+                  `,
+                  boxShadow: `
+                    0 8px 32px rgba(255, 51, 102, 0.25),
+                    0 4px 16px rgba(255, 0, 102, 0.2),
+                    inset 0 1px 0 rgba(255, 255, 255, 0.2),
+                    inset 0 -1px 0 rgba(0, 0, 0, 0.1),
+                    inset 0 0 40px rgba(255, 51, 102, 0.08)
+                  `,
+                  border: '1px solid rgba(255, 51, 102, 0.35)',
+                  backdropFilter: 'blur(12px) saturate(180%)',
+                  color: '#ff3366',
+                  cursor: 'pointer',
+                  transition: 'all 0.2s',
+                  fontFamily: "'JetBrains Mono', monospace",
+                  textTransform: 'uppercase'
+                }}
+                onMouseEnter={(e) => {
+                  e.target.style.background = `
+                    radial-gradient(ellipse at top left, rgba(255, 51, 102, 0.25) 0%, transparent 50%),
+                    radial-gradient(ellipse at bottom right, rgba(255, 0, 102, 0.25) 0%, transparent 50%),
+                    linear-gradient(135deg, rgba(81, 68, 124, 0.5) 0%, rgba(64, 81, 149, 0.6) 50%, rgba(81, 68, 124, 0.7) 100%)
+                  `;
+                  e.target.style.color = '#ffffff';
+                  e.target.style.textShadow = '0 0 10px rgba(255, 51, 102, 0.8)';
+                  e.target.style.boxShadow = '0 12px 48px rgba(255, 51, 102, 0.35)';
+                }}
+                onMouseLeave={(e) => {
+                  e.target.style.background = `
+                    radial-gradient(ellipse at top left, rgba(255, 51, 102, 0.15) 0%, transparent 50%),
+                    radial-gradient(ellipse at bottom right, rgba(255, 0, 102, 0.15) 0%, transparent 50%),
+                    linear-gradient(135deg, rgba(81, 68, 124, 0.35) 0%, rgba(64, 81, 149, 0.45) 50%, rgba(81, 68, 124, 0.55) 100%)
+                  `;
+                  e.target.style.color = '#ff3366';
+                  e.target.style.textShadow = 'none';
+                  e.target.style.boxShadow = `
+                    0 8px 32px rgba(255, 51, 102, 0.25),
+                    0 4px 16px rgba(255, 0, 102, 0.2),
+                    inset 0 1px 0 rgba(255, 255, 255, 0.2),
+                    inset 0 -1px 0 rgba(0, 0, 0, 0.1),
+                    inset 0 0 40px rgba(255, 51, 102, 0.08)
+                  `;
+                }}
+              >
+                Exit Without Saving
+              </button>
+              
+              <button
+                onClick={handleCancelExit}
+                className="angled-corners"
+                style={{
+                  padding: '0.7rem 1.4rem',
+                  fontSize: '13px',
+                  fontWeight: '600',
+                  letterSpacing: '0.1rem',
+                  background: `
+                    radial-gradient(ellipse at top left, rgba(78, 205, 196, 0.03) 0%, transparent 50%),
+                    radial-gradient(ellipse at bottom right, rgba(136, 197, 233, 0.03) 0%, transparent 50%),
+                    linear-gradient(135deg, rgba(81, 68, 124, 0.15) 0%, rgba(64, 81, 149, 0.2) 50%, rgba(81, 68, 124, 0.25) 100%)
+                  `,
+                  boxShadow: `
+                    0 8px 32px rgba(78, 205, 196, 0.1),
+                    0 4px 16px rgba(136, 197, 233, 0.08),
+                    inset 0 1px 0 rgba(255, 255, 255, 0.1),
+                    inset 0 -1px 0 rgba(0, 0, 0, 0.1),
+                    inset 0 0 40px rgba(136, 197, 233, 0.03)
+                  `,
+                  border: '1px solid rgba(78, 205, 196, 0.15)',
+                  backdropFilter: 'blur(12px) saturate(180%)',
+                  color: 'rgba(255, 255, 255, 0.5)',
+                  cursor: 'pointer',
+                  transition: 'all 0.2s',
+                  fontFamily: "'JetBrains Mono', monospace",
+                  textTransform: 'uppercase'
+                }}
+                onMouseEnter={(e) => {
+                  e.target.style.background = `
+                    radial-gradient(ellipse at top left, rgba(78, 205, 196, 0.08) 0%, transparent 50%),
+                    radial-gradient(ellipse at bottom right, rgba(136, 197, 233, 0.08) 0%, transparent 50%),
+                    linear-gradient(135deg, rgba(81, 68, 124, 0.25) 0%, rgba(64, 81, 149, 0.3) 50%, rgba(81, 68, 124, 0.35) 100%)
+                  `;
+                  e.target.style.color = 'rgba(255, 255, 255, 0.75)';
+                  e.target.style.boxShadow = '0 12px 48px rgba(78, 205, 196, 0.15)';
+                }}
+                onMouseLeave={(e) => {
+                  e.target.style.background = `
+                    radial-gradient(ellipse at top left, rgba(78, 205, 196, 0.03) 0%, transparent 50%),
+                    radial-gradient(ellipse at bottom right, rgba(136, 197, 233, 0.03) 0%, transparent 50%),
+                    linear-gradient(135deg, rgba(81, 68, 124, 0.15) 0%, rgba(64, 81, 149, 0.2) 50%, rgba(81, 68, 124, 0.25) 100%)
+                  `;
+                  e.target.style.color = 'rgba(255, 255, 255, 0.5)';
+                  e.target.style.boxShadow = `
+                    0 8px 32px rgba(78, 205, 196, 0.1),
+                    0 4px 16px rgba(136, 197, 233, 0.08),
+                    inset 0 1px 0 rgba(255, 255, 255, 0.1),
+                    inset 0 -1px 0 rgba(0, 0, 0, 0.1),
+                    inset 0 0 40px rgba(136, 197, 233, 0.03)
+                  `;
+                }}
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+      
       <ThreeScene
         scale={scale}
         metalness={metalness}
@@ -161,9 +596,10 @@ function HomePageWithNav() {
   );
 }
 
-function App() {
-  // Use location hook from react-router-dom to track route changes reliably
-  const location = useNavigate();
+function AppContent() {
+  // Get authentication status from AuthContext 
+  const { isAuthenticated, isLoading } = useAuth();
+
   const currentPath = window.location.pathname;
   const isHomePage = currentPath === '/' || currentPath === '';
   const isGeomLabPage = currentPath === '/geom-lab';
@@ -179,21 +615,61 @@ function App() {
     }
   }, [currentPath, isHomePage, isGeomLabPage]);
   
+  // Show loading screen while checking authentication
+  if (isLoading) {
+    return (
+      <div style={{ 
+        display: 'flex', 
+        justifyContent: 'center', 
+        alignItems: 'center', 
+        height: '100vh',
+        background: '#000',
+        color: '#fff',
+        fontSize: '24px'
+      }}>
+        Loading...
+      </div>
+    );
+  }
+  
+  return (
+    <SceneProvider>
+      {/* Render QuantumCursor on all pages EXCEPT geom-lab */}
+      {!isGeomLabPage && <QuantumCursor />}
+      <Routes>
+        {/* PUBLIC ROUTE - anyone can access */}
+        <Route path="/" element={<HomePageWithNav />} />
+        
+        {/* PROTECTED ROUTES - redirect to login if not authenticated */}
+        <Route 
+          path="/geom-lab" 
+          element={isAuthenticated ? <GeomLab /> : <Navigate to="/login" />}
+        />
+        <Route 
+          path="/geometry-lab" 
+          element={isAuthenticated ? <GeomLab /> : <Navigate to="/login" />}
+        />
+        <Route 
+          path="/showcase" 
+          element={isAuthenticated ? <><NavBar /><ShowcaseGallery /></> : <Navigate to="/login" />} 
+        />
+        <Route 
+          path="/scenes" 
+          element={isAuthenticated ? <MyScenesPage /> : <Navigate to="/login" />} 
+        />
+        
+        {/* PUBLIC AUTH ROUTES - anyone can access */}
+        <Route path="/signup" element={<SignUpPage />} />
+        <Route path="/login" element={<LoginPage />} />
+      </Routes>
+    </SceneProvider>
+  );
+}
+
+function App() {
   return (
     <AuthProvider>
-      <SceneProvider>
-        {/* Render QuantumCursor on all pages EXCEPT geom-lab */}
-        {!isGeomLabPage && <QuantumCursor />}
-        <Routes>
-          <Route path="/" element={<HomePageWithNav />} />
-          <Route path="/geom-lab" element={<GeomLab />} />
-          <Route path="/geometry-lab" element={<GeomLab />} />
-          <Route path="/showcase" element={<><NavBar /><ShowcaseGallery /></>} />
-          <Route path="/scenes" element={<MyScenesPage />} />
-          <Route path="/signup" element={<SignUpPage />} />
-          <Route path="/login" element={<LoginPage />} />
-        </Routes>
-      </SceneProvider>
+      <AppContent />
     </AuthProvider>
   );
 }

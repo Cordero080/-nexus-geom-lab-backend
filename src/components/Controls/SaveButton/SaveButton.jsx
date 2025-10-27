@@ -3,11 +3,12 @@ import { useAuth } from '../../../context/AuthContext';
 import { useScene } from '../../../context/SceneContext';
 import { saveScene } from '../../../services/sceneApi';
 import './SaveButton.css';
+import '../../../styles/shared.css';
 
 // Save button component - handles saving scenes to backend
-// Props: sceneConfig (object with all scene settings)
+// Props: sceneConfig (object with all scene settings), textColor (optional custom color)
 
-function SaveButton ({ sceneConfig }) {
+function SaveButton ({ sceneConfig, textColor }) {
   //get authentication state and token from AuthContext
   const { user, token, isAuthenticated } = useAuth();
 
@@ -44,9 +45,9 @@ try {
 
   //Success! show confirmation
   let message = `"${name}" saved successfully!`;
-  // if any technosentients were unlocked, show them
-  if (result.unlockedTechnosentients && result.unlockedTechnosentients.length > 0) {
-    message += `\n\nUnlocked: ${result.unlockedTechnosentients.join(', ')}!`;
+  // if any noetechs were unlocked, show them
+  if (result.unlockedNoetechs && result.unlockedNoetechs.length > 0) {
+    message += `\n\nUnlocked: ${result.unlockedNoetechs.join(', ')}!`;
   }
   alert(message);
 
@@ -65,7 +66,8 @@ return (
   <button 
     onClick={handleSave}
     disabled={isSaving} // prevents button from being clicked multiple times
-    className={`save-button ${isSaving ? 'saving' : ''}`}
+    className={`save-button angled-corners ${isSaving ? 'saving' : ''}`}
+    style={textColor ? { color: textColor } : {}} // Apply custom text color if provided
   >
     <div className="beam-scan-effect"></div>
     {isSaving ? 'Saving...' : 'Save Scene'} 

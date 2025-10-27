@@ -213,7 +213,7 @@
   font-weight: 600;
   padding: 14px 28px;
   border: 2px solid transparent;
-  border-radius: 8px;
+  border-radius: 0;
   background: 
     linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)) padding-box,
     linear-gradient(135deg, #00ffff, #ff00ff) border-box;
@@ -247,7 +247,7 @@
   height: 50px;
   background: rgba(255, 0, 255, 0.2);
   border: 2px solid #ff00ff;
-  border-radius: 50%;
+  border-radius: 0;
   color: #ff00ff;
   font-size: 28px;
   cursor: pointer;

@@ -2,9 +2,11 @@ import React, { useState, useEffect, useRef } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useScene } from "../../context/SceneContext";
 import { useAuth } from "../../context/AuthContext";
+import { getMyScenes } from "../../services/sceneApi"; // Import API function
 import SceneCard from "../../components/Scenes/SceneCard"; // Corrected import path to Scenes
 import CustomSelect from "../../components/CustomSelect/CustomSelect";
 import "./MyScenesPage.css";
+import "../../styles/shared.css";
 
 /**
  * QUANTUM COLLAPSE UTILITY
@@ -74,7 +76,7 @@ const glyphSets = [
 export default function MyScenesPage() {
   const navigate = useNavigate();
   const { loadScene, deleteScene } = useScene();
-  const { isAuthenticated, logout } = useAuth();
+  const { isAuthenticated, logout, user, token } = useAuth(); // Get user and token from auth
 
   // Scene management state
   const [scenes, setScenes] = useState([]);
@@ -181,66 +183,38 @@ export default function MyScenesPage() {
     };
   }, []);
 
-  // Mock user data (replace with actual auth context)
-  const currentUser = {
-    id: "user_123",
-    username: "demo_user",
-    token: "mock_token",
-  };
-
-  // Fetch user's scenes
+  // Fetch user's scenes when component mounts or token changes
   useEffect(() => {
-    fetchMyScenes();
-  }, []);
+    if (token) {
+      fetchMyScenes();
+    }
+  }, [token]);
 
   const fetchMyScenes = async () => {
     setLoading(true);
 
-    // TODO: Replace with actual API call
-    // const response = await fetch(`${API_URL}/scenes/my-scenes`, {
-    //   headers: { 'Authorization': `Bearer ${currentUser.token}` }
-    // });
-    // const data = await response.json();
+    try {
+      // Check if user is authenticated and has token
+      if (!token) {
+        console.error('No token available');
+        setLoading(false);
+        return;
+      }
 
-    // Mock data for now
-    const mockScenes = [
-      {
-        id: "scene_1",
-        userId: currentUser.id,
-        name: "Purple Hyperspace",
-        description: "An alien oscillating icosahedron in a nebula environment",
-        config: {},
-        createdAt: "2025-10-20T10:30:00Z",
-        viewCount: 42,
-        likeCount: 7,
-      },
-      {
-        id: "scene_2",
-        userId: currentUser.id,
-        name: "Floating Sphere",
-        description: "Gentle floating motion with cyan glow",
-        config: {},
-        createdAt: "2025-10-18T15:20:00Z",
-        viewCount: 3,
-        likeCount: 0,
-      },
-      {
-        id: "scene_3",
-        userId: currentUser.id,
-        name: "Chaos Cube",
-        description: "Chaotic movement with hyperframe visualization",
-        config: {},
-        createdAt: "2025-10-15T09:00:00Z",
-        viewCount: 128,
-        likeCount: 23,
-      },
-    ];
-
-    // Reduce timeout to minimize layout shift
-    setTimeout(() => {
-      setScenes(mockScenes);
+      // Call the real API
+      const data = await getMyScenes(token);
+      console.log('📦 Fetched scenes:', data);
+      
+      // Backend returns { success: true, scenes: [...] }
+      const scenesArray = data.scenes || data || [];
+      setScenes(scenesArray);
+    } catch (error) {
+      console.error('Error fetching scenes:', error);
+      // Set empty array on error
+      setScenes([]);
+    } finally {
       setLoading(false);
-    }, 100);
+    }
   };
 
   // Sort scenes
@@ -272,7 +246,7 @@ export default function MyScenesPage() {
 
   // Load scene into editor
   const handleLoad = (scene) => {
-    loadScene(scene, currentUser.id);
+    loadScene(scene, user?.id);
     navigate("/geometry-lab"); // Navigate to editor
   };
 
@@ -288,10 +262,10 @@ export default function MyScenesPage() {
   };
 
   const confirmDelete = async () => {
-    if (!sceneToDelete) return;
+    if (!sceneToDelete || !token) return;
 
     try {
-      await deleteScene(sceneToDelete.id, currentUser.token);
+      await deleteScene(sceneToDelete.id, token);
       
       // Remove from local state
       setScenes(scenes.filter((s) => s.id !== sceneToDelete.id));
@@ -447,7 +421,7 @@ export default function MyScenesPage() {
           <h2>No scenes yet</h2>
           <p>Create your first geometric masterpiece in the Geometry Lab!</p>
           <button
-            className="my-scenes-page__cta"
+            className="my-scenes-page__cta angled-corners"
             onClick={() => navigate("/geometry-lab")}
           >
             Start Creating
@@ -486,13 +460,13 @@ export default function MyScenesPage() {
             </p>
             <div className="delete-modal__actions">
               <button
-                className="delete-modal__btn delete-modal__btn--cancel"
+                className="delete-modal__btn delete-modal__btn--cancel angled-corners"
                 onClick={cancelDelete}
               >
                 Cancel
               </button>
               <button
-                className="delete-modal__btn delete-modal__btn--delete"
+                className="delete-modal__btn delete-modal__btn--delete angled-corners"
                 onClick={confirmDelete}
               >
                 Delete Forever

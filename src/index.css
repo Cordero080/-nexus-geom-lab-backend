@@ -135,6 +135,31 @@ body {
   gap: 20px;
 }
 
+.nav-page-indicator {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: 'Future Z', sans-serif !important;
+  font-size: 28px;
+  font-weight: 700;
+  background: linear-gradient(135deg, #00ffbf 0%, #f61482 60%, #067c76 70%, #ffae00 100%);
+  background-size: 200% 200%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-transform: uppercase;
+  letter-spacing: 4px;
+  animation: shimmer 5s ease-in-out infinite;
+  pointer-events: none;
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  margin-left: auto;
+}
+
 .nav-link {
   text-decoration: none;
   font-size: 18px;

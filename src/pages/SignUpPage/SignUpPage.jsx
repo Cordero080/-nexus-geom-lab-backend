@@ -43,8 +43,8 @@ export default function SignUpPage() {
     // Password validation
     if (!formData.password) {
       newErrors.password = 'Password is required';
-    } else if (formData.password.length < 8) {
-      newErrors.password = 'Password must be at least 8 characters';
+    } else if (formData.password.length < 6) {
+      newErrors.password = 'Password must be at least 6 characters';
     }
     
     // Confirm password validation
@@ -84,8 +84,8 @@ export default function SignUpPage() {
       // Call signup from AuthContext
       await signup(formData.username, formData.email, formData.password);
       
-      // Redirect to geom-lab on success
-      navigate('/geom-lab');
+      // Redirect to homepage on success
+      navigate('/');
     } catch (error) {
       setErrors({ submit: error.message || 'Sign up failed. Please try again.' });
     } finally {

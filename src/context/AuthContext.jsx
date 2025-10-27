@@ -1,18 +1,8 @@
+// (We rename them signupApi and loginApi to avoid conflict with your context function names)
+
+import { signup as signupApi, login as loginApi, getCurrentUser } from '../services/sceneApi';
 import React, { createContext, useContext, useState, useCallback } from "react";
 
-/**
- * Auth Context - Manages authentication state across the application
- * 
- * Tracks:
- * - Current user (id, username, email, token)
- * - Authentication status
- * 
- * Provides:
- * - login() - Authenticate user
- * - signup() - Create new account
- * - logout() - Clear authentication
- * - isAuthenticated - Boolean flag
- */
 
 const AuthContext = createContext(null);
 
@@ -21,16 +11,27 @@ export function AuthProvider({ children }) {
   const defaultUser = {
     id: "dev_user_123",
     username: "dev_builder",
-    email: "dev@nexusgeom.com"
+    email: "dev@nexusgeom.com",
+    unlockedNoetechs: ["icarus-x", "vectra", "nexus"] // Unlocked for dev
   };
   const defaultToken = "dev_jwt_token_12345";
 
   // User state - default to authenticated for development
-  const [user, setUser] = useState(defaultUser);
-  const [token, setToken] = useState(defaultToken);
+  const [user, setUser] = useState(null);
+  const [token, setToken] = useState(null);
+  const [isLoading, setIsLoading] = useState(true); // Add loading state
 
   // Check if user is authenticated
   const isAuthenticated = !!user && !!token;
+
+  // Debug logging
+  React.useEffect(() => {
+    console.log('🔐 Auth State:', { 
+      user: user, 
+      token: token ? `${token.substring(0, 20)}...` : null, 
+      isAuthenticated: isAuthenticated 
+    });
+  }, [user, token, isAuthenticated]);
 
   /**
    * Login user
@@ -39,31 +40,33 @@ export function AuthProvider({ children }) {
    * @returns {Promise<Object>} - User data and token
    */
   const login = useCallback(async (email, password) => {
-    // TODO: Replace with actual API call
-    // const response = await fetch(`${API_URL}/auth/login`, {
-    //   method: 'POST',
-    //   headers: { 'Content-Type': 'application/json' },
-    //   body: JSON.stringify({ email, password })
-    // });
-    // const data = await response.json();
-
     // Mock login for now
-    const mockUser = {
-      id: "user_123",
-      username: "demo_user",
-      email: email,
-    };
-    const mockToken = "mock_jwt_token_12345";
+    try {
+      const data = await loginApi(email, password);
+      console.log('📥 Login API response:', data);
+      
+      // Extract user token from response
+      const { user: userData, token: userToken } = data;
+      
+      console.log('👤 User data:', userData);
+      console.log('🔑 Token:', userToken);
+      
+      setUser(userData);
+      setToken(userToken);
 
-    setUser(mockUser);
-    setToken(mockToken);
+      // Store in localStorage
+      localStorage.setItem("user", JSON.stringify(userData));
+      localStorage.setItem("token", userToken);
 
-    // Store in localStorage
-    localStorage.setItem("user", JSON.stringify(mockUser));
-    localStorage.setItem("token", mockToken);
+      console.log('✅ Login complete, stored in localStorage');
 
-    return { user: mockUser, token: mockToken };
+      return data;
+    } catch (error) {
+      console.error("Login failed", error);
+      throw error;
+    }
   }, []);
+    
 
   /**
    * Signup new user
@@ -73,32 +76,34 @@ export function AuthProvider({ children }) {
    * @returns {Promise<Object>} - User data and token
    */
   const signup = useCallback(async (username, email, password) => {
-    // TODO: Replace with actual API call
-    // const response = await fetch(`${API_URL}/auth/signup`, {
-    //   method: 'POST',
-    //   headers: { 'Content-Type': 'application/json' },
-    //   body: JSON.stringify({ username, email, password })
-    // });
-    // const data = await response.json();
+    
+    try {
+      // Call API
+      const data = await signupApi(username, email, password);
+      console.log('📥 Signup API response:', data);
+      
+      //extract user and token from response
+      const { user: userData, token: userToken } = data;
+      
+      console.log('👤 User data:', userData);
+      console.log('🔑 Token:', userToken);
+      
+      // Update state
+      setUser(userData);
+      setToken(userToken);
 
-    // Mock signup for now
-    const mockUser = {
-      id: "user_" + Date.now(),
-      username: username,
-      email: email,
-    };
-    const mockToken = "mock_jwt_token_" + Date.now();
-
-    setUser(mockUser);
-    setToken(mockToken);
-
-    // Store in localStorage
-    localStorage.setItem("user", JSON.stringify(mockUser));
-    localStorage.setItem("token", mockToken);
-
-    return { user: mockUser, token: mockToken };
+      // Store local storage
+      localStorage.setItem("user", JSON.stringify(userData));
+      localStorage.setItem("token", userToken);
+      
+      console.log('✅ Signup complete, stored in localStorage');
+      
+      return data;
+    } catch (error) {
+      console.error("Signup failed:", error);
+      throw error;
+    }
   }, []);
-
   /**
    * Logout user
    */
@@ -115,23 +120,36 @@ export function AuthProvider({ children }) {
   React.useEffect(() => {
     const storedUser = localStorage.getItem("user");
     const storedToken = localStorage.getItem("token");
+    
+    console.log('🔄 Initializing auth from localStorage:', {
+      hasUser: !!storedUser,
+      hasToken: !!storedToken,
+      storedUser: storedUser,
+      storedToken: storedToken ? `${storedToken.substring(0, 20)}...` : null
+    });
 
     if (storedUser && storedToken) {
       try {
-        setUser(JSON.parse(storedUser));
+        const parsedUser = JSON.parse(storedUser);
+        setUser(parsedUser);
         setToken(storedToken);
+        console.log('✅ Auth restored from localStorage');
       } catch (error) {
         console.error("Failed to parse stored user:", error);
         localStorage.removeItem("user");
         localStorage.removeItem("token");
       }
     }
+    
+    // Always set loading to false after checking localStorage
+    setIsLoading(false);
   }, []);
 
   const value = {
     user,
     token,
     isAuthenticated,
+    isLoading, // Export loading state
     login,
     signup,
     logout,

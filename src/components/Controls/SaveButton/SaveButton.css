@@ -9,24 +9,24 @@
   
   /* Layout */
   display: inline-block;
-  padding: 16px 32px;
+  padding: 12px 24px; /* Smaller padding */
   
   /* Typography */
   font-family: 'Orbitron', 'JetBrains Mono', monospace;
-  font-size: 18px;
+  font-size: 14px; /* Smaller font */
   font-weight: 700;
   letter-spacing: 0.04em;
   text-transform: uppercase;
   color: #00ffff;
   
-  /* Background with gradient border effect */
+  /* Background with gradient border effect - Faded background */
   background: 
-    linear-gradient(rgba(10, 15, 26, 0.8), rgba(10, 15, 26, 0.8)) padding-box,
+    linear-gradient(rgba(10, 15, 26, 0.4), rgba(10, 15, 26, 0.4)) padding-box, /* More transparent */
     linear-gradient(90deg, #00ffff 0%, #ff00cc 100%) border-box;
   
   /* Border */
   border: 2px solid transparent;
-  border-radius: 16px;
+  border-radius: 0;
   
   /* Shadow - Cyan glow */
   box-shadow: 
@@ -37,15 +37,21 @@
   cursor: pointer;
   
   /* Transition */
-  transition: all 0.2s ease;
+  transition: all 0.3s ease;
   
   /* Remove default button styles */
   outline: none;
   overflow: visible;
+  
+  /* Fade out by default */
+  opacity: 0.3;
 }
 
 /* Hover effect */
 .save-button:hover:not(:disabled) {
+  /* Fade in fully */
+  opacity: 1;
+  
   /* Enhanced glow */
   box-shadow: 
     0 0 30px rgba(0, 255, 255, 0.5),

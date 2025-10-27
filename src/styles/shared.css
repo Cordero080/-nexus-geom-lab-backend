@@ -1,0 +1,37 @@
+/* Shared styles for universal UI consistency */
+
+/* Angled corner clip-path for buttons and interactive elements */
+.angled-corners {
+  clip-path: polygon(
+    14px 0,
+    100% 0,
+    100% calc(100% - 14px),
+    calc(100% - 14px) 100%,
+    0 100%,
+    0 14px
+  );
+}
+
+/* Alternative: smaller angled corners for compact elements */
+.angled-corners-sm {
+  clip-path: polygon(
+    8px 0,
+    100% 0,
+    100% calc(100% - 8px),
+    calc(100% - 8px) 100%,
+    0 100%,
+    0 8px
+  );
+}
+
+/* Alternative: larger angled corners for prominent elements */
+.angled-corners-lg {
+  clip-path: polygon(
+    20px 0,
+    100% 0,
+    100% calc(100% - 20px),
+    calc(100% - 20px) 100%,
+    0 100%,
+    0 20px
+  );
+}

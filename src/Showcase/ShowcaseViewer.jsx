@@ -3,6 +3,7 @@ import { Canvas } from '@react-three/fiber';
 import { OrbitControls } from '@react-three/drei';
 import RotatingCube from './RotatingCube';
 import './ShowcaseViewer.css';
+import '../styles/shared.css';
 
 export default function ShowcaseViewer({ animation, onClose }) {
   // Store the mounted state to handle animations properly
@@ -33,11 +34,11 @@ export default function ShowcaseViewer({ animation, onClose }) {
           opacity: mounted ? 1 : 0
         }}
       >
-        <button className="viewer-back-button-bottom" onClick={onClose}>
+        <button className="viewer-back-button-bottom angled-corners" onClick={onClose}>
           ← Back
         </button>
         
-        <button className="viewer-close" onClick={onClose}>
+        <button className="viewer-close angled-corners" onClick={onClose}>
           ✕
         </button>
       

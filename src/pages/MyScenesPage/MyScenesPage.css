@@ -231,7 +231,7 @@
 .my-scenes-page__cta {
   padding: 12px 32px;
   border: none;
-  border-radius: 12px;
+  border-radius: 0;
   background: linear-gradient(135deg, #00ffff 0%, #ff00ff 100%);
   color: #000000;
   font-size: 1rem;
@@ -326,7 +326,7 @@
   flex: 1;
   padding: 12px 24px;
   border: none;
-  border-radius: 12px;
+  border-radius: 0;
   font-size: 1rem;
   font-weight: 600;
   cursor: pointer;
