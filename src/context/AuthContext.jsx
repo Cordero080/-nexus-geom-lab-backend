@@ -145,6 +145,21 @@ export function AuthProvider({ children }) {
     setIsLoading(false);
   }, []);
 
+  // Merge new unlocked noetechs into the current user and persist
+  const addUnlockedNoetechs = useCallback((newKeys) => {
+    if (!newKeys || newKeys.length === 0) return;
+    setUser((prev) => {
+      if (!prev) return prev; // require logged-in user
+      const prevList = Array.isArray(prev.unlockedNoetechs) ? prev.unlockedNoetechs : [];
+      const merged = Array.from(new Set([...prevList, ...newKeys]));
+      const updated = { ...prev, unlockedNoetechs: merged };
+      try {
+        localStorage.setItem("user", JSON.stringify(updated));
+      } catch {}
+      return updated;
+    });
+  }, []);
+
   const value = {
     user,
     token,
@@ -153,6 +168,7 @@ export function AuthProvider({ children }) {
     login,
     signup,
     logout,
+    addUnlockedNoetechs,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

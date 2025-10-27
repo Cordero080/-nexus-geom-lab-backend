@@ -39,8 +39,6 @@ export default function NavBar() {
          {/* Conditional links based on authentication */}
         {isAuthenticated ? (
           <>
-          <Link to="/geometry-lab" className="nav-link">Geom-Lab</Link>
-          <Link to="/showcase" className="nav-link">Showcase</Link>
             <Link to="/scenes" className="nav-link">Scenes</Link>
             <button onClick={logout} className="nav-link nav-link-button">
               Logout

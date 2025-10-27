@@ -45,6 +45,7 @@ This project explores the intersection of **geometric mathematics**, **character
 - ✅ Custom cursor system with quantum particle effects
 - ✅ Responsive navigation with modal management
 - ✅ Per-animation gradient backgrounds and custom lighting
+- ✅ Noetech locking system: Only Icarus‑X is unlocked by default; save a scene to unlock more
 
 **Ready for Expansion:**
 
@@ -52,6 +53,7 @@ This project explores the intersection of **geometric mathematics**, **character
 - 🎯 Public gallery with social features (likes, comments)
 - 🎯 Backend API integration (Express + PostgreSQL)
 - 🎯 Additional animated characters (target: 50+ unique animations)
+- 🎯 Extended Noetech roster and progression rules
 
 ### The Technical Pipeline
 
@@ -298,6 +300,13 @@ Each 3D shape consists of multiple components that must move together in unison:
 ---
 
 ## 🎯 Problem Solutions & Technical Fixes
+
+### Noetech Locking System (New)
+
+- Default unlocked: `icarus-x`
+- Locked items show an overlay in the Showcase and are not clickable
+- Saving a scene may unlock more Noetechs; the response merges into the user state and persists
+- Details and customization: see [NOETECH_LOCKING.md](./NOETECH_LOCKING.md)
 
 ### FBX Animation Root Motion Issue
 

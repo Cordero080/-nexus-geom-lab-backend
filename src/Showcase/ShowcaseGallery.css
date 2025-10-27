@@ -224,6 +224,50 @@
   box-shadow: 0 10px 40px rgba(255, 0, 255, 0.4);
 }
 
+/* Locked state styling */
+.parallax-model-card.locked {
+  cursor: not-allowed;
+  filter: grayscale(0.5) brightness(0.75);
+}
+
+.parallax-model-card.locked:hover {
+  transform: none;
+  box-shadow: none;
+  border-color: rgba(0, 255, 255, 0.25);
+}
+
+.lock-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(180deg, rgba(0,0,0,0.55), rgba(0,0,0,0.4));
+  color: #cceeff;
+  z-index: 3;
+  text-align: center;
+  pointer-events: none;
+}
+
+.lock-badge {
+  font-weight: 800;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  padding: 6px 12px;
+  border: 1px solid rgba(0, 255, 255, 0.5);
+  border-radius: 10px;
+  background: rgba(0, 255, 255, 0.09);
+  color: #00ffff;
+  margin-bottom: 8px;
+}
+
+.lock-hint {
+  font-size: 0.95rem;
+  color: rgba(255, 255, 255, 0.85);
+  text-shadow: 0 0 12px rgba(0, 255, 255, 0.25);
+}
+
 /* Specific heights for all models - consistent sizing */
 .parallax-model-card-1,
 .parallax-model-card-2,

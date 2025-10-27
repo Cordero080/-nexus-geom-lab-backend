@@ -3,9 +3,11 @@ import React, { useState, useEffect, useRef } from 'react';
 import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader';
 import { Canvas } from '@react-three/fiber';
 import { useLocation } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 import RotatingCube from './RotatingCube';
 import ShowcaseViewer from './ShowcaseViewer';
 import './ShowcaseGallery.css';
+import '../styles/shared.css';
 
 export default function ShowcaseGallery() {
   const [selectedAnimation, setSelectedAnimation] = useState(null);
@@ -16,6 +18,7 @@ export default function ShowcaseGallery() {
   const [visibleCards, setVisibleCards] = useState(new Set([1])); // Only render first card initially
   const location = useLocation();
   const containerRef = useRef(null);
+  const { user } = useAuth();
 
   // Close viewer when navigating and manage document body overflow
   useEffect(() => {
@@ -110,6 +113,7 @@ export default function ShowcaseGallery() {
   const mockAnimations = [
     {
       id: 1,
+      noetechKey: 'icarus-x',
       name: 'Icarus-X #001',
       animation: 'Solar Ascension',
       variant: 'Golden Phoenix',
@@ -127,6 +131,7 @@ export default function ShowcaseGallery() {
     },
     {
       id: 2,
+      noetechKey: 'vectra',
       name: 'Vectra APEX #002',
       animation: 'Break Dance',
       variant: 'Spectral',
@@ -144,6 +149,7 @@ export default function ShowcaseGallery() {
     },
     {
       id: 3,
+      noetechKey: 'nexus',
       name: 'Nexus-Prime #003',
       animation: 'Warrior Flip',
       variant: 'Shadow Striker',
@@ -247,6 +253,10 @@ export default function ShowcaseGallery() {
         {mockAnimations.map((animation, index) => {
           const position = getCardPosition(index);
           const isVisible = visibleCards.has(animation.id);
+          const unlocked = Array.isArray(user?.unlockedNoetechs) && user?.unlockedNoetechs?.length
+            ? user.unlockedNoetechs
+            : ['icarus-x'];
+          const isUnlocked = unlocked.includes(animation.noetechKey);
           
           return (
             <div
@@ -256,8 +266,12 @@ export default function ShowcaseGallery() {
               data-card-id={animation.id}
             >
               <div
-                className={`parallax-model-card parallax-model-card-${animation.id}`}
+                className={`parallax-model-card parallax-model-card-${animation.id} ${isUnlocked ? '' : 'locked'}`}
                 onClick={() => {
+                  if (!isUnlocked) {
+                    alert('Locked — Save a scene to unlock this Noetech.');
+                    return;
+                  }
                   loadModelOnDemand(animation.id);
                   setSelectedAnimation(animation);
                 }}
@@ -268,6 +282,12 @@ export default function ShowcaseGallery() {
                 }}
                 onMouseLeave={() => setHoveredCard(null)}
               >
+                {!isUnlocked && (
+                  <div className="lock-overlay">
+                    <div className="lock-badge angled-corners-sm">Locked</div>
+                    <div className="lock-hint">Save a scene to unlock</div>
+                  </div>
+                )}
                 {isVisible ? (
                   <Canvas
                     camera={{ position: [0, 1, 6], fov: 60 }}

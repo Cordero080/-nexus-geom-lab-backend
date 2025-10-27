@@ -10,7 +10,7 @@ import '../../../styles/shared.css';
 
 function SaveButton ({ sceneConfig, textColor }) {
   //get authentication state and token from AuthContext
-  const { user, token, isAuthenticated } = useAuth();
+  const { token, isAuthenticated, addUnlockedNoetechs } = useAuth();
 
   //get scene context functions and state
   const { sceneName, setSceneName } = useScene();
@@ -48,6 +48,10 @@ try {
   // if any noetechs were unlocked, show them
   if (result.unlockedNoetechs && result.unlockedNoetechs.length > 0) {
     message += `\n\nUnlocked: ${result.unlockedNoetechs.join(', ')}!`;
+    // Merge into auth context so UI reflects unlocks immediately
+    try {
+      addUnlockedNoetechs(result.unlockedNoetechs);
+    } catch {}
   }
   alert(message);
 
