@@ -329,7 +329,7 @@ Create a `.env` file:
 MONGODB_URI=mongodb+srv://username:password@cluster.mongodb.net/nexus-geom
 JWT_SECRET=your-secret-key-here
 FRONTEND_URL=http://localhost:5173
-PORT=3000
+PORT=5000
 ```
 
 ## 📦 Dependencies
@@ -401,6 +401,34 @@ Visit `http://localhost:3000/` to see the health check response.
 - ✅ CORS protection
 - ✅ Ownership verification for scene operations
 - ✅ Error handling middleware
+
+### Input Sanitizers (what and why)
+
+Sanitizers are small "cleaners" that neutralize sketchy input before your app uses it.
+
+- Why: stop common attacks like XSS (script tags in text) and NoSQL injection (sneaky `$`/`.` keys in JSON).
+- What they do: trim/normalize/escape strings, remove dangerous keys, and strip harmful HTML/JS.
+- Where we use them: right after JSON/urlencoded parsing, before routes.
+
+Enabled in this backend:
+
+- `xss-clean` – sanitizes strings against cross‑site scripting.
+- `express-mongo-sanitize` – removes `$` and `.` from keys to prevent NoSQL injection.
+
+Code (index.js):
+
+```js
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(mongoSanitize());
+app.use(xss());
+```
+
+These run alongside other hardening:
+
+- `helmet` for security headers
+- Global and auth‑scoped rate limiting
+- `morgan` request logging
 
 ## 📈 Performance Features
 
