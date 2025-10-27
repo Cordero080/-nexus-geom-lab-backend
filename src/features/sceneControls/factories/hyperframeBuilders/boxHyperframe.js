@@ -221,6 +221,105 @@ export function createBoxHyperframe(
       `12 inner + 12 tiny + 8 outer→inner + 8 inner→tiny = 40 edges`
   );
 
+  // ========================================
+  // 3. DUPLICATE: Rotated compound hypercube merged into current
+  // ========================================
+  const rot = new THREE.Matrix4().makeRotationY(Math.PI / 4);
+  const scale = 0.98;
+  const RS = (x, y, z) =>
+    new THREE.Vector3(x, y, z).applyMatrix4(rot).multiplyScalar(scale);
+
+  const outerCornersRot = [
+    RS(-outerSize, -outerSize, -outerSize),
+    RS(outerSize, -outerSize, -outerSize),
+    RS(outerSize, outerSize, -outerSize),
+    RS(-outerSize, outerSize, -outerSize),
+    RS(-outerSize, -outerSize, outerSize),
+    RS(outerSize, -outerSize, outerSize),
+    RS(outerSize, outerSize, outerSize),
+    RS(-outerSize, outerSize, outerSize),
+  ];
+  const innerCornersRot = [
+    RS(-innerSize, -innerSize, -innerSize),
+    RS(innerSize, -innerSize, -innerSize),
+    RS(innerSize, innerSize, -innerSize),
+    RS(-innerSize, innerSize, -innerSize),
+    RS(-innerSize, -innerSize, innerSize),
+    RS(innerSize, -innerSize, innerSize),
+    RS(innerSize, innerSize, innerSize),
+    RS(-innerSize, innerSize, innerSize),
+  ];
+  const tinyCornersRot = [
+    RS(-tinySize, -tinySize, -tinySize),
+    RS(tinySize, -tinySize, -tinySize),
+    RS(tinySize, tinySize, -tinySize),
+    RS(-tinySize, tinySize, -tinySize),
+    RS(-tinySize, -tinySize, tinySize),
+    RS(tinySize, -tinySize, tinySize),
+    RS(tinySize, tinySize, tinySize),
+    RS(-tinySize, tinySize, tinySize),
+  ];
+
+  // Helper to add cube edges to innerCubeGroup using centerLinesMaterial
+  const addCubeEdges = (verts, radius = 0.004) => {
+    const edges = [
+      [0, 1],
+      [1, 2],
+      [2, 3],
+      [3, 0],
+      [4, 5],
+      [5, 6],
+      [6, 7],
+      [7, 4],
+      [0, 4],
+      [1, 5],
+      [2, 6],
+      [3, 7],
+    ];
+    edges.forEach(([i, j]) => {
+      const v1 = verts[i];
+      const v2 = verts[j];
+      const dist = v1.distanceTo(v2);
+      const cyl = new THREE.CylinderGeometry(radius, radius, dist, 8);
+      const mesh = new THREE.Mesh(cyl, centerLinesMaterial);
+      mesh.position.copy(v1.clone().add(v2).multiplyScalar(0.5));
+      mesh.lookAt(v2);
+      mesh.rotateX(Math.PI / 2);
+      innerCubeGroup.add(mesh);
+    });
+  };
+  // Rotated inner cube edges
+  addCubeEdges(innerCornersRot);
+  // Rotated tiny cube edges
+  addCubeEdges(tinyCornersRot, 0.003);
+
+  // Rotated tesseract connections: outer→inner
+  for (let i = 0; i < 8; i++) {
+    const outerV = outerCornersRot[i];
+    const innerV = innerCornersRot[i];
+    const d = outerV.distanceTo(innerV);
+    const cyl = new THREE.CylinderGeometry(0.003, 0.003, d, 6);
+    const mesh = new THREE.Mesh(cyl, curvedLinesMaterial);
+    mesh.position.copy(outerV.clone().add(innerV).multiplyScalar(0.5));
+    mesh.lookAt(innerV);
+    mesh.rotateX(Math.PI / 2);
+    tesseractConnectionGroup.add(mesh);
+  }
+  // Rotated nested connections: inner→tiny
+  for (let i = 0; i < 8; i++) {
+    const innerV = innerCornersRot[i];
+    const tinyV = tinyCornersRot[i];
+    const d = innerV.distanceTo(tinyV);
+    const cyl = new THREE.CylinderGeometry(0.0025, 0.0025, d, 6);
+    const mesh = new THREE.Mesh(cyl, curvedLinesMaterial);
+    mesh.position.copy(innerV.clone().add(tinyV).multiplyScalar(0.5));
+    mesh.lookAt(tinyV);
+    mesh.rotateX(Math.PI / 2);
+    tesseractConnectionGroup.add(mesh);
+  }
+
+  console.log("Added rotated compound hypercube (edges + connections)");
+
   return {
     centerLines: innerCubeGroup,
     centerLinesMaterial,

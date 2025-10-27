@@ -137,5 +137,60 @@ export function createBoxWireframe(geometry, wireframeMaterial) {
     "cylinder edges"
   );
 
+  // === DUPLICATE: Rotated compound cube wireframe merged into same group ===
+  // Apply a 45° Y-rotation with a slight scale to reduce z-fighting
+  const rot = new THREE.Matrix4().makeRotationY(Math.PI / 4);
+  const scale = 0.98;
+  const rotateScale = (v) => v.clone().applyMatrix4(rot).multiplyScalar(scale);
+
+  // Rotated edges
+  cubeEdges.forEach(([i, j]) => {
+    const start = rotateScale(new THREE.Vector3(...cubeCorners[i]));
+    const end = rotateScale(new THREE.Vector3(...cubeCorners[j]));
+    const distance = start.distanceTo(end);
+
+    const cylinderGeom = new THREE.CylinderGeometry(
+      MAIN_RADIUS,
+      MAIN_RADIUS,
+      distance,
+      8
+    );
+    const cylinderMesh = new THREE.Mesh(cylinderGeom, wireframeMaterial);
+    cylinderMesh.position.copy(start.clone().add(end).multiplyScalar(0.5));
+    cylinderMesh.lookAt(end);
+    cylinderMesh.rotateX(Math.PI / 2);
+
+    // Add halo for the rotated edge as well
+    const haloGeom = new THREE.CylinderGeometry(
+      MAIN_RADIUS * HALO_RADIUS_FACTOR,
+      MAIN_RADIUS * HALO_RADIUS_FACTOR,
+      distance,
+      8
+    );
+    const haloMesh = new THREE.Mesh(haloGeom, haloMaterial);
+    haloMesh.name = "edgeHalo";
+    haloMesh.position.set(0, 0, 0);
+    haloMesh.rotation.set(0, 0, 0);
+    cylinderMesh.add(haloMesh);
+    cubeWireframeGroup.add(cylinderMesh);
+  });
+
+  // Rotated vertex nodes (instanced)
+  const instancesRot = new THREE.InstancedMesh(
+    sphereGeom,
+    nodeMaterial,
+    cubeCorners.length
+  );
+  instancesRot.name = "vertexNodesRotated";
+  for (let idx = 0; idx < cubeCorners.length; idx++) {
+    const v = rotateScale(new THREE.Vector3(...cubeCorners[idx]));
+    m.makeTranslation(v.x, v.y, v.z);
+    instancesRot.setMatrixAt(idx, m);
+  }
+  instancesRot.instanceMatrix.needsUpdate = true;
+  nodesGroup.add(instancesRot);
+
+  console.log("Added rotated compound cube wireframe to group");
+
   return cubeWireframeGroup;
 }

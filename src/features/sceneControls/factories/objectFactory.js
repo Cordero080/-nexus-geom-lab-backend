@@ -90,7 +90,27 @@ export function createSceneObject(config) {
   // ========================================
   // 3. SOLID MESH CREATION
   // ========================================
-  const solidMesh = new THREE.Mesh(geometry, solidMaterial);
+  // Create a container so we can optionally add a rotated duplicate solid for Box (compound)
+  const solidMesh = new THREE.Group();
+  const primarySolid = new THREE.Mesh(geometry, solidMaterial);
+  primarySolid.castShadow = true;
+  primarySolid.receiveShadow = true;
+  solidMesh.add(primarySolid);
+
+  // If this is a standard Box hypercube (not compound tesseract), add a rotated duplicate solid cube
+  if (
+    (geometry.type === "BoxGeometry" || (geometry.userData && geometry.userData.baseType === "BoxGeometry")) &&
+    !(geometry.userData && geometry.userData.isCpdTesseract)
+  ) {
+    const rotatedGeom = geometry.clone();
+    const rotatedSolid = new THREE.Mesh(rotatedGeom, solidMaterial);
+    // Apply a gentle rotation and slight scale to reduce z-fighting, matching wireframe/hyperframe duplicate
+    rotatedSolid.rotation.y = Math.PI / 4;
+    rotatedSolid.scale.setScalar(0.98);
+    rotatedSolid.castShadow = true;
+    rotatedSolid.receiveShadow = true;
+    solidMesh.add(rotatedSolid);
+  }
 
   // Generate unique object ID for interaction
   const objectId = `object_${objectIndex}_${Date.now()}`;
@@ -261,8 +281,7 @@ export function createSceneObject(config) {
   // ========================================
   // 7. SHADOW CONFIGURATION
   // ========================================
-  solidMesh.castShadow = true;
-  solidMesh.receiveShadow = true;
+  // Shadows are set on child meshes above; group holds both
   wireframeMesh.castShadow = true;
   wireframeMesh.receiveShadow = true;
 
