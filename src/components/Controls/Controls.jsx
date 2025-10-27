@@ -29,12 +29,6 @@ function Controls({
   ambientLightIntensity, onAmbientLightIntensityChange,
   directionalLightColor, onDirectionalLightColorChange,
   directionalLightIntensity, onDirectionalLightIntensityChange
-  ,
-  // GEOMETRY-SPECIFIC: Compound Torus Knot (Twin)
-  cpdTK_p, onCpdTK_pChange,
-  cpdTK_q, onCpdTK_qChange,
-  cpdTK_tubeRadius, onCpdTK_tubeRadiusChange,
-  cpdTK_gap, onCpdTK_gapChange
 }) {
   
   // LOCAL STATE - These are managed by Controls component itself (NOT from App.jsx)
@@ -129,24 +123,6 @@ function Controls({
   const handleObjectTypeChange = (event) => {
     const newType = event.target.value;
     onObjectTypeChange(newType);
-  };
-
-  // Geometry-specific handlers (cpd torus knot)
-  const handleCpdTK_pChange = (event) => {
-    const v = Math.max(2, parseInt(event.target.value || 2, 10));
-    onCpdTK_pChange(isNaN(v) ? 2 : v);
-  };
-  const handleCpdTK_qChange = (event) => {
-    const v = Math.max(2, parseInt(event.target.value || 3, 10));
-    onCpdTK_qChange(isNaN(v) ? 3 : v);
-  };
-  const handleCpdTK_tubeRadiusChange = (event) => {
-    const v = Math.max(0.01, parseFloat(event.target.value || 0.08));
-    onCpdTK_tubeRadiusChange(isNaN(v) ? 0.08 : v);
-  };
-  const handleCpdTK_gapChange = (event) => {
-    const v = Math.max(0.0, parseFloat(event.target.value || 0.12));
-    onCpdTK_gapChange(isNaN(v) ? 0.12 : v);
   };
 
 
@@ -280,68 +256,7 @@ function Controls({
           <option value="cpdtesseract">💎 Mega-Tesseract</option>
           <option value="octahedron">🔸 Cpd-Octahedron</option>
           <option value="tetrahedron">🔻 Cpd-Tetrahedron</option>
-          <option value="torusknot">🌀 Torus Knot</option>
-          <option value="cpdtorusknot">🪢 Cpd-Torus Knot (Twin)</option>
-          <option value="alienintellect">🧠 Alien Intellect (Knots)</option>
         </select>
-
-        {/* Geometry-specific controls: only when selected */}
-        {objectType === 'cpdtorusknot' && (
-          <div style={{
-            marginTop: '10px',
-            padding: '10px',
-            border: '1px solid rgba(0,255,255,0.2)',
-            borderRadius: '8px',
-            background: 'rgba(0,0,0,0.2)'
-          }}>
-            <div style={{ fontWeight: 600, marginBottom: '6px' }}>🪢 Torus Knot (Twin) Params</div>
-            <label>
-              p (longitudinal wraps): <span className="value-display">{cpdTK_p}</span>
-            </label>
-            <input
-              type="number"
-              min="2"
-              step="1"
-              value={cpdTK_p}
-              onChange={handleCpdTK_pChange}
-            />
-
-            <label>
-              q (minor rotations): <span className="value-display">{cpdTK_q}</span>
-            </label>
-            <input
-              type="number"
-              min="2"
-              step="1"
-              value={cpdTK_q}
-              onChange={handleCpdTK_qChange}
-            />
-
-            <label>
-              Tube Thickness: <span className="value-display">{cpdTK_tubeRadius.toFixed(3)}</span>
-            </label>
-            <input
-              type="range"
-              min="0.02"
-              max="0.2"
-              step="0.005"
-              value={cpdTK_tubeRadius}
-              onChange={handleCpdTK_tubeRadiusChange}
-            />
-
-            <label>
-              Knot Gap: <span className="value-display">{cpdTK_gap.toFixed(3)}</span>
-            </label>
-            <input
-              type="range"
-              min="0"
-              max="0.3"
-              step="0.005"
-              value={cpdTK_gap}
-              onChange={handleCpdTK_gapChange}
-            />
-          </div>
-        )}
 
         {/* Animation Style Control */}
         <label>

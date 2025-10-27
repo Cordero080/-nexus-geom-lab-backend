@@ -115,7 +115,7 @@ export function createIcosahedronWireframe(geometry, wireframeMaterial) {
 }
 
 /**
- * Create a standard thin wireframe for other geometries (TorusKnot, etc.)
+ * Create a standard thin wireframe for other geometries
  * @param {THREE.BufferGeometry} geometry - The geometry
  * @param {THREE.Material} wireframeMaterial - Material for the wireframe
  * @returns {THREE.Mesh} The wireframe mesh

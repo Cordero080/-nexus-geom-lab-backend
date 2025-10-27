@@ -41,7 +41,7 @@ export function createSolidMaterial({
  * @param {number} options.metalness - Metalness value (0-1)
  * @param {number} options.emissiveIntensity - Emissive intensity (0-2, multiplied by baseColor)
  * @param {number} options.wireframeIntensity - Wireframe intensity (0-100) - used as opacity
- * @param {boolean} options.isStandardWireframe - Whether to use standard wireframe mode (for TorusKnot, etc.)
+ * @param {boolean} options.isStandardWireframe - Whether to use standard wireframe mode
  * @returns {THREE.MeshStandardMaterial} The wireframe material with PBR support
  */
 export function createWireframeMaterial({

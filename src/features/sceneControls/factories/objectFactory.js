@@ -64,14 +64,6 @@ export function createSceneObject(config) {
   if (objectCount === 1) {
     // Single object: use the selected objectType
     const options = {};
-    if (objectType === "cpdtorusknot") {
-      options.cpdtorusknot = {
-        p: cpdTK_p,
-        q: cpdTK_q,
-        tubeRadius: cpdTK_tubeRadius,
-        gap: cpdTK_gap,
-      };
-    }
     geometry = createGeometry(objectType, options);
   } else {
     // Multiple objects: cycle through different types for variety
@@ -81,7 +73,6 @@ export function createSceneObject(config) {
       () => new THREE.BoxGeometry(1.5, 1.5, 1.5),
       () => new THREE.OctahedronGeometry(),
       () => new THREE.TetrahedronGeometry(1.2),
-      () => new THREE.TorusKnotGeometry(1, 0.2, 150, 16),
     ];
     geometry = geometryTypes[objectIndex % geometryTypes.length]();
   }
@@ -125,33 +116,6 @@ export function createSceneObject(config) {
     rotatedSolid.castShadow = true;
     rotatedSolid.receiveShadow = true;
     solidMesh.add(rotatedSolid);
-
-    // Add symmetric -45° rotated third solid for a balanced triple-merge
-    const rotatedGeomNeg = geometry.clone();
-    const rotatedSolidNeg = new THREE.Mesh(rotatedGeomNeg, solidMaterial);
-    rotatedSolidNeg.rotation.y = -Math.PI / 4;
-    rotatedSolidNeg.scale.setScalar(0.98);
-    rotatedSolidNeg.castShadow = true;
-    rotatedSolidNeg.receiveShadow = true;
-    solidMesh.add(rotatedSolidNeg);
-
-    // Add +45° rotated around X-axis
-    const rotatedGeomX = geometry.clone();
-    const rotatedSolidX = new THREE.Mesh(rotatedGeomX, solidMaterial);
-    rotatedSolidX.rotation.x = Math.PI / 4;
-    rotatedSolidX.scale.setScalar(0.98);
-    rotatedSolidX.castShadow = true;
-    rotatedSolidX.receiveShadow = true;
-    solidMesh.add(rotatedSolidX);
-
-    // Add +45° rotated around Z-axis
-    const rotatedGeomZ = geometry.clone();
-    const rotatedSolidZ = new THREE.Mesh(rotatedGeomZ, solidMaterial);
-    rotatedSolidZ.rotation.z = Math.PI / 4;
-    rotatedSolidZ.scale.setScalar(0.98);
-    rotatedSolidZ.castShadow = true;
-    rotatedSolidZ.receiveShadow = true;
-    solidMesh.add(rotatedSolidZ);
   }
 
   // Generate unique object ID for interaction
@@ -174,8 +138,13 @@ export function createSceneObject(config) {
     geometry.type === "BoxGeometry" ||
     (geometry.userData && geometry.userData.baseType === "BoxGeometry")
   ) {
-    // Check if it's a compound tesseract
-    if (geometry.userData && geometry.userData.isCpdTesseract) {
+    // Check if it's a mega tesseract (4 tesseracts)
+    if (geometry.userData && geometry.userData.isMegaTesseract) {
+      wireframeMaterial = createWireframeMaterial(materialConfig);
+      wireframeMesh = createCpdTesseractWireframe(geometry, wireframeMaterial);
+    }
+    // Check if it's a compound tesseract (2 tesseracts)
+    else if (geometry.userData && geometry.userData.isCpdTesseract) {
       wireframeMaterial = createWireframeMaterial(materialConfig);
       wireframeMesh = createCpdTesseractWireframe(geometry, wireframeMaterial);
     } else {
@@ -201,7 +170,7 @@ export function createSceneObject(config) {
     wireframeMaterial = createWireframeMaterial(materialConfig);
     wireframeMesh = createIcosahedronWireframe(geometry, wireframeMaterial);
   } else {
-    // Standard thin wireframe for other geometries (TorusKnot, etc.)
+    // Standard thin wireframe for other geometries
     wireframeMaterial = createWireframeMaterial({
       ...materialConfig,
       isStandardWireframe: true,
@@ -447,72 +416,58 @@ function createGenericHyperframe(geometry, spiralColor, edgeColor) {
   const centerLinesGeometry = new THREE.BufferGeometry();
   const centerLinesPositions = [];
 
-  // Determine if this geometry type should have center lines
-  let createCenterLines = true;
-  if (
-    geometry.type === "TorusKnotGeometry" ||
-    (geometry.userData && geometry.userData.baseType === "TorusKnotGeometry")
-  ) {
-    createCenterLines = false; // No center lines for torus
-  }
+  // Use actual wireframe edge endpoints for connections
+  for (let j = 0; j < edgeVertices.length; j += 12) {
+    // Every other edge
+    const endX = edgeVertices[j + 3]; // End point of edge
+    const endY = edgeVertices[j + 4];
+    const endZ = edgeVertices[j + 5];
 
-  if (createCenterLines) {
-    // Use actual wireframe edge endpoints for connections
-    for (let j = 0; j < edgeVertices.length; j += 12) {
-      // Every other edge
-      const endX = edgeVertices[j + 3]; // End point of edge
-      const endY = edgeVertices[j + 4];
-      const endZ = edgeVertices[j + 5];
+    // Create spiral path from center to edge endpoint
+    const steps = 8; // Number of spiral steps
+    for (let step = 0; step < steps; step++) {
+      const t1 = step / steps;
+      const t2 = (step + 1) / steps;
 
-      // Create spiral path from center to edge endpoint
-      const steps = 8; // Number of spiral steps
-      for (let step = 0; step < steps; step++) {
-        const t1 = step / steps;
-        const t2 = (step + 1) / steps;
+      // Spiral parameters
+      const radius1 = t1 * 0.8; // Gradually increase radius
+      const radius2 = t2 * 0.8;
+      const angle1 = t1 * Math.PI * 2; // One full rotation
+      const angle2 = t2 * Math.PI * 2;
 
-        // Spiral parameters
-        const radius1 = t1 * 0.8; // Gradually increase radius
-        const radius2 = t2 * 0.8;
-        const angle1 = t1 * Math.PI * 2; // One full rotation
-        const angle2 = t2 * Math.PI * 2;
+      // Interpolate toward the actual edge point
+      const normalizer = Math.sqrt(endX * endX + endY * endY + endZ * endZ);
+      const x1 = Math.cos(angle1) * radius1 * (endX / normalizer);
+      const y1 = Math.sin(angle1) * radius1 * (endY / normalizer) + t1 * endY;
+      const z1 = t1 * endZ;
 
-        // Interpolate toward the actual edge point
-        const normalizer = Math.sqrt(endX * endX + endY * endY + endZ * endZ);
-        const x1 = Math.cos(angle1) * radius1 * (endX / normalizer);
-        const y1 = Math.sin(angle1) * radius1 * (endY / normalizer) + t1 * endY;
-        const z1 = t1 * endZ;
+      const x2 = Math.cos(angle2) * radius2 * (endX / normalizer);
+      const y2 = Math.sin(angle2) * radius2 * (endY / normalizer) + t2 * endY;
+      const z2 = t2 * endZ;
 
-        const x2 = Math.cos(angle2) * radius2 * (endX / normalizer);
-        const y2 = Math.sin(angle2) * radius2 * (endY / normalizer) + t2 * endY;
-        const z2 = t2 * endZ;
-
-        centerLinesPositions.push(x1, y1, z1, x2, y2, z2);
-      }
+      centerLinesPositions.push(x1, y1, z1, x2, y2, z2);
     }
   }
+}
 
-  // Create center lines mesh
-  let centerLines, centerLinesMaterial;
-  if (centerLinesPositions.length > 0) {
-    centerLinesGeometry.setAttribute(
-      "position",
-      new THREE.Float32BufferAttribute(centerLinesPositions, 3)
-    );
+// Create center lines mesh
+let centerLines, centerLinesMaterial;
+if (centerLinesPositions.length > 0) {
+  centerLinesGeometry.setAttribute(
+    "position",
+    new THREE.Float32BufferAttribute(centerLinesPositions, 3)
+  );
 
-    centerLinesMaterial = new THREE.LineBasicMaterial({
-      color: new THREE.Color(spiralColor),
-      transparent: true,
-      opacity: 0.6,
-    });
+  centerLinesMaterial = new THREE.LineBasicMaterial({
+    color: new THREE.Color(spiralColor),
+    transparent: true,
+    opacity: 0.6,
+  });
 
-    centerLines = new THREE.LineSegments(
-      centerLinesGeometry,
-      centerLinesMaterial
-    );
-  } else {
-    centerLines = new THREE.Object3D();
-    centerLinesMaterial = null;
-  }
+  centerLines = new THREE.LineSegments(
+    centerLinesGeometry,
+    centerLinesMaterial
+  );
 
   // ========================================
   // 2. CREATE CURVED LINES (Edge connections)
@@ -560,11 +515,7 @@ function createGenericHyperframe(geometry, spiralColor, edgeColor) {
       );
 
       // Connect to nearby edge points
-      const isTorusKnot =
-        geometry.type === "TorusKnotGeometry" ||
-        (geometry.userData &&
-          geometry.userData.baseType === "TorusKnotGeometry");
-      const maxDist = isTorusKnot ? 0.4 : 1.2;
+      const maxDist = 1.2;
 
       if (dist1 < maxDist) {
         curvedLinesPositions.push(...edge1End, ...edge2Start);
@@ -1328,34 +1279,34 @@ function createCompoundSphereExtras(geometry) {
   const internalOrbs = [];
   const internalOrbCount = 20;
   // Reuse goldenAngle already defined above
-  
+
   for (let i = 0; i < internalOrbCount; i++) {
     const t = i / internalOrbCount;
     const inclination = Math.acos(1 - 2 * t);
     const azimuth = goldenAngle * i;
-    
+
     // Create glowing orbs (LARGER and more visible)
     const orbSize = 0.15 + (i % 3) * 0.03; // Varying sizes - much larger
     const orbGeom = new THREE.SphereGeometry(orbSize, 16, 16);
-    const orbColor = new THREE.Color().setHSL((i / internalOrbCount), 1.0, 0.7);
+    const orbColor = new THREE.Color().setHSL(i / internalOrbCount, 1.0, 0.7);
     const orbMat = new THREE.MeshBasicMaterial({
       color: orbColor,
       transparent: true,
-      opacity: 0.9
+      opacity: 0.9,
     });
     const orb = new THREE.Mesh(orbGeom, orbMat);
-    
+
     // Add glow (larger and brighter)
     const glowGeom = new THREE.SphereGeometry(orbSize * 2.0, 16, 16);
     const glowMat = new THREE.MeshBasicMaterial({
       color: orbColor,
       transparent: true,
       opacity: 0.5,
-      side: THREE.BackSide
+      side: THREE.BackSide,
     });
     const glow = new THREE.Mesh(glowGeom, glowMat);
     orb.add(glow);
-    
+
     orb.userData = {
       baseInclination: inclination,
       baseAzimuth: azimuth,
@@ -1364,9 +1315,9 @@ function createCompoundSphereExtras(geometry) {
       phaseOffset: i * 0.25,
       pulseSpeed: 1.2 + (i % 3) * 0.3,
       bobSpeed: 0.8 + (i % 3) * 0.2,
-      bobAmplitude: 0.1 + (i % 3) * 0.05
+      bobAmplitude: 0.1 + (i % 3) * 0.05,
     };
-    
+
     internalOrbs.push(orb);
     group.add(orb);
   }
@@ -1417,22 +1368,30 @@ function createCompoundSphereExtras(geometry) {
     });
 
     // Animate internal orbiting spheres (Fibonacci spiral inside)
-    internalOrbs.forEach(orb => {
+    internalOrbs.forEach((orb) => {
       const data = orb.userData;
       const orbitPhase = t * data.orbitSpeed + data.phaseOffset;
-      
+
       // Fibonacci spiral motion (inside the main sphere)
-      const x = Math.sin(data.baseInclination) * Math.cos(data.baseAzimuth + orbitPhase) * data.orbitRadius;
-      const y = Math.sin(data.baseInclination) * Math.sin(data.baseAzimuth + orbitPhase) * data.orbitRadius;
+      const x =
+        Math.sin(data.baseInclination) *
+        Math.cos(data.baseAzimuth + orbitPhase) *
+        data.orbitRadius;
+      const y =
+        Math.sin(data.baseInclination) *
+        Math.sin(data.baseAzimuth + orbitPhase) *
+        data.orbitRadius;
       const z = Math.cos(data.baseInclination) * data.orbitRadius;
-      
+
       // Add gentle bobbing motion
-      const bob = Math.sin(t * data.bobSpeed + data.phaseOffset) * data.bobAmplitude;
-      
+      const bob =
+        Math.sin(t * data.bobSpeed + data.phaseOffset) * data.bobAmplitude;
+
       orb.position.set(x, y + bob, z);
-      
+
       // Pulsing scale and glow
-      const pulse = Math.sin(t * data.pulseSpeed + data.phaseOffset) * 0.5 + 0.5;
+      const pulse =
+        Math.sin(t * data.pulseSpeed + data.phaseOffset) * 0.5 + 0.5;
       const scale = 0.8 + pulse * 0.4;
       orb.scale.setScalar(scale);
       orb.material.opacity = 0.6 + pulse * 0.4;

@@ -23,7 +23,7 @@ export function createCpdTesseractWireframe(geometry, wireframeMaterial) {
   const positions = edgesGeometry.attributes.position.array;
 
   // Halo material and settings
-  const MAIN_RADIUS = 0.015;
+  const MAIN_RADIUS = 0.008;
   const HALO_RADIUS_FACTOR = 1.35; // slightly slimmer halo
   const haloMaterial = new THREE.MeshBasicMaterial({
     color: wireframeMaterial.color?.clone?.() || new THREE.Color("#ffffff"),

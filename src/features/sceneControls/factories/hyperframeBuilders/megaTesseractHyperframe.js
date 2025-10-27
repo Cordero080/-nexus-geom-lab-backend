@@ -12,8 +12,8 @@ export function createMegaTesseractHyperframe(
   // Golden ratio for beautiful proportions
   const phi = (1 + Math.sqrt(5)) / 2;
 
-  const outerSize = 0.75;
-  const innerSize = 0.375;
+  const outerSize = 0.6;
+  const innerSize = 0.3;
 
   // MULTI-LAYER STELLATIONS at phi powers
   const stellatedSize1 = outerSize * phi; // Φ¹ = 1.618
@@ -23,7 +23,7 @@ export function createMegaTesseractHyperframe(
   const radialSize = innerSize / phi; // Inner radial sphere
 
   // Temporal dimension offsets (5D projection)
-  const temporalOffset = 0.15; // Slight offset for past/future states
+  const temporalOffset = 0.12; // Slight offset for past/future states
 
   const cube1Outer = [
     [-outerSize, -outerSize, -outerSize],
@@ -170,7 +170,12 @@ export function createMegaTesseractHyperframe(
     const end = new THREE.Vector3(...cube1Inner[j]);
     const distance = start.distanceTo(end);
 
-    const cylinderGeom = new THREE.CylinderGeometry(0.004, 0.004, distance, 8);
+    const cylinderGeom = new THREE.CylinderGeometry(
+      0.0016,
+      0.0016,
+      distance,
+      8
+    );
     const cylinderMesh = new THREE.Mesh(cylinderGeom, centerLinesMaterial);
 
     cylinderMesh.position.copy(start.clone().add(end).multiplyScalar(0.5));
@@ -185,7 +190,12 @@ export function createMegaTesseractHyperframe(
     const end = new THREE.Vector3(...cube2Inner[j]);
     const distance = start.distanceTo(end);
 
-    const cylinderGeom = new THREE.CylinderGeometry(0.004, 0.004, distance, 8);
+    const cylinderGeom = new THREE.CylinderGeometry(
+      0.0016,
+      0.0016,
+      distance,
+      8
+    );
     const cylinderMesh = new THREE.Mesh(cylinderGeom, centerLinesMaterial);
 
     cylinderMesh.position.copy(start.clone().add(end).multiplyScalar(0.5));
@@ -297,7 +307,7 @@ export function createMegaTesseractHyperframe(
     const start1 = new THREE.Vector3(...cube1Inner[i]);
     const end1 = new THREE.Vector3(...cube1Inner[j]);
     const dist1 = start1.distanceTo(end1);
-    const cyl1 = new THREE.CylinderGeometry(0.002, 0.002, dist1, 6);
+    const cyl1 = new THREE.CylinderGeometry(0.0008, 0.0008, dist1, 6);
     const mesh1 = new THREE.Mesh(cyl1, faceDiagonalMaterial);
     mesh1.position.copy(start1.clone().add(end1).multiplyScalar(0.5));
     mesh1.lookAt(end1);
@@ -308,7 +318,7 @@ export function createMegaTesseractHyperframe(
     const start2 = new THREE.Vector3(...cube2Inner[i]);
     const end2 = new THREE.Vector3(...cube2Inner[j]);
     const dist2 = start2.distanceTo(end2);
-    const cyl2 = new THREE.CylinderGeometry(0.002, 0.002, dist2, 6);
+    const cyl2 = new THREE.CylinderGeometry(0.0008, 0.0008, dist2, 6);
     const mesh2 = new THREE.Mesh(cyl2, faceDiagonalMaterial);
     mesh2.position.copy(start2.clone().add(end2).multiplyScalar(0.5));
     mesh2.lookAt(end2);
@@ -335,7 +345,7 @@ export function createMegaTesseractHyperframe(
     const start1 = new THREE.Vector3(...cube1Inner[i]);
     const end1 = new THREE.Vector3(...cube1Inner[j]);
     const dist1 = start1.distanceTo(end1);
-    const cyl1 = new THREE.CylinderGeometry(0.003, 0.003, dist1, 8);
+    const cyl1 = new THREE.CylinderGeometry(0.0012, 0.0012, dist1, 8);
     const mesh1 = new THREE.Mesh(cyl1, spaceDiagonalMaterial);
     mesh1.position.copy(start1.clone().add(end1).multiplyScalar(0.5));
     mesh1.lookAt(end1);
@@ -346,7 +356,7 @@ export function createMegaTesseractHyperframe(
     const start2 = new THREE.Vector3(...cube2Inner[i]);
     const end2 = new THREE.Vector3(...cube2Inner[j]);
     const dist2 = start2.distanceTo(end2);
-    const cyl2 = new THREE.CylinderGeometry(0.003, 0.003, dist2, 8);
+    const cyl2 = new THREE.CylinderGeometry(0.0012, 0.0012, dist2, 8);
     const mesh2 = new THREE.Mesh(cyl2, spaceDiagonalMaterial);
     mesh2.position.copy(start2.clone().add(end2).multiplyScalar(0.5));
     mesh2.lookAt(end2);
