@@ -27,6 +27,116 @@ export default function SceneCard({
 }) {
   const [imageError, setImageError] = useState(false);
 
+  // Determine scene object type for placeholder outline (fallback to generic)
+  const objectType = (scene?.config?.objectType || scene?.objectType || '').toLowerCase();
+
+  const OutlineSVG = ({ id }) => {
+    const gradId = `scene-wire-${id}`;
+    const commonDefs = (
+      <defs>
+        <linearGradient id={gradId} x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stopColor="#00ffff" />
+          <stop offset="100%" stopColor="#ff00ff" />
+        </linearGradient>
+      </defs>
+    );
+
+    const stroke = `url(#${gradId})`;
+
+    // Simple, lightweight wireframe shapes per object type
+    switch (objectType) {
+      case 'box':
+      case 'cube':
+        // Isometric cube: front + back squares with connectors
+        return (
+          <svg className="scene-card__geo" viewBox="0 0 200 200" aria-hidden="true">
+            {commonDefs}
+            <g fill="none" stroke={stroke} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <rect x="50" y="50" width="80" height="80" className="geo-outline" />
+              <rect x="70" y="30" width="80" height="80" className="geo-outline geo-outline--inner" />
+              <line x1="50" y1="50" x2="70" y2="30" className="geo-connector" />
+              <line x1="130" y1="50" x2="150" y2="30" className="geo-connector" />
+              <line x1="50" y1="130" x2="70" y2="110" className="geo-connector" />
+              <line x1="130" y1="130" x2="150" y2="110" className="geo-connector" />
+            </g>
+          </svg>
+        );
+      case 'icosahedron':
+        // Stylized polyhedron using triangles and a hex-like core
+        return (
+          <svg className="scene-card__geo" viewBox="0 0 200 200" aria-hidden="true">
+            {commonDefs}
+            <g fill="none" stroke={stroke} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <polygon points="100,15 160,50 160,120 100,155 40,120 40,50" className="geo-outline" />
+              <polygon points="100,45 140,68 140,102 100,125 60,102 60,68" className="geo-outline geo-outline--inner" />
+              <line x1="100" y1="15" x2="100" y2="45" className="geo-connector" />
+              <line x1="160" y1="50" x2="140" y2="68" className="geo-connector" />
+              <line x1="160" y1="120" x2="140" y2="102" className="geo-connector" />
+              <line x1="100" y1="155" x2="100" y2="125" className="geo-connector" />
+              <line x1="40" y1="120" x2="60" y2="102" className="geo-connector" />
+              <line x1="40" y1="50" x2="60" y2="68" className="geo-connector" />
+            </g>
+          </svg>
+        );
+      case 'octahedron':
+        return (
+          <svg className="scene-card__geo" viewBox="0 0 200 200" aria-hidden="true">
+            {commonDefs}
+            <g fill="none" stroke={stroke} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <polygon points="100,20 160,100 100,180 40,100" className="geo-outline" />
+              <polygon points="100,45 135,100 100,155 65,100" className="geo-outline geo-outline--inner" />
+              <line x1="40" y1="100" x2="160" y2="100" className="geo-connector" />
+              <line x1="100" y1="20" x2="100" y2="180" className="geo-connector" />
+            </g>
+          </svg>
+        );
+      case 'sphere':
+        // Equator + two longitudes as arcs/ellipses
+        return (
+          <svg className="scene-card__geo" viewBox="0 0 200 200" aria-hidden="true">
+            {commonDefs}
+            <g fill="none" stroke={stroke} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <circle cx="100" cy="100" r="60" className="geo-outline" />
+              <ellipse cx="100" cy="100" rx="60" ry="24" className="geo-outline geo-outline--inner" />
+              <ellipse cx="100" cy="100" rx="24" ry="60" className="geo-outline geo-outline--inner" />
+            </g>
+          </svg>
+        );
+      case 'torus':
+        // Donut ring: outer and inner ellipse
+        return (
+          <svg className="scene-card__geo" viewBox="0 0 200 200" aria-hidden="true">
+            {commonDefs}
+            <g fill="none" stroke={stroke} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <ellipse cx="100" cy="100" rx="60" ry="40" className="geo-outline" />
+              <ellipse cx="100" cy="100" rx="35" ry="20" className="geo-outline geo-outline--inner" />
+              <line x1="40" y1="100" x2="65" y2="100" className="geo-connector" />
+              <line x1="135" y1="100" x2="160" y2="100" className="geo-connector" />
+            </g>
+          </svg>
+        );
+      default:
+        // Generic hex/poly wireframe (existing fallback)
+        return (
+          <svg className="scene-card__geo" viewBox="0 0 200 200" aria-hidden="true">
+            {commonDefs}
+            <g fill="none" stroke={stroke} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <polygon points="100,10 173,55 173,145 100,190 27,145 27,55" className="geo-outline" />
+              <polygon points="100,40 153,70 153,130 100,160 47,130 47,70" className="geo-outline geo-outline--inner" />
+              <line x1="100" y1="10" x2="100" y2="40" className="geo-connector" />
+              <line x1="173" y1="55" x2="153" y2="70" className="geo-connector" />
+              <line x1="173" y1="145" x2="153" y2="130" className="geo-connector" />
+              <line x1="100" y1="190" x2="100" y2="160" className="geo-connector" />
+              <line x1="27" y1="145" x2="47" y2="130" className="geo-connector" />
+              <line x1="27" y1="55" x2="47" y2="70" className="geo-connector" />
+              <line x1="27" y1="55" x2="173" y2="145" className="geo-diagonal" />
+              <line x1="173" y1="55" x2="27" y2="145" className="geo-diagonal" />
+            </g>
+          </svg>
+        );
+    }
+  };
+
   // Format date
   const formatDate = (dateString) => {
     const date = new Date(dateString);
@@ -70,6 +180,8 @@ export default function SceneCard({
           />
         ) : (
           <div className="scene-card__placeholder">
+            {/* Geometric outline placeholder - shape-aware */}
+            <OutlineSVG id={scene.id} />
           </div>
         )}
       </div>

@@ -122,6 +122,10 @@ export function createGeometry(type = "icosahedron") {
       return mergedIco;
     case "sphere":
       return new THREE.SphereGeometry(1, 16, 16);
+    case "cube":
+      // Simple cube (BoxGeometry) for classic cube shape
+      // Kept separate from "box" which represents the compound tesseract variant
+      return new THREE.BoxGeometry(1.5, 1.5, 1.5);
     case "box":
       // COMPOUND TESSERACT (was "hypercube") - two 4D hypercubes interpenetrating
       // Each tesseract has outer cube, inner cube, AND 6 connecting frustum faces

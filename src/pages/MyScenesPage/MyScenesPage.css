@@ -63,10 +63,25 @@
   font-size: 3rem;
   font-weight: 700;
   margin: 0 0 12px;
-  background: linear-gradient(135deg, #00ffff 0%, #ff00ff 100%);
+  background: linear-gradient(135deg, #00ffff 0%, #ff00ff 50%, #ffff00 100%);
+  background-size: 200% 200%;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
+  animation: scenesTitleShimmer 6s ease-in-out infinite;
+  /* Match showcase title warp intensity */
+  text-transform: uppercase;
+  letter-spacing: 8px;
+  transform: perspective(400px) rotateX(15deg);
+  transform-origin: center bottom;
+  filter: drop-shadow(0 4px 20px rgba(6, 21, 185, 0.25));
+  text-shadow: 0 0 20px rgba(0, 212, 255, 0.15);
+}
+
+@keyframes scenesTitleShimmer {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
 }
 
 .my-scenes-page__subtitle {

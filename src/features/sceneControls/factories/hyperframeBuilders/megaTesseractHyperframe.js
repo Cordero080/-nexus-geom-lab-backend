@@ -194,6 +194,78 @@ export function createMegaTesseractHyperframe(
     innerCubesGroup.add(cylinderMesh);
   });
 
+  // === NEW: ROTATED INNER CUBE LAYERS (break flat top/bottom symmetry) ===
+  const rotX = new THREE.Matrix4().makeRotationX(Math.PI / 6);
+  const rotZ = new THREE.Matrix4().makeRotationZ(Math.PI / 6);
+  const scaleFactor = 0.85; // Slightly smaller to avoid z-fighting
+
+  // First tesseract rotated inner sets
+  const cube1InnerXRot = cube1Inner.map((v) => {
+    const vec = new THREE.Vector3(
+      v[0] * scaleFactor,
+      v[1] * scaleFactor,
+      v[2] * scaleFactor
+    );
+    vec.applyMatrix4(rotX);
+    return [vec.x, vec.y, vec.z];
+  });
+  const cube1InnerZRot = cube1Inner.map((v) => {
+    const vec = new THREE.Vector3(
+      v[0] * scaleFactor,
+      v[1] * scaleFactor,
+      v[2] * scaleFactor
+    );
+    vec.applyMatrix4(rotZ);
+    return [vec.x, vec.y, vec.z];
+  });
+
+  // Second tesseract rotated inner sets (apply base Y-rotation first)
+  const cube2InnerXRot = cube1Inner.map((v) => {
+    const vec = new THREE.Vector3(
+      v[0] * scaleFactor,
+      v[1] * scaleFactor,
+      v[2] * scaleFactor
+    );
+    vec.applyMatrix4(rotationMatrix).applyMatrix4(rotX);
+    return [vec.x, vec.y, vec.z];
+  });
+  const cube2InnerZRot = cube1Inner.map((v) => {
+    const vec = new THREE.Vector3(
+      v[0] * scaleFactor,
+      v[1] * scaleFactor,
+      v[2] * scaleFactor
+    );
+    vec.applyMatrix4(rotationMatrix).applyMatrix4(rotZ);
+    return [vec.x, vec.y, vec.z];
+  });
+
+  const rotatedWireframeMaterial = new THREE.MeshBasicMaterial({
+    color: centerLinesMaterial.color,
+    transparent: true,
+    opacity: 0.85,
+  });
+
+  // Helper to add wireframe edges for a given cube vertex set
+  const addCubeWireframe = (verts, radius = 0.0035) => {
+    cubeEdges.forEach(([i, j]) => {
+      const start = new THREE.Vector3(...verts[i]);
+      const end = new THREE.Vector3(...verts[j]);
+      const distance = start.distanceTo(end);
+      const cyl = new THREE.CylinderGeometry(radius, radius, distance, 8);
+      const mesh = new THREE.Mesh(cyl, rotatedWireframeMaterial);
+      mesh.position.copy(start.clone().add(end).multiplyScalar(0.5));
+      mesh.lookAt(end);
+      mesh.rotateX(Math.PI / 2);
+      innerCubesGroup.add(mesh);
+    });
+  };
+
+  // Add the rotated inner wireframes
+  addCubeWireframe(cube1InnerXRot);
+  addCubeWireframe(cube1InnerZRot);
+  addCubeWireframe(cube2InnerXRot);
+  addCubeWireframe(cube2InnerZRot);
+
   // INTRICATE INNER-CUBE CONNECTIONS - Rich cross-connections between the two cubes
   console.log("Creating intricate inner-cube cross-connections...");
 
@@ -288,6 +360,60 @@ export function createMegaTesseractHyperframe(
   });
 
   const connectionsGroup = new THREE.Group();
+
+  // === NEW: NON-PLANAR BELTS FROM EDGE MIDPOINTS (weave to remove flat silhouette) ===
+  const beltMaterial = createGradientMaterial(hyperframeLineColor, 0.55, 0.85);
+  const computeEdgeMidpoints = (verts) => {
+    const mids = [];
+    for (const [a, b] of cubeEdges) {
+      const v1 = new THREE.Vector3(...verts[a]);
+      const v2 = new THREE.Vector3(...verts[b]);
+      mids.push(v1.clone().add(v2).multiplyScalar(0.5));
+    }
+    return mids;
+  };
+
+  const mids1 = computeEdgeMidpoints(cube1Inner);
+  const mids2 = computeEdgeMidpoints(cube2Inner);
+
+  const sortByAngle = (arr) =>
+    arr
+      .map((v) => ({ v, angle: Math.atan2(v.z, v.x) }))
+      .sort((a, b) => a.angle - b.angle)
+      .map((o) => o.v);
+
+  const weaveConnect = (points, radius = 0.0012) => {
+    const ordered = sortByAngle(points);
+    for (let i = 0; i < ordered.length; i++) {
+      const a = ordered[i];
+      const b = ordered[(i + 1) % ordered.length];
+      const dist = a.distanceTo(b);
+      const cyl = new THREE.CylinderGeometry(radius, radius, dist, 5);
+      const mesh = new THREE.Mesh(cyl, beltMaterial);
+      mesh.position.copy(a.clone().add(b).multiplyScalar(0.5));
+      mesh.lookAt(b);
+      mesh.rotateX(Math.PI / 2);
+      connectionsGroup.add(mesh);
+
+      // Cross weave to opposite point to avoid planar look
+      const c = ordered[(i + Math.floor(ordered.length / 2)) % ordered.length];
+      const dist2 = a.distanceTo(c);
+      const cyl2 = new THREE.CylinderGeometry(
+        radius * 0.9,
+        radius * 0.9,
+        dist2,
+        5
+      );
+      const mesh2 = new THREE.Mesh(cyl2, beltMaterial);
+      mesh2.position.copy(a.clone().add(c).multiplyScalar(0.5));
+      mesh2.lookAt(c);
+      mesh2.rotateX(Math.PI / 2);
+      connectionsGroup.add(mesh2);
+    }
+  };
+
+  weaveConnect(mids1);
+  weaveConnect(mids2);
 
   // === MULTI-LAYER STELLATED CATHEDRAL ===
 
@@ -677,6 +803,38 @@ export function createMegaTesseractHyperframe(
       }
     }
   }
+
+  // === NEW: OUTER→ROTATED INNER MULTI-CONNECTIONS (star web, non-axis aligned) ===
+  const connectOuterToNearest = (
+    outers,
+    inners,
+    count = 3,
+    radius = 0.0012
+  ) => {
+    for (let i = 0; i < outers.length; i++) {
+      const o = new THREE.Vector3(...outers[i]);
+      // compute nearest inner vertices
+      const sorted = inners
+        .map((p) => new THREE.Vector3(...p))
+        .map((p) => ({ p, d: o.distanceTo(p) }))
+        .sort((a, b) => a.d - b.d)
+        .slice(0, count);
+      for (const { p, d } of sorted) {
+        const cyl = new THREE.CylinderGeometry(radius, radius, d, 5);
+        const mesh = new THREE.Mesh(cyl, curvedLinesMaterial);
+        mesh.position.copy(o.clone().add(p).multiplyScalar(0.5));
+        mesh.lookAt(p);
+        mesh.rotateX(Math.PI / 2);
+        connectionsGroup.add(mesh);
+      }
+    }
+  };
+
+  // Connect each outer corner to nearest few vertices from the rotated inner sets
+  connectOuterToNearest(cube1Outer, cube1InnerXRot);
+  connectOuterToNearest(cube1Outer, cube1InnerZRot);
+  connectOuterToNearest(cube2Outer, cube2InnerXRot);
+  connectOuterToNearest(cube2Outer, cube2InnerZRot);
 
   // 4. INVERTED HYPERFRAME CONNECTIONS - Pull from outer stellations back to inner structure
   console.log("Creating inverted hyperframe pulls (stellated → inner cube)...");

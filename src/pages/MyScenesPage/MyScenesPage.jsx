@@ -382,7 +382,7 @@ export default function MyScenesPage() {
 
       {/* Header */}
       <div className="my-scenes-page__header">
-        <h1 className="my-scenes-page__title">Gallery</h1>
+  <h1 className="my-scenes-page__title">My Scenes</h1>
         <p className="my-scenes-page__subtitle">
           Your collection of geometric creations
         </p>

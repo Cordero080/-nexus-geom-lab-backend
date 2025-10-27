@@ -79,6 +79,42 @@
   opacity: 0.8;
 }
 
+/* Geometric outline placeholder */
+.scene-card__geo {
+  width: 70%;
+  height: 70%;
+  opacity: 0.95;
+  filter: drop-shadow(0 0 10px rgba(0, 255, 255, 0.25)) drop-shadow(0 0 18px rgba(255, 0, 255, 0.12));
+  animation: geoFloat 6s ease-in-out infinite;
+}
+
+.geo-outline {
+  stroke-opacity: 0.9;
+}
+
+.geo-outline--inner {
+  stroke-opacity: 0.6;
+}
+
+.geo-connector {
+  stroke-opacity: 0.6;
+}
+
+.geo-diagonal {
+  stroke-dasharray: 6 8;
+  animation: dashMove 8s linear infinite;
+  stroke-opacity: 0.5;
+}
+
+@keyframes dashMove {
+  to { stroke-dashoffset: -200; }
+}
+
+@keyframes geoFloat {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-6px); }
+}
+
 /* Info Section */
 .scene-card__info {
   padding: 20px;

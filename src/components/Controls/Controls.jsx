@@ -250,6 +250,7 @@ function Controls({
         <select value={objectType} onChange={handleObjectTypeChange}>
           <option value="icosahedron">🔯 Cpd-Icosahedron</option>
           <option value="sphere">⚪ Sphere</option>
+          <option value="cube">🧊 Cube</option>
           <option value="box">🔷 Cpd-Tesseract</option>
           <option value="cpdtesseract">💎 Mega-Tesseract</option>
           <option value="octahedron">🔸 Cpd-Octahedron</option>

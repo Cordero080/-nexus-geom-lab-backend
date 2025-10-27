@@ -308,6 +308,12 @@ Each 3D shape consists of multiple components that must move together in unison:
 - Saving a scene may unlock more Noetechs; the response merges into the user state and persists
 - Details and customization: see [NOETECH_LOCKING.md](./NOETECH_LOCKING.md)
 
+### Shape-Aware Scene Card Placeholders (New)
+
+- Scene cards without thumbnails now display a geometric wireframe matching the saved shape type (box, icosahedron, sphere, torus, octahedron)
+- Provides instant visual context and avoids empty headers when images are missing/slow
+- Details: see [SCENE_CARD_PLACEHOLDERS.md](./SCENE_CARD_PLACEHOLDERS.md)
+
 ### FBX Animation Root Motion Issue
 
 **Problem:** Animated characters with offsetX/offsetZ positioning would appear correct on the first animation loop, but reset to a different position on subsequent loops.
