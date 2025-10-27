@@ -18,6 +18,7 @@ export function createBoxHyperframe(
   // Tesseract: Outer cube (1.5 units) and inner cube (0.75 units)
   const outerSize = 0.75; // Half of 1.5
   const innerSize = 0.375; // Half of 0.75
+  const tinySize = innerSize * 0.5; // Nested hypercube inside inner cube
 
   // 8 vertices of outer cube
   const outerCorners = [
@@ -41,6 +42,18 @@ export function createBoxHyperframe(
     [innerSize, -innerSize, innerSize], // 5
     [innerSize, innerSize, innerSize], // 6
     [-innerSize, innerSize, innerSize], // 7
+  ];
+
+  // 8 vertices of tiny inner cube (nested hypercube target)
+  const tinyCorners = [
+    [-tinySize, -tinySize, -tinySize], // 0
+    [tinySize, -tinySize, -tinySize], // 1
+    [tinySize, tinySize, -tinySize], // 2
+    [-tinySize, tinySize, -tinySize], // 3
+    [-tinySize, -tinySize, tinySize], // 4
+    [tinySize, -tinySize, tinySize], // 5
+    [tinySize, tinySize, tinySize], // 6
+    [-tinySize, tinySize, tinySize], // 7
   ];
 
   // ========================================
@@ -88,6 +101,27 @@ export function createBoxHyperframe(
   });
 
   console.log(`Created inner cube wireframe: 12 edges`);
+
+  // ========================================
+  // 1B. CREATE NESTED TINY CUBE WIREFRAME (12 edges)
+  // ========================================
+  const tinyCubeGroup = new THREE.Group();
+  cubeEdges.forEach(([i, j]) => {
+    const start = new THREE.Vector3(...tinyCorners[i]);
+    const end = new THREE.Vector3(...tinyCorners[j]);
+    const distance = start.distanceTo(end);
+
+    const cylinderGeom = new THREE.CylinderGeometry(0.003, 0.003, distance, 8);
+    const cylinderMesh = new THREE.Mesh(cylinderGeom, centerLinesMaterial);
+
+    cylinderMesh.position.copy(start.clone().add(end).multiplyScalar(0.5));
+    cylinderMesh.lookAt(end);
+    cylinderMesh.rotateX(Math.PI / 2);
+
+    tinyCubeGroup.add(cylinderMesh);
+  });
+  innerCubeGroup.add(tinyCubeGroup);
+  console.log(`Created nested tiny cube wireframe: 12 edges`);
 
   // ========================================
   // 2. CREATE TESSERACT CONNECTIONS (8 edges)
@@ -154,6 +188,37 @@ export function createBoxHyperframe(
   );
   console.log(
     `Total tesseract structure: 12 inner edges + 8 connecting edges = 20 edges`
+  );
+
+  // ========================================
+  // 2B. CREATE NESTED TESSERACT CONNECTIONS (8 edges: inner → tiny)
+  // ========================================
+  for (let i = 0; i < 8; i++) {
+    const innerVertex = new THREE.Vector3(...innerCorners[i]);
+    const tinyVertex = new THREE.Vector3(...tinyCorners[i]);
+    const distance = innerVertex.distanceTo(tinyVertex);
+
+    const cylinderGeom = new THREE.CylinderGeometry(
+      0.0025,
+      0.0025,
+      distance,
+      6
+    );
+    const cylinderMesh = new THREE.Mesh(cylinderGeom, curvedLinesMaterial);
+
+    cylinderMesh.position.copy(
+      innerVertex.clone().add(tinyVertex).multiplyScalar(0.5)
+    );
+    cylinderMesh.lookAt(tinyVertex);
+    cylinderMesh.rotateX(Math.PI / 2);
+
+    tesseractConnectionGroup.add(cylinderMesh);
+  }
+  console.log(`Created nested tesseract connections: inner → tiny (8 edges)`);
+
+  console.log(
+    `Total with nested: ` +
+      `12 inner + 12 tiny + 8 outer→inner + 8 inner→tiny = 40 edges`
   );
 
   return {

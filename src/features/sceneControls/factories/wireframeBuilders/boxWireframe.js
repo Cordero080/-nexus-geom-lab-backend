@@ -12,6 +12,22 @@ export function createBoxWireframe(geometry, wireframeMaterial) {
   const cubeWireframeGroup = new THREE.Group();
   const cubeEdgePairs = [];
 
+  // Halo material and settings
+  const MAIN_RADIUS = 0.015; // Keep consistent with existing thickness
+  const HALO_RADIUS_FACTOR = 1.35; // slightly slimmer halo
+  const haloMaterial = new THREE.MeshBasicMaterial({
+    color: wireframeMaterial.color?.clone?.() || new THREE.Color("#ffffff"),
+    transparent: true,
+    opacity: 0.25,
+    blending: THREE.AdditiveBlending,
+    depthWrite: false,
+  });
+
+  // Subgroup for vertex nodes (avoid interfering with update logic)
+  const nodesGroup = new THREE.Group();
+  nodesGroup.name = "wireframeVertexNodes";
+  cubeWireframeGroup.add(nodesGroup);
+
   // Get the 8 corners of the cube
   const size = 0.75; // Half of 1.5
   const cubeCorners = [
@@ -51,7 +67,12 @@ export function createBoxWireframe(geometry, wireframeMaterial) {
     const distance = start.distanceTo(end);
 
     // Create thick cylinder for cube edge - ADJUST 0.015 TO CHANGE MAIN WIREFRAME THICKNESS
-    const cylinderGeom = new THREE.CylinderGeometry(0.015, 0.015, distance, 8);
+    const cylinderGeom = new THREE.CylinderGeometry(
+      MAIN_RADIUS,
+      MAIN_RADIUS,
+      distance,
+      8
+    );
     const cylinderMesh = new THREE.Mesh(cylinderGeom, wireframeMaterial);
 
     // Position cylinder between start and end points
@@ -63,10 +84,52 @@ export function createBoxWireframe(geometry, wireframeMaterial) {
     const iA_c = nearestVertexIndex(geometry, start);
     const iB_c = nearestVertexIndex(geometry, end);
     cubeEdgePairs.push([iA_c, iB_c]);
+
+    // Add halo cylinder as a child so it inherits transforms
+    const haloGeom = new THREE.CylinderGeometry(
+      MAIN_RADIUS * HALO_RADIUS_FACTOR,
+      MAIN_RADIUS * HALO_RADIUS_FACTOR,
+      distance,
+      8
+    );
+    const haloMesh = new THREE.Mesh(haloGeom, haloMaterial);
+    haloMesh.name = "edgeHalo";
+    haloMesh.position.set(0, 0, 0);
+    haloMesh.rotation.set(0, 0, 0);
+    cylinderMesh.add(haloMesh);
     cubeWireframeGroup.add(cylinderMesh);
   });
 
   cubeWireframeGroup.userData.edgePairs = cubeEdgePairs;
+
+  // Create vertex nodes at the 8 cube corners
+  const NODE_RADIUS = MAIN_RADIUS * 1.5;
+  const sphereGeom = new THREE.SphereGeometry(NODE_RADIUS, 10, 10);
+  const nodeMaterial = new THREE.MeshStandardMaterial({
+    color: wireframeMaterial.color?.clone?.() || new THREE.Color("#ffffff"),
+    emissive: (
+      wireframeMaterial.emissive?.clone?.() || new THREE.Color("#ffffff")
+    ).multiplyScalar(0.5),
+    emissiveIntensity: 1,
+    metalness: 0.0,
+    roughness: 0.4,
+    transparent: true,
+    opacity: Math.min(1, (wireframeMaterial.opacity ?? 0.6) + 0.2),
+  });
+  const instances = new THREE.InstancedMesh(
+    sphereGeom,
+    nodeMaterial,
+    cubeCorners.length
+  );
+  instances.name = "vertexNodes";
+  const m = new THREE.Matrix4();
+  for (let idx = 0; idx < cubeCorners.length; idx++) {
+    const v = new THREE.Vector3(...cubeCorners[idx]);
+    m.makeTranslation(v.x, v.y, v.z);
+    instances.setMatrixAt(idx, m);
+  }
+  instances.instanceMatrix.needsUpdate = true;
+  nodesGroup.add(instances);
 
   console.log(
     "Created thick wireframe for cube with",

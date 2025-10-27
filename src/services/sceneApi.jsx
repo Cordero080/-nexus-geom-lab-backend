@@ -18,7 +18,11 @@
 
 // Development: Uses http://localhost:3000
 // Production: Uses https://your-backend.onrender.com
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000';
+// In development, use a relative base URL so Vite's dev proxy can forward to the backend
+// In production, use VITE_API_BASE_URL (or fall back to localhost:3000 if not provided)
+const API_BASE_URL = import.meta.env.DEV
+  ? ''
+  : (import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000');
 
 export const saveScene = async (sceneData, token) => {
 // try to make the API call

@@ -19,6 +19,7 @@ export function createMegaTesseractHyperframe(
   const stellatedSize1 = outerSize * phi; // Φ¹ = 1.618
   const stellatedSize2 = outerSize * phi * phi; // Φ² = 2.618
   const stellatedSize3 = outerSize * phi * phi * phi; // Φ³ = 4.236
+  const stellatedSize4 = outerSize * phi * phi * phi * phi; // Φ⁴ = ~6.854 (sparse outermost hints)
   const radialSize = innerSize / phi; // Inner radial sphere
 
   // Temporal dimension offsets (5D projection)
@@ -382,14 +383,14 @@ export function createMegaTesseractHyperframe(
       .sort((a, b) => a.angle - b.angle)
       .map((o) => o.v);
 
-  const weaveConnect = (points, radius = 0.0012) => {
+  const weaveConnect = (points, radius = 0.0012, mat = beltMaterial) => {
     const ordered = sortByAngle(points);
     for (let i = 0; i < ordered.length; i++) {
       const a = ordered[i];
       const b = ordered[(i + 1) % ordered.length];
       const dist = a.distanceTo(b);
       const cyl = new THREE.CylinderGeometry(radius, radius, dist, 5);
-      const mesh = new THREE.Mesh(cyl, beltMaterial);
+      const mesh = new THREE.Mesh(cyl, mat);
       mesh.position.copy(a.clone().add(b).multiplyScalar(0.5));
       mesh.lookAt(b);
       mesh.rotateX(Math.PI / 2);
@@ -404,7 +405,7 @@ export function createMegaTesseractHyperframe(
         dist2,
         5
       );
-      const mesh2 = new THREE.Mesh(cyl2, beltMaterial);
+      const mesh2 = new THREE.Mesh(cyl2, mat);
       mesh2.position.copy(a.clone().add(c).multiplyScalar(0.5));
       mesh2.lookAt(c);
       mesh2.rotateX(Math.PI / 2);
@@ -414,6 +415,27 @@ export function createMegaTesseractHyperframe(
 
   weaveConnect(mids1);
   weaveConnect(mids2);
+
+  // NEW: OUTER WEAVE BELTS on Φ² shell mid-edges to increase exterior structure
+  const computeEdgeMidpointsFromCorners = (cornerVerts) => {
+    const mids = [];
+    for (const [a, b] of cubeEdges) {
+      const v1 = new THREE.Vector3(...cornerVerts[a]);
+      const v2 = new THREE.Vector3(...cornerVerts[b]);
+      mids.push(v1.clone().add(v2).multiplyScalar(0.5));
+    }
+    return mids;
+  };
+  const outerMids1 = computeEdgeMidpointsFromCorners(stellated1_layer2);
+  const outerMids2 = computeEdgeMidpointsFromCorners(stellated2_layer2);
+  // Slightly brighter belt to be visible outside, modest radius
+  const outerBeltMaterial = createGradientMaterial(
+    hyperframeLineColor,
+    0.6,
+    0.95
+  );
+  weaveConnect(outerMids1, 0.0013, outerBeltMaterial);
+  weaveConnect(outerMids2, 0.0013, outerBeltMaterial);
 
   // === MULTI-LAYER STELLATED CATHEDRAL ===
 
@@ -426,7 +448,12 @@ export function createMegaTesseractHyperframe(
     const core = new THREE.Vector3(...radialCore[i]);
     const stellar = new THREE.Vector3(...stellated1_layer1[i]);
     const distance = core.distanceTo(stellar);
-    const cylinderGeom = new THREE.CylinderGeometry(0.002, 0.002, distance, 4);
+    const cylinderGeom = new THREE.CylinderGeometry(
+      0.0024,
+      0.0024,
+      distance,
+      4
+    );
     const cylinderMesh = new THREE.Mesh(cylinderGeom, layer1Material);
     cylinderMesh.position.copy(core.clone().add(stellar).multiplyScalar(0.5));
     cylinderMesh.lookAt(stellar);
@@ -435,14 +462,14 @@ export function createMegaTesseractHyperframe(
   }
 
   // Layer 2 (Φ²) - Medium brightness
-  const layer2Material = createGradientMaterial(hyperframeLineColor, 0.7, 0.7);
+  const layer2Material = createGradientMaterial(hyperframeLineColor, 0.8, 0.85);
   for (let i = 0; i < 8; i++) {
     const core = new THREE.Vector3(...radialCore[i]);
     const stellar = new THREE.Vector3(...stellated1_layer2[i]);
     const distance = core.distanceTo(stellar);
     const cylinderGeom = new THREE.CylinderGeometry(
-      0.0015,
-      0.0015,
+      0.0018,
+      0.0018,
       distance,
       4
     );
@@ -454,12 +481,17 @@ export function createMegaTesseractHyperframe(
   }
 
   // Layer 3 (Φ³) - Dimmest outer shell
-  const layer3Material = createGradientMaterial(hyperframeLineColor, 0.4, 0.5);
+  const layer3Material = createGradientMaterial(hyperframeLineColor, 0.55, 0.7);
   for (let i = 0; i < 8; i++) {
     const core = new THREE.Vector3(...radialCore[i]);
     const stellar = new THREE.Vector3(...stellated1_layer3[i]);
     const distance = core.distanceTo(stellar);
-    const cylinderGeom = new THREE.CylinderGeometry(0.001, 0.001, distance, 4);
+    const cylinderGeom = new THREE.CylinderGeometry(
+      0.0013,
+      0.0013,
+      distance,
+      4
+    );
     const cylinderMesh = new THREE.Mesh(cylinderGeom, layer3Material);
     cylinderMesh.position.copy(core.clone().add(stellar).multiplyScalar(0.5));
     cylinderMesh.lookAt(stellar);
@@ -474,7 +506,7 @@ export function createMegaTesseractHyperframe(
     // Layer 1
     const stellar1 = new THREE.Vector3(...stellated2_layer1[i]);
     const dist1 = inner.distanceTo(stellar1);
-    const cyl1 = new THREE.CylinderGeometry(0.002, 0.002, dist1, 4);
+    const cyl1 = new THREE.CylinderGeometry(0.0024, 0.0024, dist1, 4);
     const mesh1 = new THREE.Mesh(cyl1, layer1Material);
     mesh1.position.copy(inner.clone().add(stellar1).multiplyScalar(0.5));
     mesh1.lookAt(stellar1);
@@ -484,7 +516,7 @@ export function createMegaTesseractHyperframe(
     // Layer 2
     const stellar2 = new THREE.Vector3(...stellated2_layer2[i]);
     const dist2 = inner.distanceTo(stellar2);
-    const cyl2 = new THREE.CylinderGeometry(0.0015, 0.0015, dist2, 4);
+    const cyl2 = new THREE.CylinderGeometry(0.0018, 0.0018, dist2, 4);
     const mesh2 = new THREE.Mesh(cyl2, layer2Material);
     mesh2.position.copy(inner.clone().add(stellar2).multiplyScalar(0.5));
     mesh2.lookAt(stellar2);
@@ -494,7 +526,7 @@ export function createMegaTesseractHyperframe(
     // Layer 3
     const stellar3 = new THREE.Vector3(...stellated2_layer3[i]);
     const dist3 = inner.distanceTo(stellar3);
-    const cyl3 = new THREE.CylinderGeometry(0.001, 0.001, dist3, 4);
+    const cyl3 = new THREE.CylinderGeometry(0.0013, 0.0013, dist3, 4);
     const mesh3 = new THREE.Mesh(cyl3, layer3Material);
     mesh3.position.copy(inner.clone().add(stellar3).multiplyScalar(0.5));
     mesh3.lookAt(stellar3);
@@ -531,6 +563,43 @@ export function createMegaTesseractHyperframe(
     meshFuture.lookAt(future);
     meshFuture.rotateX(Math.PI / 2);
     connectionsGroup.add(meshFuture);
+  }
+
+  // 1B+. SPARSE OUTERMOST RAYS (Φ⁴) — subtle but longer reach to emphasize exterior
+  const layer4Material = createGradientMaterial(hyperframeLineColor, 0.35, 0.9);
+  // Build Φ⁴ layer corners by scaling outer cube corners
+  const stellated1_layer4 = cube1Outer.map((v) => [
+    v[0] * (stellatedSize4 / outerSize),
+    v[1] * (stellatedSize4 / outerSize),
+    v[2] * (stellatedSize4 / outerSize),
+  ]);
+  const stellated2_layer4 = cube2Outer.map((v) => [
+    v[0] * (stellatedSize4 / outerSize),
+    v[1] * (stellatedSize4 / outerSize),
+    v[2] * (stellatedSize4 / outerSize),
+  ]);
+
+  // Connect inner cube corners out to Φ⁴ (one per corner per tesseract)
+  for (let i = 0; i < 8; i++) {
+    const core1 = new THREE.Vector3(...cube1Inner[i]);
+    const stellar4_1 = new THREE.Vector3(...stellated1_layer4[i]);
+    const d1 = core1.distanceTo(stellar4_1);
+    const c1 = new THREE.CylinderGeometry(0.001, 0.001, d1, 4);
+    const m1 = new THREE.Mesh(c1, layer4Material);
+    m1.position.copy(core1.clone().add(stellar4_1).multiplyScalar(0.5));
+    m1.lookAt(stellar4_1);
+    m1.rotateX(Math.PI / 2);
+    connectionsGroup.add(m1);
+
+    const core2 = new THREE.Vector3(...cube2Inner[i]);
+    const stellar4_2 = new THREE.Vector3(...stellated2_layer4[i]);
+    const d2 = core2.distanceTo(stellar4_2);
+    const c2 = new THREE.CylinderGeometry(0.001, 0.001, d2, 4);
+    const m2 = new THREE.Mesh(c2, layer4Material);
+    m2.position.copy(core2.clone().add(stellar4_2).multiplyScalar(0.5));
+    m2.lookAt(stellar4_2);
+    m2.rotateX(Math.PI / 2);
+    connectionsGroup.add(m2);
   }
 
   // Second tesseract temporal trails
@@ -573,6 +642,35 @@ export function createMegaTesseractHyperframe(
     [3, 7], // vertical edges
   ];
 
+  // Helper to add face diagonals for a cube-like shell (using cube indexing)
+  const addFaceDiagonalsOnShell = (verts, material, radius = 0.0009) => {
+    const faceDiagPairs = [
+      [0, 2],
+      [1, 3], // bottom face
+      [4, 6],
+      [5, 7], // top face
+      [0, 5],
+      [1, 4], // front
+      [2, 7],
+      [3, 6], // back
+      [0, 7],
+      [3, 4], // left
+      [1, 6],
+      [2, 5], // right
+    ];
+    for (const [a, b] of faceDiagPairs) {
+      const v1 = new THREE.Vector3(...verts[a]);
+      const v2 = new THREE.Vector3(...verts[b]);
+      const dist = v1.distanceTo(v2);
+      const cyl = new THREE.CylinderGeometry(radius, radius, dist, 3);
+      const mesh = new THREE.Mesh(cyl, material);
+      mesh.position.copy(v1.clone().add(v2).multiplyScalar(0.5));
+      mesh.lookAt(v2);
+      mesh.rotateX(Math.PI / 2);
+      connectionsGroup.add(mesh);
+    }
+  };
+
   // Layer 1 edges (brightest outer shell)
   for (const [a, b] of stellatedEdges) {
     const v1 = new THREE.Vector3(...stellated1_layer1[a]);
@@ -598,6 +696,9 @@ export function createMegaTesseractHyperframe(
     mesh.rotateX(Math.PI / 2);
     connectionsGroup.add(mesh);
   }
+
+  // NEW: add face diagonals on Layer 2 to strengthen outer shell presence
+  addFaceDiagonalsOnShell(stellated1_layer2, layer2Material, 0.0011);
 
   // Layer 3 edges (dimmest outer shell)
   for (const [a, b] of stellatedEdges) {
@@ -647,6 +748,9 @@ export function createMegaTesseractHyperframe(
     mesh3.rotateX(Math.PI / 2);
     connectionsGroup.add(mesh3);
   }
+
+  // Add face diagonals on Layer 2 for the second tesseract as well
+  addFaceDiagonalsOnShell(stellated2_layer2, layer2Material, 0.0011);
 
   // 1D. CROSS-LAYER DIAGONAL RAYS - Connect between phi shells for depth
   console.log("Adding cross-layer diagonal connections through phi-space...");
