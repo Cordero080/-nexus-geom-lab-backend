@@ -779,6 +779,239 @@ export function createMegaTesseractHyperframe(
     }
   }
 
+  // 2B. CORE AUGMENTATION (subtle, non-planar) — add rotated tiny cores and spokes
+  // Create two tiny rotated cores (X and Z rotations) for each tesseract and connect lightly
+  const tinyFactor = (radialSize * 0.7) / innerSize; // smaller than radial core
+
+  const makeTransformed = (baseVerts, transforms) =>
+    baseVerts.map((v) => {
+      const vec = new THREE.Vector3(
+        v[0] * tinyFactor,
+        v[1] * tinyFactor,
+        v[2] * tinyFactor
+      );
+      transforms.forEach((m) => vec.applyMatrix4(m));
+      return [vec.x, vec.y, vec.z];
+    });
+
+  const tinyCore1_X = makeTransformed(cube1Inner, [rotX]);
+  const tinyCore1_Z = makeTransformed(cube1Inner, [rotZ]);
+  const tinyCore2_X = makeTransformed(cube1Inner, [rotationMatrix, rotX]);
+  const tinyCore2_Z = makeTransformed(cube1Inner, [rotationMatrix, rotZ]);
+
+  // Slightly brighter accent for tiny core edges
+  const coreAccentColor = new THREE.Color(
+    centerLinesMaterial.color
+  ).multiplyScalar(1.05);
+  const coreAccentMaterial = new THREE.MeshBasicMaterial({
+    color: coreAccentColor,
+    transparent: true,
+    opacity: 0.95,
+  });
+
+  const addTinyCoreEdges = (verts, radius = 0.0025) => {
+    for (const [a, b] of cubeEdges) {
+      const v1 = new THREE.Vector3(...verts[a]);
+      const v2 = new THREE.Vector3(...verts[b]);
+      const dist = v1.distanceTo(v2);
+      const cyl = new THREE.CylinderGeometry(radius, radius, dist, 8);
+      const mesh = new THREE.Mesh(cyl, coreAccentMaterial);
+      mesh.position.copy(v1.clone().add(v2).multiplyScalar(0.5));
+      mesh.lookAt(v2);
+      mesh.rotateX(Math.PI / 2);
+      innerCubesGroup.add(mesh);
+    }
+  };
+
+  // Add tiny rotated cores (light touch)
+  addTinyCoreEdges(tinyCore1_X);
+  addTinyCoreEdges(tinyCore1_Z);
+  addTinyCoreEdges(tinyCore2_X);
+  addTinyCoreEdges(tinyCore2_Z);
+
+  // Spokes: from radial core points to nearest tiny core vertices (2 nearest per point)
+  const allTiny = [
+    ...tinyCore1_X,
+    ...tinyCore1_Z,
+    ...tinyCore2_X,
+    ...tinyCore2_Z,
+  ];
+  const spokeMaterial = new THREE.MeshBasicMaterial({
+    color: coreAccentColor,
+    transparent: true,
+    opacity: 0.7,
+  });
+
+  for (let i = 0; i < radialCore.length; i++) {
+    const r = new THREE.Vector3(...radialCore[i]);
+    const sorted = allTiny
+      .map((p) => new THREE.Vector3(...p))
+      .map((p) => ({ p, d: r.distanceTo(p) }))
+      .sort((a, b) => a.d - b.d)
+      .slice(0, 2);
+    for (const { p, d } of sorted) {
+      const cyl = new THREE.CylinderGeometry(0.0012, 0.0012, d, 6);
+      const mesh = new THREE.Mesh(cyl, spokeMaterial);
+      mesh.position.copy(r.clone().add(p).multiplyScalar(0.5));
+      mesh.lookAt(p);
+      mesh.rotateX(Math.PI / 2);
+      innerCubesGroup.add(mesh);
+    }
+  }
+
+  // 2C. MINI TESSERACT CORE (explicit small tesseract inside each main tesseract)
+  // Build a smaller tesseract (outer cube + inner cube + 8 connections) as the red hyperframe core
+  const miniOuter = innerSize * 0.66; // Outer half-size of the mini tesseract
+  const miniInner = miniOuter * 0.5; // Inner half-size of the mini tesseract
+
+  const makeCubeCorners = (half) => [
+    [-half, -half, -half],
+    [half, -half, -half],
+    [half, half, -half],
+    [-half, half, -half],
+    [-half, -half, half],
+    [half, -half, half],
+    [half, half, half],
+    [-half, half, half],
+  ];
+
+  // First tesseract mini core (aligned with axes)
+  const mini1Outer = makeCubeCorners(miniOuter);
+  const mini1Inner = makeCubeCorners(miniInner);
+
+  // Second tesseract mini core (merge vertically and horizontally): rotate about X and Z by 45°
+  const rotX45 = new THREE.Matrix4().makeRotationX(Math.PI / 4);
+  const rotZ45 = new THREE.Matrix4().makeRotationZ(Math.PI / 4);
+  const mini2Outer = mini1Outer.map((v) => {
+    const vec = new THREE.Vector3(...v)
+      .applyMatrix4(rotX45)
+      .applyMatrix4(rotZ45);
+    return [vec.x, vec.y, vec.z];
+  });
+  const mini2Inner = mini1Inner.map((v) => {
+    const vec = new THREE.Vector3(...v)
+      .applyMatrix4(rotX45)
+      .applyMatrix4(rotZ45);
+    return [vec.x, vec.y, vec.z];
+  });
+
+  // Helper to add cube edges with centerLinesMaterial (red)
+  const addCubeEdges = (verts, radius = 0.003) => {
+    for (const [a, b] of cubeEdges) {
+      const v1 = new THREE.Vector3(...verts[a]);
+      const v2 = new THREE.Vector3(...verts[b]);
+      const dist = v1.distanceTo(v2);
+      const cyl = new THREE.CylinderGeometry(radius, radius, dist, 8);
+      const mesh = new THREE.Mesh(cyl, centerLinesMaterial);
+      mesh.position.copy(v1.clone().add(v2).multiplyScalar(0.5));
+      mesh.lookAt(v2);
+      mesh.rotateX(Math.PI / 2);
+      innerCubesGroup.add(mesh);
+    }
+  };
+
+  // Helper to add mini tesseract connections (outer→inner, 8 edges)
+  const addTesseractConnections = (outerVerts, innerVerts, radius = 0.0025) => {
+    for (let i = 0; i < 8; i++) {
+      const vOuter = new THREE.Vector3(...outerVerts[i]);
+      const vInner = new THREE.Vector3(...innerVerts[i]);
+      const dist = vOuter.distanceTo(vInner);
+      const cyl = new THREE.CylinderGeometry(radius, radius, dist, 6);
+      const mesh = new THREE.Mesh(cyl, centerLinesMaterial);
+      mesh.position.copy(vOuter.clone().add(vInner).multiplyScalar(0.5));
+      mesh.lookAt(vInner);
+      mesh.rotateX(Math.PI / 2);
+      innerCubesGroup.add(mesh);
+    }
+  };
+
+  // Helper to add space diagonals within the mini inner cube
+  const addSpaceDiagonals = (verts, radius = 0.0022) => {
+    const pairs = [
+      [0, 6],
+      [1, 7],
+      [2, 4],
+      [3, 5],
+    ];
+    for (const [a, b] of pairs) {
+      const v1 = new THREE.Vector3(...verts[a]);
+      const v2 = new THREE.Vector3(...verts[b]);
+      const dist = v1.distanceTo(v2);
+      const cyl = new THREE.CylinderGeometry(radius, radius, dist, 7);
+      const mesh = new THREE.Mesh(cyl, centerLinesMaterial);
+      mesh.position.copy(v1.clone().add(v2).multiplyScalar(0.5));
+      mesh.lookAt(v2);
+      mesh.rotateX(Math.PI / 2);
+      innerCubesGroup.add(mesh);
+    }
+  };
+
+  // Helper to add face diagonals within the mini inner cube
+  const addFaceDiagonalsMini = (verts, radius = 0.0018) => {
+    const facePairs = [
+      // Bottom face (y-)
+      [0, 2],
+      [1, 3],
+      // Top face (y+)
+      [4, 6],
+      [5, 7],
+      // Front face (z+)
+      [4, 5],
+      [6, 7],
+      // Back face (z-)
+      [0, 1],
+      [2, 3],
+      // Left face (x-)
+      [0, 4],
+      [3, 7],
+      // Right face (x+)
+      [1, 5],
+      [2, 6],
+    ];
+    for (const [a, b] of facePairs) {
+      const v1 = new THREE.Vector3(...verts[a]);
+      const v2 = new THREE.Vector3(...verts[b]);
+      const dist = v1.distanceTo(v2);
+      const cyl = new THREE.CylinderGeometry(radius, radius, dist, 6);
+      const mesh = new THREE.Mesh(cyl, centerLinesMaterial);
+      mesh.position.copy(v1.clone().add(v2).multiplyScalar(0.5));
+      mesh.lookAt(v2);
+      mesh.rotateX(Math.PI / 2);
+      innerCubesGroup.add(mesh);
+    }
+  };
+
+  // Build mini tesseracts (red core)
+  addCubeEdges(mini1Outer);
+  addCubeEdges(mini1Inner);
+  addTesseractConnections(mini1Outer, mini1Inner);
+  addSpaceDiagonals(mini1Inner);
+  addFaceDiagonalsMini(mini1Inner);
+
+  addCubeEdges(mini2Outer);
+  addCubeEdges(mini2Inner);
+  addTesseractConnections(mini2Outer, mini2Inner);
+  addSpaceDiagonals(mini2Inner);
+  addFaceDiagonalsMini(mini2Inner);
+
+  // Connect mini tesseract outer corners to the inner corners of the larger tesseract (green)
+  const connectMiniToInner = (miniOuterVerts, innerVerts, radius = 0.0016) => {
+    for (let i = 0; i < 8; i++) {
+      const a = new THREE.Vector3(...miniOuterVerts[i]);
+      const b = new THREE.Vector3(...innerVerts[i]);
+      const dist = a.distanceTo(b);
+      const cyl = new THREE.CylinderGeometry(radius, radius, dist, 5);
+      const mesh = new THREE.Mesh(cyl, curvedLinesMaterial);
+      mesh.position.copy(a.clone().add(b).multiplyScalar(0.5));
+      mesh.lookAt(b);
+      mesh.rotateX(Math.PI / 2);
+      connectionsGroup.add(mesh);
+    }
+  };
+
+  connectMiniToInner(mini1Outer, cube1Inner);
+  connectMiniToInner(mini2Outer, cube2Inner);
+
   // 3. INTER-TESSERACT BRIDGES - Connect where they interpenetrate
   console.log("Creating inter-tesseract bridging arcs...");
   for (let i = 0; i < 8; i++) {
