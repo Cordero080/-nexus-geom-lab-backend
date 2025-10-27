@@ -256,6 +256,7 @@ function Controls({
           <option value="cpdtesseract">💎 Mega-Tesseract</option>
           <option value="octahedron">🔸 Cpd-Octahedron</option>
           <option value="tetrahedron">🔻 Cpd-Tetrahedron</option>
+          <option value="120cell">🌐 120-Cell</option>
         </select>
 
         {/* Animation Style Control */}

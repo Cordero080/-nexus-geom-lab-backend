@@ -284,6 +284,54 @@ The 120 lines at varying thicknesses create a rich, layered visualization that s
 4. **Layer with thickness** - Visual hierarchy through line weight
 5. **Communication matters** - Complex requirements need iterative clarification
 
+## Object Type Naming Discrepancy (October 2025)
+
+### Issue Discovered
+
+During development, a naming conflict was discovered between two distinct tesseract types:
+
+1. **Compound Tesseract** (`objectType: "box"`)
+
+   - 2 interpenetrating tesseracts (rotated 45°)
+   - Sizes: outer 1.5, inner 0.75
+   - Uses `createCpdTesseractHyperframe()`
+   - userData flag: `isCpdTesseract`
+
+2. **Mega Tesseract** (`objectType: "cpdtesseract"`)
+   - 4 tesseracts (inner pair + outer pair)
+   - Sizes: inner pair (0.75/0.375), outer pair (2.0/1.5)
+   - Uses `createMegaTesseractHyperframe()`
+   - userData flag: `isMegaTesseract`
+
+### The Problem
+
+Both object types initially shared the same `userData.isCpdTesseract` flag, causing confusion when modifications were requested for one type but detection logic affected both. The naming was counterintuitive:
+
+- `"box"` objectType actually creates **compound tesseract**
+- `"cpdtesseract"` objectType actually creates **mega tesseract**
+
+### Resolution
+
+**Changed mega tesseract identification** (commit 0540c40):
+
+- Updated `geometryCreation.js` case `"cpdtesseract"` to set `userData.isMegaTesseract = true`
+- Updated `objectFactory.js` to check for both `isMegaTesseract` and `isCpdTesseract` flags separately
+- Both object types now have unique identification in the codebase
+
+**Files Modified**:
+
+- `/src/features/sceneControls/geometryCreation.js`
+- `/src/features/sceneControls/factories/objectFactory.js`
+
+### Best Practice Going Forward
+
+When adding new geometric object types:
+
+1. Choose objectType names that clearly indicate the geometry
+2. Use unique userData flags for each type
+3. Document the distinction in code comments
+4. Avoid sharing detection flags between different geometries
+
 ## Future Enhancements
 
 Potential additions:

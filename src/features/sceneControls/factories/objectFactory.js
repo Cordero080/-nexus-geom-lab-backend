@@ -11,12 +11,14 @@ import { createOctahedronWireframe } from "./wireframeBuilders/octahedronWirefra
 import {
   createTetrahedronWireframe,
   createIcosahedronWireframe,
+  createDodecahedronWireframe,
   createCommonWireframe,
 } from "./wireframeBuilders/commonWireframe";
 import { createTetrahedronHyperframe } from "./hyperframeBuilders/tetrahedronHyperframe";
 import { createBoxHyperframe } from "./hyperframeBuilders/boxHyperframe";
 import { createOctahedronHyperframe } from "./hyperframeBuilders/octahedronHyperframe";
 import { createIcosahedronHyperframe } from "./hyperframeBuilders/icosahedronHyperframe";
+import { create120CellHyperframe } from "./hyperframeBuilders/cell120Hyperframe";
 import { createCpdTesseractHyperframe } from "./hyperframeBuilders/cpdTesseractHyperframe";
 import { createMegaTesseractHyperframe } from "./hyperframeBuilders/megaTesseractHyperframe";
 
@@ -169,6 +171,12 @@ export function createSceneObject(config) {
   ) {
     wireframeMaterial = createWireframeMaterial(materialConfig);
     wireframeMesh = createIcosahedronWireframe(geometry, wireframeMaterial);
+  } else if (
+    geometry.type === "DodecahedronGeometry" ||
+    (geometry.userData && geometry.userData.baseType === "DodecahedronGeometry")
+  ) {
+    wireframeMaterial = createWireframeMaterial(materialConfig);
+    wireframeMesh = createDodecahedronWireframe(geometry, wireframeMaterial);
   } else {
     // Standard thin wireframe for other geometries
     wireframeMaterial = createWireframeMaterial({
@@ -271,6 +279,17 @@ export function createSceneObject(config) {
     (geometry.userData && geometry.userData.baseType === "IcosahedronGeometry")
   ) {
     const result = createIcosahedronHyperframe(
+      geometry,
+      hyperframeColor,
+      hyperframeLineColor
+    );
+    ({ centerLines, centerLinesMaterial, curvedLines, curvedLinesMaterial } =
+      result);
+  } else if (
+    geometry.type === "DodecahedronGeometry" ||
+    (geometry.userData && geometry.userData.baseType === "DodecahedronGeometry")
+  ) {
+    const result = create120CellHyperframe(
       geometry,
       hyperframeColor,
       hyperframeLineColor
@@ -448,26 +467,29 @@ function createGenericHyperframe(geometry, spiralColor, edgeColor) {
       centerLinesPositions.push(x1, y1, z1, x2, y2, z2);
     }
   }
-}
 
-// Create center lines mesh
-let centerLines, centerLinesMaterial;
-if (centerLinesPositions.length > 0) {
-  centerLinesGeometry.setAttribute(
-    "position",
-    new THREE.Float32BufferAttribute(centerLinesPositions, 3)
-  );
+  // Create center lines mesh
+  let centerLines, centerLinesMaterial;
+  if (centerLinesPositions.length > 0) {
+    centerLinesGeometry.setAttribute(
+      "position",
+      new THREE.Float32BufferAttribute(centerLinesPositions, 3)
+    );
 
-  centerLinesMaterial = new THREE.LineBasicMaterial({
-    color: new THREE.Color(spiralColor),
-    transparent: true,
-    opacity: 0.6,
-  });
+    centerLinesMaterial = new THREE.LineBasicMaterial({
+      color: new THREE.Color(spiralColor),
+      transparent: true,
+      opacity: 0.6,
+    });
 
-  centerLines = new THREE.LineSegments(
-    centerLinesGeometry,
-    centerLinesMaterial
-  );
+    centerLines = new THREE.LineSegments(
+      centerLinesGeometry,
+      centerLinesMaterial
+    );
+  } else {
+    centerLines = new THREE.Object3D();
+    centerLinesMaterial = null;
+  }
 
   // ========================================
   // 2. CREATE CURVED LINES (Edge connections)
