@@ -39,6 +39,14 @@ function ThreeScene({
 	objectCount,         // Current object count → will create this many objects
 	animationStyle,      // Current animation → will control how objects move
 	objectType,          // Current object type → will determine which 3D shape to show
+
+	// GEOMETRY-SPECIFIC PROPS
+	// Compound Torus Knot (Twin) parameters
+	// Optional; used only when objectType === 'cpdtorusknot'
+	cpdTK_p,
+	cpdTK_q,
+	cpdTK_tubeRadius,
+	cpdTK_gap,
 	
 	// LIGHTING PROPS - How the scene should be lit (FROM App.jsx state)
 	ambientLightColor,       // Current ambient light color → will update ambient light
@@ -86,7 +94,7 @@ function ThreeScene({
 	useObjectManager(
 		{ sceneRef, objectsRef, materialRef },
 		{ objectCount, objectType, baseColor, metalness, emissiveIntensity, 
-		  wireframeIntensity, hyperframeColor, hyperframeLineColor }
+		  wireframeIntensity, hyperframeColor, hyperframeLineColor, cpdTK_p, cpdTK_q, cpdTK_tubeRadius, cpdTK_gap }
 	);
 
 	// Control camera position

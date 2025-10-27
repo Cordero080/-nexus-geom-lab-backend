@@ -66,6 +66,12 @@ export function createWireframeMaterial({
     flatShading: false,
     emissive: emissiveColor,
     emissiveIntensity: 1,
+    // Ensure wireframe shows on both sides and reduces z-fighting/occlusion
+    side: THREE.DoubleSide,
+    depthWrite: false,
+    polygonOffset: true,
+    polygonOffsetFactor: -2,
+    polygonOffsetUnits: -2,
   });
 }
 

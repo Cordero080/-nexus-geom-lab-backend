@@ -52,6 +52,12 @@ function GeomLab() {
   const [animationStyle, setAnimationStyle] = useState('rotate')
   const [objectType, setObjectType] = useState('icosahedron')
 
+  // GEOMETRY-SPECIFIC: Compound Torus Knot (Twin) parameters
+  const [cpdTK_p, setCpdTK_p] = useState(2)
+  const [cpdTK_q, setCpdTK_q] = useState(3)
+  const [cpdTK_tubeRadius, setCpdTK_tubeRadius] = useState(0.08)
+  const [cpdTK_gap, setCpdTK_gap] = useState(0.12)
+
   // LIGHTING STATE
   const [ambientLightColor, setAmbientLightColor] = useState('#ffffff')
   const [ambientLightIntensity, setAmbientLightIntensity] = useState(0.5)
@@ -69,7 +75,7 @@ function GeomLab() {
       hyperframeLineColor, cameraView, environment, environmentHue, objectCount,
       animationStyle, objectType, ambientLightColor, ambientLightIntensity,
       directionalLightColor, directionalLightIntensity, directionalLightX,
-      directionalLightY, directionalLightZ, scale]);
+      directionalLightY, directionalLightZ, scale, cpdTK_p, cpdTK_q, cpdTK_tubeRadius, cpdTK_gap]);
 
   // Intercept link clicks for navigation blocking
   useEffect(() => {
@@ -127,6 +133,11 @@ function GeomLab() {
       if (loadedConfig.objectCount !== undefined) setObjectCount(loadedConfig.objectCount);
       if (loadedConfig.animationStyle) setAnimationStyle(loadedConfig.animationStyle);
       if (loadedConfig.objectType) setObjectType(loadedConfig.objectType);
+  // Apply geometry-specific (compound torus knot) if present
+  if (loadedConfig.cpdTK_p !== undefined) setCpdTK_p(loadedConfig.cpdTK_p);
+  if (loadedConfig.cpdTK_q !== undefined) setCpdTK_q(loadedConfig.cpdTK_q);
+  if (loadedConfig.cpdTK_tubeRadius !== undefined) setCpdTK_tubeRadius(loadedConfig.cpdTK_tubeRadius);
+  if (loadedConfig.cpdTK_gap !== undefined) setCpdTK_gap(loadedConfig.cpdTK_gap);
       
       // Apply lighting
       if (loadedConfig.ambientLightColor) setAmbientLightColor(loadedConfig.ambientLightColor);
@@ -250,7 +261,12 @@ function GeomLab() {
     directionalLightX,
     directionalLightY,
     directionalLightZ,
-    scale
+    scale,
+    // geometry-specific (saved for reproducibility)
+    cpdTK_p,
+    cpdTK_q,
+    cpdTK_tubeRadius,
+    cpdTK_gap
   };
 
   // Handle exit with save prompt
@@ -533,6 +549,10 @@ function GeomLab() {
         directionalLightX={directionalLightX}
         directionalLightY={directionalLightY}
         directionalLightZ={directionalLightZ}
+        cpdTK_p={cpdTK_p}
+        cpdTK_q={cpdTK_q}
+        cpdTK_tubeRadius={cpdTK_tubeRadius}
+        cpdTK_gap={cpdTK_gap}
       />
       <Controls
         scale={scale}
@@ -575,6 +595,15 @@ function GeomLab() {
         onDirectionalLightYChange={setDirectionalLightY}
         directionalLightZ={directionalLightZ}
         onDirectionalLightZChange={setDirectionalLightZ}
+        // geometry-specific controls
+        cpdTK_p={cpdTK_p}
+        onCpdTK_pChange={setCpdTK_p}
+        cpdTK_q={cpdTK_q}
+        onCpdTK_qChange={setCpdTK_q}
+        cpdTK_tubeRadius={cpdTK_tubeRadius}
+        onCpdTK_tubeRadiusChange={setCpdTK_tubeRadius}
+        cpdTK_gap={cpdTK_gap}
+        onCpdTK_gapChange={setCpdTK_gap}
       />
     </>
   );

@@ -250,7 +250,8 @@ export function createBoxWireframe(geometry, wireframeMaterial) {
   // === DUPLICATE 3: +45° X-rotation ===
   const rotX = new THREE.Matrix4().makeRotationX(Math.PI / 4);
   const scaleX = 0.98;
-  const rotateScaleX = (v) => v.clone().applyMatrix4(rotX).multiplyScalar(scaleX);
+  const rotateScaleX = (v) =>
+    v.clone().applyMatrix4(rotX).multiplyScalar(scaleX);
 
   cubeEdges.forEach(([i, j]) => {
     const start = rotateScaleX(new THREE.Vector3(...cubeCorners[i]));
@@ -299,7 +300,8 @@ export function createBoxWireframe(geometry, wireframeMaterial) {
   // === DUPLICATE 4: +45° Z-rotation ===
   const rotZ = new THREE.Matrix4().makeRotationZ(Math.PI / 4);
   const scaleZ = 0.98;
-  const rotateScaleZ = (v) => v.clone().applyMatrix4(rotZ).multiplyScalar(scaleZ);
+  const rotateScaleZ = (v) =>
+    v.clone().applyMatrix4(rotZ).multiplyScalar(scaleZ);
 
   cubeEdges.forEach(([i, j]) => {
     const start = rotateScaleZ(new THREE.Vector3(...cubeCorners[i]));

@@ -102,19 +102,6 @@ export default function SceneCard({
             </g>
           </svg>
         );
-      case 'torus':
-        // Donut ring: outer and inner ellipse
-        return (
-          <svg className="scene-card__geo" viewBox="0 0 200 200" aria-hidden="true">
-            {commonDefs}
-            <g fill="none" stroke={stroke} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <ellipse cx="100" cy="100" rx="60" ry="40" className="geo-outline" />
-              <ellipse cx="100" cy="100" rx="35" ry="20" className="geo-outline geo-outline--inner" />
-              <line x1="40" y1="100" x2="65" y2="100" className="geo-connector" />
-              <line x1="135" y1="100" x2="160" y2="100" className="geo-connector" />
-            </g>
-          </svg>
-        );
       default:
         // Generic hex/poly wireframe (existing fallback)
         return (

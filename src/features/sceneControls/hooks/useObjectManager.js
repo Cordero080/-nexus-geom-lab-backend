@@ -30,6 +30,11 @@ export function useObjectManager(refs, objectProps) {
     wireframeIntensity,
     hyperframeColor,
     hyperframeLineColor,
+    // Geometry-specific (optional) props
+    cpdTK_p,
+    cpdTK_q,
+    cpdTK_tubeRadius,
+    cpdTK_gap,
   } = objectProps;
 
   useEffect(() => {
@@ -63,6 +68,10 @@ export function useObjectManager(refs, objectProps) {
         wireframeIntensity,
         hyperframeColor,
         hyperframeLineColor,
+        cpdTK_p,
+        cpdTK_q,
+        cpdTK_tubeRadius,
+        cpdTK_gap,
       });
 
       // Add all components to scene
@@ -80,6 +89,14 @@ export function useObjectManager(refs, objectProps) {
     if (objectsRef.current.length > 0) {
       materialRef.current = objectsRef.current[0].material;
     }
-  }, [objectCount, baseColor, objectType]);
+  }, [
+    objectCount,
+    baseColor,
+    objectType,
+    cpdTK_p,
+    cpdTK_q,
+    cpdTK_tubeRadius,
+    cpdTK_gap,
+  ]);
   // Effect runs when these props change
 }
