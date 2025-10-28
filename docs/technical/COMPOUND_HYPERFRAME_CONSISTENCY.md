@@ -11,11 +11,13 @@
 When implementing compound geometries, there are two architectural approaches:
 
 ### Compound Icosahedron (CORRECT ✅)
+
 - **Geometry**: 2 icosahedrons merged together (rotated)
 - **Hyperframe**: 2 inner icosahedrons as wireframes (matching the actual structure)
 - **Result**: Hyperframe accurately represents what's merged
 
 ### Compound Mega Tesseract (WAS INCONSISTENT ❌)
+
 - **Geometry**: 8 tesseracts merged together (4 mega set + 4 cross set)
 - **Hyperframe**: Used same builder as 4-tesseract mega (only 2 inner cubes shown)
 - **Result**: Hyperframe didn't reflect the actual 8-tesseract structure
@@ -25,9 +27,11 @@ When implementing compound geometries, there are two architectural approaches:
 ## The Inconsistency Explained
 
 The compound icosahedron established a clear pattern:
+
 > **"The hyperframe should visually represent each component of the compound geometry"**
 
 However, the compound mega tesseract broke this pattern:
+
 - It merged **8 complete tesseracts** with specific rotations:
   - First mega set (4 tesseracts): Original Y-axis rotations
   - Second cross set (4 tesseracts): Perpendicular X/Z-axis rotations
@@ -37,6 +41,7 @@ However, the compound mega tesseract broke this pattern:
 ### Why This Matters
 
 Hyperframes serve as the dimensional framework - they should reveal the underlying structure, not simplify it. When you see a compound mega tesseract, the hyperframe should show you:
+
 - All 8 tesseract cores (inner cubes)
 - Their specific rotational orientations
 - How they interpenetrate in 3D space
@@ -68,18 +73,21 @@ const cross4Inner = rotateVertices(..., rotationZ(π/2) * rotationY(π/5 + π/4)
 ### 2. Creates 8 Inner Cube Wireframes
 
 Each inner cube is rendered as a pink wireframe with 12 edges:
+
 - **96 total edges** (12 edges × 8 cubes)
 - Each cube at its specific rotation matching the geometry
 
 ### 3. Radial Connections from All 8 Cubes
 
 Green curved lines connect from each inner cube vertex outward:
+
 - **64 radial connections** (8 vertices × 8 cubes)
 - Project outward to golden ratio stellated layer (Φ²)
 
 ### 4. Visual Consistency
 
 Now when you view the compound mega tesseract:
+
 - You can see **all 8 tesseract cores** as inner cube wireframes
 - The **rotational structure** is visible (first 4 vs cross 4)
 - The hyperframe **matches the geometry** (8 merged tesseracts = 8 inner cubes)
@@ -93,6 +101,7 @@ Now when you view the compound mega tesseract:
 > **"When geometries are merged to create compound shapes, the hyperframe must reflect each component's structure with geometric accuracy, not symbolic simplification."**
 
 This ensures:
+
 1. **Visual Truth**: What you see matches what's actually merged
 2. **Educational Value**: Users can understand the compound structure by examining the hyperframe
 3. **Consistency**: Same approach across all compound geometries (icosahedron, tesseract, mega tesseract)
@@ -120,6 +129,7 @@ if (isCompoundMegaTesseract) {
 ## Files Modified
 
 1. **Created**: `/src/features/sceneControls/factories/hyperframeBuilders/compoundMegaTesseractHyperframe.js`
+
    - New dedicated hyperframe builder for 8-tesseract compound
    - Creates 8 inner cube wireframes with accurate rotations
    - Generates 64 radial connections from all cubes
@@ -134,11 +144,13 @@ if (isCompoundMegaTesseract) {
 ## Visual Impact
 
 ### Before (Inconsistent)
+
 - Compound mega tesseract showed only 2 inner cubes
 - Hidden complexity - couldn't see the 8-tesseract structure
 - Didn't match the compound icosahedron pattern
 
 ### After (Consistent)
+
 - Compound mega tesseract shows all 8 inner cubes
 - Full visibility of the cross-compound structure
 - Matches compound icosahedron philosophy: "show what's merged"
@@ -147,30 +159,59 @@ if (isCompoundMegaTesseract) {
 
 ## Related Geometries
 
-This consistency now applies across:
+This consistency now applies across all tesseract variants:
 
-| Geometry | Components Merged | Hyperframe Inner Structures |
-|----------|-------------------|----------------------------|
-| Compound Icosahedron | 2 icosahedrons | 2 inner icosahedrons |
-| Compound Tesseract | 2 tesseracts | 2 inner cubes |
-| Mega Tesseract | 4 tesseracts | 4 inner cubes (stellated) |
-| **Compound Mega Tesseract** | **8 tesseracts** | **8 inner cubes** ✅ |
+| Geometry                    | Components Merged                               | Hyperframe Inner Structures | Status         |
+| --------------------------- | ----------------------------------------------- | --------------------------- | -------------- |
+| Compound Icosahedron        | 2 icosahedrons                                  | 2 inner icosahedrons        | ✅ Consistent  |
+| Compound Tesseract          | 2 tesseracts                                    | 2 inner cubes               | ✅ Consistent  |
+| Mega Tesseract              | 4 tesseracts (2 small + 2 large pairs)          | 4 inner cubes               | ✅ **Fixed**   |
+| **Compound Mega Tesseract** | **8 tesseracts (4 mega set + 4 cross set)**     | **8 inner cubes**           | ✅ **Fixed**   |
+
+### Implementation Details
+
+**Compound Tesseract** (Already Consistent):
+- Merges 2 complete tesseracts with Y rotations (0°, 45°)
+- Hyperframe shows 2 inner cubes at innerSize=0.375
+- Uses `createCpdTesseractHyperframe`
+
+**Mega Tesseract** (Now Fixed):
+- Merges 4 complete tesseracts:
+  - Inner pair: 2 smaller (rotation: 0°, 45°, innerSize=0.375)
+  - Outer pair: 2 larger (rotation: 22.5°, 67.5°, innerSize=1.5)
+- **Previous issue**: Old hyperframe showed 2 base cubes + 4 artistic rotated cubes (6 total) - didn't match geometry
+- **Fix**: Created `createMegaTesseractHyperframeSimple` showing exactly 4 inner cubes matching the 4 merged tesseracts
+- Hyperframe now accurately reflects: 2 cubes at innerSize1=0.375, 2 cubes at innerSize2=1.5
+
+**Compound Mega Tesseract** (Now Fixed):
+- Merges 8 complete tesseracts (first mega set + cross set with X/Z rotations)
+- Hyperframe shows all 8 inner cubes with correct rotations
+- Uses dedicated `createCompoundMegaTesseractHyperframe`
 
 All compound geometries now follow the same architectural truth: the hyperframe reflects the actual merged structure.
+
+---
+
+## Files Modified
+
+### First Fix (Compound Mega Tesseract - 8 cores)
+
+1. **Created**: `/src/features/sceneControls/factories/hyperframeBuilders/compoundMegaTesseractHyperframe.js`
+2. **Updated**: `/src/features/sceneControls/factories/objectFactory.js` (added compound mega routing)
+
+### Second Fix (Mega Tesseract - 4 cores)
+
+3. **Created**: `/src/features/sceneControls/factories/hyperframeBuilders/megaTesseractHyperframeSimple.js`
+4. **Updated**: `/src/features/sceneControls/factories/objectFactory.js` (switch to simple consistent version)
+5. **Updated**: `/docs/technical/COMPOUND_HYPERFRAME_CONSISTENCY.md` (added mega tesseract details)
 
 ---
 
 ## Commit
 
 ```bash
-git add src/features/sceneControls/factories/hyperframeBuilders/compoundMegaTesseractHyperframe.js
+git add src/features/sceneControls/factories/hyperframeBuilders/megaTesseractHyperframeSimple.js
 git add src/features/sceneControls/factories/objectFactory.js
 git add docs/technical/COMPOUND_HYPERFRAME_CONSISTENCY.md
-git commit -m "feat: compound mega tesseract hyperframe now shows all 8 tesseract cores
-
-- Created dedicated compoundMegaTesseractHyperframe.js
-- Generates 8 inner cube wireframes matching actual geometry structure
-- First mega set (4 tesseracts) + cross set (4 tesseracts) all visible
-- Maintains consistency with compound icosahedron philosophy
-- See COMPOUND_HYPERFRAME_CONSISTENCY.md"
+git commit -m "feat: mega tesseract hyperframe now shows 4 cores - see COMPOUND_HYPERFRAME_CONSISTENCY.md"
 ```

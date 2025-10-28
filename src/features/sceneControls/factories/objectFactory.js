@@ -27,6 +27,7 @@ import { create600CellHyperframe } from "./hyperframeBuilders/cell600Hyperframe"
 import { createCompound600CellHyperframe } from "./hyperframeBuilders/compoundCell600Hyperframe";
 import { createCpdTesseractHyperframe } from "./hyperframeBuilders/cpdTesseractHyperframe";
 import { createMegaTesseractHyperframe } from "./hyperframeBuilders/megaTesseractHyperframe";
+import { createMegaTesseractHyperframeSimple } from "./hyperframeBuilders/megaTesseractHyperframeSimple";
 import { createCompoundMegaTesseractHyperframe } from "./hyperframeBuilders/compoundMegaTesseractHyperframe";
 
 /**
@@ -279,8 +280,8 @@ export function createSceneObject(config) {
           hyperframeLineColor
         );
       } else if (isMegaTesseract) {
-        // 4-tesseract mega: use stellated hyperframe
-        result = createMegaTesseractHyperframe(
+        // 4-tesseract mega: use simple consistent hyperframe with 4 inner cubes
+        result = createMegaTesseractHyperframeSimple(
           geometry,
           hyperframeColor,
           hyperframeLineColor
