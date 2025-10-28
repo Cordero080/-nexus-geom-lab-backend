@@ -1,6 +1,6 @@
 /* Scene Card Styles */
 
-@keyframes dark-holographic-shimmer {
+@keyframes darkHolographicShimmer {
   0%, 100% {
     background-position: 0% 50%, 0% 0%, 100% 100%, 0% 50%;
   }
@@ -15,7 +15,7 @@
   }
 }
 
-.scene-card {
+.sceneCard {
   background:
     linear-gradient(145deg, #0a0a0a, #000000),
     radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.1), transparent 50%),
@@ -36,17 +36,17 @@
     0 4px 8px rgba(0, 0, 0, 0.8),
     inset 0 1px 3px rgba(255, 255, 255, 0.2),
     inset 0 -1px 3px rgba(0, 0, 0, 0.5) !important;
-  animation: dark-holographic-shimmer 3s ease infinite !important;
+  animation: darkHolographicShimmer 3s ease infinite !important;
 }
 
-.scene-card:hover {
+.sceneCard:hover {
   transform: translateY(-4px);
   border-color: rgba(0, 255, 255, 0.3);
   box-shadow: 0 8px 32px rgba(0, 255, 255, 0.15);
 }
 
 /* Highlighted state for newly saved scenes */
-.scene-card--highlighted {
+.sceneCardHighlighted {
   border: 3px solid #00ffff !important;
   box-shadow: 
     0 0 20px rgba(0, 255, 255, 0.6),
@@ -54,7 +54,7 @@
     0 4px 8px rgba(0, 0, 0, 0.8),
     inset 0 0 30px rgba(0, 255, 255, 0.2) !important;
   animation: 
-    dark-holographic-shimmer 3s ease infinite,
+    darkHolographicShimmer 3s ease infinite,
     highlightPulse 2s ease-in-out infinite !important;
 }
 
@@ -76,7 +76,7 @@
 }
 
 /* Thumbnail */
-.scene-card__thumbnail {
+.sceneCardThumbnail {
   position: relative;
   width: 100%;
   padding-top: 56.25%; /* 16:9 aspect ratio (was 66.67% for 3:2) */
@@ -84,7 +84,7 @@
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
 }
 
-.scene-card__thumbnail img {
+.sceneCardThumbnail img {
   position: absolute;
   top: 0;
   left: 0;
@@ -93,7 +93,7 @@
   object-fit: cover;
 }
 
-.scene-card__placeholder {
+.sceneCardPlaceholder {
   position: absolute;
   top: 0;
   left: 0;
@@ -104,13 +104,13 @@
   justify-content: center;
 }
 
-.scene-card__icon {
+.sceneCardIcon {
   font-size: 3rem;
   opacity: 0.8;
 }
 
 /* Geometric outline placeholder */
-.scene-card__geo {
+.sceneCardGeo {
   width: 70%;
   height: 70%;
   opacity: 0.95;
@@ -118,19 +118,19 @@
   animation: geoFloat 6s ease-in-out infinite;
 }
 
-.geo-outline {
+.geoOutline {
   stroke-opacity: 0.9;
 }
 
-.geo-outline--inner {
+.geoOutlineInner {
   stroke-opacity: 0.6;
 }
 
-.geo-connector {
+.geoConnector {
   stroke-opacity: 0.6;
 }
 
-.geo-diagonal {
+.geoDiagonal {
   stroke-dasharray: 6 8;
   animation: dashMove 8s linear infinite;
   stroke-opacity: 0.5;
@@ -146,7 +146,7 @@
 }
 
 /* Info Section */
-.scene-card__info {
+.sceneCardInfo {
   padding: 20px;
   display: flex;
   flex-direction: column;
@@ -155,7 +155,7 @@
   min-height: 180px; /* Ensure minimum height for content */
 }
 
-.scene-card__title {
+.sceneCardTitle {
   font-size: 1.125rem;
   font-weight: 700;
   color: #ffffff;
@@ -169,7 +169,7 @@
   -webkit-box-orient: vertical;
 }
 
-.scene-card__description {
+.sceneCardDescription {
   font-size: 0.875rem;
   color: rgba(255, 255, 255, 0.7);
   margin: 0;
@@ -183,7 +183,7 @@
 }
 
 /* Meta */
-.scene-card__meta {
+.sceneCardMeta {
   display: flex;
   align-items: center;
   gap: 12px;
@@ -192,20 +192,20 @@
   flex-wrap: wrap;
 }
 
-.scene-card__creator {
+.sceneCardCreator {
   color: #00ffff;
   font-weight: 600;
 }
 
-.scene-card__date,
-.scene-card__views {
+.sceneCardDate,
+.sceneCardViews {
   display: flex;
   align-items: center;
   gap: 4px;
 }
 
 /* Actions */
-.scene-card__actions {
+.sceneCardActions {
   display: flex;
   gap: 12px;
   margin-top: auto;
@@ -215,7 +215,7 @@
   min-height: 48px; /* Ensure minimum height for buttons */
 }
 
-.scene-card__btn {
+.sceneCardBtn {
   flex: 1;
   min-width: 60px;
   padding: 10px 12px;
@@ -229,7 +229,7 @@
   white-space: nowrap;
 }
 
-.scene-card__btn--primary {
+.sceneCardBtnPrimary {
   background: linear-gradient(90deg, #00ffff 0%, #ff00cc 100%);
   color: #ffffff;
   border: none;
@@ -237,20 +237,20 @@
   font-weight: 700;
 }
 
-.scene-card__btn--primary:hover {
+.sceneCardBtnPrimary:hover {
   background: linear-gradient(90deg, #ff00cc 0%, #00ffff 100%);
   box-shadow: 0 4px 32px rgba(255, 0, 204, 0.4);
   transform: scale(1.05);
 }
 
-.scene-card__btn--secondary {
+.sceneCardBtnSecondary {
   background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
   color: rgba(255, 255, 255, 0.9);
   border: 1px solid rgba(255, 255, 255, 0.2);
   font-weight: 600;
 }
 
-.scene-card__btn--secondary:hover {
+.sceneCardBtnSecondary:hover {
   background: linear-gradient(135deg, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0.1) 100%);
   border-color: rgba(255, 255, 255, 0.4);
   color: #ffffff;
@@ -258,7 +258,7 @@
   transform: scale(1.05);
 }
 
-.scene-card__btn--danger {
+.sceneCardBtnDanger {
   background: linear-gradient(90deg, #ff0044 0%, #cc0033 100%);
   color: #ffffff;
   border: none;
@@ -267,7 +267,7 @@
   letter-spacing: 0.04em;
 }
 
-.scene-card__btn--danger:hover {
+.sceneCardBtnDanger:hover {
   background: linear-gradient(90deg, #cc0033 0%, #ff0044 100%);
   box-shadow: 0 4px 32px rgba(255, 0, 68, 0.6);
   transform: scale(1.05);
@@ -275,24 +275,24 @@
 
 /* Responsive */
 @media (max-width: 768px) {
-  .scene-card__info {
+  .sceneCardInfo {
     padding: 12px;
     gap: 8px;
   }
 
-  .scene-card__title {
+  .sceneCardTitle {
     font-size: 1rem;
   }
 
-  .scene-card__description {
+  .sceneCardDescription {
     font-size: 0.8125rem;
   }
 
-  .scene-card__actions {
+  .sceneCardActions {
     flex-direction: column;
   }
 
-  .scene-card__btn {
+  .sceneCardBtn {
     width: 100%;
   }
 }
