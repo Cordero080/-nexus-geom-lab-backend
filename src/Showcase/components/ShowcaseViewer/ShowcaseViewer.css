@@ -29,7 +29,7 @@
    ======================================== */
 
 /* Animation 1 - Icarus-X #001 (Golden Phoenix - Solar Ascension) */
-:global(.viewer-overlay-1) {
+.viewer-overlay-1 {
   background: 
     /* 1. Primary Light Source: Concentrated Golden/White Core */
     radial-gradient(circle at 50% 50%, rgba(255, 255, 200, 0.4) 0%, transparent 15%),
@@ -66,7 +66,7 @@
   }
 }
 /* Animation 2 - Vectra #002 (Dark Radial with Contained Glow) */
-:global(.viewer-overlay-2) {
+.viewer-overlay-2 {
   background: 
     radial-gradient(circle at center, 
       #2a2a2a 0%, 
@@ -107,7 +107,7 @@
 
 /* Animation 3 - Fire-Tech Warrior #003 (Red-Orange) */
 /* Static Fire/Warm */
-:global(.viewer-overlay-3) {
+.viewer-overlay-3 {
   background: 
     radial-gradient(ellipse at 20% 30%, rgba(255, 157, 0, 0.4) 0%, transparent 50%),
     radial-gradient(ellipse at 80% 70%, rgba(92, 12, 55, 0.6) 0%, transparent 50%),
@@ -116,7 +116,7 @@
 }
 
 /* Animation 4 - Nexus-Prime #004 (Deep Space with Crimson Solar Flares) */
-:global(.viewer-overlay-3) {
+.viewer-overlay-3 {
   background: 
     /* 1. Subtle Radial Glow (for a centered focal point) */
     radial-gradient(circle at 50% 50%, rgba(255, 69, 0, 0.2) 0%, transparent 25%),
@@ -213,7 +213,7 @@
   font-weight: 600;
   padding: 14px 28px;
   border: 2px solid transparent;
-  border-radius: 0;
+  border-radius: 8px;
   background: 
     linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)) padding-box,
     linear-gradient(135deg, #00ffff, #ff00ff) border-box;
@@ -247,7 +247,7 @@
   height: 50px;
   background: rgba(255, 0, 255, 0.2);
   border: 2px solid #ff00ff;
-  border-radius: 0;
+  border-radius: 50%;
   color: #ff00ff;
   font-size: 28px;
   cursor: pointer;
@@ -276,7 +276,7 @@
 
 
 
-:global(.viewer-info) {
+.viewer-info {
   flex-shrink: 0;
   padding: 20px 30px;
   /* Current style is orange/red themed - matches Animation 3 best */
@@ -290,7 +290,7 @@
 }
 
 /* Icarus-X #001 - Golden/Amber Theme */
-:global(.viewer-overlay-1) .viewer-info {
+.viewer-overlay-1 .viewer-info {
   background: 
     radial-gradient(ellipse at top left, rgba(149, 212, 208, 0.133) 0%, transparent 50%),
     radial-gradient(ellipse at bottom right, rgba(173, 174, 207, 0.153) 0%, transparent 50%),
@@ -304,7 +304,7 @@
     inset 0 -1px 0 rgba(0, 0, 0, 0.1);
 }
 
-:global(.viewer-overlay-1) .viewer-title {
+.viewer-overlay-1 .viewer-title {
   background: linear-gradient(135deg, #4ecdc4, #88c5e9, #95d4d0);
   -webkit-background-clip: text;
   background-clip: text;
@@ -313,12 +313,12 @@
   font-family: inherit; /* Default: Orbitron */
 }
 
-:global(.viewer-overlay-1) .viewer-description {
+.viewer-overlay-1 .viewer-description {
   color: rgba(255, 255, 255, 0.9);
   font-family: inherit; /* Default: system font */
 }
 
-:global(.viewer-overlay-1) .meta-tag {
+.viewer-overlay-1 .meta-tag {
   background: rgba(78, 205, 196, 0.15);
   border: 1px solid rgba(136, 197, 233, 0.3);
   color: #88c5e9;
@@ -326,20 +326,20 @@
   font-family: inherit; /* Default: system font */
 }
 
-:global(.viewer-overlay-1) .meta-tag:hover {
+.viewer-overlay-1 .meta-tag:hover {
   background: rgba(78, 205, 196, 0.25);
   box-shadow: 0 2px 12px rgba(78, 205, 196, 0.3);
 }
 
 /* Prismia #002 - Default Orange/Red Theme */
-:global(.viewer-overlay-2) .viewer-info {
+.viewer-overlay-2 .viewer-info {
   background: linear-gradient(180deg, rgba(215, 28, 134, 0.256) 0%, rgba(255, 0, 100, 0.35) 100%);
   border-top: 2px solid rgba(255, 140, 70, 0.5);
   backdrop-filter: blur(10px);
   box-shadow: 0 -5px 30px rgba(255, 100, 0, 0.3);
 }
 
-:global(.viewer-overlay-2) .viewer-title {
+.viewer-overlay-2 .viewer-title {
   background: linear-gradient(235deg, #21aef9, #ff00b7, #ffcc00);
   -webkit-background-clip: text;
   background-clip: text;
@@ -348,13 +348,13 @@
   font-family: inherit; /* Default: Orbitron */
 }
 
-:global(.viewer-overlay-2) .viewer-description {
+.viewer-overlay-2 .viewer-description {
   color: rgba(251, 248, 248, 0.59);
   text-shadow: 0 0 10px rgba(255, 100, 0, 0.5);
   font-family: inherit; /* Default: system font */
 }
 
-:global(.viewer-overlay-2) .meta-tag {
+.viewer-overlay-2 .meta-tag {
   background: rgba(255, 100, 0, 0.15);
   border: 1px solid rgba(255, 234, 0, 0.4);
   color: #033a3fe6;
@@ -362,20 +362,20 @@
   font-family: inherit; /* Default: system font */
 }
 
-:global(.viewer-overlay-2) .meta-tag:hover {
+.viewer-overlay-2 .meta-tag:hover {
   background: rgba(255, 100, 0, 0.25);
   box-shadow: 0 2px 12px rgba(255, 60, 0, 0.3);
 }
 
 /* Nexus-Prime #003 - Crimson/Red Theme */
-:global(.viewer-overlay-3) .viewer-info {
+.viewer-overlay-3 .viewer-info {
   background: linear-gradient(180deg, rgba(255, 100, 0, 0.25) 0%, rgba(255, 0, 100, 0.35) 100%);
   border-top: 2px solid rgba(255, 140, 70, 0.5);
   backdrop-filter: blur(10px);
   box-shadow: 0 -5px 30px rgba(255, 100, 0, 0.3);
 }
 
-:global(.viewer-overlay-3) .viewer-title {
+.viewer-overlay-3 .viewer-title {
   background: linear-gradient(360deg, #ffcc00fb, #ff2b00, #ffc400c6, #ff2f00);
   -webkit-background-clip: text;
   background-clip: text;
@@ -384,13 +384,13 @@
   font-family: inherit; /* Default: Orbitron */
 }
 
-:global(.viewer-overlay-3) .viewer-description {
+.viewer-overlay-3 .viewer-description {
   color: rgba(255, 255, 255, 0.9);
   text-shadow: 0 0 10px rgba(255, 100, 0, 0.5);
   font-family: inherit; /* Default: system font */
 }
 
-:global(.viewer-overlay-3) .meta-tag {
+.viewer-overlay-3 .meta-tag {
   background: rgba(255, 100, 0, 0.15);
   border: 1px solid rgba(255, 80, 0, 0.4);
   color: #ff7700;
@@ -398,7 +398,7 @@
   font-family: inherit; /* Default: system font */
 }
 
-:global(.viewer-overlay-3) .meta-tag:hover {
+.viewer-overlay-3 .meta-tag:hover {
   background: rgba(255, 100, 0, 0.25);
   box-shadow: 0 2px 12px rgba(255, 60, 0, 0.3);
 }
@@ -424,7 +424,7 @@ Animation 3 (Fire-Tech Warrior #003):
   - Meta tags: Currently orange theme (#ff7700) - matches this theme
 */
 
-:global(.viewer-title) {
+.viewer-title {
   font-size: 1.8rem;
   font-weight: 700;
   background: linear-gradient(135deg, #ff6a00, #ff2b00, #ffcc00); /* Orange-red gradient - fits Animation 3 */
@@ -438,7 +438,7 @@ Animation 3 (Fire-Tech Warrior #003):
   display: inline-block; /* Ensures gradient only applies to text */
 }
 
-:global(.viewer-description) {
+.viewer-description {
   font-size: 0.95rem;
   color: rgba(255, 255, 255, 0.9);
   margin: 0 0 16px 0;
@@ -450,14 +450,14 @@ Animation 3 (Fire-Tech Warrior #003):
   letter-spacing: 0.5px;
 }
 
-:global(.viewer-meta) {
+.viewer-meta {
   display: flex;
   gap: 12px;
   justify-content: center;
   flex-wrap: wrap;
 }
 
-:global(.meta-tag) {
+.meta-tag {
   padding: 6px 16px;
   background: rgba(255, 100, 0, 0.15); /* Orange theme - fits Animation 3 */
   border: 1px solid rgba(255, 80, 0, 0.4);
@@ -510,4 +510,3 @@ Animation 3 (Fire-Tech Warrior #003):
     padding: 6px 16px;
   }
 }
-

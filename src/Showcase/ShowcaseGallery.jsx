@@ -267,9 +267,9 @@ export default function ShowcaseGallery() {
         {mockAnimations.map((animation, index) => {
           const position = getCardPosition(index);
           const isVisible = visibleCards.has(animation.id);
-          const unlocked = Array.isArray(user?.unlockedNoetechs) && user?.unlockedNoetechs?.length
+          const unlocked = Array.isArray(user?.unlockedNoetechs) 
             ? user.unlockedNoetechs
-            : ['icarus-x'];
+            : [];
           const isUnlocked = unlocked.includes(animation.noetechKey);
           
           return (
