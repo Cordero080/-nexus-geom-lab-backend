@@ -5,7 +5,7 @@ import { useScene } from "../../../context/SceneContext";
 import { saveScene, updateScene } from "../../../services/sceneApi";
 import ScrambleButton from '../../ScrambleButton/ScrambleButton';
 import styles from "./SaveButton.module.scss";
-import "../../../styles/shared.css";
+import sharedStyles from "../../../styles/shared.module.scss";
 
 /**
  * SaveControls Component
@@ -229,7 +229,7 @@ function SaveControls({ sceneConfig, textColor }) {
                 <input
                   id="scene-name"
                   type="text"
-                  className="save-modal__input angled-corners"
+                  className={`save-modal__input ${sharedStyles.angledCorners}`}
                   value={newSceneName}
                   onChange={(e) => setNewSceneName(e.target.value)}
                   placeholder="Enter scene name..."
@@ -265,7 +265,7 @@ function SaveControls({ sceneConfig, textColor }) {
                 <div className="save-modal__save-as-new-section">
                   <input
                     type="text"
-                    className="save-modal__input angled-corners"
+                    className={`save-modal__input ${sharedStyles.angledCorners}`}
                     value={newSceneName}
                     onChange={(e) => setNewSceneName(e.target.value)}
                     placeholder="New scene name..."

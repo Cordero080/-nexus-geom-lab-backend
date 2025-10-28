@@ -75,16 +75,20 @@ function updateThickWireframeCylinders(objData) {
 
 /**
  * Creates a tesseract (4D hypercube) geometry with frustum faces
- * 
+ *
  * This is the canonical implementation that should be used across the application.
  * Previously duplicated in geometryCreation.js, compoundTesseract.js, and megaTesseract.js.
- * 
+ *
  * @param {number} outerSize - Size of the outer cube
  * @param {number} innerSize - Size of the inner cube
  * @param {number} rotation - Optional rotation to apply
  * @returns {THREE.BufferGeometry} Complete tesseract with outer, inner, and connecting faces
  */
-export function createTesseractWithFaces(outerSize, innerSize, rotation = null) {
+export function createTesseractWithFaces(
+  outerSize,
+  innerSize,
+  rotation = null
+) {
   const geometries = [];
 
   // Outer cube

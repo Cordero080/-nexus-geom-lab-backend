@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import BeamScanButton from '../../components/HUD/BeamScanButton/BeamScanButton';
 import './LoginPage.css';
-import '../../styles/shared.css';
+import sharedStyles from '../../styles/shared.module.scss';
 import '../../nav/nav.css';
 
 const LoginPage = () => {

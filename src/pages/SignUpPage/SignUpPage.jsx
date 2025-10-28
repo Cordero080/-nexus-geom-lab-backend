@@ -3,7 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { BeamScanButton } from '../../components/HUD';
 import './SignUpPage.css';
-import '../../styles/shared.css';
+import sharedStyles from '../../styles/shared.module.scss';
 import '../../nav/nav.css';
 
 export default function SignUpPage() {

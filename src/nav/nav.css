@@ -1,5 +1,5 @@
 /* Shared nav styles matching Home/Scenes quantum nav */
-@import '../styles/shared.css';
+@import '../styles/shared.module.scss';
 
 .quantum-nav {
   width: 100vw;

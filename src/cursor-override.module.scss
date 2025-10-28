@@ -1,0 +1,52 @@
+/* Global cursor behavior - see CSS_MODULES_FINAL_PHASE.md */
+:global(html) {
+  cursor: none !important;
+  overflow-y: scroll; // Force scrollbar to always show
+  scrollbar-gutter: stable; // Reserve space for scrollbar
+}
+
+:global(body) {
+  cursor: none !important;
+  overflow-x: hidden; // Prevent horizontal scroll
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+/* Show regular cursor ONLY in geom-lab */
+:global(body.geom-lab-page) {
+  cursor: auto !important;
+}
+
+/* Ensure all elements inside the body inherit cursor style */
+:global(body *) {
+  cursor: inherit;
+}
+
+/* Force cursor visibility on canvas and all geom-lab elements */
+:global(body.geom-lab-page *),
+:global(body.geom-lab-page canvas),
+:global(body.geom-lab-page .three-scene-container),
+:global(body.geom-lab-page .three-scene-container *) {
+  cursor: auto !important;
+}
+
+/* Specialized controls in geom-lab */
+:global(body.geom-lab-page .controls *) {
+  cursor: auto !important;
+}
+
+/* Input fields should show text cursor in geom-lab */
+:global(body.geom-lab-page input), 
+:global(body.geom-lab-page select),
+:global(body.geom-lab-page textarea) {
+  cursor: text !important;
+}
+
+/* Buttons, links, etc. should show pointer in geom-lab */
+:global(body.geom-lab-page button),
+:global(body.geom-lab-page a),
+:global(body.geom-lab-page [role="button"]),
+:global(body.geom-lab-page .section-header) {
+  cursor: pointer !important;
+}

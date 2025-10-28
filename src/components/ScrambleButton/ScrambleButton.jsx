@@ -6,7 +6,7 @@ import {
   createHoverHandlers,
 } from './scrambleButtonHandlers';
 import styles from './ScrambleButton.module.scss';
-import '../../styles/shared.css';
+import sharedStyles from '../../styles/shared.module.scss';
 
 const ScrambleButton = ({ 
   children, 

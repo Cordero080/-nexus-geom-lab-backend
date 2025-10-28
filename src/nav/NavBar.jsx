@@ -1,7 +1,7 @@
 
 import React, { useState } from "react";
 import "./nav.css";
-import "../styles/shared.css";
+import sharedStyles from "../styles/shared.module.scss";
 import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import ScrambleButton from "../components/ScrambleButton/ScrambleButton";

@@ -15,6 +15,7 @@ export const useTextScramble = (finalText, duration = 2000, trigger = true) => {
     if (!trigger || completedRef.current) return;
 
     // Katakana character pool for scrambling
+    // Atorie (Atelier, it katakana Japanese)
     const katakanaChars = [
       'ア', 'イ', 'ウ', 'エ', 'オ', 'カ', 'キ', 'ク', 'ケ', 'コ',
       'サ', 'シ', 'ス', 'セ', 'ソ', 'タ', 'チ', 'ツ', 'テ', 'ト',

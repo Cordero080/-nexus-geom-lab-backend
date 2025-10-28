@@ -14,8 +14,8 @@ import LoginPage from './pages/LoginPage/LoginPage';
 import { SceneProvider, useScene } from './context/SceneContext';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { QuantumCursor } from "./components/Effects";
-import './cursor-override.css';
-import './styles/shared.css';
+import './cursor-override.module.scss';
+import sharedStyles from './styles/shared.module.scss';
 
 // Updated default colors for psychedelic theme
 const defaultBaseColor = '#ff00ff'; // Vibrant magenta

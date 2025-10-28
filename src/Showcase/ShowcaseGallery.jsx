@@ -7,7 +7,7 @@ import { useAuth } from '../context/AuthContext';
 import RotatingCube from './RotatingCube';
 import ShowcaseViewer from './ShowcaseViewer';
 import './ShowcaseGallery.css';
-import '../styles/shared.css';
+import sharedStyles from '../styles/shared.module.scss';
 
 export default function ShowcaseGallery() {
   // Quantum Uncertainty Utility
@@ -380,7 +380,7 @@ export default function ShowcaseGallery() {
               >
                 {!isUnlocked && (
                   <div className="lock-overlay">
-                    <div className="lock-badge angled-corners-sm">Locked</div>
+                    <div className={`lock-badge ${sharedStyles.angledCornersSm}`}>Locked</div>
                     <div className="lock-hint">Save a scene to unlock</div>
                   </div>
                 )}

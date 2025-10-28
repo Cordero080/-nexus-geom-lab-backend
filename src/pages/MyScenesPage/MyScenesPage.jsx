@@ -7,7 +7,7 @@ import SceneCard from "../../components/Scenes/SceneCard"; // Corrected import p
 import CustomSelect from "../../components/CustomSelect/CustomSelect";
 import { quantumCollapse } from "../../utils/coreHelpers";
 import "./MyScenesPage.css";
-import "../../styles/shared.css";
+import sharedStyles from "../../styles/shared.module.scss";
 import "../../nav/nav.css";
 
 // quantumCollapse now imported from utils/coreHelpers.js
@@ -420,7 +420,7 @@ export default function MyScenesPage() {
           <h2>No scenes yet</h2>
           <p>Create your first geometric masterpiece in the Geometry Lab!</p>
           <button
-            className="my-scenes-page__cta angled-corners"
+            className={`my-scenes-page__cta ${sharedStyles.angledCorners}`}
             onClick={() => navigate("/geometry-lab")}
           >
             Start Creating
@@ -460,13 +460,13 @@ export default function MyScenesPage() {
             </p>
             <div className="delete-modal__actions">
               <button
-                className="delete-modal__btn delete-modal__btn--cancel angled-corners"
+                className={`delete-modal__btn delete-modal__btn--cancel ${sharedStyles.angledCorners}`}
                 onClick={cancelDelete}
               >
                 Cancel
               </button>
               <button
-                className="delete-modal__btn delete-modal__btn--delete angled-corners"
+                className={`delete-modal__btn delete-modal__btn--delete ${sharedStyles.angledCorners}`}
                 onClick={confirmDelete}
               >
                 Delete Forever

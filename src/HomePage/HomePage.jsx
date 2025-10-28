@@ -8,7 +8,7 @@ function quantumCollapse(states) {
 import Quote from './Quote';
 import ProgressBar from './ProgressBar';
 import Scene from './Scene';
-import '../styles/shared.css';
+import sharedStyles from '../styles/shared.module.scss';
 // import './bg.css';
 // import './index.css';
 import './Home.css';
