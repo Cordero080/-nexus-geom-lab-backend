@@ -2,7 +2,7 @@
 
 ## Problem
 
-Wireframes (thick cylinder edges and inner centerLines) were disconnected from the mesh during the alien/omni animation. The wireframe would stay in place while the solid mesh moved, rotated, and scaled.
+Wireframes (thick cylinder edges and inner centerLines) were disconnected from the mesh during the omni animation. The wireframe would stay in place while the solid mesh moved, rotated, and scaled.
 
 ## Root Cause
 
@@ -16,14 +16,14 @@ The animation loop was iterating through `meshesToAnimate` array which included 
 
 ### Step 1: Only Animate solidMesh
 
-Added a check at the start of the alien animation case to skip execution for non-solidMesh objects:
+Added a check at the start of the omni animation case to skip execution for non-solidMesh objects:
 
 ```javascript
-case 'alien':
+case 'alien': // renamed "omni" eventually 
   // Only animate solidMesh - wireframes will be synchronized after
   if (currentMesh !== solidMesh) break;
 
-  // ... rest of alien animation code
+  // ... rest of alien(omni) animation code
 ```
 
 ### Step 2: Synchronize Wireframes After Animation
