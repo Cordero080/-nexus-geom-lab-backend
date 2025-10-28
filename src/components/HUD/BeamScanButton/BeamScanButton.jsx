@@ -1,5 +1,5 @@
 import React, { useRef } from 'react';
-import './BeamScanButton.css';
+import styles from './BeamScanButton.module.scss';
 import '../../../styles/shared.css';
 
 // Example code to reveal on hover
@@ -16,22 +16,26 @@ const RAW_CODE = `function quantumLeap() {
  * @param {Function} props.onClick - Function to call when button is clicked
  * @param {string} props.label - Button label text (default: 'Enter Playground')
  * @param {string} props.code - Optional custom code to display (defaults to RAW_CODE)
+ * @param {Object} props.style - Optional inline styles to apply to button
+ * @param {string} props.className - Optional additional CSS classes
+ * @param {boolean} props.delayedString - If true, uses delayed quantum string animation
  */
-export default function BeamScanButton({ onClick, label = 'Enter Playground', code = RAW_CODE }) {
+export default function BeamScanButton({ onClick, label = 'Enter Playground', code = RAW_CODE, style, className = '', delayedString = false }) {
   const btnRef = useRef(null);
 
   return (
     <button
       ref={btnRef}
-      className="beam-scan-btn beam-btn angled-corners"
+      className={`${styles.beamScanBtn} ${delayedString ? styles.delayedString : ''} angled-corners ${className}`}
       onClick={onClick}
       tabIndex={0}
+      style={style}
     >
-      <span className="beam-scan-label beam-btn-label">{label}</span>
-      <span className="beam-scan-code beam-btn-code" aria-hidden="true">
+      <span className={styles.beamScanLabel}>{label}</span>
+      <span className={styles.beamScanCode} aria-hidden="true">
         <pre>{code}</pre>
       </span>
-      <span className="beam-scan-effect" aria-hidden="true" />
+      <span className={styles.beamScanEffect} aria-hidden="true" />
     </button>
   );
 }

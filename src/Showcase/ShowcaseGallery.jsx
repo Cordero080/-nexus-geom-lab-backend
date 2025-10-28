@@ -10,6 +10,34 @@ import './ShowcaseGallery.css';
 import '../styles/shared.css';
 
 export default function ShowcaseGallery() {
+  // Quantum Uncertainty Utility
+  function quantumCollapse(states) {
+    return states[Math.floor(Math.random() * states.length)];
+  }
+
+  // Portal Worlds and Glyphs (quantum-reactive theming)
+  const portalWorlds = [
+    { colors: ['#ff00cc', '#00fff7', '#1a003a'], label: 'Fractal' },
+    { colors: ['#ffea00', '#7300ffff', '#003a2a'], label: 'Nebula' },
+    { colors: ['#ff3300', '#cc00ff', '#0a0f1a'], label: 'Inferno' },
+    { colors: ['#00ff33', '#00aaff', '#003a3a'], label: 'Emerald' },
+    { colors: ['#ffffff', '#00fff7', '#0a0f1a'], label: 'Singularity' },
+  ];
+  const glyphSets = [
+    ['ψ', 'Ω', 'Σ'],
+    ['λ', 'Φ', 'Ξ'],
+    ['π', 'Δ', 'Γ'],
+    ['μ', 'θ', 'ζ'],
+    ['τ', 'β', 'η'],
+  ];
+
+  const [portalState, setPortalState] = useState(() => quantumCollapse(portalWorlds));
+  const [glyphState, setGlyphState] = useState(() => quantumCollapse(glyphSets));
+
+  // Parallax layer refs
+  const bgRef = useRef(null);
+  const fgRef = useRef(null);
+  const bgCutoutRef = useRef(null);
   const [selectedAnimation, setSelectedAnimation] = useState(null);
   const [hoveredCard, setHoveredCard] = useState(null);
   const [preloadedModels, setPreloadedModels] = useState({});
@@ -51,7 +79,7 @@ export default function ShowcaseGallery() {
     };
   }, [selectedAnimation]);
 
-  // Scroll progress bar and title fade
+  // Scroll progress bar (non-visual, for future use)
   useEffect(() => {
     const handleScroll = () => {
       const container = containerRef.current;
@@ -61,28 +89,64 @@ export default function ShowcaseGallery() {
       if (progressBar) {
         progressBar.style.width = scrollProgress + '%';
       }
-      
-      // Fade out title when scrolling
-      const titleOverlay = document.querySelector('.showcase-title-overlay');
-      if (titleOverlay) {
-        const scrollTop = container.scrollTop;
-        const fadeStart = 100; // Start fading after 100px
-        const fadeEnd = 300; // Fully faded by 300px
-        
-        if (scrollTop < fadeStart) {
-          titleOverlay.style.opacity = '1';
-        } else if (scrollTop > fadeEnd) {
-          titleOverlay.style.opacity = '0';
-        } else {
-          const fadeProgress = (scrollTop - fadeStart) / (fadeEnd - fadeStart);
-          titleOverlay.style.opacity = String(1 - fadeProgress);
-        }
-      }
     };
 
     const container = containerRef.current;
     container?.addEventListener('scroll', handleScroll);
     return () => container?.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  // Quantum parallax background (scroll + mouse driven)
+  useEffect(() => {
+    const handleParallax = (e) => {
+      const container = containerRef.current;
+      const scrollY = container ? container.scrollTop : 0;
+      const maxScroll = container ? (container.scrollHeight - container.clientHeight) || 1 : 1;
+      const progress = Math.min(1, scrollY / maxScroll);
+      let mx = 0, my = 0;
+      if (e && e.type === 'mousemove') {
+        mx = (e.clientX / window.innerWidth) - 0.5;
+        my = (e.clientY / window.innerHeight) - 0.5;
+      }
+      // Slightly reduce motion and opacity as user scrolls down (like Home)
+      const motionDampen = 1 - progress * 0.5; // up to 50% less motion at bottom
+      if (bgRef.current) {
+        bgRef.current.style.transform = `translate3d(${mx * 30 * motionDampen}px, ${-scrollY * 0.08 * motionDampen + my * 20 * motionDampen}px, 0)`;
+        bgRef.current.style.opacity = String(1 - progress * 0.75); // fade out by ~75%
+      }
+      if (fgRef.current) {
+        fgRef.current.style.transform = `translate3d(${mx * 80 * motionDampen}px, ${-scrollY * 0.18 * motionDampen + my * 40 * motionDampen}px, 0)`;
+        fgRef.current.style.opacity = String(0.9 - progress * 0.9); // fade to ~0
+      }
+      // Clip-path layer fade-in like Home/Scenes
+      if (bgCutoutRef.current) {
+        const progress = Math.min(1, scrollY / (maxScroll * 0.25)); // appear over first 25% scroll
+        bgCutoutRef.current.style.opacity = String(progress);
+      }
+    };
+    const container = containerRef.current;
+    container?.addEventListener('scroll', handleParallax);
+    window.addEventListener('mousemove', handleParallax);
+    handleParallax();
+    return () => {
+      container?.removeEventListener('scroll', handleParallax);
+      window.removeEventListener('mousemove', handleParallax);
+    };
+  }, []);
+
+  // Quantum collapse on scroll/click (theme color shift)
+  useEffect(() => {
+    const collapse = () => {
+      setPortalState(quantumCollapse(portalWorlds));
+      setGlyphState(quantumCollapse(glyphSets));
+    };
+    const container = containerRef.current;
+    container?.addEventListener('scroll', collapse);
+    window.addEventListener('click', collapse);
+    return () => {
+      container?.removeEventListener('scroll', collapse);
+      window.removeEventListener('click', collapse);
+    };
   }, []);
 
   // Intersection Observer for scroll animations
@@ -153,7 +217,7 @@ export default function ShowcaseGallery() {
       name: 'Nexus-Prime #003',
       animation: 'Warrior Flip',
       variant: 'Shadow Striker',
-      description: 'The Quantum Architect of the Digital Nexus...Master of Dimensional Combat',
+      description: 'The Quantum Architect of the Digital Nexus...Master of hyperdimensional Combat',
       fbxUrl: '/models/iron-man-2.fbx',
       scale: 0.0230,
       galleryScale: 0.0180,
@@ -234,6 +298,35 @@ export default function ShowcaseGallery() {
   return (
     <>
       {/* Scroll Progress Bar */}
+      {/* Geometric Background Layers (consistency with Home/Scenes) */}
+      <div ref={bgRef} className="parallax-bg-layer" aria-hidden="true">
+        {/* Abstract SVG/gradient background shapes */}
+        <svg width="100%" height="100%" viewBox="0 0 1920 400" style={{position:'absolute',top:0,left:0,width:'100vw',height:'40vh',pointerEvents:'none', background: `linear-gradient(120deg, ${portalState.colors[0]} 0%, ${portalState.colors[1]} 60%, ${portalState.colors[2]} 100%)`, transition: 'background 1.2s cubic-bezier(0.4,0,0.2,1)'}}>
+          <defs>
+            <linearGradient id="showcase-bg-grad1" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stopColor="#00d4ff" stopOpacity="0.18"/>
+              <stop offset="100%" stopColor="#ff00ff" stopOpacity="0.08"/>
+            </linearGradient>
+          </defs>
+          <polygon points="0,0 1920,0 1600,400 0,300" fill="url(#showcase-bg-grad1)"/>
+          <ellipse cx="1600" cy="80" rx="220" ry="60" fill={portalState.colors[2] + '22'}/>
+        </svg>
+      </div>
+      <div ref={fgRef} className="parallax-fg-layer" aria-hidden="true">
+        {/* Foreground SVG/gradient shapes */}
+        <svg width="100%" height="100%" viewBox="0 0 1920 400" style={{position:'absolute',top:0,left:0,width:'100vw',height:'40vh',pointerEvents:'none'}}>
+          <defs>
+            <linearGradient id="showcase-fg-grad1" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stopColor="#fff" stopOpacity="0.12"/>
+              <stop offset="100%" stopColor="#00f0ff" stopOpacity="0.22"/>
+            </linearGradient>
+          </defs>
+          <polygon points="1920,0 1920,400 400,400 0,200" fill="url(#showcase-fg-grad1)"/>
+          <ellipse cx="320" cy="120" rx="180" ry="40" fill="#ffffff22"/>
+        </svg>
+      </div>
+    {/* Sectioned geometric background layers (match Home's multiple diagonal cuts) */}
+
       <div className="scroll-progress" style={{ visibility: selectedAnimation ? 'hidden' : 'visible' }} />
 
       <div 
@@ -241,13 +334,16 @@ export default function ShowcaseGallery() {
         ref={containerRef}
         style={{ visibility: selectedAnimation ? 'hidden' : 'visible' }}
       >
-        {/* Fixed Title Overlay */}
-        <div className="showcase-title-overlay">
-          <h1 className="showcase-main-title"> Machina Animus NEXUS</h1> 
-          <p className="showcase-main-subtitle">
-            The Noetech Digitla Pantheon
-          </p>
-        </div>
+        {/* Layered cutouts aligned to hero + each scene */}
+        <div className="bg-gallery-layer bg-gallery-reality" aria-hidden="true" style={{ top: '0vh' }} />
+        <div className="bg-gallery-layer bg-gallery-probability" aria-hidden="true" style={{ top: '100vh' }} />
+        <div className="bg-gallery-layer bg-gallery-entanglement" aria-hidden="true" style={{ top: '200vh' }} />
+        <div className="bg-gallery-layer bg-gallery-superposition" aria-hidden="true" style={{ top: '300vh' }} />
+        {/* Hero Title Section (separate from scenes to avoid overlap) */}
+        <header className="showcase-hero">
+          <h1 className="showcase-main-title">Machina NEXUS</h1>
+          <p className="showcase-main-subtitle">The Noetech Digital Pantheon</p>
+        </header>
 
         {/* Parallax Scenes */}
         {mockAnimations.map((animation, index) => {
@@ -262,7 +358,6 @@ export default function ShowcaseGallery() {
             <div
               key={animation.id}
               className={`parallax-scene parallax-scene-${position} scene-${animation.id}`}
-              style={animation.background ? { background: animation.background } : {}}
               data-card-id={animation.id}
             >
               <div
@@ -272,6 +367,7 @@ export default function ShowcaseGallery() {
                     alert('Locked — Save a scene to unlock this Noetech.');
                     return;
                   }
+
                   loadModelOnDemand(animation.id);
                   setSelectedAnimation(animation);
                 }}
@@ -295,8 +391,7 @@ export default function ShowcaseGallery() {
                       width: '100%',
                       height: '100%',
                       opacity: 1,
-                      transition: 'opacity 0.7s',
-                      background: animation.background
+                      transition: 'opacity 0.7s'
                     }}
                   >
                     <ambientLight intensity={0.6} />
@@ -322,10 +417,10 @@ export default function ShowcaseGallery() {
                   <div style={{
                     width: '100%',
                     height: '100%',
-                    background: animation.background,
                     display: 'flex',
                     alignItems: 'center',
-                    justifyContent: 'center'
+                    justifyContent: 'center',
+                    background: 'transparent'
                   }}>
                     <div className="loader-spinner" />
                   </div>

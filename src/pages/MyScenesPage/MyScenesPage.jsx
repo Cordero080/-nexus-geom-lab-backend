@@ -7,6 +7,7 @@ import SceneCard from "../../components/Scenes/SceneCard"; // Corrected import p
 import CustomSelect from "../../components/CustomSelect/CustomSelect";
 import "./MyScenesPage.css";
 import "../../styles/shared.css";
+import "../../nav/nav.css";
 
 /**
  * QUANTUM COLLAPSE UTILITY
@@ -38,8 +39,8 @@ function quantumCollapse(states) {
 const portalWorlds = [
   { colors: ['#ff00cc', '#00fff7', '#1a003a'], label: 'Fractal' },    // 🌀 Cyberpunk pink/cyan
   { colors: ['#ffea00', '#7300ffff', '#003a2a'], label: 'Nebula' },   // ☄️ Cosmic yellow/purple  
-  { colors: ['#ff3300', '#cc00ff', '#0a0f1a'], label: 'Inferno' },    // 🔥 Volcanic red/magenta
-  { colors: ['#00ff33', '#00aaff', '#003a3a'], label: 'Emerald' },    // 💎 Crystalline green/blue
+  { colors: ['#ff3300', '#cc00ff', '#0a0f1a'], label: 'Being' },    // 🔥 Volcanic red/magenta
+  { colors: ['#00ff33', '#00aaff', '#003a3a'], label: '' },    // 💎 Crystalline green/blue
   { colors: ['#cfccbeff', '#056864ff', '#210205ff'], label: 'Singularity' },   // ⭐ Stellar white/cyan
 ];
 
@@ -340,22 +341,15 @@ export default function MyScenesPage() {
           <div className="logo-particles"></div>
         </div>
         <div className="nav-links">
-          <Link to="/" className="nav-link" data-dimension="0">// HOME</Link>
-          <Link to="/scenes" className="nav-link" data-dimension="1">// SCENES</Link>
+          <Link to="/" className="nav-link nav-link--home" data-dimension="0">// HOME</Link>
+          {/* Hide SCENES link since we're on this page */}
           <Link to="/showcase" className="nav-link" data-dimension="2">// SHOWCASE</Link>
+          <Link to="/geom-lab" className="nav-link" data-dimension="3">// GEOM LAB</Link>
           {isAuthenticated && (
             <div className="nav-terminal">
               <button 
                 onClick={logout}
                 className="terminal-cursor"
-                style={{ 
-                  background: 'none', 
-                  border: 'none', 
-                  cursor: 'pointer',
-                  fontFamily: 'inherit',
-                  fontSize: 'inherit',
-                  color: '#14fbc2ff'
-                }}
               >
                 [LOGOUT]
               </button>

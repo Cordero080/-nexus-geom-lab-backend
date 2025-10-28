@@ -16,6 +16,85 @@ import { BeamScanButton } from '../components/HUD';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
+// Scrambling component for N3XUS title
+function ScrambleOnHover({ originalText, finalText, delay = 3000 }) {
+  const [displayText, setDisplayText] = useState(originalText);
+  const [isHovered, setIsHovered] = useState(false);
+  const timeoutRef = useRef(null);
+  const intervalRef = useRef(null);
+
+  const katakanaChars = [
+    'ア', 'イ', 'ウ', 'エ', 'オ', 'カ', 'キ', 'ク', 'ケ', 'コ',
+    'サ', 'シ', 'ス', 'セ', 'ソ', 'タ', 'チ', 'ツ', 'テ', 'ト',
+    'ナ', 'ニ', 'ヌ', 'ネ', 'ノ', 'ハ', 'ヒ', 'フ', 'ヘ', 'ホ',
+    'マ', 'ミ', 'ム', 'メ', 'モ', 'ヤ', 'ユ', 'ヨ', 'ラ', 'リ',
+    'ル', 'レ', 'ロ', 'ワ', 'ヲ', 'ン'
+  ];
+
+  useEffect(() => {
+    if (isHovered) {
+      // Start scrambling after delay
+      timeoutRef.current = setTimeout(() => {
+        const duration = 2000;
+        const chars = finalText.split('');
+        const settled = new Array(chars.length).fill(false);
+        const startTime = Date.now();
+        const settleInterval = duration / chars.length;
+        let frameDelay = 50; // Start at 50ms
+
+        intervalRef.current = setInterval(() => {
+          const elapsed = Date.now() - startTime;
+          const progress = elapsed / duration;
+          
+          // Speed up over time (crescendo effect)
+          frameDelay = Math.max(10, 50 - (progress * 40)); // 50ms -> 10ms
+          
+          // Settle characters progressively
+          chars.forEach((char, i) => {
+            if (elapsed > settleInterval * (i + 1)) {
+              settled[i] = true;
+            }
+          });
+
+          // Generate scrambled text
+          const scrambled = chars.map((char, i) => {
+            if (settled[i]) return char;
+            return katakanaChars[Math.floor(Math.random() * katakanaChars.length)];
+          }).join('');
+
+          setDisplayText(scrambled);
+
+          // Complete
+          if (elapsed >= duration) {
+            setDisplayText(finalText);
+            clearInterval(intervalRef.current);
+          }
+        }, frameDelay);
+      }, delay);
+    } else {
+      // Reset on mouse leave
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+      if (intervalRef.current) clearInterval(intervalRef.current);
+      setDisplayText(originalText);
+    }
+
+    return () => {
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+      if (intervalRef.current) clearInterval(intervalRef.current);
+    };
+  }, [isHovered, originalText, finalText, delay]);
+
+  return (
+    <span 
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+      style={{ cursor: 'pointer' }}
+    >
+      {displayText}
+    </span>
+  );
+}
+
 export default function HomePage() {
   const { isAuthenticated, logout } = useAuth();
   
@@ -178,22 +257,15 @@ export default function HomePage() {
           <div className="logo-particles"></div>
         </div>
         <div className="nav-links">
-          <a href="#reality" className="nav-link" data-dimension="0">// HOME</a>
+          {/* Hide HOME link since we're on this page */}
           <Link to="/scenes" className="nav-link" data-dimension="1">// SCENES</Link>
           <Link to="/showcase" className="nav-link" data-dimension="2">// SHOWCASE</Link>
+          <Link to="/geom-lab" className="nav-link" data-dimension="3">// GEOM LAB</Link>
           {isAuthenticated && (
             <div className="nav-terminal">
               <button 
                 onClick={logout}
                 className="terminal-cursor"
-                style={{ 
-                  background: 'none', 
-                  border: 'none', 
-                  cursor: 'pointer',
-                  fontFamily: 'inherit',
-                  fontSize: 'inherit',
-                  color: '#00ff88'
-                }}
               >
                 [LOGOUT]
               </button>
@@ -249,7 +321,9 @@ export default function HomePage() {
               <span className="timestamp" id="timestamp"></span>
             </div>
             <h1 className="quantum-title" data-text="MODERN JAVASCRIPT SYNTAX LAB">
-              <span className="title-word" data-word="0">N3XUS</span><br></br>
+              <span className="title-word" data-word="0">
+                <ScrambleOnHover originalText="N3XUS" finalText="アトリエ" delay={3000} />
+              </span><br></br>
               <span className="title-word" data-word="1">GE<span className="zero-char">0</span>M</span><br></br>
               <span className="title-word" data-word="2">3D</span>
               {/* Show quantum glyphs globally */}
@@ -279,22 +353,35 @@ export default function HomePage() {
             
             {/* Show Enter Geom Lab only when logged in, Login/Signup when logged out */}
             {isAuthenticated ? (
-              <BeamScanButton
-                onClick={() => window.location.href = '/geom-lab'}
-                label="Enter GE0M LAB"
-                style={{ margin: '32px auto 0', display: 'block' }}
-              />
+              <div style={{ 
+                display: 'flex', 
+                justifyContent: 'center', 
+                marginTop: '48px',
+                marginBottom: '24px'
+              }}>
+                <BeamScanButton
+                  onClick={() => window.location.href = '/geom-lab'}
+                  label="ENTER GE0M LAB"
+                  style={{
+                    fontSize: '24px',
+                    padding: '24px 180px',
+                    letterSpacing: '0.2em',
+                    boxShadow: '0 8px 32px rgba(0, 255, 255, 0.3), 0 0 60px rgba(255, 0, 204, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.1)',
+                    transform: 'perspective(500px) translateZ(20px)',
+                    border: '2px solid rgba(0, 255, 255, 0.4)'
+                  }}
+                />
+              </div>
             ) : (
               <div style={{ display: 'flex', gap: '16px', justifyContent: 'center', marginTop: '32px' }}>
                 <BeamScanButton
                   onClick={() => window.location.href = '/login'}
-                  label="LOGIN"
-                  style={{ display: 'block' }}
+                  label={<>LOGI<span style={{ display: 'inline-block', transform: 'scaleX(-1)' }}>N</span></>}
                 />
                 <BeamScanButton
                   onClick={() => window.location.href = '/signup'}
                   label="SIGN UP"
-                  style={{ display: 'block' }}
+                  delayedString={true}
                 />
               </div>
             )}

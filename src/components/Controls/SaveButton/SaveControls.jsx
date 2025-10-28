@@ -16,7 +16,7 @@ import '../../../styles/shared.css';
  * Props: sceneConfig (object with all scene settings), textColor (optional custom color)
  */
 function SaveControls({ sceneConfig, textColor }) {
-  const { token, isAuthenticated, addUnlockedNoetechs, user } = useAuth();
+  const { token, isAuthenticated, addUnlockedNoetechs, user, isLoading } = useAuth();
   const navigate = useNavigate();
   const { currentSceneId, sceneName, isOwnScene } = useScene();
 
@@ -53,6 +53,19 @@ function SaveControls({ sceneConfig, textColor }) {
    * Only available if user owns the scene
    */
   const handleSave = async () => {
+    // Check if auth is still loading
+    if (isLoading) {
+      console.log('Auth still loading, please wait...');
+      return;
+    }
+
+    // Check if user is authenticated
+    if (!isAuthenticated || !token) {
+      alert('Please log in to save scenes');
+      navigate('/login');
+      return;
+    }
+
     if (!canUpdate) {
       alert('You cannot update a scene you do not own.');
       return;
@@ -61,6 +74,8 @@ function SaveControls({ sceneConfig, textColor }) {
     setIsSaving(true);
 
     try {
+      console.log('🔐 Updating with token:', token ? `${token.substring(0, 20)}...` : 'NO TOKEN');
+      
       // Prepare scene data for update
       const sceneData = {
         name: sceneName, // Keep existing name
@@ -112,6 +127,19 @@ function SaveControls({ sceneConfig, textColor }) {
    * Available for all scenes (owned or remixed)
    */
   const handleSaveAsNew = async () => {
+    // Check if auth is still loading
+    if (isLoading) {
+      console.log('Auth still loading, please wait...');
+      return;
+    }
+
+    // Check if user is authenticated
+    if (!isAuthenticated || !token) {
+      alert('Please log in to save scenes');
+      navigate('/login');
+      return;
+    }
+
     // Validate name input
     const name = newSceneName.trim();
     if (!name) {
@@ -122,6 +150,8 @@ function SaveControls({ sceneConfig, textColor }) {
     setIsSaving(true);
 
     try {
+      console.log('🔐 Saving with token:', token ? `${token.substring(0, 20)}...` : 'NO TOKEN');
+      
       // Prepare scene data for new scene
       const sceneData = {
         name: name,
@@ -223,9 +253,9 @@ function SaveControls({ sceneConfig, textColor }) {
                 <button
                   className="save-modal__btn save-modal__btn--save angled-corners"
                   onClick={handleSave}
-                  disabled={isSaving}
+                  disabled={isSaving || isLoading}
                 >
-                  {isSaving ? 'Updating...' : 'Save (Update)'}
+                  {isSaving ? 'Updating...' : isLoading ? 'Loading...' : 'Save (Update)'}
                 </button>
               )}
 
@@ -242,9 +272,9 @@ function SaveControls({ sceneConfig, textColor }) {
                   <button
                     className="save-modal__btn save-modal__btn--save-as-new angled-corners"
                     onClick={handleSaveAsNew}
-                    disabled={isSaving || !newSceneName.trim()}
+                    disabled={isSaving || isLoading || !newSceneName.trim()}
                   >
-                    {isSaving ? 'Creating...' : 'Save As New'}
+                    {isSaving ? 'Creating...' : isLoading ? 'Loading...' : 'Save As New'}
                   </button>
                 </div>
               )}
@@ -254,9 +284,9 @@ function SaveControls({ sceneConfig, textColor }) {
                 <button
                   className="save-modal__btn save-modal__btn--save angled-corners"
                   onClick={handleSaveAsNew}
-                  disabled={isSaving || !newSceneName.trim()}
+                  disabled={isSaving || isLoading || !newSceneName.trim()}
                 >
-                  {isSaving ? 'Saving...' : 'Save Scene'}
+                  {isSaving ? 'Saving...' : isLoading ? 'Loading...' : 'Save Scene'}
                 </button>
               )}
             </div>

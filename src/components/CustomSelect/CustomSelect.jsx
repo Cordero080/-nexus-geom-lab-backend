@@ -3,7 +3,7 @@ import {
   createClickOutsideHandler,
   createSelectHandler,
   createToggleHandler,
-} from '../../utils/handlers/customSelectHandlers';
+} from './customSelectHandlers';
 import styles from './CustomSelect.module.scss';
 
 const CustomSelect = ({ value, onChange, options, label }) => {

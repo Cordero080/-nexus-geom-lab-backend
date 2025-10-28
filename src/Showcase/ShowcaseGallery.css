@@ -43,7 +43,7 @@
   overflow-y: scroll;
   scroll-snap-type: y mandatory;
   scroll-behavior: smooth;
-  position: relative;
+  position: relative; /* Needed for absolute background layers */
   background: transparent; /* Ensure container doesn't block scene backgrounds */
   /* Hide scrollbar completely for immersive experience */
   scrollbar-width: none; /* Firefox */
@@ -55,37 +55,104 @@
   display: none;
 }
 
-/* Title overlay */
-.showcase-title-overlay {
-  position: fixed;
-  top: 140px;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 100;
+/* Hero Title Section */
+.showcase-hero {
+  height: 45vh;
+  min-height: 360px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  position: relative;
+  z-index: 2;
   text-align: center;
+  padding: 40px 20px 0;
+  /* Make hero a snap point so scroll doesn't skip it */
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+  overflow: hidden; /* contain soft overlays */
+}
+  .parallax-bg-layer,
+  .parallax-fg-layer {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 40vh;
+    z-index: -1;
+    pointer-events: none;
+    /* Fade the bottom edge to avoid a hard horizontal line */
+    -webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 85%);
+    mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 85%);
+  }
+
+  .parallax-bg-layer {
+    z-index: -2; /* Behind foreground layer */
+  }
+
+  .parallax-fg-layer {
+    z-index: -1; /* In front of background layer */
+  }
+
+  /* Layered geometric backgrounds (match Home’s multiple diagonal cuts) */
+  .bg-gallery-layer {
+    position: absolute;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    min-height: 100vh;
+    pointer-events: none;
+    z-index: -3; /* Behind parallax layers, below content */
+    background: linear-gradient(120deg, #0a0f1a 60%, #1a2a3a 100%),
+      repeating-linear-gradient(-30deg, #00f0ff22 0 2px, transparent 2px 40px);
+  }
+
+  /* Variants reusing Home’s clip-path shapes */
+  .bg-gallery-layer.bg-gallery-reality {
+    clip-path: polygon(0 0, 100% 0, 100% 80%, 60% 100%, 0 80%);
+  }
+  .bg-gallery-layer.bg-gallery-probability {
+    clip-path: polygon(0 10%, 100% 0, 100% 90%, 0 100%);
+  }
+  .bg-gallery-layer.bg-gallery-entanglement {
+    clip-path: polygon(0 0, 100% 10%, 100% 100%, 40% 90%, 0 100%);
+  }
+  .bg-gallery-layer.bg-gallery-superposition {
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 20% 90%, 0 100%);
+  }
+
+/* Soft, subtle hero background overlay to improve contrast */
+.showcase-hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(1000px 380px at 50% 38%, rgba(255,255,255,0.06), rgba(255,255,255,0) 60%),
+    linear-gradient(180deg, rgba(0,0,0,0.22) 0%, rgba(0,0,0,0.12) 55%, rgba(0,0,0,0.04) 100%);
   pointer-events: none;
-  transition: opacity 0.5s ease;
-  will-change: transform;
+  z-index: 0;
 }
 
 .showcase-main-title {
   font-family: 'Future Z', 'Orbitron', 'Rajdhani', sans-serif !important;
-  font-size: 3.5rem;
+  font-size: 4.2rem;
   font-weight: normal;
   font-style: normal;
-  background: linear-gradient(135deg, #00ffbf 0%, #f61482 60%, #067c76 70%, #ffae00 100%);
+  /* Softer, more refined gradient */
+  background: linear-gradient(135deg, #7ff3df 0%, #ff7fb4 55%, #5fbab4 75%, #ffd27f 100%);
   background-size: 200% 200%;
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
-  margin: 0 0 12px 0;
+  margin: 0 0 14px 0;
   text-transform: uppercase;
-  letter-spacing: 8px;
-  text-shadow: 0 0 20px rgba(241, 239, 246, 0.009), 0 0 80px rgba(0, 132, 255, 0.815);
-  transform: perspective(400px) rotateX(15deg);
+  letter-spacing: 10px;
+  text-shadow: 0 0 16px rgba(241, 239, 246, 0.06), 0 0 48px rgba(0, 132, 255, 0.5);
+  transform: perspective(560px) rotateX(7deg);
   transform-origin: center bottom;
   animation: shimmer 5s ease-in-out infinite;
-  filter: drop-shadow(0 4px 20px rgba(6, 21, 185, 0.299));
+  filter: drop-shadow(0 6px 24px rgba(6, 21, 185, 0.32));
 }
 
 @keyframes shimmer {
@@ -98,12 +165,13 @@
 }
 
 .showcase-main-subtitle {
-  font-size: 1.1rem;
-  color: #00d4ff;
+  font-size: 1.3rem;
+  color: #7fe6ff;
   font-style: italic;
-  opacity: 0.85;
+  opacity: 0.92;
   margin: 0;
-  text-shadow: 0 0 20px rgba(0, 212, 255, 0.3);
+  letter-spacing: 2px;
+  text-shadow: 0 0 20px rgba(0, 212, 255, 0.4);
 }
 
 .parallax-scene {
@@ -112,54 +180,32 @@
   height: 100vh;
   display: flex;
   align-items: center;
-  padding: 80px 100px;
+  padding: 40px 80px;
   box-sizing: border-box;
   scroll-snap-align: start;
   position: relative;
-  gap: 60px;
+  gap: 80px;
   overflow-x: hidden; /* Prevent horizontal overflow */
   /* Background is set inline via style prop - no default background here */
   background-size: cover;
   background-position: center;
-  background-attachment: fixed; /* Optional: creates parallax effect */
+  /* Remove fixed attachment to avoid banding and hard horizontal edges */
+  background-attachment: unset;
+  /* Scenes themselves are transparent; global cutout provides the geometry */
+  overflow: hidden;
 }
 
-/* Smooth transition overlay between scenes */
-.parallax-scene::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 20%;
-  background: linear-gradient(180deg, 
-    rgba(0, 0, 0, 0.8) 0%, 
-    rgba(0, 0, 0, 0) 100%
-  );
-  pointer-events: none;
-  z-index: 1;
-}
-
+/* Remove horizontal transition bands; the global cutout handles transitions */
+.parallax-scene::before,
 .parallax-scene::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  height: 20%;
-  background: linear-gradient(0deg, 
-    rgba(0, 0, 0, 0.8) 0%, 
-    rgba(0, 0, 0, 0) 100%
-  );
-  pointer-events: none;
-  z-index: 1;
+  display: none;
 }
 
 /* Center position - first model */
 .parallax-scene-center {
   justify-content: center;
   flex-direction: column;
-  padding-top: calc(200px + 20vh);
+  padding-top: 20px; /* Hero section provides headroom */
 }
 
 .parallax-scene-center .parallax-model-card {
@@ -167,10 +213,10 @@
 }
 
 .parallax-scene-center .parallax-info {
+  order: -1; /* Move description above model */
   text-align: center;
-  max-width: 700px;
-  margin: 0 auto;
-  margin-top: -20px;
+  max-width: 620px;
+  margin: 0 auto 24px;
 }
 
 /* Left position - second model */
@@ -185,7 +231,7 @@
 
 .parallax-scene-left .parallax-info {
   text-align: left;
-  max-width: 500px;
+  max-width: 550px;
 }
 
 /* Right position - third model */
@@ -200,28 +246,29 @@
 
 .parallax-scene-right .parallax-info {
   text-align: right;
-  max-width: 500px;
+  max-width: 550px;
 }
 
 /* Model card styling */
 .parallax-model-card {
-  width: 600px;
-  height: 800px;
+  width: 500px;
+  height: 650px;
   border: 2px solid rgba(0, 255, 255, 0.3);
   border-radius: 20px;
   overflow: hidden;
   background: rgba(0, 0, 0, 0.3);
   backdrop-filter: blur(10px);
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
   z-index: 2; /* Above transition overlays */
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
 }
 
 .parallax-model-card:hover {
-  transform: scale(1.05);
+  transform: scale(1.05) translateY(-10px);
   border-color: rgba(255, 0, 255, 0.6);
-  box-shadow: 0 10px 40px rgba(255, 0, 255, 0.4);
+  box-shadow: 0 20px 60px rgba(255, 0, 255, 0.5), 0 0 40px rgba(0, 255, 255, 0.3);
 }
 
 /* Locked state styling */

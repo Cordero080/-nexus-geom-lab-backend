@@ -1,6 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { getScrambledText, scrambleText } from '../../utils/textScrambler';
-import './ScrambleButton.css';
+import {
+  createMouseMoveHandler,
+  createClickHandler,
+  createHoverHandlers,
+} from './scrambleButtonHandlers';
+import styles from './ScrambleButton.module.scss';
 import '../../styles/shared.css';
 
 const ScrambleButton = ({ 
@@ -12,11 +17,17 @@ const ScrambleButton = ({
 }) => {
   const [isHovering, setIsHovering] = useState(false);
   const [displayText, setDisplayText] = useState(children);
+  const [ripples, setRipples] = useState([]);
   const originalText = useRef(children);
   const scrambleInterval = useRef(null);
   const buttonRef = useRef(null);
   const scrambleSpeed = 50; // ms between scramble updates
   const codeDisplayTime = 1500; // ms to display code snippet
+
+  // Get handlers from local handlers file
+  const handleMouseMove = createMouseMoveHandler(buttonRef);
+  const handleClick = createClickHandler(buttonRef, setRipples, onClick);
+  const hoverHandlers = createHoverHandlers(setIsHovering);
 
   // Handle hover state
   useEffect(() => {
@@ -67,51 +78,11 @@ const ScrambleButton = ({
     }
   }, [children, isHovering]);
 
-  // State for ripple effect
-  const [ripples, setRipples] = useState([]);
-
-  // Handle mouse movement for beam effect
-  const handleMouseMove = (e) => {
-    if (!buttonRef.current) return;
-    
-    const rect = buttonRef.current.getBoundingClientRect();
-    const x = e.clientX - rect.left; // x position within the element
-    const y = e.clientY - rect.top; // y position within the element
-    
-    // Update CSS variables for the beam position
-    buttonRef.current.style.setProperty('--x', `${x}px`);
-    buttonRef.current.style.setProperty('--y', `${y}px`);
-  };
-  
-  // Handle click for ripple effect
-  const handleClick = (e) => {
-    if (!buttonRef.current) return;
-    
-    const rect = buttonRef.current.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
-    
-    // Create a new ripple with unique ID
-    const id = Date.now();
-    const newRipple = { id, x, y };
-    
-    setRipples(prev => [...prev, newRipple]);
-    
-    // Remove ripple after animation completes
-    setTimeout(() => {
-      setRipples(prev => prev.filter(ripple => ripple.id !== id));
-    }, 1000);
-    
-    // Call the original onClick handler
-    if (onClick) onClick(e);
-  };
-
   return (
     <button
       ref={buttonRef}
-      className={`scramble-button angled-corners ${variant} ${className}`}
-      onMouseEnter={() => setIsHovering(true)}
-      onMouseLeave={() => setIsHovering(false)}
+      className={`${styles.scrambleButton} ${styles[variant]} ${className}`}
+      {...hoverHandlers}
       onMouseMove={handleMouseMove}
       onClick={handleClick}
       type={type}
@@ -120,14 +91,14 @@ const ScrambleButton = ({
       {ripples.map(ripple => (
         <span
           key={ripple.id}
-          className={`ripple ${variant}-ripple`}
+          className={`${styles.ripple} ${styles[`${variant}Ripple`]}`}
           style={{
             left: ripple.x,
             top: ripple.y,
           }}
         />
       ))}
-      <span className="scramble-text">{displayText}</span>
+      <span className={styles.scrambleText}>{displayText}</span>
     </button>
   );
 };

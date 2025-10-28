@@ -32,22 +32,27 @@ export default function NavBar() {
         <span className="logo-text" data-text="Nexus Geom 3D">Nexus Geom-3D</span>
       </div>
       <div className="nav-links">
-         {/* ALWAYS show these - public links */}
-        <Link to="/" className="nav-link">Home</Link>
-        <Link to="/geometry-lab" className="nav-link">Geom Lab</Link>
-        <Link to="/showcase" className="nav-link">Showcase</Link>
+         {/* ALWAYS show these - public links (hide if on current page) */}
+  {location.pathname !== '/' && <Link to="/" className="nav-link nav-link--home">// HOME</Link>}
+        {location.pathname !== '/geometry-lab' && <Link to="/geometry-lab" className="nav-link">// GEOM LAB</Link>}
+        {location.pathname !== '/showcase' && <Link to="/showcase" className="nav-link">// SHOWCASE</Link>}
          {/* Conditional links based on authentication */}
         {isAuthenticated ? (
           <>
-            <Link to="/scenes" className="nav-link">Scenes</Link>
-            <button onClick={logout} className="nav-link nav-link-button">
-              Logout
-            </button>
+            {location.pathname !== '/scenes' && <Link to="/scenes" className="nav-link">// SCENES</Link>}
+            <div className="nav-terminal">
+              <button 
+                onClick={logout}
+                className="terminal-cursor"
+              >
+                [LOGOUT]
+              </button>
+            </div>
           </>
         ) : (
           <>
-            <Link to="/signup" className="nav-link">Sign Up</Link>
-            <Link to="/login" className="nav-link">Login</Link>
+            {location.pathname !== '/signup' && <Link to="/signup" className="nav-link">// SIGN UP</Link>}
+            {location.pathname !== '/login' && <Link to="/login" className="nav-link">// LOGIN</Link>}
           </>
         )}
       </div>

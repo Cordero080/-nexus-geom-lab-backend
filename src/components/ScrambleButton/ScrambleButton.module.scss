@@ -1,0 +1,285 @@
+// ScrambleButton Styles - CSS Modules + SCSS
+
+// Variables
+$primary-color: #00f5ff;
+$secondary-color: #ff00ff;
+$accent-color: #39ff14;
+$danger-color: #ff0044;
+
+// Mixins
+@mixin button-variant($color, $opacity-base: 0.2) {
+  background: linear-gradient(135deg, 
+    rgba($color, $opacity-base) 0%, 
+    rgba($color, $opacity-base * 0.5) 100%);
+  border-color: rgba($color, 0.5);
+  color: $color;
+  box-shadow: 0 0 20px rgba($color, $opacity-base);
+
+  &:hover {
+    background: linear-gradient(135deg, 
+      rgba($color, $opacity-base * 1.5) 0%, 
+      rgba($color, $opacity-base) 100%);
+    transform: translateY(-3px);
+    box-shadow: 0 0 30px rgba($color, $opacity-base * 2);
+  }
+
+  &::before {
+    background: radial-gradient(
+      circle closest-side,
+      rgba($color, 0.5),
+      transparent
+    );
+  }
+}
+
+@mixin ripple-variant($color) {
+  background: radial-gradient(
+    circle,
+    rgba($color, 0.6) 0%,
+    rgba($color, 0) 70%
+  );
+}
+
+.scrambleButton {
+  padding: 0.75rem 1.75rem;
+  border: 1px solid var(--primary-glow);
+  border-radius: 0;
+  font-family: 'Orbitron', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-weight: 600;
+  font-size: 1rem;
+  text-transform: uppercase;
+  text-align: center;
+  
+  // Angled corners clip-path (matching shared.css)
+  clip-path: polygon(
+    14px 0,
+    100% 0,
+    100% calc(100% - 14px),
+    calc(100% - 14px) 100%,
+    0 100%,
+    0 14px
+  );
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
+  background: transparent;
+  isolation: isolate;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  // Card Beam Effect
+  &::before {
+    content: '';
+    position: absolute;
+    top: var(--y, 0);
+    left: var(--x, 0);
+    transform: translate(-50%, -50%);
+    width: 0;
+    height: 400%;
+    background: radial-gradient(
+      circle closest-side,
+      rgba(255, 255, 255, 0.3),
+      transparent
+    );
+    transition: width 0.15s ease;
+    z-index: -1;
+  }
+
+  &:hover::before {
+    width: 150%;
+  }
+
+  // Reflection effect
+  &::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background: linear-gradient(
+      115deg,
+      transparent 30%,
+      rgba(255, 255, 255, 0.3) 45%,
+      rgba(255, 255, 255, 0.4) 47%,
+      rgba(255, 255, 255, 0.3) 49%,
+      transparent 60%
+    );
+    transform: translateX(-100%);
+    z-index: -1;
+  }
+
+  &:hover::after {
+    animation: shine 2.5s infinite;
+  }
+
+  // Variants
+  &.primary {
+    @include button-variant($primary-color);
+  }
+
+  &.secondary {
+    @include button-variant($secondary-color);
+  }
+
+  &.accent {
+    @include button-variant($accent-color);
+  }
+
+  &.danger {
+    @include button-variant($danger-color);
+  }
+
+  // Button press effect
+  &:active {
+    transform: scale(0.98) translateY(-1px);
+    transition: transform 0.1s;
+  }
+
+  // Edge glow effect on hover
+  &:hover {
+    animation: edgeGlow 2s ease-in-out infinite;
+  }
+}
+
+// Scramble Text
+.scrambleText {
+  display: block;
+  text-align: center;
+  font-family: monospace;
+  font-size: 0.9em;
+  white-space: nowrap;
+  transition: color 0.2s ease;
+  position: relative;
+  z-index: 2;
+
+  .scrambleButton:hover & {
+    animation: textGlitch 0.2s infinite;
+    text-shadow: 0 0 5px currentColor;
+
+    &::before,
+    &::after {
+      content: '';
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      opacity: 0;
+      filter: blur(1px);
+      animation: particlesGlow 2s ease-in-out infinite alternate;
+      pointer-events: none;
+    }
+
+    &::before {
+      animation-delay: 0.5s;
+      transform: translateY(-5px);
+    }
+  }
+}
+
+// Ripple Effect
+.ripple {
+  position: absolute;
+  border-radius: 50%;
+  transform: scale(0);
+  animation: ripple 1s linear;
+  pointer-events: none;
+  z-index: 1;
+  width: 20px;
+  height: 20px;
+
+  &.primaryRipple {
+    @include ripple-variant($primary-color);
+  }
+
+  &.secondaryRipple {
+    @include ripple-variant($secondary-color);
+  }
+
+  &.accentRipple {
+    @include ripple-variant($accent-color);
+  }
+
+  &.dangerRipple {
+    @include ripple-variant($danger-color);
+  }
+}
+
+// Animations
+@keyframes shine {
+  0% {
+    opacity: 0;
+    transform: translateX(-100%);
+  }
+  20% {
+    opacity: 1;
+  }
+  80% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translateX(100%);
+  }
+}
+
+@keyframes particlesGlow {
+  0%, 100% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+@keyframes textGlitch {
+  0% {
+    transform: translate(0);
+    filter: brightness(1);
+  }
+  25% {
+    transform: translate(1px, -1px);
+    filter: brightness(1.1);
+  }
+  50% {
+    transform: translate(-1px, 1px);
+    filter: brightness(0.9);
+  }
+  75% {
+    transform: translate(1px, 1px);
+    filter: brightness(1.1);
+  }
+  100% {
+    transform: translate(0);
+    filter: brightness(1);
+  }
+}
+
+@keyframes edgeGlow {
+  0%, 100% {
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.3),
+                0 0 30px currentColor;
+  }
+  50% {
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.4),
+                0 0 40px currentColor;
+  }
+}
+
+@keyframes ripple {
+  to {
+    transform: scale(4);
+    opacity: 0;
+  }
+}
+
+// Responsive Styling
+@media (max-width: 768px) {
+  .scrambleButton {
+    padding: 0.7rem 1.5rem;
+    font-size: 0.9rem;
+  }
+}

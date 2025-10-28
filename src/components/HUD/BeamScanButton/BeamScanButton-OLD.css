@@ -1,0 +1,21 @@
+.beam-scan-btn {
+  position: relative;
+  display: inline-block;
+  font-weight: 700;
+  color: #fff;
+  background: linear-gradient(90deg, #00ffff 0%, #ff00cc 100%);
+  border: none;
+  border-radius: 0 !important;
+  box-shadow: 0 2px 16px #00ffffcc;
+  cursor: pointer !important;
+  letter-spacing: 0.04em;
+  overflow: visible;
+  z-index: 1;
+  isolation: isolate;
+  transition: background 0.2s, box-shadow 0.2s, color 0.2s;
+}
+
+.beam-btn {
+  padding: 20px 32px;
+  font-size: 18px;
+}
