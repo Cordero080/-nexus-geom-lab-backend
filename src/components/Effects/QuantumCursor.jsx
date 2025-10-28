@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from "react";
 import QuantumCursorUniverse from "./QuantumCursorUniverse";
-import "./QuantumCursor.css";
+import styles from "./QuantumCursor.module.scss";
 
 /**
  * QuantumCursor component creates an interactive, particle-based cursor
@@ -44,9 +44,9 @@ export default function QuantumCursor() {
   
   return (
     <div className="quantum-cursor-container">
-      <div id="cursor" className="cursor"></div>
-      <div id="gravity-field" className="gravity-field"></div>
-      <div id="dimensional-rift" className="dimensional-rift"></div>
+      <div id="cursor" className={styles.cursor}></div>
+      <div id="gravity-field" className={styles.gravityField}></div>
+      <div id="dimensional-rift" className={styles.dimensionalRift}></div>
     </div>
   );
 }

@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import './CustomCursor.css';
+import styles from './CustomCursor.module.scss';
 
 /**
  * CustomCursor component for creating a custom mouse cursor

@@ -1,4 +1,4 @@
-#custom-cursor {
+:global(#custom-cursor) {
   position: fixed;
   left: 0;
   top: 0;
@@ -9,11 +9,11 @@
 }
 
 /* Apply cursor:none with !important on homepage only */
-body:not(.geom-lab-page) {
+:global(body:not(.geom-lab-page)) {
   cursor: none !important;
 }
 
 /* Explicitly show cursor in geom-lab */
-body.geom-lab-page {
+:global(body.geom-lab-page) {
   cursor: auto !important;
 }
