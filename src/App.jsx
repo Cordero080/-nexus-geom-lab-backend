@@ -4,6 +4,7 @@ import ThreeScene from './features/sceneControls/ThreeScene';
 import Controls from './components/Controls/Controls';
 import SaveControls from './components/Controls/SaveButton/SaveControls';
 import ExitButton from './components/Controls/ExitButton/ExitButton';
+import ScrambleButton from './components/ScrambleButton/ScrambleButton';
 import HomePage from './HomePage/HomePage';
 import NavBar from './nav/NavBar';
 import ShowcaseGallery from './Showcase/ShowcaseGallery';
@@ -280,26 +281,29 @@ function GeomLab() {
             </p>
             
             <div className="save-modal__actions">
-              <button
+              <ScrambleButton
                 onClick={handleSaveFromModal}
-                className="save-modal__btn save-modal__btn--save angled-corners"
+                variant="primary"
+                className="save-modal__btn"
               >
                 Save & Exit
-              </button>
+              </ScrambleButton>
               
-              <button
+              <ScrambleButton
                 onClick={handleExitWithoutSaving}
-                className="save-modal__btn save-modal__btn--exit angled-corners"
+                variant="danger"
+                className="save-modal__btn"
               >
                 Exit Without Saving
-              </button>
+              </ScrambleButton>
               
-              <button
+              <ScrambleButton
                 onClick={handleCancelExit}
-                className="save-modal__btn save-modal__btn--cancel angled-corners"
+                variant="secondary"
+                className="save-modal__btn"
               >
                 Cancel
-              </button>
+              </ScrambleButton>
             </div>
           </div>
         </div>

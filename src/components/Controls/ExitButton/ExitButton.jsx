@@ -1,17 +1,18 @@
 import React from 'react';
+import ScrambleButton from '../../ScrambleButton/ScrambleButton';
 import styles from './ExitButton.module.scss';
-import '../../../styles/shared.css';
 
 function ExitButton({ onClick, textColor }) {
   return (
-    <button 
-      onClick={onClick}
-      className={`${styles.exitButton} angled-corners`}
-      style={textColor ? { color: textColor } : {}} // Apply custom text color if provided
-    >
-      <div className={styles.beamScanEffect}></div>
-      ← Exit Lab
-    </button>
+    <div className={styles.exitButtonContainer}>
+      <ScrambleButton
+        onClick={onClick}
+        variant="danger"
+        className={styles.exitButton}
+      >
+        ← Exit Lab
+      </ScrambleButton>
+    </div>
   );
 }
 

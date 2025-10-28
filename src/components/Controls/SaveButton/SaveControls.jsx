@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../../../context/AuthContext';
-import { useScene } from '../../../context/SceneContext';
-import { saveScene, updateScene } from '../../../services/sceneApi';
-import './SaveButton.css';
-import '../../../styles/shared.css';
+import { useAuth } from "../../../context/AuthContext";
+import { useScene } from "../../../context/SceneContext";
+import { saveScene, updateScene } from "../../../services/sceneApi";
+import ScrambleButton from '../../ScrambleButton/ScrambleButton';
+import styles from "./SaveButton.module.scss";
+import "../../../styles/shared.css";
 
 /**
  * SaveControls Component
@@ -201,15 +202,15 @@ function SaveControls({ sceneConfig, textColor }) {
   return (
     <>
       {/* Main Save Button */}
-      <button 
-        onClick={handleOpenModal}
-        disabled={isSaving}
-        className={`save-button angled-corners ${isSaving ? 'saving' : ''}`}
-        style={textColor ? { color: textColor } : {}}
-      >
-        <div className="beam-scan-effect"></div>
-        {isSaving ? 'Saving...' : 'Save Scene'}
-      </button>
+      <div className={styles.saveButtonContainer}>
+        <ScrambleButton
+          onClick={handleOpenModal}
+          variant="primary"
+          className={`${styles.saveButton} ${isSaving ? styles.saving : ''}`}
+        >
+          {isSaving ? 'Saving...' : 'Save Scene'}
+        </ScrambleButton>
+      </div>
 
       {/* Save Modal */}
       {showModal && (
@@ -250,13 +251,13 @@ function SaveControls({ sceneConfig, textColor }) {
             <div className="save-modal__actions">
               {/* Save (Update) - Only if user owns the scene */}
               {canUpdate && (
-                <button
-                  className="save-modal__btn save-modal__btn--save angled-corners"
+                <ScrambleButton
+                  variant="primary"
                   onClick={handleSave}
-                  disabled={isSaving || isLoading}
+                  className="save-modal__btn"
                 >
                   {isSaving ? 'Updating...' : isLoading ? 'Loading...' : 'Save (Update)'}
-                </button>
+                </ScrambleButton>
               )}
 
               {/* Save As New - Only if editing an existing scene (own or someone else's) */}
@@ -269,25 +270,25 @@ function SaveControls({ sceneConfig, textColor }) {
                     onChange={(e) => setNewSceneName(e.target.value)}
                     placeholder="New scene name..."
                   />
-                  <button
-                    className="save-modal__btn save-modal__btn--save-as-new angled-corners"
+                  <ScrambleButton
+                    variant="secondary"
                     onClick={handleSaveAsNew}
-                    disabled={isSaving || isLoading || !newSceneName.trim()}
+                    className="save-modal__btn"
                   >
                     {isSaving ? 'Creating...' : isLoading ? 'Loading...' : 'Save As New'}
-                  </button>
+                  </ScrambleButton>
                 </div>
               )}
 
               {/* Fresh scene - just Save button */}
               {!currentSceneId && (
-                <button
-                  className="save-modal__btn save-modal__btn--save angled-corners"
+                <ScrambleButton
+                  variant="primary"
                   onClick={handleSaveAsNew}
-                  disabled={isSaving || isLoading || !newSceneName.trim()}
+                  className="save-modal__btn"
                 >
                   {isSaving ? 'Saving...' : isLoading ? 'Loading...' : 'Save Scene'}
-                </button>
+                </ScrambleButton>
               )}
             </div>
 
@@ -323,21 +324,23 @@ function SaveControls({ sceneConfig, textColor }) {
                 You can now view this in the showcase!
               </p>
               <div className="unlock-modal__actions">
-                <button
-                  className="save-modal__btn save-modal__btn--save angled-corners"
+                <ScrambleButton
+                  variant="primary"
                   onClick={() => navigate('/showcase')}
+                  className="save-modal__btn"
                 >
                   View Showcase
-                </button>
-                <button
-                  className="save-modal__btn save-modal__btn--cancel angled-corners"
+                </ScrambleButton>
+                <ScrambleButton
+                  variant="secondary"
                   onClick={() => {
                     setShowUnlockModal(false);
                     navigate('/scenes');
                   }}
+                  className="save-modal__btn"
                 >
                   View My Scenes
-                </button>
+                </ScrambleButton>
               </div>
             </div>
           </div>
