@@ -326,6 +326,65 @@ $glass-border: rgba(255, 255, 255, 0.2);
 
 ---
 
+---
+
+## 🎨 Shared Styling Architecture
+
+### Nav Link Styles (Unified)
+
+**Location:** `src/nav/nav.css`
+
+All navigation links share a common base style defined in `nav.css`:
+- `.nav-link` - Base cyan color, hover magenta
+- `.nav-link--home` - Brighter gold with glow for visual priority (matches LOGOUT brightness)
+- `.nav-terminal .terminal-cursor` - LOGOUT button style (cyan, hover magenta glow)
+
+**Pages using shared nav styles:**
+- `NavBar.jsx` (shared component)
+- `HomePage.jsx` (inline nav)
+- `MyScenesPage.jsx` (inline nav)
+- `LoginPage.jsx` (inline nav)
+- `SignUpPage.jsx` (inline nav)
+
+**Implementation notes:**
+- Page-specific CSS (e.g., `LoginPage.css`) must import `nav.css` if rendering inline nav
+- Use increased specificity (`.nav-links .nav-link.nav-link--home`) + `!important` to override page-level `.nav-link` rules
+- HOME link uses `nav-link--home` class for gold accent and brightness boost
+
+### Background System (Shared Geometry)
+
+**Common patterns across Home, Scenes, and Showcase:**
+
+1. **Parallax layers** (fixed position):
+   - `.parallax-bg-layer` (z-index: -2)
+   - `.parallax-fg-layer` (z-index: -1)
+   - Both use SVG gradients reactive to portal/quantum state colors
+   - Bottom-edge fade via `mask-image` to avoid horizontal banding
+
+2. **Geometric clip-path backgrounds** (match Home's diagonal cuts):
+   - `.bg-gallery-reality` - Top/bottom diagonal
+   - `.bg-gallery-probability` - Offset top angle
+   - `.bg-gallery-entanglement` - Bottom-right diagonal
+   - `.bg-gallery-superposition` - Aggressive bottom-left angle
+
+3. **Base gradient** (neutral, consistent):
+   ```css
+   background: linear-gradient(120deg, #0a0f1a 60%, #1a2a3a 100%),
+     repeating-linear-gradient(-30deg, #00f0ff22 0 2px, transparent 2px 40px);
+   ```
+
+**Pages using shared background system:**
+- `HomePage.jsx` - Multiple layered sections with clip-paths
+- `MyScenesPage.jsx` - Single `.bg-gallery-reality` layer
+- `ShowcaseGallery.jsx` - Layered sections at 0/100/200/300vh offsets
+
+**Showcase-specific additions:**
+- Scroll-based parallax fade (opacity decreases with scroll)
+- Motion dampening (parallax effect tapers as user scrolls down)
+- Container-scoped scroll (not body scroll) for snap points
+
+---
+
 ## Next Action
 
 **Start with CustomSelect migration** - it's:
