@@ -125,22 +125,30 @@ export function createCompoundMegaTesseract(options = {}) {
   // Scale factor: 88% of original (was 80%, now increased by 10%)
   const scale = 0.88;
 
+  // Size proportions: smaller set now scaled up to be between small and large
+  // Original small: 0.75/0.375, Large: 2.0/1.5
+  // New small (scaled up): 1.2/0.6 (60% larger, creating better visual balance)
+  const smallOuter = 1.2 * scale;
+  const smallInner = 0.6 * scale;
+  const largeOuter = 2.0 * scale;
+  const largeInner = 1.5 * scale;
+
   // FIRST MEGA SET - Original 4 tesseracts from mega-tesseract
-  // Inner pair
-  const mega1 = createTesseractWithFaces(0.75 * scale, 0.375 * scale, null);
+  // Inner pair (now larger for better proportion)
+  const mega1 = createTesseractWithFaces(smallOuter, smallInner, null);
   const mega2 = createTesseractWithFaces(
-    0.75 * scale,
-    0.375 * scale,
+    smallOuter,
+    smallInner,
     Math.PI / 4
   );
   mega2.translate(0, 0.01, 0);
 
   // Outer pair
-  const mega3 = createTesseractWithFaces(2.0 * scale, 1.5 * scale, Math.PI / 8);
+  const mega3 = createTesseractWithFaces(largeOuter, largeInner, Math.PI / 8);
   mega3.translate(0, 0.02, 0);
   const mega4 = createTesseractWithFaces(
-    2.0 * scale,
-    1.5 * scale,
+    largeOuter,
+    largeInner,
     Math.PI / 8 + Math.PI / 4
   );
   mega4.translate(0, 0.03, 0);
@@ -148,16 +156,16 @@ export function createCompoundMegaTesseract(options = {}) {
   // SECOND MEGA SET - 4 tesseracts rotated at cross angles (90° perpendicular)
   // Rotate on X axis to create cross effect
   const cross1 = createTesseractWithFaces(
-    0.75 * scale,
-    0.375 * scale,
+    smallOuter,
+    smallInner,
     Math.PI / 6
   );
   cross1.rotateX(Math.PI / 2); // 90° rotation on X
   cross1.translate(0, 0.04, 0);
 
   const cross2 = createTesseractWithFaces(
-    0.75 * scale,
-    0.375 * scale,
+    smallOuter,
+    smallInner,
     Math.PI / 6 + Math.PI / 4
   );
   cross2.rotateX(Math.PI / 2);
@@ -165,16 +173,16 @@ export function createCompoundMegaTesseract(options = {}) {
 
   // Larger cross pair - rotated on Z axis
   const cross3 = createTesseractWithFaces(
-    2.0 * scale,
-    1.5 * scale,
+    largeOuter,
+    largeInner,
     Math.PI / 5
   );
   cross3.rotateZ(Math.PI / 2); // 90° rotation on Z
   cross3.translate(0, 0.06, 0);
 
   const cross4 = createTesseractWithFaces(
-    2.0 * scale,
-    1.5 * scale,
+    largeOuter,
+    largeInner,
     Math.PI / 5 + Math.PI / 4
   );
   cross4.rotateZ(Math.PI / 2);
