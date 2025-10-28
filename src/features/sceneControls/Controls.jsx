@@ -8,13 +8,21 @@ import { useState } from 'react';
  * 
  * COMPLETE DATA FLOW TRACE:
  * 1. USER INTERACTION: User moves slider, clicks color picker, selects dropdown option
+ * 
  * 2. BROWSER EVENT: Browser creates 'change' event with event.target.value containing new value
+ * 
  * 3. REACT HANDLER: onChange attribute calls our handler function (e.g., handleShininessChange)
+ * 
  * 4. VALUE EXTRACTION: Handler extracts value from event.target.value (usually a string)
+ * 
  * 5. TYPE CONVERSION: Handler converts string to appropriate type (parseFloat, parseInt, or keep as string)
+ * 
  * 6. PARENT CALLBACK: Handler calls the setter function passed from App.jsx (e.g., onShininessChange)
+ * 
  * 7. STATE UPDATE: App.jsx updates its state using the setter function (e.g., setShininess)
+ * 
  * 8. RE-RENDER CASCADE: App.jsx re-renders and passes new values to both Controls and ThreeScene
+ * 
  * 9. UI SYNC: Controls displays updated value, ThreeScene updates 3D scene
  * 
  * KEY CONCEPTS:

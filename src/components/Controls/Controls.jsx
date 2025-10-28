@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import './controls.css';
+import styles from './Controls.module.scss';
 import LightingControls from './LightingControls';
 import SaveButton from './SaveButton/SaveButton';
 
@@ -139,7 +139,7 @@ function Controls({
       {/* Toggle Button - Shows when controls are hidden */}
       {isHidden && (
         <button 
-          className="controls-toggle-btn controls-toggle-btn--show"
+          className={`${styles.controlsToggleBtn} ${styles.controlsToggleBtnShow}`}
           onClick={() => setIsHidden(false)}
           title="Show Controls"
         >
@@ -147,15 +147,15 @@ function Controls({
         </button>
       )}
 
-      <div className={`controls ${isHidden ? 'controls--hidden' : ''}`}>
+      <div className={`${styles.controls} ${isHidden ? styles.controlsHidden : ''}`}>
         {/* Hide Button - Shows when controls are visible */}
         <button 
-          className="controls-toggle-btn controls-toggle-btn--hide"
+          className={`${styles.controlsToggleBtn} ${styles.controlsToggleBtnHide}`}
           onClick={() => setIsHidden(true)}
           title="Hide Controls"
         >
           <span>▶</span>
-          <span className="controls-toggle-text">Hide</span>
+          <span className={styles.controlsToggleText}>Hide</span>
         </button>
 
       {/* 
@@ -170,14 +170,14 @@ function Controls({
 
       {/* COLLAPSIBLE SECTION: MATERIAL PROPERTIES */}
       <div 
-        className={`section-header ${materialOpen ? 'material-open' : 'material-closed'}`}
+        className={`${styles.sectionHeader} ${materialOpen ? styles.sectionHeaderMaterialOpen : styles.sectionHeaderMaterialClosed}`}
         onClick={() => setMaterialOpen(!materialOpen)} // CLICK HANDLER: Toggles section open/closed - updates LOCAL state
       >
         <span>🎨 MATERIAL PROPERTIES</span>
         <span>{materialOpen ? '▼' : '▶'}</span>
       </div>
       
-      <div className={`section-content ${materialOpen ? 'material-open open' : 'closed'}`}>
+      <div className={`${styles.sectionContent} ${materialOpen ? `${styles.sectionContentMaterialOpen} ${styles.sectionContentOpen}` : styles.sectionContentClosed}`}>
         {/* 
          * MATERIAL PROPERTY CONTROLS
          * Each input element has an onChange attribute that connects to a handler function
@@ -196,7 +196,7 @@ function Controls({
         
         {/* EMISSIVE INTENSITY SLIDER: User drags → handleEmissiveIntensityChange → App.jsx setState */}
         <label>
-          Emissive Intensity: <span className="value-display">{emissiveIntensity.toFixed(1)}</span> {/* Shows current value FROM App.jsx */}
+          Emissive Intensity: <span className={styles.valueDisplay}>{emissiveIntensity.toFixed(1)}</span> {/* Shows current value FROM App.jsx */}
         </label>
         {/* This range slider DISPLAYS current value FROM App.jsx and TRIGGERS handler WHEN user drags slider */}
         <input 
@@ -210,7 +210,7 @@ function Controls({
         
         {/* METALNESS SLIDER: User drags → handleMetalnessChange → App.jsx setState */}
         <label>
-          Metalness: <span className="value-display">{metalness.toFixed(2)}</span> {/* Shows current value FROM App.jsx */}
+          Metalness: <span className={styles.valueDisplay}>{metalness.toFixed(2)}</span> {/* Shows current value FROM App.jsx */}
         </label>
         {/* This range slider DISPLAYS current value FROM App.jsx and TRIGGERS handler WHEN user drags slider */}
         <input 
@@ -223,19 +223,19 @@ function Controls({
         />
 
         {/* Wireframe visibility toggle */}
-        <label className="futuristic-checkbox-label">
+        <label className={styles.futuristicCheckboxLabel}>
           <input
             type="checkbox"
             checked={wireframeIntensity > 0}
             onChange={handleWireframeToggle}
-            className="futuristic-checkbox"
+            className={styles.futuristicCheckbox}
           />
-          <span className="futuristic-custom-checkbox"></span>
-          <span className="futuristic-checkbox-text">Wireframe</span>
+          <span className={styles.futuristicCustomCheckbox}></span>
+          <span className={styles.futuristicCheckboxText}>Wireframe</span>
         </label>
         {/* Wireframe intensity slider */}
         <label>
-          Wireframe Intensity: <span className="value-display">{wireframeIntensity}%</span>
+          Wireframe Intensity: <span className={styles.valueDisplay}>{wireframeIntensity}%</span>
         </label>
         <input 
           type="range" 
@@ -310,17 +310,17 @@ function Controls({
 
       {/* NEW: SCENE CONTROLS SECTION */}
       <div 
-        className={`section-header ${sceneOpen ? 'scene-open' : 'scene-closed'}`}
+        className={`${styles.sectionHeader} ${sceneOpen ? styles.sectionHeaderSceneOpen : styles.sectionHeaderSceneClosed}`}
         onClick={() => setSceneOpen(!sceneOpen)}
       >
         <span>🎬 CAMERA & SCENE</span>
         <span>{sceneOpen ? '▼' : '▶'}</span>
       </div>
       
-      <div className={`section-content ${sceneOpen ? 'scene-open open' : 'closed'}`}>
+      <div className={`${styles.sectionContent} ${sceneOpen ? `${styles.sectionContentSceneOpen} ${styles.sectionContentOpen}` : styles.sectionContentClosed}`}>
         {/* Scale Control */}
         <label>
-          Scale: <span className="value-display">{scale.toFixed(1)}</span>
+          Scale: <span className={styles.valueDisplay}>{scale.toFixed(1)}</span>
         </label>
         <input
         type="range"
@@ -354,7 +354,7 @@ function Controls({
 
         {/* Environment Hue Shift Control */}
         <label>
-          Environment Hue: <span className="value-display">{environmentHue}°</span>
+          Environment Hue: <span className={styles.valueDisplay}>{environmentHue}°</span>
         </label>
         <input 
           type="range" 
@@ -366,7 +366,7 @@ function Controls({
 
         {/* Object Count Control */}
         <label>
-          Object Count: <span className="value-display">{objectCount}</span>
+          Object Count: <span className={styles.valueDisplay}>{objectCount}</span>
         </label>
         <input 
           type="range" 
@@ -379,7 +379,7 @@ function Controls({
 
       {/* NEW: LIGHTING CONTROLS SECTION */}
       <div 
-        className={`section-header ${lightingOpen ? 'lighting-open' : 'lighting-closed'}`}
+        className={`${styles.sectionHeader} ${lightingOpen ? styles.sectionHeaderLightingOpen : styles.sectionHeaderLightingClosed}`}
         onClick={() => setLightingOpen(!lightingOpen)}
       >
         <span>💡 LIGHTING CONTROLS</span>
