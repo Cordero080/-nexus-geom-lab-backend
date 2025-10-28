@@ -32,7 +32,7 @@ const sceneSchema = new mongoose.Schema({
     hyperframeColor: { type: String, default: "#ff4500" },
     hyperframeLineColor: { type: String, default: "#00ff00" },
 
-  // Mega overlay controls removed (not used currently)
+    // Mega overlay controls removed (not used currently)
 
     // Scene Behavior
     cameraView: { type: String, default: "free" },

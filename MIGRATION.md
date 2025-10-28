@@ -11,6 +11,7 @@
 ## 📋 **Changes Made:**
 
 ### **1. User Model (`models/User.js`)**
+
 ```javascript
 // BEFORE (Animation System)
 unlockedAnimations: { type: [String], default: ["rotate"] }
@@ -24,22 +25,24 @@ unlockTechnosentient(technosentientName)
 ```
 
 ### **2. Scene Model (`models/Scene.js`)**
+
 ```javascript
 // BEFORE (Restricted Validation)
-animationStyle: { 
-  type: String, 
+animationStyle: {
+  type: String,
   enum: ["rotate", "float", "spiral", "chaos", "alien"]
 }
 
 // AFTER (Free String - All Effects Available)
-animationStyle: { 
-  type: String, 
+animationStyle: {
+  type: String,
   default: "rotate"
   // No validation - all visual effects always available
 }
 ```
 
 ### **3. Unlock Logic (`middleware/unlockChecker.js`)**
+
 ```javascript
 // BEFORE (Animation Unlocks)
 { sceneCount: 1, animationName: "float" }
@@ -55,10 +58,12 @@ animationStyle: {
 ```
 
 ### **4. Auth Routes (`routes/auth.js`)**
+
 - All response fields: `unlockedAnimations` → `unlockedTechnosentients`
 - Default for new users: `["blu-khan"]` instead of `["rotate"]`
 
 ### **5. Scene Routes (`routes/scenes.js`)**
+
 - Removed `animationStyle` validation from POST/PUT routes
 - Updated response field: `unlockedAnimations` → `unlockedTechnosentients`
 - Updated middleware call: `checkAndUnlockAnimations` → `checkAndUnlockTechnosentients`
@@ -68,16 +73,19 @@ animationStyle: {
 ## 🎮 **New System Behavior:**
 
 ### **Default State:**
+
 - New users start with **Blu-Khan** unlocked
 - All visual effects (rotate, float, spiral, etc.) always available in playground
 
 ### **Unlock Progression:**
+
 1. **Save 1st scene** → Unlock **Prismia**
-2. **Save 2nd scene** → Unlock **Magna-Tek**  
+2. **Save 2nd scene** → Unlock **Magna-Tek**
 3. **Save 3rd scene** → Unlock **Nexus-Prime**
 4. **Save 5th scene** → Unlock **Void-Walker**
 
 ### **Frontend Integration:**
+
 - Playground controls: All animation effects always selectable
 - Showcase gallery: Shows unlocked technosentients
 - Notifications: "Prismia Unlocked!" instead of animation messages
@@ -88,6 +96,7 @@ animationStyle: {
 ## 🔌 **API Response Changes:**
 
 ### **Before:**
+
 ```json
 {
   "user": {
@@ -97,7 +106,8 @@ animationStyle: {
 }
 ```
 
-### **After:**  
+### **After:**
+
 ```json
 {
   "user": {

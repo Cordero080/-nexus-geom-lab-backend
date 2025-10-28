@@ -26,13 +26,18 @@ const userSchema = new mongoose.Schema({
     required: true,
     minlength: 6,
   },
-  unlockedTechnosentients: {
+  scenesSaved: {
     //FIELD 4
+    type: Number,
+    default: 0,
+  },
+  unlockedNoetechs: {
+    //FIELD 5
     type: [String],
-    default: ["blu-khan"], // Everyone starts with Blu-Khan unlocked
+    default: [], // No Noetechs unlocked initially
   },
   createdAt: {
-    //FIELD 5
+    //FIELD 6
     type: Date,
     default: Date.now,
   },
@@ -54,14 +59,38 @@ userSchema.pre("save", async function (next) {
 userSchema.methods.comparePassword = async function (candidatePassword) {
   return await bcrypt.compare(candidatePassword, this.password);
 };
-// Method to check if technosentient is unlocked
-userSchema.methods.hasUnlockedTechnosentient = function (technosentientName) {
-  return this.unlockedTechnosentients.includes(technosentientName);
+// Method to check if Noetech is unlocked
+userSchema.methods.hasUnlockedNoetech = function (noetechName) {
+  return this.unlockedNoetechs.includes(noetechName);
 };
-// Method to unlock technosentient
-userSchema.methods.unlockTechnosentient = function (technosentientName) {
-  if (!this.hasUnlockedTechnosentient(technosentientName)) {
-    this.unlockedTechnosentients.push(technosentientName);
+// Method to unlock Noetech
+userSchema.methods.unlockNoetech = function (noetechName) {
+  if (!this.hasUnlockedNoetech(noetechName)) {
+    this.unlockedNoetechs.push(noetechName);
   }
 };
+
+// Progressive unlock system based on scenes saved
+userSchema.methods.checkAndUnlockNoetechs = function () {
+  const noetechOrder = ['icarus-x', 'vectra', 'nexus'];
+  const newUnlocks = [];
+  
+  // Unlock based on scenes saved count
+  for (let i = 0; i < Math.min(this.scenesSaved, noetechOrder.length); i++) {
+    const noetech = noetechOrder[i];
+    if (!this.hasUnlockedNoetech(noetech)) {
+      this.unlockedNoetechs.push(noetech);
+      newUnlocks.push(noetech);
+    }
+  }
+  
+  return newUnlocks; // Return newly unlocked Noetechs
+};
+
+// Method to increment scenes saved and check for unlocks
+userSchema.methods.incrementScenesSaved = function () {
+  this.scenesSaved += 1;
+  return this.checkAndUnlockNoetechs();
+};
+
 module.exports = mongoose.model("User", userSchema);

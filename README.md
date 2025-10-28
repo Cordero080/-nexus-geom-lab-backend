@@ -1,12 +1,15 @@
 # Nexus-Geom Backend API
 
-A Node.js/Express backend for the Nexus-Geom 3D geometry playground application. This API provides user authentication and personal scene management with gamified animation unlocking.
+A Node.js/Express backend for the Nexus-Geom 3D application. This API provides user authentication and personal scene management with gamified Noetech (geometry/effect) unlocking.
 
 ## 🚀 Quick Start
 
 ```bash
 # Install dependencies
 npm install
+
+# Create dev user for testing
+node seedDevUser.js
 
 # Start development server
 npm run dev
@@ -16,6 +19,15 @@ npm start
 ```
 
 Server runs on: `http://localhost:3000`
+
+## 👤 Development Setup
+
+For testing and development, see **[DEV_USER_GUIDE.md](./DEV_USER_GUIDE.md)** for:
+
+- Creating test users
+- Testing progressive Noetech unlocks
+- Resetting user data
+- API testing commands
 
 ## 🎯 Project Overview
 
@@ -29,7 +41,7 @@ Server runs on: `http://localhost:3000`
 - Save 3D geometry scenes with full configuration
 - Load and edit their personal scenes
 - Delete scenes they no longer want
-- **Unlock animations** by saving more scenes (gamification)
+- **Unlock Noetechs** (geometries/effects) by saving more scenes (gamification)
 
 ### What This Backend Does NOT Include
 
@@ -62,17 +74,17 @@ backend/
 
 ### Critical Issues Resolved:
 
-1. **Animation System Overhaul**
+1. **Noetech System Implementation**
 
-   - ✅ Changed from numeric IDs (1,2,3) to string names ("rotate", "float", "spiral", "chaos", "alien")
-   - ✅ Updated User model methods: `hasUnlockedAnimation()`, `unlockAnimation()`
-   - ✅ Fixed default unlocked animations: `["rotate"]` instead of `[1]`
+   - ✅ Using string-based Noetech names ("icarus-x", "vectra", "nexus")
+   - ✅ User model methods: `hasUnlockedNoetech()`, `unlockNoetech()`
+   - ✅ Default unlocked: `["icarus-x"]` - everyone starts with Icarus-X
 
-2. **Animation Unlock Thresholds Corrected**
+2. **Noetech Unlock Thresholds**
 
-   - ✅ Fixed unlock logic in `unlockChecker.js`
-   - ✅ New thresholds: 1 scene→"float", 3→"spiral", 5→"chaos", 10→"alien"
-   - ✅ Everyone starts with "rotate" unlocked
+   - ✅ Unlock logic in `unlockChecker.js`
+   - ✅ Thresholds: 1 scene→"vectra", 3 scenes→"nexus"
+   - ✅ Everyone starts with "icarus-x" unlocked
 
 3. **Removed Public Gallery Features**
 
@@ -85,9 +97,10 @@ backend/
    - ✅ PUT route now **merges** config instead of replacing wholesale
    - ✅ Prevents data loss during partial updates
 
-5. **File Structure Cleanup**
-   - ✅ Removed empty `server.js` file (using `index.js`)
-   - ✅ Added explicit PORT to `.env`
+5. **Security & Performance**
+   - ✅ Rate limiting on all routes
+   - ✅ Helmet security headers
+   - ✅ Request logging with morgan
 
 ## 🗃 Database Models
 
@@ -98,15 +111,15 @@ backend/
   username: String (required, unique, 3-30 chars),
   email: String (required, unique, lowercase),
   password: String (hashed with bcrypt, min 6 chars),
-  unlockedAnimations: [String] (default: ["rotate"]),
+  unlockedNoetechs: [String] (default: ["icarus-x"]),
   createdAt: Date
 }
 ```
 
 **Methods:**
 
-- `hasUnlockedAnimation(animationName)` - Check if animation is unlocked
-- `unlockAnimation(animationName)` - Add animation to unlocked array
+- `hasUnlockedNoetech(noetechName)` - Check if Noetech is unlocked
+- `unlockNoetech(noetechName)` - Add Noetech to unlocked array
 - `comparePassword(candidatePassword)` - Verify password
 
 ### Scene Model
@@ -133,7 +146,7 @@ backend/
     environment: String,
     environmentHue: Number (0-360),
     objectCount: Number,
-    animationStyle: String (enum: "rotate", "float", "spiral", "chaos", "alien"),
+    animationStyle: String,
     objectType: String,
 
     // Lighting
@@ -172,7 +185,7 @@ Response:
     "id": "...",
     "username": "artist123",
     "email": "artist@example.com",
-    "unlockedAnimations": ["rotate"]
+    "unlockedNoetechs": ["icarus-x"]
   }
 }
 ```
@@ -193,7 +206,7 @@ Response:
   "user": {
     "id": "...",
     "username": "artist123",
-    "unlockedAnimations": ["rotate", "float"]
+    "unlockedNoetechs": ["icarus-x", "vectra"]
   }
 }
 ```
@@ -210,7 +223,7 @@ Response:
     "id": "...",
     "username": "artist123",
     "email": "artist@example.com",
-    "unlockedAnimations": ["rotate", "float"],
+    "unlockedNoetechs": ["icarus-x", "vectra"],
     "createdAt": "..."
   }
 }
@@ -240,7 +253,7 @@ Response:
   "success": true,
   "message": "Scene created successfully",
   "scene": { ... },
-  "unlockedAnimations": ["float"] // If any unlocked
+  "unlockedNoetechs": ["vectra"] // If any unlocked
 }
 ```
 
@@ -300,26 +313,24 @@ Response:
 }
 ```
 
-## 🎮 Animation Unlock System
+## 🎮 Noetech Unlock System
 
 ### Default Unlocked
 
-- **"rotate"** - Everyone starts with this animation
+- **"icarus-x"** - Everyone starts with this Noetech (geometry type)
 
 ### Unlock Thresholds
 
-- **1 scene saved** → Unlock "float"
-- **3 scenes saved** → Unlock "spiral"
-- **5 scenes saved** → Unlock "chaos"
-- **10 scenes saved** → Unlock "alien"
+- **1 scene saved** → Unlock "vectra"
+- **3 scenes saved** → Unlock "nexus"
 
 ### How It Works
 
 1. User creates/saves a scene
 2. `unlockChecker.js` middleware counts their total scenes
-3. If threshold reached, animation is added to `user.unlockedAnimations`
-4. Response includes `unlockedAnimations` array for frontend notification
-5. Frontend can show "New Animation Unlocked!" message
+3. If threshold reached, Noetech is added to `user.unlockedNoetechs`
+4. Response includes `unlockedNoetechs` array for frontend notification
+5. Frontend can show "New Noetech Unlocked!" message
 
 ## 🔧 Environment Variables
 
@@ -401,34 +412,9 @@ Visit `http://localhost:3000/` to see the health check response.
 - ✅ CORS protection
 - ✅ Ownership verification for scene operations
 - ✅ Error handling middleware
-
-### Input Sanitizers (what and why)
-
-Sanitizers are small "cleaners" that neutralize sketchy input before your app uses it.
-
-- Why: stop common attacks like XSS (script tags in text) and NoSQL injection (sneaky `$`/`.` keys in JSON).
-- What they do: trim/normalize/escape strings, remove dangerous keys, and strip harmful HTML/JS.
-- Where we use them: right after JSON/urlencoded parsing, before routes.
-
-Enabled in this backend:
-
-- `xss-clean` – sanitizes strings against cross‑site scripting.
-- `express-mongo-sanitize` – removes `$` and `.` from keys to prevent NoSQL injection.
-
-Code (index.js):
-
-```js
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-app.use(mongoSanitize());
-app.use(xss());
-```
-
-These run alongside other hardening:
-
-- `helmet` for security headers
-- Global and auth‑scoped rate limiting
-- `morgan` request logging
+- ✅ Helmet for security headers
+- ✅ Global and auth-scoped rate limiting
+- ✅ Request logging with morgan
 
 ## 📈 Performance Features
 
@@ -441,6 +427,6 @@ These run alongside other hardening:
 
 ## 📞 Support
 
-This backend is designed for the Nexus-Geom 3D geometry playground. It provides secure, personal scene management with gamified progression through animation unlocks.
+This backend is designed for the Nexus-Geom 3D geometry playground. It provides secure, personal scene management with gamified progression through Noetech unlocks.
 
 **Key Focus:** Simple, personal scene library management - no social features or public galleries.

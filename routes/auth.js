@@ -58,7 +58,7 @@ router.post(
         username,
         email,
         password,
-        unlockedTechnosentients: ["blu-khan"], // Welcome gift: Blu-Khan unlocked!
+        unlockedNoetechs: ["icarus-x"], // Welcome gift: Icarus-X unlocked!
       });
 
       // Save to database
@@ -81,7 +81,7 @@ router.post(
           id: user._id,
           username: user.username,
           email: user.email,
-          unlockedTechnosentients: user.unlockedTechnosentients,
+          unlockedNoetechs: user.unlockedNoetechs,
         },
       });
     } catch (error) {
@@ -157,7 +157,7 @@ router.post(
         user: {
           id: user._id,
           username: user.username,
-          unlockedTechnosentients: user.unlockedTechnosentients, // Shows what they've unlocked!
+          unlockedNoetechs: user.unlockedNoetechs, // Shows what they've unlocked!
         },
       });
     } catch (error) {
@@ -186,7 +186,7 @@ router.get("/me", authMiddleware, async (req, res) => {
         id: req.user._id,
         username: req.user.username,
         email: req.user.email,
-        unlockedTechnosentients: req.user.unlockedTechnosentients,
+        unlockedNoetechs: req.user.unlockedNoetechs,
         createdAt: req.user.createdAt,
       },
     });

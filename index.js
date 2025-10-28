@@ -6,8 +6,6 @@ const cors = require("cors");
 const helmet = require("helmet");
 const morgan = require("morgan");
 const rateLimit = require("express-rate-limit");
-const mongoSanitize = require("express-mongo-sanitize");
-const xss = require("xss-clean");
 const connectDB = require("./config/db");
 
 // Import routes
@@ -46,10 +44,6 @@ app.use(
 
 app.use(express.json()); // Parse JSON request bodies
 app.use(express.urlencoded({ extended: true })); // Parse URL-encoded bodies
-
-// Input sanitizers (after parsers so they can inspect req.body/query/params)
-app.use(mongoSanitize()); // remove $ and . from incoming keys
-app.use(xss()); // sanitize user-provided strings against XSS
 
 // Log all incoming requests
 app.use((req, res, next) => {

@@ -3,12 +3,12 @@ const router = express.Router();
 const { body, validationResult } = require("express-validator");
 const Scene = require("../models/Scene");
 const authMiddleware = require("../middleware/auth");
-const checkAndUnlockTechnosentients = require("../middleware/unlockChecker");
+const checkAndUnlockNoetech = require("../middleware/unlockChecker");
 
 /**
  * CREATE SCENE ROUTE
  * POST /api/scenes
- * Saves a new scene + checks for technosentient unlocks
+ * Saves a new scene + checks for Noetech unlocks
  * Private (requires login)
  */
 router.post(
@@ -23,7 +23,7 @@ router.post(
       .withMessage("Scene name cannot exceed 100 characters"),
 
     body("config").isObject().withMessage("Config must be an object"),
-    
+
     // No animationStyle validation - all visual effects are always available
   ],
 
@@ -47,16 +47,16 @@ router.post(
       });
 
       await scene.save();
-      
-      // Check if this unlocks any technosentients
-      await checkAndUnlockTechnosentients(req, res, async () => {
+
+      // Check if this unlocks any Noetechs
+      await checkAndUnlockNoetech(req, res, async () => {
         await scene.populate("userId", "username");
 
         res.status(201).json({
           success: true,
           message: "Scene created successfully",
           scene,
-          unlockedTechnosentients: req.unlockedTechnosentients || [],
+          unlockedNoetechs: req.unlockedNoetechs || [],
         });
       });
     } catch (error) {
@@ -103,22 +103,22 @@ router.get("/my-scenes", authMiddleware, async (req, res) => {
  * Private (must be scene owner)
  */
 router.put(
-  '/:id',
+  "/:id",
   authMiddleware,
-  [ 
-    body('name')
+  [
+    body("name")
       .optional()
       .trim()
       .isLength({ max: 100 })
-      .withMessage('Scene name cannot exceed 100 characters'),
+      .withMessage("Scene name cannot exceed 100 characters"),
 
-    body('config')
+    body("config")
       .optional()
       .isObject()
-      .withMessage('Config must be an object'),
-    
+      .withMessage("Config must be an object"),
+
     // No animationStyle validation - all visual effects are always available
-      
+
     body("config.environmentHue")
       .optional()
       .isFloat({ min: 0, max: 360 })
@@ -130,38 +130,38 @@ router.put(
       if (!errors.isEmpty()) {
         return res.status(400).json({
           success: false,
-          errors: errors.array()
+          errors: errors.array(),
         });
       }
-      
+
       const scene = await Scene.findById(req.params.id);
 
       if (!scene) {
         return res.status(404).json({
           success: false,
-          message: 'Scene not found'
+          message: "Scene not found",
         });
       }
-      
+
       // Check ownership
       if (scene.userId.toString() !== req.user._id.toString()) {
         return res.status(403).json({
           success: false,
-          message: 'Not authorized to update this scene'
+          message: "Not authorized to update this scene",
         });
       }
-      
+
       // Update fields if provided
       const { name, description, config } = req.body;
-      
+
       if (name) scene.name = name;
       if (description !== undefined) scene.description = description;
-      
+
       // IMPORTANT: Merge config instead of replacing wholesale
       if (config) {
         scene.config = {
           ...scene.config.toObject(), // Existing config
-          ...config // New config (overwrites matching keys)
+          ...config, // New config (overwrites matching keys)
         };
       }
 
@@ -169,15 +169,14 @@ router.put(
 
       res.json({
         success: true,
-        message: 'Scene updated successfully',
-        scene
+        message: "Scene updated successfully",
+        scene,
       });
-
     } catch (error) {
-      console.error('Update scene error:', error);
+      console.error("Update scene error:", error);
       res.status(500).json({
-        success: false, 
-        message: 'Error updating scene'
+        success: false,
+        message: "Error updating scene",
       });
     }
   }
@@ -189,14 +188,14 @@ router.put(
  * Deletes a scene
  * Private (must be scene owner)
  */
-router.delete('/:id', authMiddleware, async (req, res) => {
+router.delete("/:id", authMiddleware, async (req, res) => {
   try {
     const scene = await Scene.findById(req.params.id);
 
     if (!scene) {
       return res.status(404).json({
         success: false,
-        message: 'Scene not found'
+        message: "Scene not found",
       });
     }
 
@@ -204,7 +203,7 @@ router.delete('/:id', authMiddleware, async (req, res) => {
     if (scene.userId.toString() !== req.user._id.toString()) {
       return res.status(403).json({
         success: false,
-        message: 'Not authorized to delete this scene'
+        message: "Not authorized to delete this scene",
       });
     }
 
@@ -212,14 +211,13 @@ router.delete('/:id', authMiddleware, async (req, res) => {
 
     res.json({
       success: true,
-      message: 'Scene deleted successfully'
+      message: "Scene deleted successfully",
     });
-
   } catch (error) {
-    console.error('Delete scene error:', error);
+    console.error("Delete scene error:", error);
     res.status(500).json({
       success: false,
-      message: 'Error deleting scene'
+      message: "Error deleting scene",
     });
   }
 });
