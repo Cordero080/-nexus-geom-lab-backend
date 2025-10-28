@@ -1,9 +1,9 @@
 import React from 'react';
 import { Canvas } from '@react-three/fiber';
 import { OrbitControls } from '@react-three/drei';
-import RotatingCube from './RotatingCube';
-import './ShowcaseViewer.css';
-import sharedStyles from '../styles/shared.module.scss';
+import RotatingCube from '../RotatingCube/RotatingCube';
+import './ShowcaseViewer.module.scss';
+import sharedStyles from '../../../styles/shared.module.scss';
 
 export default function ShowcaseViewer({ animation, onClose }) {
   // Store the mounted state to handle animations properly
