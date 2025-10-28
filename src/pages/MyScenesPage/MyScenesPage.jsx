@@ -5,6 +5,7 @@ import { useAuth } from "../../context/AuthContext";
 import { getMyScenes } from "../../services/sceneApi"; // Import API function
 import SceneCard from "../../components/Scenes/SceneCard"; // Corrected import path to Scenes
 import CustomSelect from "../../components/CustomSelect/CustomSelect";
+import { DeleteSuccessModal } from "../../components/Modals";
 import { quantumCollapse } from "../../utils/coreHelpers";
 import "./MyScenesPage.css";
 import sharedStyles from "../../styles/shared.module.scss";
@@ -78,6 +79,8 @@ export default function MyScenesPage() {
   const [sortBy, setSortBy] = useState("newest");
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [sceneToDelete, setSceneToDelete] = useState(null);
+  const [showDeleteSuccessModal, setShowDeleteSuccessModal] = useState(false);
+  const [deletedSceneName, setDeletedSceneName] = useState("");
 
   /**
    * QUANTUM STATE MANAGEMENT
@@ -271,14 +274,22 @@ export default function MyScenesPage() {
     if (!sceneToDelete || !token) return;
 
     try {
-      await deleteScene(sceneToDelete.id, token);
+      // Use _id or id, whichever exists
+      const sceneId = sceneToDelete._id || sceneToDelete.id;
+      await deleteScene(sceneId, token);
       
       // Remove from local state
-      setScenes(scenes.filter((s) => s.id !== sceneToDelete.id));
+      setScenes(scenes.filter((s) => (s._id || s.id) !== sceneId));
       
-      // Close modal
+      // Store scene name for success modal
+      setDeletedSceneName(sceneToDelete.name);
+      
+      // Close delete confirmation modal
       setShowDeleteModal(false);
       setSceneToDelete(null);
+      
+      // Show success modal
+      setShowDeleteSuccessModal(true);
     } catch (error) {
       console.error("Failed to delete scene:", error);
       alert("Failed to delete scene. Please try again.");
@@ -381,8 +392,8 @@ export default function MyScenesPage() {
 
       {/* Header */}
       <div className="my-scenes-page__header">
-  <h1 className="my-scenes-page__title">My Scenes</h1>
-        <p className="my-scenes-page__subtitle">
+        <h1 className={`${sharedStyles.pageTitle} my-scenes-page__title`}>My Scenes</h1>
+        <p className={`${sharedStyles.pageSubtitle} my-scenes-page__subtitle`}>
           Your collection of geometric creations
         </p>
       </div>
@@ -433,7 +444,7 @@ export default function MyScenesPage() {
         <div className="my-scenes-page__grid">
           {sortedScenes.map((scene) => (
             <SceneCard
-              key={scene.id}
+              key={scene._id || scene.id}
               scene={scene}
               showLoadButton={true}
               showEditButton={true}
@@ -441,7 +452,7 @@ export default function MyScenesPage() {
               onLoad={handleLoad}
               onEdit={handleEdit}
               onDelete={handleDeleteClick}
-              isHighlighted={scene.id === highlightSceneId}
+              isHighlighted={(scene._id || scene.id) === highlightSceneId}
             />
           ))}
         </div>
@@ -475,6 +486,13 @@ export default function MyScenesPage() {
           </div>
         </div>
       )}
+
+      {/* Delete Success Modal */}
+      <DeleteSuccessModal
+        isOpen={showDeleteSuccessModal}
+        onClose={() => setShowDeleteSuccessModal(false)}
+        sceneName={deletedSceneName}
+      />
     </div>
   );
 }

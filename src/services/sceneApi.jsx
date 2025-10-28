@@ -118,11 +118,11 @@ try {
   }
 
   // Convert response back to JavaScript object
-  // Backend sent JSON array of scenes, we convert it back
+  // Backend sent JSON with scenes array, we extract it
   const data = await response.json();
 
   // Return the array of user's scenes to whoever called this function
-return data;
+  return data.scenes || [];
 } catch (error) {
   // IF API fails, log error and throw a user message for user to see
   console.error('Error fetching my scenes:', error);

@@ -349,6 +349,55 @@ $glass-border: rgba(255, 255, 255, 0.2);
 
 ---
 
+## ⚠️ Known Issues & Exceptions
+
+### ShowcaseViewer: CSS Modules Incompatibility
+
+**Issue:** Complex nested selectors with animation-specific classes break under CSS Modules scoping.
+
+**Problem:**
+
+```scss
+// This pattern fails with CSS Modules:
+.viewer-overlay-1 .viewer-info {
+  /* Animation 1 specific info panel */
+}
+.viewer-overlay-2 .viewer-info {
+  /* Animation 2 specific info panel */
+}
+.viewer-overlay-3 .viewer-info {
+  /* Animation 3 specific info panel */
+}
+```
+
+**Root Cause:**
+
+- CSS Modules scopes classes like `.viewer-overlay` → `.viewer-overlay_hash123`
+- Dynamic class names (`viewer-overlay-${animation.id}`) can't be properly resolved
+- Complex nested selectors with multiple animation variants break scoping
+
+**Solution:**
+ShowcaseViewer uses regular CSS import instead of CSS Modules:
+
+```jsx
+import "./ShowcaseViewer.css"; // Regular CSS, not .module.scss
+```
+
+**Components NOT suitable for CSS Modules:**
+
+- ShowcaseViewer (complex animation-specific nested selectors)
+- Any component with dynamic class name combinations
+- Components with deeply nested theme-specific styling
+
+**Files:**
+
+- `src/Showcase/components/ShowcaseViewer/ShowcaseViewer.css` - Regular CSS
+- `src/Showcase/components/ShowcaseViewer/ShowcaseViewer.jsx` - Uses regular CSS classes
+
+**Commit:** `fix: restore ShowcaseViewer styling - see CSS_MODULES_MIGRATION.md`
+
+---
+
 ---
 
 ## 🎨 Shared Styling Architecture

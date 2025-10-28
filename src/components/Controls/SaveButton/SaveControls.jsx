@@ -4,6 +4,7 @@ import { useAuth } from "../../../context/AuthContext";
 import { useScene } from "../../../context/SceneContext";
 import { saveScene, updateScene } from "../../../services/sceneApi";
 import ScrambleButton from '../../ScrambleButton/ScrambleButton';
+import { SuccessModal } from '../../Modals';
 import styles from "./SaveButton.module.scss";
 import sharedStyles from "../../../styles/shared.module.scss";
 
@@ -27,6 +28,8 @@ function SaveControls({ sceneConfig, textColor }) {
   const [newSceneName, setNewSceneName] = useState('');
   const [showUnlockModal, setShowUnlockModal] = useState(false);
   const [unlockedNoetechs, setUnlockedNoetechs] = useState([]);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [successData, setSuccessData] = useState({ title: '', unlockedNoetechs: [], sceneId: null });
 
   // Check if user owns the currently loaded scene
   const canUpdate = currentSceneId && isOwnScene(user?.id);
@@ -101,20 +104,24 @@ function SaveControls({ sceneConfig, textColor }) {
         }
       }
       
-      alert(`"${sceneName}" updated successfully!`);
+      // Show success modal with unlock info
+      setSuccessData({
+        title: sceneName,
+        unlockedNoetechs: result.unlockedNoetechs || [],
+        sceneId: currentSceneId // Pass the scene ID for highlighting
+      });
+      setShowSuccessModal(true);
 
-      // Close modal and navigate
+      // Close save modal
       handleCloseModal();
       
-      // Show unlock modal if noetechs were unlocked
+      // Show unlock modal if noetechs were unlocked (keep existing logic)
       if (result.unlockedNoetechs && result.unlockedNoetechs.length > 0) {
         console.log('Showing unlock modal');
         setShowUnlockModal(true);
-      } else {
-        console.log('No unlocks, navigating to scenes');
-        const savedSceneId = result.scene?._id || result.scene?.id || result._id || result.id || currentSceneId;
-        navigate('/scenes', { state: { highlightSceneId: savedSceneId } });
       }
+      
+      // Note: Navigation now handled by success modal onClose
 
     } catch (error) {
       alert(`Failed to update scene: ${error.message}`);
@@ -177,20 +184,24 @@ function SaveControls({ sceneConfig, textColor }) {
         }
       }
       
-      alert(`"${name}" saved successfully!`);
+      // Show success modal with unlock info
+      setSuccessData({
+        title: name,
+        unlockedNoetechs: result.unlockedNoetechs || [],
+        sceneId: result.scene._id || result.scene.id // Pass the newly created scene ID for highlighting
+      });
+      setShowSuccessModal(true);
 
-      // Close modal
+      // Close save modal
       handleCloseModal();
       
-      // Show unlock modal if noetechs were unlocked
+      // Show unlock modal if noetechs were unlocked (keep existing logic)
       if (result.unlockedNoetechs && result.unlockedNoetechs.length > 0) {
         console.log('Showing unlock modal');
         setShowUnlockModal(true);
-      } else {
-        console.log('No unlocks, navigating to scenes');
-        const savedSceneId = result.scene?._id || result.scene?.id || result._id || result.id;
-        navigate('/scenes', { state: { highlightSceneId: savedSceneId } });
       }
+      
+      // Note: Navigation now handled by success modal onClose
 
     } catch (error) {
       alert(`Failed to save scene: ${error.message}`);
@@ -346,6 +357,20 @@ function SaveControls({ sceneConfig, textColor }) {
           </div>
         </div>
       )}
+
+      {/* Success Modal */}
+      <SuccessModal
+        isOpen={showSuccessModal}
+        onClose={() => {
+          setShowSuccessModal(false);
+          // Navigate to scenes page with highlight ID after closing success modal
+          navigate('/scenes', { 
+            state: { highlightSceneId: successData.sceneId } 
+          });
+        }}
+        title={successData.title}
+        unlockedNoetechs={successData.unlockedNoetechs}
+      />
     </>
   );
 }

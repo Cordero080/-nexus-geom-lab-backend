@@ -151,6 +151,11 @@ export function createSceneObject(config) {
       wireframeMaterial = createWireframeMaterial(materialConfig);
       wireframeMesh = createCpdTesseractWireframe(geometry, wireframeMaterial);
     }
+    // Check if it's a compound mega tesseract (8 tesseracts)
+    else if (geometry.userData && geometry.userData.isCompoundMegaTesseract) {
+      wireframeMaterial = createWireframeMaterial(materialConfig);
+      wireframeMesh = createCpdTesseractWireframe(geometry, wireframeMaterial);
+    }
     // Check if it's a compound tesseract (2 tesseracts)
     else if (geometry.userData && geometry.userData.isCpdTesseract) {
       wireframeMaterial = createWireframeMaterial(materialConfig);
@@ -259,9 +264,10 @@ export function createSceneObject(config) {
   ) {
     // Check if it's a compound tesseract (two interpenetrating 4D hypercubes) or regular tesseract (single 4D hypercube)
     if (geometry.userData && geometry.userData.isCpdTesseract) {
-      // Use Mega-Tesseract hyperframe (with stellations) if objectType is "cpdtesseract"
+      // Use Mega-Tesseract hyperframe (with stellations) if objectType is "cpdtesseract" or "cpd-megatesseract"
       // Otherwise use regular Cpd-Tesseract hyperframe (simple version)
-      const isMegaTesseract = objectType === "cpdtesseract";
+      const isMegaTesseract =
+        objectType === "cpdtesseract" || objectType === "cpd-megatesseract";
 
       const result = isMegaTesseract
         ? createMegaTesseractHyperframe(

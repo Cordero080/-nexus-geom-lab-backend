@@ -259,8 +259,8 @@ export default function ShowcaseGallery() {
         <div className="bg-gallery-layer bg-gallery-superposition" aria-hidden="true" style={{ top: '300vh' }} />
         {/* Hero Title Section (separate from scenes to avoid overlap) */}
         <header className="showcase-hero">
-          <h1 className="showcase-main-title">Machina NEXUS</h1>
-          <p className="showcase-main-subtitle">The Noetech Digital Pantheon</p>
+          <h1 className={`${sharedStyles.pageTitle} showcase-main-title`}>Machina NEXUS</h1>
+          <p className={`${sharedStyles.pageSubtitle} showcase-main-subtitle`}>The Noetech Digital Pantheon</p>
         </header>
 
         {/* Parallax Scenes */}

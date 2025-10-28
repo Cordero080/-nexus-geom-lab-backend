@@ -140,19 +140,24 @@ export function createCpdTesseractHyperframe(
   // DON'T search geometry - outer cube corners don't exist as vertices (frustums replace them)
   // Just use the canonical mathematical positions directly
 
-  // First tesseract: 8 connections from outer corners to inner corners
-  for (let i = 0; i < 8; i++) {
-    const outerVertex = new THREE.Vector3(...cube1Outer[i]); // Use canonical position directly
-    const innerVertex = new THREE.Vector3(...cube1Inner[i]);
-    const distance = outerVertex.distanceTo(innerVertex);
+  // === GREEN CURVED LINES: FROM PINK HYPERFRAME CORNERS OUTWARD ===
+  // Pink hyperframe is at cube*Inner (0.375)
+  // Green lines connect FROM pink hyperframe corners OUTWARD to outer structure (cube*Outer at 0.75)
+  // This keeps the CENTER clear with only pink hyperframe, no green lines in the middle
 
-    const cylinderGeom = new THREE.CylinderGeometry(0.006, 0.006, distance, 6);
+  // First tesseract: 8 green connections from pink wireframe corners OUTWARD
+  for (let i = 0; i < 8; i++) {
+    const wireframeCorner = new THREE.Vector3(...cube1Inner[i]);
+    const outerVertex = new THREE.Vector3(...cube1Outer[i]);
+    const distance = wireframeCorner.distanceTo(outerVertex);
+
+    const cylinderGeom = new THREE.CylinderGeometry(0.003, 0.003, distance, 6);
     const cylinderMesh = new THREE.Mesh(cylinderGeom, curvedLinesMaterial);
 
     cylinderMesh.position.copy(
-      outerVertex.clone().add(innerVertex).multiplyScalar(0.5)
+      wireframeCorner.clone().add(outerVertex).multiplyScalar(0.5)
     );
-    cylinderMesh.lookAt(innerVertex);
+    cylinderMesh.lookAt(outerVertex);
     cylinderMesh.rotateX(Math.PI / 2);
 
     connectionsGroup.add(cylinderMesh);
@@ -192,25 +197,25 @@ export function createCpdTesseractHyperframe(
     innerCubesGroup.add(cylinderMesh);
   });
 
-  // Second tesseract: 8 connections from outer corners to inner corners
+  // Second tesseract: 8 green connections from pink wireframe corners OUTWARD
   for (let i = 0; i < 8; i++) {
-    const outerVertex = new THREE.Vector3(...cube2Outer[i]); // Use canonical position directly
-    const innerVertex = new THREE.Vector3(...cube2Inner[i]);
-    const distance = outerVertex.distanceTo(innerVertex);
+    const wireframeCorner = new THREE.Vector3(...cube2Inner[i]);
+    const outerVertex = new THREE.Vector3(...cube2Outer[i]);
+    const distance = wireframeCorner.distanceTo(outerVertex);
 
-    const cylinderGeom = new THREE.CylinderGeometry(0.006, 0.006, distance, 6);
+    const cylinderGeom = new THREE.CylinderGeometry(0.003, 0.003, distance, 6);
     const cylinderMesh = new THREE.Mesh(cylinderGeom, curvedLinesMaterial);
 
     cylinderMesh.position.copy(
-      outerVertex.clone().add(innerVertex).multiplyScalar(0.5)
+      wireframeCorner.clone().add(outerVertex).multiplyScalar(0.5)
     );
-    cylinderMesh.lookAt(innerVertex);
+    cylinderMesh.lookAt(outerVertex);
     cylinderMesh.rotateX(Math.PI / 2);
 
     connectionsGroup.add(cylinderMesh);
   }
 
-  // Second tesseract RECURSIVE: 8 connections from inner (middle) corners to tiny inner corners
+  // Second tesseract RECURSIVE: Pink lines from inner to tiny (part of hyperframe structure)
   for (let i = 0; i < 8; i++) {
     const middleVertex = new THREE.Vector3(...cube2Inner[i]);
     const tinyVertex = new THREE.Vector3(...cube2Tiny[i]);
@@ -324,60 +329,10 @@ export function createCpdTesseractHyperframe(
     innerCubesGroup.add(cylinderMesh);
   }
 
-  // 3. Space diagonals from outer corners through center (showing 4D depth) - ORANGE
-  const spaceDiagonalPairs = [
-    [0, 6], // Bottom-left-back to top-right-front
-    [1, 7], // Bottom-right-back to top-left-front
-    [2, 4], // Top-left-back to bottom-right-front
-    [3, 5], // Top-right-back to bottom-left-front
-  ];
-
-  // First tesseract space diagonals
-  spaceDiagonalPairs.forEach(([i, j]) => {
-    const start = new THREE.Vector3(...cube1Outer[i]);
-    const end = new THREE.Vector3(...cube1Outer[j]);
-    const distance = start.distanceTo(end);
-
-    const cylinderGeom = new THREE.CylinderGeometry(
-      0.0015,
-      0.0015,
-      distance,
-      6
-    );
-    const cylinderMesh = new THREE.Mesh(cylinderGeom, curvedLinesMaterial);
-
-    cylinderMesh.position.copy(start.clone().add(end).multiplyScalar(0.5));
-    cylinderMesh.lookAt(end);
-    cylinderMesh.rotateX(Math.PI / 2);
-
-    connectionsGroup.add(cylinderMesh);
-  });
-
-  // Second tesseract space diagonals
-  spaceDiagonalPairs.forEach(([i, j]) => {
-    const start = new THREE.Vector3(...cube2Outer[i]);
-    const end = new THREE.Vector3(...cube2Outer[j]);
-    const distance = start.distanceTo(end);
-
-    const cylinderGeom = new THREE.CylinderGeometry(
-      0.0015,
-      0.0015,
-      distance,
-      6
-    );
-    const cylinderMesh = new THREE.Mesh(cylinderGeom, curvedLinesMaterial);
-
-    cylinderMesh.position.copy(start.clone().add(end).multiplyScalar(0.5));
-    cylinderMesh.lookAt(end);
-    cylinderMesh.rotateX(Math.PI / 2);
-
-    connectionsGroup.add(cylinderMesh);
-  });
-
   console.log(
     `Created complete compound tesseract hyperframe:
     - ${innerCubesGroup.children.length} aqua/red lines (cubes + recursion + face diagonals + cross-connections)
-    - ${connectionsGroup.children.length} orange lines (outer→middle + space diagonals)`
+    - ${connectionsGroup.children.length} green lines (pink hyperframe corners to outer vertices)`
   );
 
   return {

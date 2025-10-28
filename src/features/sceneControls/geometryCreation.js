@@ -27,6 +27,7 @@ import { createCompound600Cell } from "./geometries/polytopes/compoundCell600.js
 import { createCapsule } from "./geometries/curved/capsule.js";
 import { createMobiusSphere } from "./geometries/manifolds/mobiusSphere.js";
 import { createMegaTesseract } from "./geometries/polytopes/megaTesseract.js";
+import { createCompoundMegaTesseract } from "./geometries/polytopes/compoundMegaTesseract.js";
 
 /**
  * Create a tesseract with connecting frustum faces between outer and inner cubes
@@ -193,6 +194,9 @@ export function createGeometry(type = "icosahedron", options = {}) {
     case "cpdtesseract":
       // Use modular geometry - see geometries/polytopes/megaTesseract.js
       return createMegaTesseract(options);
+    case "cpd-megatesseract":
+      // Use modular geometry - see geometries/polytopes/compoundMegaTesseract.js
+      return createCompoundMegaTesseract(options);
     case "octahedron":
       // Use modular geometry - see geometries/polytopes/octahedron.js
       return createOctahedron(options);

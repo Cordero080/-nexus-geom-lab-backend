@@ -27,6 +27,10 @@ export {
   createMegaTesseract,
   metadata as megaTesseractMetadata,
 } from "./megaTesseract.js";
+export {
+  createCompoundMegaTesseract,
+  metadata as compoundMegaTesseractMetadata,
+} from "./compoundMegaTesseract.js";
 export { create120Cell, metadata as cell120Metadata } from "./cell120.js";
 export {
   createCompound120Cell,

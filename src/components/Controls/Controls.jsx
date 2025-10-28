@@ -249,6 +249,7 @@ function Controls({
           <option value="cube">🧊 Cube</option>
           <option value="box">🔷 Cpd-Tesseract</option>
           <option value="cpdtesseract">💎 Mega-Tesseract</option>
+          <option value="cpd-megatesseract">💎💎💎 Cpd-Mega-Tesseract</option>
           <option value="octahedron">🔸 Cpd-Octahedron</option>
           <option value="tetrahedron">🔻 Cpd-Tetrahedron</option>
           <option value="120cell">🌐 120-Cell</option>

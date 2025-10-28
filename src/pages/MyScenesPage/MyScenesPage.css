@@ -56,37 +56,22 @@
   max-width: 1400px;
   margin: 0 auto 40px;
   text-align: center;
+  min-height: 360px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 40px 20px 60px;
 }
 
 .my-scenes-page__title {
-  font-family: 'Future Z', 'Arial Black', Arial, sans-serif !important;
-  font-size: 3rem;
-  font-weight: 700;
-  margin: 0 0 12px;
-  background: linear-gradient(135deg, #00ffff 0%, #ff00ff 50%, #ffff00 100%);
-  background-size: 200% 200%;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  animation: scenesTitleShimmer 6s ease-in-out infinite;
-  /* Match showcase title warp intensity */
-  text-transform: uppercase;
-  letter-spacing: 8px;
-  transform: perspective(400px) rotateX(15deg);
-  transform-origin: center bottom;
-  filter: drop-shadow(0 4px 20px rgba(6, 21, 185, 0.25));
-  text-shadow: 0 0 20px rgba(0, 212, 255, 0.15);
-}
-
-@keyframes scenesTitleShimmer {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
+  /* Use shared pageTitle for typography; keep only layout overrides here */
+  margin: 0 0 14px;
 }
 
 .my-scenes-page__subtitle {
-  font-size: 1.125rem;
-  color: rgba(255, 255, 255, 0.6);
+  /* Typography from shared.pageSubtitle; keep spacing only */
   margin: 0;
 }
 
@@ -383,9 +368,7 @@
     grid-template-columns: repeat(2, 1fr);
   }
 
-  .my-scenes-page__title {
-    font-size: 2.5rem;
-  }
+  /* Title font-size handled by shared styles */
 }
 
 @media (max-width: 600px) {
@@ -397,14 +380,7 @@
     grid-template-columns: 1fr;
     gap: 16px;
   }
-
-  .my-scenes-page__title {
-    font-size: 2rem;
-  }
-
-  .my-scenes-page__subtitle {
-    font-size: 1rem;
-  }
+  /* Title/subtitle sizes handled by shared styles */
 
   .my-scenes-page__controls {
     flex-direction: column;

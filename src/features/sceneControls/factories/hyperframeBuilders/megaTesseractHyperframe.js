@@ -372,6 +372,106 @@ export function createMegaTesseractHyperframe(
 
   const connectionsGroup = new THREE.Group();
 
+  // === SYSTEMATIC VERTEX-TO-INNER CONNECTIONS (like icosahedron) ===
+  // The mega tesseract has 4 separate tesseracts, each with its own outer→inner connections
+  // We need to define the 4 sets of outer and inner cubes based on the actual geometry
+
+  // INNER PAIR (smaller tesseracts)
+  const innerPairOuterSize = 0.75 / 2; // Half-size for outer cube
+  const innerPairInnerSize = 0.375 / 2; // Half-size for inner cube
+
+  // OUTER PAIR (larger tesseracts)
+  const outerPairOuterSize = 2.0 / 2; // Half-size for outer cube
+  const outerPairInnerSize = 1.5 / 2; // Half-size for inner cube
+
+  // Helper to create cube corner positions
+  const makeCubeCorners = (halfSize) => [
+    [-halfSize, -halfSize, -halfSize],
+    [halfSize, -halfSize, -halfSize],
+    [halfSize, halfSize, -halfSize],
+    [-halfSize, halfSize, -halfSize],
+    [-halfSize, -halfSize, halfSize],
+    [halfSize, -halfSize, halfSize],
+    [halfSize, halfSize, halfSize],
+    [-halfSize, halfSize, halfSize],
+  ];
+
+  // Tesseract 1: no rotation
+  const tess1Outer = makeCubeCorners(innerPairOuterSize);
+  const tess1Inner = makeCubeCorners(innerPairInnerSize);
+
+  // Tesseract 2: rotated 45° on Y
+  const rot45 = new THREE.Matrix4().makeRotationY(Math.PI / 4);
+  const tess2Outer = makeCubeCorners(innerPairOuterSize).map((v) => {
+    const vec = new THREE.Vector3(...v);
+    vec.applyMatrix4(rot45);
+    return [vec.x, vec.y, vec.z];
+  });
+  const tess2Inner = makeCubeCorners(innerPairInnerSize).map((v) => {
+    const vec = new THREE.Vector3(...v);
+    vec.applyMatrix4(rot45);
+    return [vec.x, vec.y, vec.z];
+  });
+
+  // Tesseract 3: rotated π/8 on Y (larger)
+  const rot22_5 = new THREE.Matrix4().makeRotationY(Math.PI / 8);
+  const tess3Outer = makeCubeCorners(outerPairOuterSize).map((v) => {
+    const vec = new THREE.Vector3(...v);
+    vec.applyMatrix4(rot22_5);
+    return [vec.x, vec.y, vec.z];
+  });
+  const tess3Inner = makeCubeCorners(outerPairInnerSize).map((v) => {
+    const vec = new THREE.Vector3(...v);
+    vec.applyMatrix4(rot22_5);
+    return [vec.x, vec.y, vec.z];
+  });
+
+  // Tesseract 4: rotated π/8 + π/4 on Y (larger)
+  const rot67_5 = new THREE.Matrix4().makeRotationY(Math.PI / 8 + Math.PI / 4);
+  const tess4Outer = makeCubeCorners(outerPairOuterSize).map((v) => {
+    const vec = new THREE.Vector3(...v);
+    vec.applyMatrix4(rot67_5);
+    return [vec.x, vec.y, vec.z];
+  });
+  const tess4Inner = makeCubeCorners(outerPairInnerSize).map((v) => {
+    const vec = new THREE.Vector3(...v);
+    vec.applyMatrix4(rot67_5);
+    return [vec.x, vec.y, vec.z];
+  });
+
+  console.log(
+    "Creating systematic outer→inner vertex connections for all 4 tesseracts..."
+  );
+
+  // Connect each tesseract's outer vertices to its own inner vertices
+  const connectTesseract = (outerVerts, innerVerts, radius = 0.003) => {
+    for (let i = 0; i < 8; i++) {
+      const outerVert = new THREE.Vector3(...outerVerts[i]);
+      const innerVert = new THREE.Vector3(...innerVerts[i]);
+      const distance = outerVert.distanceTo(innerVert);
+
+      const cylinderGeom = new THREE.CylinderGeometry(
+        radius,
+        radius,
+        distance,
+        6
+      );
+      const cylinderMesh = new THREE.Mesh(cylinderGeom, curvedLinesMaterial);
+      cylinderMesh.position.copy(
+        outerVert.clone().add(innerVert).multiplyScalar(0.5)
+      );
+      cylinderMesh.lookAt(innerVert);
+      cylinderMesh.rotateX(Math.PI / 2);
+      connectionsGroup.add(cylinderMesh);
+    }
+  };
+
+  // Connect all 4 tesseracts
+  connectTesseract(tess1Outer, tess1Inner);
+  connectTesseract(tess2Outer, tess2Inner);
+  connectTesseract(tess3Outer, tess3Inner);
+  connectTesseract(tess4Outer, tess4Inner);
+
   // === NEW: NON-PLANAR BELTS FROM EDGE MIDPOINTS (weave to remove flat silhouette) ===
   const beltMaterial = createGradientMaterial(hyperframeLineColor, 0.55, 0.85);
   const computeEdgeMidpoints = (verts) => {
@@ -978,7 +1078,7 @@ export function createMegaTesseractHyperframe(
   const miniOuter = innerSize * 0.66; // Outer half-size of the mini tesseract
   const miniInner = miniOuter * 0.5; // Inner half-size of the mini tesseract
 
-  const makeCubeCorners = (half) => [
+  const makeMiniCubeCorners = (half) => [
     [-half, -half, -half],
     [half, -half, -half],
     [half, half, -half],
@@ -990,8 +1090,8 @@ export function createMegaTesseractHyperframe(
   ];
 
   // First tesseract mini core (aligned with axes)
-  const mini1Outer = makeCubeCorners(miniOuter);
-  const mini1Inner = makeCubeCorners(miniInner);
+  const mini1Outer = makeMiniCubeCorners(miniOuter);
+  const mini1Inner = makeMiniCubeCorners(miniInner);
 
   // Second tesseract mini core (merge vertically and horizontally): rotate about X and Z by 45°
   const rotX45 = new THREE.Matrix4().makeRotationX(Math.PI / 4);

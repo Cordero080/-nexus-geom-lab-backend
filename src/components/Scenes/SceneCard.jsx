@@ -49,53 +49,53 @@ export default function SceneCard({
     switch (objectType) {
       case 'box':
       case 'cube':
-        // Isometric cube: front + back squares with connectors
+        // Isometric cube: front + back squares with connectors (scaled up)
         return (
-          <svg className="scene-card__geo" viewBox="0 0 200 200" aria-hidden="true">
+          <svg className={styles.sceneCardGeo} viewBox="0 0 200 200" aria-hidden="true">
             {commonDefs}
-            <g fill="none" stroke={stroke} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <rect x="50" y="50" width="80" height="80" className="geo-outline" />
-              <rect x="70" y="30" width="80" height="80" className="geo-outline geo-outline--inner" />
-              <line x1="50" y1="50" x2="70" y2="30" className="geo-connector" />
-              <line x1="130" y1="50" x2="150" y2="30" className="geo-connector" />
-              <line x1="50" y1="130" x2="70" y2="110" className="geo-connector" />
-              <line x1="130" y1="130" x2="150" y2="110" className="geo-connector" />
+            <g fill="none" stroke={stroke} strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+              <rect x="20" y="40" width="120" height="120" className={styles.geoOutline} />
+              <rect x="60" y="10" width="120" height="120" className={`${styles.geoOutline} ${styles.geoOutlineInner}`} />
+              <line x1="20" y1="40" x2="60" y2="10" className={styles.geoConnector} />
+              <line x1="140" y1="40" x2="180" y2="10" className={styles.geoConnector} />
+              <line x1="20" y1="160" x2="60" y2="130" className={styles.geoConnector} />
+              <line x1="140" y1="160" x2="180" y2="130" className={styles.geoConnector} />
             </g>
           </svg>
         );
       case 'icosahedron':
-        // Stylized polyhedron using triangles and a hex-like core
+        // Stylized polyhedron using triangles and a hex-like core (scaled up)
         return (
-          <svg className="scene-card__geo" viewBox="0 0 200 200" aria-hidden="true">
+          <svg className={styles.sceneCardGeo} viewBox="0 0 200 200" aria-hidden="true">
             {commonDefs}
-            <g fill="none" stroke={stroke} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <polygon points="100,15 160,50 160,120 100,155 40,120 40,50" className="geo-outline" />
-              <polygon points="100,45 140,68 140,102 100,125 60,102 60,68" className="geo-outline geo-outline--inner" />
-              <line x1="100" y1="15" x2="100" y2="45" className="geo-connector" />
-              <line x1="160" y1="50" x2="140" y2="68" className="geo-connector" />
-              <line x1="160" y1="120" x2="140" y2="102" className="geo-connector" />
-              <line x1="100" y1="155" x2="100" y2="125" className="geo-connector" />
-              <line x1="40" y1="120" x2="60" y2="102" className="geo-connector" />
-              <line x1="40" y1="50" x2="60" y2="68" className="geo-connector" />
+            <g fill="none" stroke={stroke} strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+              <polygon points="100,10 180,50 180,150 100,190 20,150 20,50" className={styles.geoOutline} />
+              <polygon points="100,40 150,70 150,130 100,160 50,130 50,70" className={`${styles.geoOutline} ${styles.geoOutlineInner}`} />
+              <line x1="100" y1="10" x2="100" y2="40" className={styles.geoConnector} />
+              <line x1="180" y1="50" x2="150" y2="70" className={styles.geoConnector} />
+              <line x1="180" y1="150" x2="150" y2="130" className={styles.geoConnector} />
+              <line x1="100" y1="190" x2="100" y2="160" className={styles.geoConnector} />
+              <line x1="20" y1="150" x2="50" y2="130" className={styles.geoConnector} />
+              <line x1="20" y1="50" x2="50" y2="70" className={styles.geoConnector} />
             </g>
           </svg>
         );
       case 'octahedron':
         return (
-          <svg className="scene-card__geo" viewBox="0 0 200 200" aria-hidden="true">
+          <svg className={styles.sceneCardGeo} viewBox="0 0 200 200" aria-hidden="true">
             {commonDefs}
-            <g fill="none" stroke={stroke} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <polygon points="100,20 160,100 100,180 40,100" className="geo-outline" />
-              <polygon points="100,45 135,100 100,155 65,100" className="geo-outline geo-outline--inner" />
-              <line x1="40" y1="100" x2="160" y2="100" className="geo-connector" />
-              <line x1="100" y1="20" x2="100" y2="180" className="geo-connector" />
+            <g fill="none" stroke={stroke} strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+              <polygon points="100,10 180,100 100,190 20,100" className={styles.geoOutline} />
+              <polygon points="100,45 145,100 100,155 55,100" className={`${styles.geoOutline} ${styles.geoOutlineInner}`} />
+              <line x1="20" y1="100" x2="180" y2="100" className={styles.geoConnector} />
+              <line x1="100" y1="10" x2="100" y2="190" className={styles.geoConnector} />
             </g>
           </svg>
         );
       case 'sphere':
         // Equator + two longitudes as arcs/ellipses
         return (
-          <svg className="scene-card__geo" viewBox="0 0 200 200" aria-hidden="true">
+          <svg className={styles.sceneCardGeo} viewBox="-10 -10 220 220" aria-hidden="true">
             {commonDefs}
             <g fill="none" stroke={stroke} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <circle cx="100" cy="100" r="60" className={styles.geoOutline} />
@@ -107,7 +107,7 @@ export default function SceneCard({
       default:
         // Generic hex/poly wireframe (existing fallback)
         return (
-          <svg className={styles.sceneCardGeo} viewBox="0 0 200 200" aria-hidden="true">
+          <svg className={styles.sceneCardGeo} viewBox="-10 -10 220 220" aria-hidden="true">
             {commonDefs}
             <g fill="none" stroke={stroke} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <polygon points="100,10 173,55 173,145 100,190 27,145 27,55" className={styles.geoOutline} />

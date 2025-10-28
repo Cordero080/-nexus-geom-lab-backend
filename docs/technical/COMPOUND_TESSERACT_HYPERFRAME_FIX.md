@@ -338,6 +338,37 @@ Potential additions:
 
 - Animate recursive collapse (outer→middle→tiny over time)
 - Add 4D rotation along W-axis (not just Y-rotation in 3D)
+
+---
+
+## Latest Update: Clean Center Structure (Oct 2025)
+
+### Problem
+Green curved lines were intersecting through the pink hyperframe center, creating visual clutter and obscuring the hyperframe structure.
+
+### Root Cause
+Space diagonal lines connected outer cube corners through the center:
+```javascript
+// Space diagonals - REMOVED
+spaceDiagonalPairs.forEach(([i, j]) => {
+  const start = new THREE.Vector3(...cube1Outer[i]);
+  const end = new THREE.Vector3(...cube1Outer[j]);
+  // Created diagonal lines passing through center
+});
+```
+
+### Solution
+Removed all space diagonals that passed through the hyperframe center. Green curved lines now only:
+- Connect FROM pink hyperframe corners (cube*Inner at 0.375)
+- Radiate OUTWARD to outer vertices (cube*Outer at 0.75)
+- Do NOT pass through or intersect the center structure
+
+### Result
+- **Center**: Only pink hyperframe structure (cube edges, face diagonals, cross-connections)
+- **Green lines**: Radial connections from hyperframe boundary outward
+- **Visual clarity**: Clear separation between inner structure and outer connections
+
+**Files Modified**: `cpdTesseractHyperframe.js`, `megaTesseractHyperframe.js` (duplicate function fix)
 - Color gradient based on 4D depth
 - Interactive toggle for different structure levels
 - Hypercube cell projections (8 cubic cells of tesseract)

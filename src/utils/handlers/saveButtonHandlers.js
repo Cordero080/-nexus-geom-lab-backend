@@ -23,17 +23,18 @@ export const createSaveHandler = ({
   navigate,
   setIsSaving,
   sceneConfig,
+  onSuccess,
 }) => {
   return async () => {
     // Guard: Check authentication
     if (!isAuthenticated) {
-      alert('Brilliant work! but... you must log in (To save)');
+      alert("Brilliant work! but... you must log in (To save)");
       return;
     }
 
     // Prompt for scene name
-    const name = prompt('Name your masterpiece:');
-    if (!name || name.trim() === '') {
+    const name = prompt("Name your masterpiece:");
+    if (!name || name.trim() === "") {
       return;
     }
 
@@ -44,28 +45,40 @@ export const createSaveHandler = ({
       // Prepare scene data
       const sceneData = {
         name: name.trim(),
-        description: '',
+        description: "",
         config: sceneConfig,
       };
 
       // Call API
       const result = await saveScene(sceneData, token);
 
-      // Build success message
-      let message = `"${name}" saved successfully!`;
+      // Handle unlocked noetechs
       if (result.unlockedNoetechs && result.unlockedNoetechs.length > 0) {
-        message += `\n\nUnlocked: ${result.unlockedNoetechs.join(', ')}!`;
         try {
           addUnlockedNoetechs(result.unlockedNoetechs);
         } catch (err) {
           // Silently fail if context update fails
         }
       }
-      alert(message);
+
+      // Show success modal (passed from component)
+      if (onSuccess) {
+        onSuccess({
+          title: name,
+          unlockedNoetechs: result.unlockedNoetechs || [],
+        });
+      } else {
+        // Fallback to alert for backward compatibility
+        let message = `"${name}" saved successfully!`;
+        if (result.unlockedNoetechs && result.unlockedNoetechs.length > 0) {
+          message += `\n\nUnlocked: ${result.unlockedNoetechs.join(", ")}!`;
+        }
+        alert(message);
+      }
 
       // Navigate to scenes page with highlight
       const savedSceneId = result.scene?.id || result.id;
-      navigate('/scenes', { state: { highlightSceneId: savedSceneId } });
+      navigate("/scenes", { state: { highlightSceneId: savedSceneId } });
     } catch (error) {
       alert(`Failed to save scene: ${error.message}`);
     } finally {

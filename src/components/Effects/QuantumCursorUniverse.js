@@ -162,8 +162,37 @@ export default class QuantumCursorUniverse {
     this.targetY += (this.mouseY - this.targetY) * 0.15;
 
     if (this.cursor) {
-      this.cursor.style.left = this.targetX - 10 + "px";
-      this.cursor.style.top = this.targetY - 10 + "px";
+      this.cursor.style.left = this.targetX - 8 + "px"; // Smaller focal point
+      this.cursor.style.top = this.targetY - 8 + "px";
+
+      // Dynamic spectral center with multiple concentric color rings
+      const centerHue = (this.quantumState * 100) % 360;
+      const pulseScale = 0.7 + Math.sin(this.quantumState * 3) * 0.2; // Smaller base size
+      const ringPulse = 1 + Math.sin(this.quantumState * 2) * 0.15;
+
+      // Multiple layered box-shadows to create concentric color rings (smaller)
+      this.cursor.style.boxShadow = `
+        0 0 4px 1px hsl(${centerHue}, 100%, 70%),
+        0 0 8px 2px hsl(${(centerHue + 60) % 360}, 100%, 60%),
+        0 0 12px 3px hsl(${(centerHue + 120) % 360}, 80%, 55%),
+        0 0 16px 4px hsl(${(centerHue + 180) % 360}, 70%, 50%, 0.6),
+        inset 0 0 4px hsl(${(centerHue + 30) % 360}, 100%, 80%)
+      `;
+
+      this.cursor.style.background = `
+        radial-gradient(circle,
+          hsl(${centerHue}, 100%, 95%) 0%,
+          hsl(${(centerHue + 30) % 360}, 100%, 85%) 30%,
+          hsl(${(centerHue + 60) % 360}, 90%, 75%) 60%,
+          hsl(${(centerHue + 90) % 360}, 80%, 65%) 100%
+        )
+      `;
+
+      this.cursor.style.transform = `translate(-50%, -50%) scale(${
+        pulseScale * ringPulse
+      })`;
+      this.cursor.style.width = "16px"; // Smaller but still bigger than particles
+      this.cursor.style.height = "16px";
     }
 
     // Adjust gravity field visibility
