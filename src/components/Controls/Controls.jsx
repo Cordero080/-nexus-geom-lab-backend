@@ -2,6 +2,22 @@ import React, { useState } from 'react';
 import styles from './Controls.module.scss';
 import LightingControls from './LightingControls';
 import SaveButton from './SaveButton/SaveButton';
+import {
+  createMetalnessHandler,
+  createScaleHandler,
+  createEmissiveIntensityHandler,
+  createBaseColorHandler,
+  createWireframeIntensityHandler,
+  createWireframeToggleHandler,
+  createHyperframeColorHandler,
+  createHyperframeLineColorHandler,
+  createCameraViewHandler,
+  createEnvironmentHandler,
+  createEnvironmentHueHandler,
+  createObjectCountHandler,
+  createAnimationStyleHandler,
+  createObjectTypeHandler,
+} from './controlsHandlers';
 
 // PROPS RECEIVED FROM App.jsx - These are the data connections
 function Controls({ 
@@ -57,74 +73,21 @@ function Controls({
    * Each handler is a higher-order function that takes a setter function and returns an event handler
    */
   
-  // Define handler functions directly
-  const handleMetalnessChange = (event) => {
-    const newMetalness = parseFloat(event.target.value);
-    onMetalnessChange(newMetalness);
-  };
-  
-  const handleScaleChange = (event) => {
-    onScaleChange(parseFloat(event.target.value));
-  };
-  
-  const handleEmissiveIntensityChange = (event) => {
-    const newIntensity = parseFloat(event.target.value);
-    onEmissiveIntensityChange(newIntensity);
-  };
-  
-  const handleBaseColorChange = (event) => {
-    const newColor = event.target.value;
-    onBaseColorChange(newColor);
-  };
-  
-  const handleWireframeIntensityChange = (event) => {
-    const newIntensity = parseFloat(event.target.value);
-    onWireframeIntensityChange(newIntensity);
-  };
-  
-  const handleWireframeToggle = (event) => {
-    onWireframeIntensityChange(event.target.checked ? 100 : 0);
-  };
-  
-  const handleHyperframeColorChange = (event) => {
-    const newColor = event.target.value;
-    onHyperframeColorChange(newColor);
-  };
-  
-  const handleHyperframeLineColorChange = (event) => {
-    const newColor = event.target.value;
-    onHyperframeLineColorChange(newColor);
-  };
-  
-  const handleCameraViewChange = (event) => {
-    const newView = event.target.value;
-    onCameraViewChange(newView);
-  };
-  
-  const handleEnvironmentChange = (event) => {
-    const newEnv = event.target.value;
-    onEnvironmentChange(newEnv);
-  };
-  
-  const handleEnvironmentHueChange = (event) => {
-    const newHue = parseInt(event.target.value, 10);
-    onEnvironmentHueChange(newHue);
-  };
-  
-  const handleObjectCountChange = (event) => {
-    const newCount = parseInt(event.target.value);
-    onObjectCountChange(newCount);
-  };
-  
-  const handleAnimationStyleChange = (event) => {
-    const newStyle = event.target.value;
-    onAnimationStyleChange(newStyle);
-  };
-  
-  const handleObjectTypeChange = (event) => {
-    const newType = event.target.value;
-    onObjectTypeChange(newType);
-  };
+  // Create handler functions using factories from controlsHandlers.js
+  const handleMetalnessChange = createMetalnessHandler(onMetalnessChange);
+  const handleScaleChange = createScaleHandler(onScaleChange);
+  const handleEmissiveIntensityChange = createEmissiveIntensityHandler(onEmissiveIntensityChange);
+  const handleBaseColorChange = createBaseColorHandler(onBaseColorChange);
+  const handleWireframeIntensityChange = createWireframeIntensityHandler(onWireframeIntensityChange);
+  const handleWireframeToggle = createWireframeToggleHandler(onWireframeIntensityChange);
+  const handleHyperframeColorChange = createHyperframeColorHandler(onHyperframeColorChange);
+  const handleHyperframeLineColorChange = createHyperframeLineColorHandler(onHyperframeLineColorChange);
+  const handleCameraViewChange = createCameraViewHandler(onCameraViewChange);
+  const handleEnvironmentChange = createEnvironmentHandler(onEnvironmentChange);
+  const handleEnvironmentHueChange = createEnvironmentHueHandler(onEnvironmentHueChange);
+  const handleObjectCountChange = createObjectCountHandler(onObjectCountChange);
+  const handleAnimationStyleChange = createAnimationStyleHandler(onAnimationStyleChange);
+  const handleObjectTypeChange = createObjectTypeHandler(onObjectTypeChange);
 
 
   // Lighting event handlers are now handled in LightingControls
