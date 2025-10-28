@@ -311,6 +311,7 @@ $glass-border: rgba(255, 255, 255, 0.2);
 ## 📊 Progress Tracking
 
 - [x] Phase 1: Setup + Test with CustomSelect ✅ **COMPLETE**
+
   - [x] Install sass package
   - [x] Create utils/handlers directory
   - [x] Extract CustomSelect handlers to utils
@@ -319,6 +320,7 @@ $glass-border: rgba(255, 255, 255, 0.2);
   - [x] Test app - NO ERRORS ✅
 
 - [x] Phase 2: Controls Component ✅ **COMPLETE** (Commit: 3ada85e)
+
   - [x] Migrate Controls/controls.css → Controls.module.scss (600+ lines)
   - [x] Update all className attributes to use CSS Modules syntax
   - [x] Convert kebab-case classes to camelCase (controls-toggle-btn → controlsToggleBtn)
@@ -326,16 +328,19 @@ $glass-border: rgba(255, 255, 255, 0.2);
   - [x] Test app - NO VISUAL CHANGES ✅
 
 - [ ] Phase 3: Effects Components (2 components)
+
   - [ ] CustomCursor.css → CustomCursor.module.scss
   - [ ] QuantumCursor.css → QuantumCursor.module.scss
 
 - [ ] Phase 4: Scene Components (1 component)
+
   - [ ] SceneCard.css → SceneCard.module.scss
 
 - [ ] Phase 5: Large Page Components (4 components)
+
   - [ ] NavBar (nav.css)
   - [ ] HomePage
-  - [ ] ShowcaseGallery  
+  - [ ] ShowcaseGallery
   - [ ] MyScenesPage/LoginPage/SignUpPage
 
 - [ ] Create shared SCSS partials (\_variables, \_mixins, \_functions)
