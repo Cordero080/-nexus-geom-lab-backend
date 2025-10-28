@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import ScrambleButton from "../ScrambleButton/ScrambleButton";
 import styles from "./SceneCard.module.scss";
+import { formatDate, getPlaceholderGradient } from "../../utils/coreHelpers";
 
 /**
  * SceneCard - Reusable card component for scene galleries
@@ -125,33 +126,7 @@ export default function SceneCard({
     }
   };
 
-  // Format date
-  const formatDate = (dateString) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString("en-US", {
-      month: "short",
-      day: "numeric",
-      year: "numeric",
-    });
-  };
-
-  // Generate placeholder gradient (based on scene ID for consistency)
-  const getPlaceholderGradient = (id) => {
-    const colors = [
-      ["#667eea", "#764ba2"], // Purple
-      ["#f093fb", "#f5576c"], // Pink
-      ["#4facfe", "#00f2fe"], // Blue
-      ["#43e97b", "#38f9d7"], // Green
-      ["#fa709a", "#fee140"], // Orange/Pink
-      ["#30cfd0", "#330867"], // Teal/Purple
-    ];
-
-    // Simple hash to pick consistent color
-    const hash = id?.split("").reduce((acc, char) => acc + char.charCodeAt(0), 0) || 0;
-    const [color1, color2] = colors[hash % colors.length];
-
-    return `linear-gradient(135deg, ${color1} 0%, ${color2} 100%)`;
-  };
+  // Helper functions now imported from utils/coreHelpers.js
 
   return (
     <div className={`${styles.sceneCard} ${isHighlighted ? styles.sceneCardHighlighted : ''}`}>

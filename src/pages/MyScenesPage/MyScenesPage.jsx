@@ -5,23 +5,12 @@ import { useAuth } from "../../context/AuthContext";
 import { getMyScenes } from "../../services/sceneApi"; // Import API function
 import SceneCard from "../../components/Scenes/SceneCard"; // Corrected import path to Scenes
 import CustomSelect from "../../components/CustomSelect/CustomSelect";
+import { quantumCollapse } from "../../utils/coreHelpers";
 import "./MyScenesPage.css";
 import "../../styles/shared.css";
 import "../../nav/nav.css";
 
-/**
- * QUANTUM COLLAPSE UTILITY
- * 
- * Simulates quantum superposition collapse - randomly selects one state from multiple possibilities.
- * This is inspired by quantum mechanics where particles exist in multiple states simultaneously
- * until "observed" (measured), at which point they collapse into a single definite state.
- * 
- * @param {Array} states - Array of possible quantum states to collapse into
- * @returns {*} - Randomly selected state from the array
- */
-function quantumCollapse(states) {
-  return states[Math.floor(Math.random() * states.length)];
-}
+// quantumCollapse now imported from utils/coreHelpers.js
 
 /**
  * PORTAL WORLDS SYSTEM
