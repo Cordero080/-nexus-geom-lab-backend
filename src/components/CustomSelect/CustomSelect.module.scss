@@ -1,0 +1,142 @@
+// Custom Select Styles - CSS Modules + SCSS
+// Following instructor requirement: styles coupled with component
+
+// Variables
+$primary-color: #00ffff;
+$secondary-color: #ff00ff;
+$bg-dark: rgba(10, 15, 26, 0.7);
+$bg-dark-solid: rgba(10, 15, 26, 0.98);
+$border-color: rgba(255, 255, 255, 0.2);
+$border-color-hover: rgba(0, 255, 255, 0.4);
+$border-color-active: rgba(0, 255, 255, 0.6);
+
+// Mixins
+@mixin glass-morphism {
+  backdrop-filter: blur(10px);
+  background: $bg-dark;
+}
+
+@mixin glow-shadow($color, $intensity: 0.1) {
+  box-shadow: 
+    0 2px 8px rgba($color, $intensity),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+.customSelect {
+  position: relative;
+  min-width: 200px;
+
+  &__trigger {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 16px;
+    border-radius: 8px;
+    border: 1px solid $border-color;
+    color: #ffffff;
+    font-family: 'Orbitron', 'JetBrains Mono', monospace;
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    user-select: none;
+    @include glass-morphism;
+    @include glow-shadow($primary-color);
+
+    &:hover {
+      border-color: $border-color-hover;
+      background: $bg-dark-solid;
+      box-shadow: 
+        0 4px 16px rgba($primary-color, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    }
+
+    &.open {
+      border-color: $border-color-active;
+      box-shadow: 
+        0 0 0 3px rgba($primary-color, 0.1),
+        0 4px 16px rgba($primary-color, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.15);
+
+      .customSelect__arrow {
+        transform: rotate(180deg);
+      }
+    }
+  }
+
+  &__value {
+    flex: 1;
+  }
+
+  &__arrow {
+    margin-left: 12px;
+    font-size: 0.7rem;
+    transition: transform 0.2s ease;
+    color: rgba($primary-color, 0.8);
+  }
+
+  &__dropdown {
+    position: absolute;
+    top: calc(100% + 4px);
+    left: 0;
+    right: 0;
+    background: $bg-dark-solid;
+    backdrop-filter: blur(20px);
+    border: 1px solid $border-color-hover;
+    border-radius: 8px;
+    overflow: hidden;
+    z-index: 1000;
+    box-shadow: 
+      0 8px 32px rgba($primary-color, 0.2),
+      inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    animation: dropdownFadeIn 0.2s ease;
+  }
+
+  &__option {
+    padding: 10px 16px;
+    font-family: 'Orbitron', 'JetBrains Mono', monospace;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.8);
+    cursor: pointer;
+    transition: all 0.15s ease;
+    border-left: 3px solid transparent;
+
+    &:hover {
+      background: linear-gradient(90deg, 
+        rgba($primary-color, 0.15) 0%, 
+        rgba($secondary-color, 0.1) 100%);
+      color: $primary-color;
+      border-left-color: $primary-color;
+      text-shadow: 0 0 8px rgba($primary-color, 0.5);
+    }
+
+    &.selected {
+      background: linear-gradient(90deg, 
+        rgba($primary-color, 0.2) 0%, 
+        rgba($secondary-color, 0.15) 100%);
+      color: $primary-color;
+      font-weight: 600;
+      border-left-color: $primary-color;
+      text-shadow: 0 0 8px rgba($primary-color, 0.5);
+
+      &::after {
+        content: '✓';
+        float: right;
+        margin-left: 12px;
+        color: $primary-color;
+      }
+    }
+  }
+}
+
+@keyframes dropdownFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

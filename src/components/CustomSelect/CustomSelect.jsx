@@ -1,45 +1,46 @@
 import React, { useState, useRef, useEffect } from 'react';
-import './CustomSelect.css';
+import {
+  createClickOutsideHandler,
+  createSelectHandler,
+  createToggleHandler,
+} from '../../utils/handlers/customSelectHandlers';
+import styles from './CustomSelect.module.scss';
 
 const CustomSelect = ({ value, onChange, options, label }) => {
   const [isOpen, setIsOpen] = useState(false);
   const selectRef = useRef(null);
 
-  // Close dropdown when clicking outside
+  // Close dropdown when clicking outside - handler from utils
   useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (selectRef.current && !selectRef.current.contains(event.target)) {
-        setIsOpen(false);
-      }
-    };
-
+    const handleClickOutside = createClickOutsideHandler(selectRef, setIsOpen);
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  const handleSelect = (optionValue) => {
-    onChange(optionValue);
-    setIsOpen(false);
-  };
+  // Handler for selecting option - from utils
+  const handleSelect = createSelectHandler(onChange, setIsOpen);
+
+  // Handler for toggling dropdown - from utils
+  const handleToggle = createToggleHandler(isOpen, setIsOpen);
 
   const selectedOption = options.find(opt => opt.value === value);
 
   return (
-    <div className="custom-select" ref={selectRef}>
+    <div className={styles.customSelect} ref={selectRef}>
       <div 
-        className={`custom-select__trigger ${isOpen ? 'open' : ''}`}
-        onClick={() => setIsOpen(!isOpen)}
+        className={`${styles.customSelect__trigger} ${isOpen ? styles.open : ''}`}
+        onClick={handleToggle}
       >
-        <span className="custom-select__value">{selectedOption?.label}</span>
-        <span className="custom-select__arrow">{isOpen ? '▲' : '▼'}</span>
+        <span className={styles.customSelect__value}>{selectedOption?.label}</span>
+        <span className={styles.customSelect__arrow}>{isOpen ? '▲' : '▼'}</span>
       </div>
       
       {isOpen && (
-        <div className="custom-select__dropdown">
+        <div className={styles.customSelect__dropdown}>
           {options.map((option) => (
             <div
               key={option.value}
-              className={`custom-select__option ${option.value === value ? 'selected' : ''}`}
+              className={`${styles.customSelect__option} ${option.value === value ? styles.selected : ''}`}
               onClick={() => handleSelect(option.value)}
             >
               {option.label}

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../../context/AuthContext';
 import { useScene } from '../../../context/SceneContext';
 import { saveScene } from '../../../services/sceneApi';
@@ -11,6 +12,7 @@ import '../../../styles/shared.css';
 function SaveButton ({ sceneConfig, textColor }) {
   //get authentication state and token from AuthContext
   const { token, isAuthenticated, addUnlockedNoetechs } = useAuth();
+  const navigate = useNavigate();
 
   //get scene context functions and state
   const { sceneName, setSceneName } = useScene();
@@ -54,6 +56,10 @@ try {
     } catch {}
   }
   alert(message);
+
+  // Navigate to scenes page with the newly saved scene ID
+  const savedSceneId = result.scene?.id || result.id;
+  navigate('/scenes', { state: { highlightSceneId: savedSceneId } });
 
 } catch (error) {
   //Something went wrong --> show error

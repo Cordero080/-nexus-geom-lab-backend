@@ -134,3 +134,426 @@
   0% { transform: translateX(-100%); }
   100% { transform: translateX(100%); }
 }
+
+/* Save Modal Overlay */
+.save-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10000;
+  animation: fadeIn 0.2s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* Save Modal Container */
+.save-modal {
+  position: relative;
+  background: linear-gradient(135deg, rgba(10, 15, 26, 0.95) 0%, rgba(20, 25, 40, 0.95) 100%);
+  border: 2px solid transparent;
+  background-clip: padding-box;
+  box-shadow: 
+    0 0 40px rgba(0, 255, 255, 0.3),
+    0 0 80px rgba(255, 0, 204, 0.2),
+    inset 0 0 40px rgba(0, 255, 255, 0.05);
+  padding: 32px;
+  min-width: 400px;
+  max-width: 500px;
+  animation: modalSlideIn 0.3s ease-out;
+}
+
+@keyframes modalSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-30px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Close Button */
+.save-modal__close {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  background: none;
+  border: none;
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 24px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  padding: 4px 8px;
+  line-height: 1;
+}
+
+.save-modal__close:hover {
+  color: #ff00cc;
+  transform: rotate(90deg);
+  text-shadow: 0 0 10px rgba(255, 0, 204, 0.8);
+}
+
+/* Modal Title */
+.save-modal__title {
+  font-family: 'Orbitron', 'JetBrains Mono', monospace;
+  font-size: 24px;
+  font-weight: 700;
+  color: #00ffff;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin: 0 0 24px 0;
+  text-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
+}
+
+/* Input Group */
+.save-modal__input-group {
+  margin-bottom: 24px;
+}
+
+.save-modal__input-group label {
+  display: block;
+  font-family: 'Orbitron', monospace;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.7);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 8px;
+}
+
+/* Input Field */
+.save-modal__input {
+  width: 100%;
+  padding: 12px 16px;
+  background: rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(0, 255, 255, 0.3);
+  color: #ffffff;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 14px;
+  transition: all 0.3s ease;
+  box-sizing: border-box;
+}
+
+.save-modal__input:focus {
+  outline: none;
+  border-color: #00ffff;
+  box-shadow: 0 0 20px rgba(0, 255, 255, 0.3);
+  background: rgba(0, 0, 0, 0.6);
+}
+
+.save-modal__input::placeholder {
+  color: rgba(255, 255, 255, 0.3);
+}
+
+/* Info Section */
+.save-modal__info {
+  margin-bottom: 24px;
+  padding: 12px;
+  background: rgba(0, 255, 255, 0.05);
+  border-left: 3px solid #00ffff;
+}
+
+.save-modal__current-name {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.8);
+  margin: 0;
+}
+
+.save-modal__current-name strong {
+  color: #00ffff;
+  text-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+}
+
+/* Action Buttons Container */
+.save-modal__actions {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+/* Button Base */
+.save-modal__btn {
+  padding: 14px 24px;
+  font-family: 'Orbitron', monospace;
+  font-size: 14px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  border: 2px solid transparent;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  background-clip: padding-box;
+}
+
+.save-modal__btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Save (Update) Button */
+.save-modal__btn--save {
+  background: 
+    linear-gradient(rgba(0, 100, 255, 0.25), rgba(0, 100, 255, 0.25)) padding-box,
+    linear-gradient(90deg, #0066ff 0%, #00ffff 100%) border-box;
+  color: #ccffff;
+  text-shadow: 0 0 8px rgba(0, 255, 255, 0.6);
+  box-shadow: 0 0 20px rgba(0, 100, 255, 0.3);
+}
+
+.save-modal__btn--save:hover:not(:disabled) {
+  background: 
+    linear-gradient(rgba(0, 100, 255, 0.35), rgba(0, 100, 255, 0.35)) padding-box,
+    linear-gradient(90deg, #0066ff 0%, #00ffff 100%) border-box;
+  color: #ffffff;
+  text-shadow: 0 0 12px rgba(0, 255, 255, 0.8);
+  box-shadow: 0 0 30px rgba(0, 100, 255, 0.5);
+  transform: translateY(-2px);
+}
+
+/* Save As New Button */
+.save-modal__btn--save-as-new {
+  background: 
+    linear-gradient(rgba(255, 0, 204, 0.25), rgba(255, 0, 204, 0.25)) padding-box,
+    linear-gradient(90deg, #ff00cc 0%, #ffaa00 100%) border-box;
+  color: #ffccff;
+  text-shadow: 0 0 8px rgba(255, 0, 204, 0.6);
+  box-shadow: 0 0 20px rgba(255, 0, 204, 0.3);
+}
+
+.save-modal__btn--save-as-new:hover:not(:disabled) {
+  background: 
+    linear-gradient(rgba(255, 0, 204, 0.35), rgba(255, 0, 204, 0.35)) padding-box,
+    linear-gradient(90deg, #ff00cc 0%, #ffaa00 100%) border-box;
+  color: #ffffff;
+  text-shadow: 0 0 12px rgba(255, 0, 204, 0.8);
+  box-shadow: 0 0 30px rgba(255, 0, 204, 0.5);
+  transform: translateY(-2px);
+}
+
+/* Save As New Section (with input) */
+.save-modal__save-as-new-section {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.save-modal__save-as-new-section .save-modal__input {
+  margin-bottom: 4px;
+}
+
+/* Hint Text */
+.save-modal__hint {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.5);
+  text-align: center;
+  margin-top: 16px;
+}
+
+/* Message Text (for exit modal) */
+.save-modal__message {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.7);
+  text-align: center;
+  margin: 0 0 24px 0;
+  line-height: 1.6;
+}
+
+/* Exit Without Saving Button */
+.save-modal__btn--exit {
+  background: 
+    linear-gradient(rgba(255, 51, 102, 0.25), rgba(255, 51, 102, 0.25)) padding-box,
+    linear-gradient(90deg, #ff3366 0%, #ff0066 100%) border-box;
+  color: #ffccdd;
+  text-shadow: 0 0 8px rgba(255, 51, 102, 0.6);
+  box-shadow: 0 0 20px rgba(255, 51, 102, 0.3);
+}
+
+.save-modal__btn--exit:hover:not(:disabled) {
+  background: 
+    linear-gradient(rgba(255, 51, 102, 0.35), rgba(255, 51, 102, 0.35)) padding-box,
+    linear-gradient(90deg, #ff3366 0%, #ff0066 100%) border-box;
+  color: #ffffff;
+  text-shadow: 0 0 12px rgba(255, 51, 102, 0.8);
+  box-shadow: 0 0 30px rgba(255, 51, 102, 0.5);
+  transform: translateY(-2px);
+}
+
+/* Cancel Button */
+.save-modal__btn--cancel {
+  background: 
+    linear-gradient(rgba(100, 100, 100, 0.2), rgba(100, 100, 100, 0.2)) padding-box,
+    linear-gradient(90deg, #666666 0%, #888888 100%) border-box;
+  color: rgba(255, 255, 255, 0.6);
+  text-shadow: none;
+  box-shadow: 0 0 10px rgba(100, 100, 100, 0.2);
+}
+
+.save-modal__btn--cancel:hover:not(:disabled) {
+  background: 
+    linear-gradient(rgba(100, 100, 100, 0.3), rgba(100, 100, 100, 0.3)) padding-box,
+    linear-gradient(90deg, #666666 0%, #888888 100%) border-box;
+  color: rgba(255, 255, 255, 0.85);
+  box-shadow: 0 0 20px rgba(100, 100, 100, 0.3);
+  transform: translateY(-2px);
+}
+
+/* ============================================
+   UNLOCK MODAL STYLES
+   ============================================ */
+
+.unlock-modal {
+  max-width: 500px;
+  text-align: center;
+  padding: 40px 30px;
+}
+
+.unlock-modal__content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+.unlock-modal__icon {
+  font-size: 80px;
+  color: #00ffff;
+  text-shadow: 
+    0 0 20px rgba(0, 255, 255, 0.8),
+    0 0 40px rgba(0, 255, 255, 0.6),
+    0 0 60px rgba(255, 0, 204, 0.4);
+  animation: unlock-bounce 0.6s ease-out, icon-glow 2s ease-in-out infinite;
+}
+
+@keyframes unlock-bounce {
+  0% { 
+    transform: scale(0) rotate(-180deg); 
+    opacity: 0;
+  }
+  50% { 
+    transform: scale(1.2) rotate(10deg); 
+  }
+  100% { 
+    transform: scale(1) rotate(0deg); 
+    opacity: 1;
+  }
+}
+
+@keyframes icon-glow {
+  0%, 100% {
+    text-shadow: 
+      0 0 20px rgba(0, 255, 255, 0.8),
+      0 0 40px rgba(0, 255, 255, 0.6),
+      0 0 60px rgba(255, 0, 204, 0.4);
+  }
+  50% {
+    text-shadow: 
+      0 0 30px rgba(0, 255, 255, 1),
+      0 0 60px rgba(0, 255, 255, 0.8),
+      0 0 90px rgba(255, 0, 204, 0.6);
+  }
+}
+
+.unlock-modal__title {
+  font-family: 'Orbitron', monospace;
+  font-size: 28px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: #00ffff;
+  text-shadow: 
+    0 0 20px rgba(0, 255, 255, 0.8),
+    0 0 40px rgba(0, 255, 255, 0.4);
+  margin: 0;
+  animation: glow-pulse 2s ease-in-out infinite;
+}
+
+@keyframes glow-pulse {
+  0%, 100% { 
+    text-shadow: 
+      0 0 20px rgba(0, 255, 255, 0.8),
+      0 0 40px rgba(0, 255, 255, 0.4);
+  }
+  50% { 
+    text-shadow: 
+      0 0 30px rgba(0, 255, 255, 1),
+      0 0 60px rgba(0, 255, 255, 0.6),
+      0 0 90px rgba(255, 0, 204, 0.3);
+  }
+}
+
+.unlock-modal__noetechs {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin: 10px 0;
+}
+
+.unlock-modal__noetech-name {
+  font-family: 'Orbitron', monospace;
+  font-size: 24px;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  color: #ff00cc;
+  text-shadow: 
+    0 0 15px rgba(255, 0, 204, 0.8),
+    0 0 30px rgba(255, 0, 204, 0.4);
+  padding: 12px 24px;
+  background: rgba(255, 0, 204, 0.1);
+  border: 2px solid rgba(255, 0, 204, 0.3);
+  border-radius: 8px;
+  animation: slide-in 0.5s ease-out backwards;
+}
+
+.unlock-modal__noetech-name:nth-child(2) {
+  animation-delay: 0.1s;
+}
+
+.unlock-modal__noetech-name:nth-child(3) {
+  animation-delay: 0.2s;
+}
+
+@keyframes slide-in {
+  from {
+    transform: translateX(-30px);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+.unlock-modal__message {
+  font-family: 'Orbitron', monospace;
+  font-size: 16px;
+  color: rgba(255, 255, 255, 0.8);
+  margin: 10px 0 20px 0;
+  letter-spacing: 0.05em;
+}
+
+.unlock-modal__actions {
+  display: flex;
+  gap: 16px;
+  width: 100%;
+  margin-top: 10px;
+}
+
+.unlock-modal__actions .save-modal__btn {
+  flex: 1;
+  padding: 14px 20px;
+  font-size: 13px;
+}

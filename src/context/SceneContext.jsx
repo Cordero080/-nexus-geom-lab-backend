@@ -140,31 +140,16 @@ export function SceneProvider({ children }) {
    * @returns {Promise<void>}
    */
   const deleteScene = useCallback(async (sceneId, token) => {
-    // TODO: Replace with actual API call when backend is ready
-
-    // If deleting current scene, reset context
-    if (sceneId === currentSceneId) {
-      resetScene();
-    }
-
-    /* 
-    // Real implementation when backend is ready:
-    const response = await fetch(`${API_URL}/scenes/${sceneId}`, {
-      method: 'DELETE',
-      headers: {
-        'Authorization': `Bearer ${token}`
-      }
-    });
+    // Import the deleteScene API function at the top of the file
+    const { deleteScene: deleteSceneAPI } = await import('../services/sceneApi');
     
-    if (!response.ok) {
-      throw new Error('Failed to delete scene');
-    }
+    // Call the real API
+    await deleteSceneAPI(sceneId, token);
     
     // If deleting current scene, reset context
     if (sceneId === currentSceneId) {
       resetScene();
     }
-    */
   }, [currentSceneId]);
 
   /**

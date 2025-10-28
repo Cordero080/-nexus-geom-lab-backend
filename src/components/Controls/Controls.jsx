@@ -36,6 +36,7 @@ function Controls({
   const [materialOpen, setMaterialOpen] = useState(false)   // Material Properties section closed by default
   const [sceneOpen, setSceneOpen] = useState(false)         // Scene Controls section closed by default
   const [lightingOpen, setLightingOpen] = useState(false)   // Lighting Controls section closed by default
+  const [isHidden, setIsHidden] = useState(false)           // Controls panel visibility state
 
   /*
   // EVENT HANDLER FUNCTIONS
@@ -135,7 +136,28 @@ function Controls({
    */
   return (
     <>
-      <div className="controls">
+      {/* Toggle Button - Shows when controls are hidden */}
+      {isHidden && (
+        <button 
+          className="controls-toggle-btn controls-toggle-btn--show"
+          onClick={() => setIsHidden(false)}
+          title="Show Controls"
+        >
+          ◀
+        </button>
+      )}
+
+      <div className={`controls ${isHidden ? 'controls--hidden' : ''}`}>
+        {/* Hide Button - Shows when controls are visible */}
+        <button 
+          className="controls-toggle-btn controls-toggle-btn--hide"
+          onClick={() => setIsHidden(true)}
+          title="Hide Controls"
+        >
+          <span>▶</span>
+          <span className="controls-toggle-text">Hide</span>
+        </button>
+
       {/* 
        * DEBUG DISPLAY SECTION
        * Shows current values FROM App.jsx - these update automatically when state changes
@@ -249,14 +271,30 @@ function Controls({
         </label>
         <select value={objectType} onChange={handleObjectTypeChange}>
           <option value="quantummanifold">♾️ Quantum Manifold (Klein+)</option>
+          <option value="compoundquantummanifold">
+            🌀 Cpd-Quantum Manifold
+          </option>
           <option value="icosahedron">🔯 Cpd-Icosahedron</option>
           <option value="sphere">⚪ Cpd-Sphere (Cross)</option>
+          <option value="compoundsphere">💫 Super-Cpd-Sphere</option>
+          <option value="floatingcity">🏙️ Floating City</option>
+          <option value="compoundfloatingcity">🌆 Compound Curves</option>
+          <option value="torus">🍩 Cpd-Torus</option>
+          <option value="compoundtorus">🌊 Super-Cpd-Torus</option>
+          <option value="capsule">💊 Capsule</option>
+          <option value="mobiussphere">🌀 Möbius Sphere</option>
           <option value="cube">🧊 Cube</option>
           <option value="box">🔷 Cpd-Tesseract</option>
           <option value="cpdtesseract">💎 Mega-Tesseract</option>
           <option value="octahedron">🔸 Cpd-Octahedron</option>
           <option value="tetrahedron">🔻 Cpd-Tetrahedron</option>
           <option value="120cell">🌐 120-Cell</option>
+          <option value="compound120cell">🌌 Cpd-120-Cell</option>
+          <option value="600cell">🔮 600-Cell</option>
+          <option value="compound600cell">✨ Cpd-600-Cell</option>
+          <option value="24cell">⬡ 24-Cell</option>
+          <option value="compound24cell">🔶 Cpd-24-Cell</option>
+          <option value="16cell">◆ 16-Cell</option>
         </select>
 
         {/* Animation Style Control */}

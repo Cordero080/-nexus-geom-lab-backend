@@ -6,9 +6,14 @@ import { nearestVertexIndex } from "../../utils/geometryHelpers";
  * Uses EdgesGeometry to automatically extract all edges from compound geometry
  * @param {THREE.BufferGeometry} geometry - The tetrahedron geometry
  * @param {THREE.Material} wireframeMaterial - Material for the wireframe
+ * @param {number} radiusScale - Scale factor for cylinder radius (default 1.0)
  * @returns {THREE.Group} The wireframe group with edge pairs in userData
  */
-export function createTetrahedronWireframe(geometry, wireframeMaterial) {
+export function createTetrahedronWireframe(
+  geometry,
+  wireframeMaterial,
+  radiusScale = 1.0
+) {
   // Use EdgesGeometry to reliably get all edges (6 for simple, 12 for compound)
   const edgesGeometry = new THREE.EdgesGeometry(geometry);
   const edgeVertices = edgesGeometry.attributes.position.array;
@@ -28,8 +33,13 @@ export function createTetrahedronWireframe(geometry, wireframeMaterial) {
     );
     const distance = start.distanceTo(end);
 
-    // Create thick cylinder for tetrahedron edge
-    const cylinderGeom = new THREE.CylinderGeometry(0.011, 0.011, distance, 8);
+    // Create thick cylinder for tetrahedron edge with scaled radius
+    const cylinderGeom = new THREE.CylinderGeometry(
+      0.011 * radiusScale,
+      0.011 * radiusScale,
+      distance,
+      8
+    );
     const cylinderMesh = new THREE.Mesh(cylinderGeom, wireframeMaterial);
 
     // Position cylinder between start and end points
@@ -59,9 +69,14 @@ export function createTetrahedronWireframe(geometry, wireframeMaterial) {
  * Create a thick wireframe for IcosahedronGeometry using cylinders
  * @param {THREE.BufferGeometry} geometry - The icosahedron geometry
  * @param {THREE.Material} wireframeMaterial - Material for the wireframe
+ * @param {number} radiusScale - Scale factor for cylinder radius (default 1.0)
  * @returns {THREE.Group} The wireframe group with edge pairs in userData
  */
-export function createIcosahedronWireframe(geometry, wireframeMaterial) {
+export function createIcosahedronWireframe(
+  geometry,
+  wireframeMaterial,
+  radiusScale = 1.0
+) {
   // Use EdgesGeometry to reliably get all 30 edges
   const edgesGeometry = new THREE.EdgesGeometry(geometry);
   const edgeVertices = edgesGeometry.attributes.position.array;
@@ -84,8 +99,13 @@ export function createIcosahedronWireframe(geometry, wireframeMaterial) {
     const direction = end.clone().sub(start);
     const distance = direction.length();
 
-    // Create thick cylinder for icosahedron edge - ADJUST 0.012 for radius
-    const cylinderGeom = new THREE.CylinderGeometry(0.012, 0.012, distance, 8);
+    // Create thick cylinder for icosahedron edge with scaled radius
+    const cylinderGeom = new THREE.CylinderGeometry(
+      0.012 * radiusScale,
+      0.012 * radiusScale,
+      distance,
+      8
+    );
     const cylinderMesh = new THREE.Mesh(cylinderGeom, wireframeMaterial);
 
     // Position cylinder at midpoint
@@ -118,9 +138,14 @@ export function createIcosahedronWireframe(geometry, wireframeMaterial) {
  * Create a thick wireframe for DodecahedronGeometry using cylinders
  * @param {THREE.BufferGeometry} geometry - The dodecahedron geometry
  * @param {THREE.Material} wireframeMaterial - Material for the wireframe
+ * @param {number} radiusScale - Scale factor for cylinder radius (default 1.0)
  * @returns {THREE.Group} The wireframe group with edge pairs in userData
  */
-export function createDodecahedronWireframe(geometry, wireframeMaterial) {
+export function createDodecahedronWireframe(
+  geometry,
+  wireframeMaterial,
+  radiusScale = 1.0
+) {
   // Use EdgesGeometry to get all 30 edges (dodecahedron has 30 edges)
   const edgesGeometry = new THREE.EdgesGeometry(geometry);
   const edgeVertices = edgesGeometry.attributes.position.array;
@@ -143,8 +168,13 @@ export function createDodecahedronWireframe(geometry, wireframeMaterial) {
     const direction = end.clone().sub(start);
     const distance = direction.length();
 
-    // Create thick cylinder for dodecahedron edge
-    const cylinderGeom = new THREE.CylinderGeometry(0.012, 0.012, distance, 8);
+    // Create thick cylinder for dodecahedron edge with scaled radius
+    const cylinderGeom = new THREE.CylinderGeometry(
+      0.012 * radiusScale,
+      0.012 * radiusScale,
+      distance,
+      8
+    );
     const cylinderMesh = new THREE.Mesh(cylinderGeom, wireframeMaterial);
 
     // Position cylinder at midpoint

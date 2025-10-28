@@ -277,12 +277,27 @@ export default function HomePage() {
               </div>
             </div>
             
-            {/* Temporarily always show Enter Geom Lab while building */}
-            <BeamScanButton
-              onClick={() => window.location.href = '/geom-lab'}
-              label="Enter GE0M LAB"
-              style={{ margin: '32px auto 0', display: 'block' }}
-            />
+            {/* Show Enter Geom Lab only when logged in, Login/Signup when logged out */}
+            {isAuthenticated ? (
+              <BeamScanButton
+                onClick={() => window.location.href = '/geom-lab'}
+                label="Enter GE0M LAB"
+                style={{ margin: '32px auto 0', display: 'block' }}
+              />
+            ) : (
+              <div style={{ display: 'flex', gap: '16px', justifyContent: 'center', marginTop: '32px' }}>
+                <BeamScanButton
+                  onClick={() => window.location.href = '/login'}
+                  label="LOGIN"
+                  style={{ display: 'block' }}
+                />
+                <BeamScanButton
+                  onClick={() => window.location.href = '/signup'}
+                  label="SIGN UP"
+                  style={{ display: 'block' }}
+                />
+              </div>
+            )}
             
             <div className="reality-particles"></div>
           </div>

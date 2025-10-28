@@ -157,12 +157,18 @@ export function useMaterialUpdates(objectsRef, materialProps) {
 
           // UPDATE HYPERFRAME ELEMENTS
           if (centerLinesMaterial) {
-            centerLinesMaterial.opacity = 0.8; // Keep bright red lines visible
+            // Preserve base opacity (e.g., 0.18 for floating city, 0.6 for others)
+            const baseOpacity =
+              centerLinesMaterial.userData?.baseOpacity ?? 0.8;
+            centerLinesMaterial.opacity = baseOpacity;
             centerLinesMaterial.needsUpdate = true;
           }
 
           if (curvedLinesMaterial) {
-            curvedLinesMaterial.opacity = 0.8; // Keep bright green lines visible
+            // Preserve base opacity (e.g., 0.12 for floating city, 0.4 for others)
+            const baseOpacity =
+              curvedLinesMaterial.userData?.baseOpacity ?? 0.8;
+            curvedLinesMaterial.opacity = baseOpacity;
             curvedLinesMaterial.needsUpdate = true;
           }
 

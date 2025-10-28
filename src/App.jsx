@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Routes, Route, useNavigate, Navigate, useLocation } from 'react-router-dom';
 import ThreeScene from './features/sceneControls/ThreeScene';
 import Controls from './components/Controls/Controls';
-import SaveButton from './components/Controls/SaveButton/SaveButton';
+import SaveControls from './components/Controls/SaveButton/SaveControls';
 import ExitButton from './components/Controls/ExitButton/ExitButton';
 import HomePage from './HomePage/HomePage';
 import NavBar from './nav/NavBar';
@@ -262,248 +262,41 @@ function GeomLab() {
   return (
     <>
       <NavBar />
-      <SaveButton sceneConfig={sceneConfig} textColor="#ccffff" />
+      <SaveControls sceneConfig={sceneConfig} textColor="#ccffff" />
       <ExitButton onClick={handleExit} textColor="#ffccdd" />
       
       {/* Save Prompt Modal */}
       {showSavePrompt && (
-        <div 
-          style={{
-            position: 'fixed',
-            top: 0,
-            left: 0,
-            width: '100vw',
-            height: '100vh',
-            background: 'rgba(0, 0, 0, 0.65)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            zIndex: 10000,
-            backdropFilter: 'blur(12px) saturate(180%)'
-          }}
-          onClick={handleCancelExit}
-        >
-          <div 
-            style={{
-              background: `
-                radial-gradient(ellipse at top left, rgba(78, 205, 196, 0.15) 0%, transparent 50%),
-                radial-gradient(ellipse at bottom right, rgba(136, 197, 233, 0.15) 0%, transparent 50%),
-                linear-gradient(135deg, rgba(81, 68, 124, 0.35) 0%, rgba(64, 81, 149, 0.45) 50%, rgba(81, 68, 124, 0.55) 100%)
-              `,
-              padding: '40px 50px',
-              border: '1px solid rgba(78, 205, 196, 0.4)',
-              boxShadow: `
-                0 8px 32px rgba(78, 205, 196, 0.3),
-                0 4px 16px rgba(136, 197, 233, 0.25),
-                inset 0 1px 0 rgba(255, 255, 255, 0.2),
-                inset 0 -1px 0 rgba(0, 0, 0, 0.1),
-                inset 0 0 40px rgba(78, 205, 196, 0.1)
-              `,
-              backdropFilter: 'blur(12px) saturate(180%)',
-              clipPath: `polygon(
-                14px 0,
-                100% 0,
-                100% calc(100% - 14px),
-                calc(100% - 14px) 100%,
-                0 100%,
-                0 14px
-              )`,
-              maxWidth: '500px',
-              textAlign: 'center'
-            }}
-            onClick={(e) => e.stopPropagation()}
-          >
-            <h2 style={{
-              color: 'rgba(255, 255, 255, 0.95)',
-              fontSize: '20px',
-              marginBottom: '15px',
-              fontWeight: '600',
-              letterSpacing: '0.1rem',
-              fontFamily: "'JetBrains Mono', monospace",
-              textTransform: 'uppercase'
-            }}>
-              Save Scene?
-            </h2>
+        <div className="save-modal-overlay" onClick={handleCancelExit}>
+          <div className="save-modal" onClick={(e) => e.stopPropagation()}>
+            <button className="save-modal__close" onClick={handleCancelExit}>
+              ✕
+            </button>
             
-            <p style={{
-              color: 'rgba(255, 255, 255, 0.7)',
-              fontSize: '14px',
-              marginBottom: '30px',
-              lineHeight: '1.5',
-              fontFamily: "'JetBrains Mono', monospace"
-            }}>
+            <h2 className="save-modal__title">Save Scene?</h2>
+            
+            <p className="save-modal__message">
               Your creation hasn't been saved yet.
             </p>
             
-            <div style={{ display: 'flex', gap: '12px', justifyContent: 'center', flexWrap: 'wrap' }}>
+            <div className="save-modal__actions">
               <button
                 onClick={handleSaveFromModal}
-                className="angled-corners"
-                style={{
-                  padding: '0.7rem 1.4rem',
-                  fontSize: '13px',
-                  fontWeight: '600',
-                  letterSpacing: '0.1rem',
-                  background: `
-                    radial-gradient(ellipse at top left, rgba(0, 255, 255, 0.15) 0%, transparent 50%),
-                    radial-gradient(ellipse at bottom right, rgba(255, 0, 204, 0.15) 0%, transparent 50%),
-                    linear-gradient(135deg, rgba(81, 68, 124, 0.35) 0%, rgba(64, 81, 149, 0.45) 50%, rgba(81, 68, 124, 0.55) 100%)
-                  `,
-                  boxShadow: `
-                    0 8px 32px rgba(0, 255, 255, 0.25),
-                    0 4px 16px rgba(255, 0, 204, 0.2),
-                    inset 0 1px 0 rgba(255, 255, 255, 0.2),
-                    inset 0 -1px 0 rgba(0, 0, 0, 0.1),
-                    inset 0 0 40px rgba(0, 255, 255, 0.08)
-                  `,
-                  border: '1px solid rgba(0, 255, 255, 0.35)',
-                  backdropFilter: 'blur(12px) saturate(180%)',
-                  color: '#00ffff',
-                  cursor: 'pointer',
-                  transition: 'all 0.2s',
-                  fontFamily: "'JetBrains Mono', monospace",
-                  textTransform: 'uppercase'
-                }}
-                onMouseEnter={(e) => {
-                  e.target.style.background = `
-                    radial-gradient(ellipse at top left, rgba(0, 255, 255, 0.25) 0%, transparent 50%),
-                    radial-gradient(ellipse at bottom right, rgba(255, 0, 204, 0.25) 0%, transparent 50%),
-                    linear-gradient(135deg, rgba(81, 68, 124, 0.5) 0%, rgba(64, 81, 149, 0.6) 50%, rgba(81, 68, 124, 0.7) 100%)
-                  `;
-                  e.target.style.color = '#ffffff';
-                  e.target.style.textShadow = '0 0 10px rgba(0, 255, 255, 0.8)';
-                  e.target.style.boxShadow = '0 12px 48px rgba(0, 255, 255, 0.35)';
-                }}
-                onMouseLeave={(e) => {
-                  e.target.style.background = `
-                    radial-gradient(ellipse at top left, rgba(0, 255, 255, 0.15) 0%, transparent 50%),
-                    radial-gradient(ellipse at bottom right, rgba(255, 0, 204, 0.15) 0%, transparent 50%),
-                    linear-gradient(135deg, rgba(81, 68, 124, 0.35) 0%, rgba(64, 81, 149, 0.45) 50%, rgba(81, 68, 124, 0.55) 100%)
-                  `;
-                  e.target.style.color = '#00ffff';
-                  e.target.style.textShadow = 'none';
-                  e.target.style.boxShadow = `
-                    0 8px 32px rgba(0, 255, 255, 0.25),
-                    0 4px 16px rgba(255, 0, 204, 0.2),
-                    inset 0 1px 0 rgba(255, 255, 255, 0.2),
-                    inset 0 -1px 0 rgba(0, 0, 0, 0.1),
-                    inset 0 0 40px rgba(0, 255, 255, 0.08)
-                  `;
-                }}
+                className="save-modal__btn save-modal__btn--save angled-corners"
               >
                 Save & Exit
               </button>
               
               <button
                 onClick={handleExitWithoutSaving}
-                className="angled-corners"
-                style={{
-                  padding: '0.7rem 1.4rem',
-                  fontSize: '13px',
-                  fontWeight: '600',
-                  letterSpacing: '0.1rem',
-                  background: `
-                    radial-gradient(ellipse at top left, rgba(255, 51, 102, 0.15) 0%, transparent 50%),
-                    radial-gradient(ellipse at bottom right, rgba(255, 0, 102, 0.15) 0%, transparent 50%),
-                    linear-gradient(135deg, rgba(81, 68, 124, 0.35) 0%, rgba(64, 81, 149, 0.45) 50%, rgba(81, 68, 124, 0.55) 100%)
-                  `,
-                  boxShadow: `
-                    0 8px 32px rgba(255, 51, 102, 0.25),
-                    0 4px 16px rgba(255, 0, 102, 0.2),
-                    inset 0 1px 0 rgba(255, 255, 255, 0.2),
-                    inset 0 -1px 0 rgba(0, 0, 0, 0.1),
-                    inset 0 0 40px rgba(255, 51, 102, 0.08)
-                  `,
-                  border: '1px solid rgba(255, 51, 102, 0.35)',
-                  backdropFilter: 'blur(12px) saturate(180%)',
-                  color: '#ff3366',
-                  cursor: 'pointer',
-                  transition: 'all 0.2s',
-                  fontFamily: "'JetBrains Mono', monospace",
-                  textTransform: 'uppercase'
-                }}
-                onMouseEnter={(e) => {
-                  e.target.style.background = `
-                    radial-gradient(ellipse at top left, rgba(255, 51, 102, 0.25) 0%, transparent 50%),
-                    radial-gradient(ellipse at bottom right, rgba(255, 0, 102, 0.25) 0%, transparent 50%),
-                    linear-gradient(135deg, rgba(81, 68, 124, 0.5) 0%, rgba(64, 81, 149, 0.6) 50%, rgba(81, 68, 124, 0.7) 100%)
-                  `;
-                  e.target.style.color = '#ffffff';
-                  e.target.style.textShadow = '0 0 10px rgba(255, 51, 102, 0.8)';
-                  e.target.style.boxShadow = '0 12px 48px rgba(255, 51, 102, 0.35)';
-                }}
-                onMouseLeave={(e) => {
-                  e.target.style.background = `
-                    radial-gradient(ellipse at top left, rgba(255, 51, 102, 0.15) 0%, transparent 50%),
-                    radial-gradient(ellipse at bottom right, rgba(255, 0, 102, 0.15) 0%, transparent 50%),
-                    linear-gradient(135deg, rgba(81, 68, 124, 0.35) 0%, rgba(64, 81, 149, 0.45) 50%, rgba(81, 68, 124, 0.55) 100%)
-                  `;
-                  e.target.style.color = '#ff3366';
-                  e.target.style.textShadow = 'none';
-                  e.target.style.boxShadow = `
-                    0 8px 32px rgba(255, 51, 102, 0.25),
-                    0 4px 16px rgba(255, 0, 102, 0.2),
-                    inset 0 1px 0 rgba(255, 255, 255, 0.2),
-                    inset 0 -1px 0 rgba(0, 0, 0, 0.1),
-                    inset 0 0 40px rgba(255, 51, 102, 0.08)
-                  `;
-                }}
+                className="save-modal__btn save-modal__btn--exit angled-corners"
               >
                 Exit Without Saving
               </button>
               
               <button
                 onClick={handleCancelExit}
-                className="angled-corners"
-                style={{
-                  padding: '0.7rem 1.4rem',
-                  fontSize: '13px',
-                  fontWeight: '600',
-                  letterSpacing: '0.1rem',
-                  background: `
-                    radial-gradient(ellipse at top left, rgba(78, 205, 196, 0.03) 0%, transparent 50%),
-                    radial-gradient(ellipse at bottom right, rgba(136, 197, 233, 0.03) 0%, transparent 50%),
-                    linear-gradient(135deg, rgba(81, 68, 124, 0.15) 0%, rgba(64, 81, 149, 0.2) 50%, rgba(81, 68, 124, 0.25) 100%)
-                  `,
-                  boxShadow: `
-                    0 8px 32px rgba(78, 205, 196, 0.1),
-                    0 4px 16px rgba(136, 197, 233, 0.08),
-                    inset 0 1px 0 rgba(255, 255, 255, 0.1),
-                    inset 0 -1px 0 rgba(0, 0, 0, 0.1),
-                    inset 0 0 40px rgba(136, 197, 233, 0.03)
-                  `,
-                  border: '1px solid rgba(78, 205, 196, 0.15)',
-                  backdropFilter: 'blur(12px) saturate(180%)',
-                  color: 'rgba(255, 255, 255, 0.5)',
-                  cursor: 'pointer',
-                  transition: 'all 0.2s',
-                  fontFamily: "'JetBrains Mono', monospace",
-                  textTransform: 'uppercase'
-                }}
-                onMouseEnter={(e) => {
-                  e.target.style.background = `
-                    radial-gradient(ellipse at top left, rgba(78, 205, 196, 0.08) 0%, transparent 50%),
-                    radial-gradient(ellipse at bottom right, rgba(136, 197, 233, 0.08) 0%, transparent 50%),
-                    linear-gradient(135deg, rgba(81, 68, 124, 0.25) 0%, rgba(64, 81, 149, 0.3) 50%, rgba(81, 68, 124, 0.35) 100%)
-                  `;
-                  e.target.style.color = 'rgba(255, 255, 255, 0.75)';
-                  e.target.style.boxShadow = '0 12px 48px rgba(78, 205, 196, 0.15)';
-                }}
-                onMouseLeave={(e) => {
-                  e.target.style.background = `
-                    radial-gradient(ellipse at top left, rgba(78, 205, 196, 0.03) 0%, transparent 50%),
-                    radial-gradient(ellipse at bottom right, rgba(136, 197, 233, 0.03) 0%, transparent 50%),
-                    linear-gradient(135deg, rgba(81, 68, 124, 0.15) 0%, rgba(64, 81, 149, 0.2) 50%, rgba(81, 68, 124, 0.25) 100%)
-                  `;
-                  e.target.style.color = 'rgba(255, 255, 255, 0.5)';
-                  e.target.style.boxShadow = `
-                    0 8px 32px rgba(78, 205, 196, 0.1),
-                    0 4px 16px rgba(136, 197, 233, 0.08),
-                    inset 0 1px 0 rgba(255, 255, 255, 0.1),
-                    inset 0 -1px 0 rgba(0, 0, 0, 0.1),
-                    inset 0 0 40px rgba(136, 197, 233, 0.03)
-                  `;
-                }}
+                className="save-modal__btn save-modal__btn--cancel angled-corners"
               >
                 Cancel
               </button>

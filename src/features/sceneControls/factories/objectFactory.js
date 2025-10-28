@@ -19,6 +19,12 @@ import { createBoxHyperframe } from "./hyperframeBuilders/boxHyperframe";
 import { createOctahedronHyperframe } from "./hyperframeBuilders/octahedronHyperframe";
 import { createIcosahedronHyperframe } from "./hyperframeBuilders/icosahedronHyperframe";
 import { create120CellHyperframe } from "./hyperframeBuilders/cell120Hyperframe";
+import { createCompound120CellHyperframe } from "./hyperframeBuilders/compoundCell120Hyperframe";
+import { create24CellHyperframe } from "./hyperframeBuilders/cell24Hyperframe";
+import { createCompound24CellHyperframe } from "./hyperframeBuilders/compoundCell24Hyperframe";
+import { create16CellHyperframe } from "./hyperframeBuilders/cell16Hyperframe";
+import { create600CellHyperframe } from "./hyperframeBuilders/cell600Hyperframe";
+import { createCompound600CellHyperframe } from "./hyperframeBuilders/compoundCell600Hyperframe";
 import { createCpdTesseractHyperframe } from "./hyperframeBuilders/cpdTesseractHyperframe";
 import { createMegaTesseractHyperframe } from "./hyperframeBuilders/megaTesseractHyperframe";
 
@@ -170,6 +176,7 @@ export function createSceneObject(config) {
     (geometry.userData && geometry.userData.baseType === "IcosahedronGeometry")
   ) {
     wireframeMaterial = createWireframeMaterial(materialConfig);
+    // 600-cell uses same icosahedron wireframe as compound icosahedron
     wireframeMesh = createIcosahedronWireframe(geometry, wireframeMaterial);
   } else if (
     geometry.type === "DodecahedronGeometry" ||
@@ -183,7 +190,11 @@ export function createSceneObject(config) {
       ...materialConfig,
       isStandardWireframe: true,
     });
-    wireframeMesh = createCommonWireframe(geometry, wireframeMaterial);
+    wireframeMesh = createCommonWireframe(
+      geometry,
+      wireframeMaterial,
+      geometry.userData.isFloatingCity ? 0.3 : 1.0 // Scale cylinder radius by 70% for floating city
+    );
   }
 
   // Add userData to wireframe mesh for interaction
@@ -223,13 +234,25 @@ export function createSceneObject(config) {
     geometry.constructor.name === "TetrahedronGeometry" ||
     (geometry.userData && geometry.userData.baseType === "TetrahedronGeometry")
   ) {
-    const result = createTetrahedronHyperframe(
-      geometry,
-      hyperframeColor,
-      hyperframeLineColor
-    );
-    ({ centerLines, centerLinesMaterial, curvedLines, curvedLinesMaterial } =
-      result);
+    // Check if it's a 16-cell
+    if (geometry.userData && geometry.userData.is16Cell) {
+      const result = create16CellHyperframe(
+        geometry,
+        hyperframeColor,
+        hyperframeLineColor
+      );
+      ({ centerLines, centerLinesMaterial, curvedLines, curvedLinesMaterial } =
+        result);
+    } else {
+      // Regular compound tetrahedron
+      const result = createTetrahedronHyperframe(
+        geometry,
+        hyperframeColor,
+        hyperframeLineColor
+      );
+      ({ centerLines, centerLinesMaterial, curvedLines, curvedLinesMaterial } =
+        result);
+    }
   } else if (
     geometry.type === "BoxGeometry" ||
     (geometry.userData && geometry.userData.baseType === "BoxGeometry")
@@ -267,41 +290,98 @@ export function createSceneObject(config) {
     geometry.type === "OctahedronGeometry" ||
     (geometry.userData && geometry.userData.baseType === "OctahedronGeometry")
   ) {
-    const result = createOctahedronHyperframe(
-      geometry,
-      hyperframeColor,
-      hyperframeLineColor
-    );
-    ({ centerLines, centerLinesMaterial, curvedLines, curvedLinesMaterial } =
-      result);
+    // Check if it's a compound 24-cell
+    if (geometry.userData && geometry.userData.isCompound24Cell) {
+      const result = createCompound24CellHyperframe(
+        geometry,
+        hyperframeColor,
+        hyperframeLineColor
+      );
+      ({ centerLines, centerLinesMaterial, curvedLines, curvedLinesMaterial } =
+        result);
+    }
+    // Check if it's a 24-cell
+    else if (geometry.userData && geometry.userData.is24Cell) {
+      const result = create24CellHyperframe(
+        geometry,
+        hyperframeColor,
+        hyperframeLineColor
+      );
+      ({ centerLines, centerLinesMaterial, curvedLines, curvedLinesMaterial } =
+        result);
+    } else {
+      // Regular compound octahedron
+      const result = createOctahedronHyperframe(
+        geometry,
+        hyperframeColor,
+        hyperframeLineColor
+      );
+      ({ centerLines, centerLinesMaterial, curvedLines, curvedLinesMaterial } =
+        result);
+    }
   } else if (
     geometry.type === "IcosahedronGeometry" ||
     (geometry.userData && geometry.userData.baseType === "IcosahedronGeometry")
   ) {
-    const result = createIcosahedronHyperframe(
-      geometry,
-      hyperframeColor,
-      hyperframeLineColor
-    );
-    ({ centerLines, centerLinesMaterial, curvedLines, curvedLinesMaterial } =
-      result);
+    // Check if it's a compound 600-cell
+    if (geometry.userData && geometry.userData.isCompound600Cell) {
+      const result = createCompound600CellHyperframe(
+        geometry,
+        hyperframeColor,
+        hyperframeLineColor
+      );
+      ({ centerLines, centerLinesMaterial, curvedLines, curvedLinesMaterial } =
+        result);
+    }
+    // Check if it's a 600-cell
+    else if (geometry.userData && geometry.userData.is600Cell) {
+      const result = create600CellHyperframe(
+        geometry,
+        hyperframeColor,
+        hyperframeLineColor
+      );
+      ({ centerLines, centerLinesMaterial, curvedLines, curvedLinesMaterial } =
+        result);
+    } else {
+      // Regular compound icosahedron
+      const result = createIcosahedronHyperframe(
+        geometry,
+        hyperframeColor,
+        hyperframeLineColor
+      );
+      ({ centerLines, centerLinesMaterial, curvedLines, curvedLinesMaterial } =
+        result);
+    }
   } else if (
     geometry.type === "DodecahedronGeometry" ||
     (geometry.userData && geometry.userData.baseType === "DodecahedronGeometry")
   ) {
-    const result = create120CellHyperframe(
-      geometry,
-      hyperframeColor,
-      hyperframeLineColor
-    );
-    ({ centerLines, centerLinesMaterial, curvedLines, curvedLinesMaterial } =
-      result);
+    // Check if it's a compound 120-cell
+    if (geometry.userData && geometry.userData.isCompound120Cell) {
+      const result = createCompound120CellHyperframe(
+        geometry,
+        hyperframeColor,
+        hyperframeLineColor
+      );
+      ({ centerLines, centerLinesMaterial, curvedLines, curvedLinesMaterial } =
+        result);
+    } else {
+      // Regular 120-cell
+      const result = create120CellHyperframe(
+        geometry,
+        hyperframeColor,
+        hyperframeLineColor
+      );
+      ({ centerLines, centerLinesMaterial, curvedLines, curvedLinesMaterial } =
+        result);
+    }
   } else {
     // OTHER GEOMETRIES: Create generic hyperframes
     const result = createGenericHyperframe(
       geometry,
       hyperframeColor,
-      hyperframeLineColor
+      hyperframeLineColor,
+      geometry.userData.isFloatingCity // Pass floating city flag
     );
     ({ centerLines, centerLinesMaterial, curvedLines, curvedLinesMaterial } =
       result);
@@ -341,8 +421,11 @@ export function createSceneObject(config) {
   // 8. RETURN COMPLETE OBJECT DATA
   // ========================================
   // Klein Attractor extras removed
-  // Inject extras for Quantum Manifold
-  if (objectType === "quantummanifold") {
+  // Inject extras for Quantum Manifold (including compound)
+  if (
+    objectType === "quantummanifold" ||
+    objectType === "compoundquantummanifold"
+  ) {
     try {
       const extrasGroup = createQuantumManifoldExtras(geometry);
       if (extrasGroup) {
@@ -356,8 +439,12 @@ export function createSceneObject(config) {
     }
   }
 
-  // Inject extras for Compound Sphere
-  if (objectType === "sphere") {
+  // Inject extras for Compound Sphere (including super-compound and floating city)
+  if (
+    objectType === "sphere" ||
+    objectType === "compoundsphere" ||
+    objectType === "floatingcity"
+  ) {
     try {
       const extrasGroup = createCompoundSphereExtras(geometry);
       if (extrasGroup) {
@@ -425,9 +512,17 @@ export function createSceneObject(config) {
  * Creates generic hyperframes for non-standard geometries (TorusKnot, etc.)
  * Includes spiral center lines and edge connections
  */
-function createGenericHyperframe(geometry, spiralColor, edgeColor) {
+function createGenericHyperframe(
+  geometry,
+  spiralColor,
+  edgeColor,
+  isFloatingCity = false
+) {
   const edgesGeometry = new THREE.EdgesGeometry(geometry);
   const edgeVertices = edgesGeometry.attributes.position.array;
+
+  // Reduce line width by 70% for floating city
+  const lineWidthMultiplier = isFloatingCity ? 0.3 : 1.0;
 
   // ========================================
   // 1. CREATE CENTER LINES (Spiral connections)
@@ -476,11 +571,16 @@ function createGenericHyperframe(geometry, spiralColor, edgeColor) {
       new THREE.Float32BufferAttribute(centerLinesPositions, 3)
     );
 
+    const baseOpacity = 0.6 * lineWidthMultiplier;
     centerLinesMaterial = new THREE.LineBasicMaterial({
       color: new THREE.Color(spiralColor),
       transparent: true,
-      opacity: 0.6,
+      opacity: baseOpacity,
+      linewidth: lineWidthMultiplier, // Note: linewidth doesn't work on all platforms
     });
+
+    // Store base opacity for material updates
+    centerLinesMaterial.userData = { baseOpacity };
 
     centerLines = new THREE.LineSegments(
       centerLinesGeometry,
@@ -555,11 +655,16 @@ function createGenericHyperframe(geometry, spiralColor, edgeColor) {
       new THREE.Float32BufferAttribute(curvedLinesPositions, 3)
     );
 
+    const baseOpacity = 0.4 * lineWidthMultiplier;
     curvedLinesMaterial = new THREE.LineBasicMaterial({
       color: new THREE.Color(edgeColor),
       transparent: true,
-      opacity: 0.4,
+      opacity: baseOpacity,
+      linewidth: lineWidthMultiplier,
     });
+
+    // Store base opacity for material updates
+    curvedLinesMaterial.userData = { baseOpacity };
 
     curvedLines = new THREE.LineSegments(
       curvedLinesGeometry,
@@ -998,6 +1103,11 @@ function createCentralGoldenSymmetry() {
  * Create animated extras for Compound Sphere
  */
 function createCompoundSphereExtras(geometry) {
+  // Check if this is a floating city - if so, use reduced extras
+  if (geometry.userData.isFloatingCity) {
+    return createFloatingCityExtras(geometry);
+  }
+
   const group = new THREE.Group();
   const phi = (1 + Math.sqrt(5)) / 2; // Golden ratio
 
@@ -1471,6 +1581,149 @@ function createCompoundSphereExtras(geometry) {
         const fadeIn = Math.min(data.currentRadius / 0.3, 1);
         const fadeOut = 1 - data.currentRadius / data.maxRadius;
         wave.material.opacity = fadeIn * fadeOut * 0.6;
+      }
+    });
+  };
+
+  return group;
+}
+
+// Floating City Extras - Reduced hyperframe density for open viewing
+function createFloatingCityExtras(geometry) {
+  const group = new THREE.Group();
+  const phi = (1 + Math.sqrt(5)) / 2;
+
+  // Only 2 minimal orbital rings (instead of 3)
+  function createOrbitalRing(radius, tilt, particleCount, color, speed) {
+    const ringGroup = new THREE.Group();
+    const particles = [];
+
+    for (let i = 0; i < particleCount; i++) {
+      const particleGeom = new THREE.SphereGeometry(0.08, 10, 10); // Smaller
+      const particleMat = new THREE.MeshBasicMaterial({
+        color: color,
+        transparent: true,
+        opacity: 0.7, // More transparent
+      });
+      const particle = new THREE.Mesh(particleGeom, particleMat);
+
+      // Smaller glow
+      const glowGeom = new THREE.SphereGeometry(0.12, 10, 10);
+      const glowMat = new THREE.MeshBasicMaterial({
+        color: color,
+        transparent: true,
+        opacity: 0.3,
+        side: THREE.BackSide,
+      });
+      const glow = new THREE.Mesh(glowGeom, glowMat);
+      particle.add(glow);
+
+      particle.userData = {
+        angle: (i / particleCount) * Math.PI * 2,
+        radius,
+        speed,
+      };
+      particles.push(particle);
+      ringGroup.add(particle);
+    }
+
+    ringGroup.rotation.x = tilt.x;
+    ringGroup.rotation.y = tilt.y;
+    ringGroup.rotation.z = tilt.z;
+
+    ringGroup.userData = { particles };
+    return ringGroup;
+  }
+
+  // Only 2 rings, fewer particles
+  const ring1 = createOrbitalRing(2.8, { x: 0, y: 0, z: 0 }, 8, 0x00ccff, 1.0);
+  const ring2 = createOrbitalRing(
+    3.2,
+    { x: Math.PI / 3, y: 0, z: 0 },
+    6,
+    0xff66ff,
+    0.8
+  );
+
+  group.add(ring1, ring2);
+
+  // Reduced Fibonacci orbs (only 12 instead of 30)
+  const fibCount = 12;
+  const goldenAngle = Math.PI * (3 - Math.sqrt(5));
+
+  for (let i = 0; i < fibCount; i++) {
+    const t = i / fibCount;
+    const inclination = Math.acos(1 - 2 * t);
+    const azimuth = goldenAngle * i;
+
+    const orbGeom = new THREE.SphereGeometry(0.1, 12, 12); // Smaller
+    const orbColor = new THREE.Color().setHSL(i / fibCount, 0.8, 0.5);
+    const orbMat = new THREE.MeshBasicMaterial({
+      color: orbColor,
+      transparent: true,
+      opacity: 0.7, // More transparent
+    });
+    const orb = new THREE.Mesh(orbGeom, orbMat);
+
+    const radius = 4.0;
+    orb.position.set(
+      radius * Math.sin(inclination) * Math.cos(azimuth),
+      radius * Math.cos(inclination),
+      radius * Math.sin(inclination) * Math.sin(azimuth)
+    );
+
+    group.add(orb);
+  }
+
+  // Minimal pulsing waves (only 3 instead of 6)
+  const waveCount = 3;
+  for (let i = 0; i < waveCount; i++) {
+    const waveGeom = new THREE.TorusGeometry(1.0, 0.01, 8, 32);
+    const waveMat = new THREE.MeshBasicMaterial({
+      color: 0x00ffff,
+      transparent: true,
+      opacity: 0.4,
+      side: THREE.DoubleSide,
+    });
+    const wave = new THREE.Mesh(waveGeom, waveMat);
+
+    wave.userData = {
+      speed: 0.3 + i * 0.1,
+      maxRadius: 4.0,
+      currentRadius: (i / waveCount) * 4.0,
+    };
+
+    group.add(wave);
+  }
+
+  // Animation function
+  group.userData.animate = (deltaTime) => {
+    // Animate orbital rings
+    [ring1, ring2].forEach((ring) => {
+      ring.userData.particles.forEach((particle) => {
+        const data = particle.userData;
+        data.angle += deltaTime * data.speed;
+
+        particle.position.x = Math.cos(data.angle) * data.radius;
+        particle.position.z = Math.sin(data.angle) * data.radius;
+      });
+    });
+
+    // Animate waves
+    group.children.forEach((child) => {
+      if (child.userData.speed && child.geometry.type === "TorusGeometry") {
+        const data = child.userData;
+        data.currentRadius += deltaTime * data.speed;
+
+        if (data.currentRadius > data.maxRadius) {
+          data.currentRadius = 0;
+        }
+
+        child.scale.setScalar(data.currentRadius);
+
+        const fadeIn = Math.min(data.currentRadius / 0.3, 1);
+        const fadeOut = 1 - data.currentRadius / data.maxRadius;
+        child.material.opacity = fadeIn * fadeOut * 0.4; // Even more transparent
       }
     });
   };

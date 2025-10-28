@@ -24,6 +24,7 @@ export default function SceneCard({
   onEdit,
   onDelete,
   creatorName = null,
+  isHighlighted = false,
 }) {
   const [imageError, setImageError] = useState(false);
 
@@ -153,7 +154,7 @@ export default function SceneCard({
   };
 
   return (
-    <div className="scene-card">
+    <div className={`scene-card ${isHighlighted ? 'scene-card--highlighted' : ''}`}>
       {/* Thumbnail */}
       <div
         className="scene-card__thumbnail"

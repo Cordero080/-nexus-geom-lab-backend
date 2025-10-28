@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate, Link, useLocation } from "react-router-dom";
 import { useScene } from "../../context/SceneContext";
 import { useAuth } from "../../context/AuthContext";
 import { getMyScenes } from "../../services/sceneApi"; // Import API function
@@ -75,8 +75,12 @@ const glyphSets = [
  */
 export default function MyScenesPage() {
   const navigate = useNavigate();
+  const location = useLocation();
   const { loadScene, deleteScene } = useScene();
   const { isAuthenticated, logout, user, token } = useAuth(); // Get user and token from auth
+
+  // Get highlighted scene ID from navigation state
+  const highlightSceneId = location.state?.highlightSceneId;
 
   // Scene management state
   const [scenes, setScenes] = useState([]);
@@ -189,6 +193,18 @@ export default function MyScenesPage() {
       fetchMyScenes();
     }
   }, [token]);
+
+  // Clear highlight state after initial render to prevent persistence
+  useEffect(() => {
+    if (highlightSceneId) {
+      // Clear the navigation state after 3 seconds so highlight doesn't persist
+      const timer = setTimeout(() => {
+        navigate(location.pathname, { replace: true, state: {} });
+      }, 3000);
+      
+      return () => clearTimeout(timer);
+    }
+  }, [highlightSceneId, navigate, location.pathname]);
 
   const fetchMyScenes = async () => {
     setLoading(true);
@@ -442,6 +458,7 @@ export default function MyScenesPage() {
               onLoad={handleLoad}
               onEdit={handleEdit}
               onDelete={handleDeleteClick}
+              isHighlighted={scene.id === highlightSceneId}
             />
           ))}
         </div>
