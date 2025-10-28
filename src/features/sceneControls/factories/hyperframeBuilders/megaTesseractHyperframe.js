@@ -326,44 +326,6 @@ export function createMegaTesseractHyperframe(
     innerCubesGroup.add(mesh2);
   });
 
-  // 2. Space diagonals (corner to opposite corner) through cube center
-  const spaceDiagonals = [
-    [0, 6],
-    [1, 7],
-    [2, 4],
-    [3, 5],
-  ];
-
-  const spaceDiagonalMaterial = new THREE.MeshBasicMaterial({
-    color: hyperframeColor,
-    transparent: true,
-    opacity: 0.8,
-  });
-
-  spaceDiagonals.forEach(([i, j]) => {
-    // First cube space diagonals
-    const start1 = new THREE.Vector3(...cube1Inner[i]);
-    const end1 = new THREE.Vector3(...cube1Inner[j]);
-    const dist1 = start1.distanceTo(end1);
-    const cyl1 = new THREE.CylinderGeometry(0.0012, 0.0012, dist1, 8);
-    const mesh1 = new THREE.Mesh(cyl1, spaceDiagonalMaterial);
-    mesh1.position.copy(start1.clone().add(end1).multiplyScalar(0.5));
-    mesh1.lookAt(end1);
-    mesh1.rotateX(Math.PI / 2);
-    innerCubesGroup.add(mesh1);
-
-    // Second cube space diagonals
-    const start2 = new THREE.Vector3(...cube2Inner[i]);
-    const end2 = new THREE.Vector3(...cube2Inner[j]);
-    const dist2 = start2.distanceTo(end2);
-    const cyl2 = new THREE.CylinderGeometry(0.0012, 0.0012, dist2, 8);
-    const mesh2 = new THREE.Mesh(cyl2, spaceDiagonalMaterial);
-    mesh2.position.copy(start2.clone().add(end2).multiplyScalar(0.5));
-    mesh2.lookAt(end2);
-    mesh2.rotateX(Math.PI / 2);
-    innerCubesGroup.add(mesh2);
-  });
-
   const curvedLinesMaterial = new THREE.MeshBasicMaterial({
     color: hyperframeLineColor,
     transparent: false,
@@ -1195,17 +1157,15 @@ export function createMegaTesseractHyperframe(
     }
   };
 
-  // Build mini tesseracts (red core)
+  // Build mini tesseracts (red core) - keep center clear, no space diagonals
   addCubeEdges(mini1Outer);
   addCubeEdges(mini1Inner);
   addTesseractConnections(mini1Outer, mini1Inner);
-  addSpaceDiagonals(mini1Inner);
   addFaceDiagonalsMini(mini1Inner);
 
   addCubeEdges(mini2Outer);
   addCubeEdges(mini2Inner);
   addTesseractConnections(mini2Outer, mini2Inner);
-  addSpaceDiagonals(mini2Inner);
   addFaceDiagonalsMini(mini2Inner);
 
   // Connect mini tesseract outer corners to the inner corners of the larger tesseract (green)
