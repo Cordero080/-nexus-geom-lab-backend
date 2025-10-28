@@ -1,0 +1,45 @@
+/**
+ * Polytopes Geometries Barrel Export
+ *
+ * This file provides centralized exports for all polytope geometry modules.
+ * Polytopes are multi-dimensional geometric shapes including:
+ * - 3D polytopes: icosahedron, octahedron, tetrahedron
+ * - 4D polytopes: tesseracts, 120-cell, 24-cell, 16-cell, 600-cell
+ */
+
+export {
+  createIcosahedron,
+  metadata as icosahedronMetadata,
+} from "./icosahedron.js";
+export {
+  createOctahedron,
+  metadata as octahedronMetadata,
+} from "./octahedron.js";
+export {
+  createTetrahedron,
+  metadata as tetrahedronMetadata,
+} from "./tetrahedron.js";
+export {
+  createCompoundTesseract,
+  metadata as compoundTesseractMetadata,
+} from "./compoundTesseract.js";
+export {
+  createMegaTesseract,
+  metadata as megaTesseractMetadata,
+} from "./megaTesseract.js";
+export { create120Cell, metadata as cell120Metadata } from "./cell120.js";
+export {
+  createCompound120Cell,
+  metadata as compoundCell120Metadata,
+} from "./compoundCell120.js";
+export { create24Cell, metadata as cell24Metadata } from "./cell24.js";
+export {
+  createCompound24Cell,
+  metadata as compoundCell24Metadata,
+} from "./compoundCell24.js";
+export { create16Cell, metadata as cell16Metadata } from "./cell16.js";
+export { create600Cell, metadata as cell600Metadata } from "./cell600.js";
+export {
+  createCompound600Cell,
+  metadata as compoundCell600Metadata,
+} from "./compoundCell600.js";
