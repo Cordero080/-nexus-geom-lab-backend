@@ -344,10 +344,13 @@ Potential additions:
 ## Latest Update: Clean Center Structure (Oct 2025)
 
 ### Problem
+
 Green curved lines were intersecting through the pink hyperframe center, creating visual clutter and obscuring the hyperframe structure.
 
 ### Root Cause
+
 Space diagonal lines connected outer cube corners through the center:
+
 ```javascript
 // Space diagonals - REMOVED
 spaceDiagonalPairs.forEach(([i, j]) => {
@@ -358,17 +361,37 @@ spaceDiagonalPairs.forEach(([i, j]) => {
 ```
 
 ### Solution
+
 Removed all space diagonals that passed through the hyperframe center. Green curved lines now only:
-- Connect FROM pink hyperframe corners (cube*Inner at 0.375)
-- Radiate OUTWARD to outer vertices (cube*Outer at 0.75)
+
+- Connect FROM pink hyperframe corners (cube\*Inner at 0.375)
+- Radiate OUTWARD to outer vertices (cube\*Outer at 0.75)
 - Do NOT pass through or intersect the center structure
 
 ### Result
+
 - **Center**: Only pink hyperframe structure (cube edges, face diagonals, cross-connections)
 - **Green lines**: Radial connections from hyperframe boundary outward
 - **Visual clarity**: Clear separation between inner structure and outer connections
 
-**Files Modified**: `cpdTesseractHyperframe.js`, `megaTesseractHyperframe.js` (duplicate function fix)
+**Files Modified**: `cpdTesseractHyperframe.js`, `megaTesseractHyperframe.js`
+
+### Applied to Mega Tesseract & Compound Mega Tesseract
+
+The same principle was applied to `megaTesseractHyperframe.js`:
+
+- **Removed main space diagonals**: Lines connecting cube1Inner/cube2Inner opposite corners through center
+- **Removed mini tesseract space diagonals**: Lines in nested mini cores passing through their centers
+- **Result**: Both mega tesseract and compound mega tesseract (8 tesseracts) now have completely clear centers
+- **Center contains**: Only pink hyperframe edges and face diagonals (no through-center lines)
+- **Green lines**: Radiate outward from hyperframe boundaries to stellated layers
+
+This ensures visual consistency across all tesseract variants - compound, mega, and compound mega.
+
+---
+
+## Future Enhancements
+
 - Color gradient based on 4D depth
 - Interactive toggle for different structure levels
 - Hypercube cell projections (8 cubic cells of tesseract)
