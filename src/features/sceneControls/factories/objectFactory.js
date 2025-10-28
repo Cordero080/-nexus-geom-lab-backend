@@ -27,6 +27,7 @@ import { create600CellHyperframe } from "./hyperframeBuilders/cell600Hyperframe"
 import { createCompound600CellHyperframe } from "./hyperframeBuilders/compoundCell600Hyperframe";
 import { createCpdTesseractHyperframe } from "./hyperframeBuilders/cpdTesseractHyperframe";
 import { createMegaTesseractHyperframe } from "./hyperframeBuilders/megaTesseractHyperframe";
+import { createCompoundMegaTesseractHyperframe } from "./hyperframeBuilders/compoundMegaTesseractHyperframe";
 
 /**
  * Creates a complete 3D object with all components:
@@ -264,22 +265,34 @@ export function createSceneObject(config) {
   ) {
     // Check if it's a compound tesseract (two interpenetrating 4D hypercubes) or regular tesseract (single 4D hypercube)
     if (geometry.userData && geometry.userData.isCpdTesseract) {
-      // Use Mega-Tesseract hyperframe (with stellations) if objectType is "cpdtesseract" or "cpd-megatesseract"
-      // Otherwise use regular Cpd-Tesseract hyperframe (simple version)
+      // Use dedicated hyperframe based on specific tesseract type
+      const isCompoundMegaTesseract = geometry.userData.isCompoundMegaTesseract;
       const isMegaTesseract =
         objectType === "cpdtesseract" || objectType === "cpd-megatesseract";
 
-      const result = isMegaTesseract
-        ? createMegaTesseractHyperframe(
-            geometry,
-            hyperframeColor,
-            hyperframeLineColor
-          )
-        : createCpdTesseractHyperframe(
-            geometry,
-            hyperframeColor,
-            hyperframeLineColor
-          );
+      let result;
+      if (isCompoundMegaTesseract) {
+        // 8-tesseract compound mega: use dedicated hyperframe with 8 inner cubes
+        result = createCompoundMegaTesseractHyperframe(
+          geometry,
+          hyperframeColor,
+          hyperframeLineColor
+        );
+      } else if (isMegaTesseract) {
+        // 4-tesseract mega: use stellated hyperframe
+        result = createMegaTesseractHyperframe(
+          geometry,
+          hyperframeColor,
+          hyperframeLineColor
+        );
+      } else {
+        // 2-tesseract compound: use simple hyperframe
+        result = createCpdTesseractHyperframe(
+          geometry,
+          hyperframeColor,
+          hyperframeLineColor
+        );
+      }
 
       ({ centerLines, centerLinesMaterial, curvedLines, curvedLinesMaterial } =
         result);
