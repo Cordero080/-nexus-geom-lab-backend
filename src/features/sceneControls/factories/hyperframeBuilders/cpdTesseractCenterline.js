@@ -1,52 +1,38 @@
 import * as THREE from "three";
 import { createCpdTesseractWireframe } from "../wireframeBuilders/cpdTesseractWireframe";
 
-const OUTER_SIZE = 1.5;
-const INNER_SIZE = 0.75;
-const INNER_Y_OFFSET = 0.01;
-const SECOND_TESSERACT_Y_OFFSET = 0.02;
-const SECOND_TESSERACT_ROTATION = Math.PI / 4;
 const CENTERLINE_SCALE = 0.6;
-const CONNECTOR_RADIUS = 0.006;
-const BRIDGE_RADIUS = CONNECTOR_RADIUS * 0.85;
+const CONNECTOR_RADIUS = 0.0025;
 const CONNECTOR_SEGMENTS = 10;
 
-function generateCubeVertices(
-  size,
-  rotationY = 0,
-  localYOffset = 0,
-  globalYOffset = 0
-) {
-  const half = size / 2;
-  const vertices = [];
-  const rotationMatrix = new THREE.Matrix4();
+function makeConnectionKey(a, b) {
+  const keyA = `${a.x.toFixed(5)}_${a.y.toFixed(5)}_${a.z.toFixed(5)}`;
+  const keyB = `${b.x.toFixed(5)}_${b.y.toFixed(5)}_${b.z.toFixed(5)}`;
+  return keyA < keyB ? `${keyA}|${keyB}` : `${keyB}|${keyA}`;
+}
 
-  if (rotationY !== 0) {
-    rotationMatrix.makeRotationY(rotationY);
-  }
+function collectUniqueVertices(bufferGeometry, precision = 4) {
+  const positionsAttr = bufferGeometry.getAttribute("position");
+  if (!positionsAttr) return [];
 
-  const translation = new THREE.Vector3(0, localYOffset + globalYOffset, 0);
+  const positions = positionsAttr.array;
+  const unique = new Map();
 
-  for (const sx of [-1, 1]) {
-    for (const sy of [-1, 1]) {
-      for (const sz of [-1, 1]) {
-        const vertex = new THREE.Vector3(sx * half, sy * half, sz * half);
-        if (rotationY !== 0) {
-          vertex.applyMatrix4(rotationMatrix);
-        }
-        vertex.add(translation);
-        vertices.push(vertex);
-      }
+  for (let i = 0; i < positions.length; i += 3) {
+    const vertex = new THREE.Vector3(
+      positions[i],
+      positions[i + 1],
+      positions[i + 2]
+    );
+    const key = `${vertex.x.toFixed(precision)}_${vertex.y.toFixed(
+      precision
+    )}_${vertex.z.toFixed(precision)}`;
+    if (!unique.has(key)) {
+      unique.set(key, vertex);
     }
   }
 
-  return vertices;
-}
-
-function applyCenterScaling(vertices, center, scale) {
-  return vertices.map((v) =>
-    v.clone().sub(center).multiplyScalar(scale).add(center)
-  );
+  return Array.from(unique.values());
 }
 
 function createCylinderBetweenPoints(start, end, radius, material) {
@@ -125,70 +111,75 @@ export function createCpdTesseractCenterline(
   const curvedLines = new THREE.Group();
   curvedLines.name = "cpdTesseractConnectors";
 
-  const axisOuterVertices = generateCubeVertices(OUTER_SIZE, 0, 0, 0);
-  const axisInnerVertices = generateCubeVertices(
-    INNER_SIZE,
-    0,
-    INNER_Y_OFFSET,
-    0
-  );
+  const sourceEdgesGeometry = new THREE.EdgesGeometry(workingGeometry);
+  const targetEdgesGeometry = new THREE.EdgesGeometry(geometry);
 
-  const rotatedOuterVertices = generateCubeVertices(
-    OUTER_SIZE,
-    SECOND_TESSERACT_ROTATION,
-    0,
-    SECOND_TESSERACT_Y_OFFSET
-  );
-  const rotatedInnerVertices = generateCubeVertices(
-    INNER_SIZE,
-    SECOND_TESSERACT_ROTATION,
-    INNER_Y_OFFSET,
-    SECOND_TESSERACT_Y_OFFSET
-  );
+  const sourceVertices = collectUniqueVertices(sourceEdgesGeometry, 4);
+  const targetVertices = collectUniqueVertices(targetEdgesGeometry, 4);
 
-  const scaledAxisInner = applyCenterScaling(
-    axisInnerVertices,
-    center,
-    CENTERLINE_SCALE
+  const targetRadii = targetVertices.map((vertex) =>
+    vertex.clone().sub(center).length()
   );
-  const scaledRotatedInner = applyCenterScaling(
-    rotatedInnerVertices,
-    center,
-    CENTERLINE_SCALE
-  );
+  const expectedOuterRadius = Math.max(...targetRadii, 0);
+  const minOuterRadius = expectedOuterRadius * 0.75;
+  const maxOuterRadius = expectedOuterRadius + 0.1;
 
-  scaledAxisInner.forEach((innerVertex, index) => {
-    const outerVertex = axisOuterVertices[index];
+  const usedConnections = new Set();
+
+  sourceVertices.forEach((sourceVertex) => {
+    const sourceDir = sourceVertex.clone().sub(center);
+    const sourceRadius = sourceDir.length();
+    if (sourceRadius < 1e-6) return;
+    sourceDir.normalize();
+
+    let bestTarget = null;
+    let bestAlignment = -Infinity;
+    let smallestRadiusDiff = Infinity;
+
+    targetVertices.forEach((targetVertex) => {
+      const targetDir = targetVertex.clone().sub(center);
+      const targetRadius = targetDir.length();
+      if (targetRadius <= sourceRadius + 1e-3) return;
+
+      if (targetRadius < minOuterRadius || targetRadius > maxOuterRadius)
+        return;
+
+      targetDir.normalize();
+      const alignment = sourceDir.dot(targetDir);
+      if (alignment < 0.9) return;
+
+      const radiusDiff = targetRadius - sourceRadius;
+      const isBetterAlignment = alignment > bestAlignment + 1e-4;
+      const isCloserRadius =
+        Math.abs(alignment - bestAlignment) <= 1e-4 &&
+        radiusDiff < smallestRadiusDiff;
+
+      if (isBetterAlignment || isCloserRadius) {
+        bestAlignment = alignment;
+        smallestRadiusDiff = radiusDiff;
+        bestTarget = targetVertex;
+      }
+    });
+
+    if (!bestTarget) return;
+
+    const key = makeConnectionKey(sourceVertex, bestTarget);
+    if (usedConnections.has(key)) return;
+
     const connector = createCylinderBetweenPoints(
-      innerVertex,
-      outerVertex,
+      sourceVertex,
+      bestTarget,
       CONNECTOR_RADIUS,
       connectorsMaterial
     );
-    if (connector) curvedLines.add(connector);
+    if (!connector) return;
+
+    usedConnections.add(key);
+    curvedLines.add(connector);
   });
 
-  scaledRotatedInner.forEach((innerVertex, index) => {
-    const outerVertex = rotatedOuterVertices[index];
-    const connector = createCylinderBetweenPoints(
-      innerVertex,
-      outerVertex,
-      CONNECTOR_RADIUS,
-      connectorsMaterial
-    );
-    if (connector) curvedLines.add(connector);
-  });
-
-  scaledAxisInner.forEach((axisVertex, index) => {
-    const rotatedVertex = scaledRotatedInner[index];
-    const connector = createCylinderBetweenPoints(
-      axisVertex,
-      rotatedVertex,
-      BRIDGE_RADIUS,
-      connectorsMaterial
-    );
-    if (connector) curvedLines.add(connector);
-  });
+  sourceEdgesGeometry.dispose();
+  targetEdgesGeometry.dispose();
 
   curvedLines.userData.skipDynamicUpdates = true;
   curvedLines.userData.edgePairs = null;

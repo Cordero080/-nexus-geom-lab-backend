@@ -60,6 +60,7 @@ Originally, we addressed the mismatch by introducing dedicated hyperframe builde
 
 - Mega tesseract centerline now samples real edge vertices and links every inner corner to the next outward lattice point, so no joints are skipped.
 - Compound tesseract centerline inherits hyperframe slider colors for both the red skeleton and green connectors.
+- Compound tesseract connectors now share the geometry-sampled pipeline from the mega build—each of the 16 red corners advances along its edge direction until it hits the outer tesseract lattice for the active object type, and the connector radius is tuned to keep the rails slender.
 - Touchpoints: `src/features/sceneControls/factories/hyperframeBuilders/megaTesseractCenterline.js`, `.../cpdTesseractCenterline.js`.
 
 ---
