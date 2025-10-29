@@ -35,6 +35,18 @@ export {
   createCompoundMegaTesseractNested,
   metadata as compoundMegaTesseractNestedMetadata,
 } from "./compoundMegaTesseract2.js";
+export {
+  createCompoundMegaTesseractExperimental,
+  metadata as compoundMegaTesseractExperimentalMetadata,
+} from "./compoundMegaTesseract3.js";
+export {
+  createCompoundMegaTesseractAxisShift,
+  metadata as compoundMegaTesseractAxisShiftMetadata,
+} from "./compoundMegaTesseract4.js";
+export {
+  createHessianPolychoron,
+  metadata as hessianPolychoronMetadata,
+} from "./hessianPolychoron.js";
 export { create120Cell, metadata as cell120Metadata } from "./cell120.js";
 export {
   createCompound120Cell,

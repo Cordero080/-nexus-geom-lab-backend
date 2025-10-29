@@ -44,15 +44,17 @@ export function useMaterialUpdates(objectsRef, materialProps) {
 
   // METALNESS UPDATER (real PBR metalness - adjust lighting to see effect)
   useEffect(() => {
-    objectsRef.current.forEach(({ material, wireframeMaterial }, index) => {
-      // Update solid material
-      if (material) {
+    const processedSolid = new Set();
+    const processedWireframe = new Set();
+    objectsRef.current.forEach(({ material, wireframeMaterial }) => {
+      if (material && !processedSolid.has(material)) {
+        processedSolid.add(material);
         material.metalness = metalness;
-        material.roughness = 0.2; // Keep roughness low for shiny metal effect
+        material.roughness = 0.2;
         material.needsUpdate = true;
       }
-      // Update wireframe material
-      if (wireframeMaterial) {
+      if (wireframeMaterial && !processedWireframe.has(wireframeMaterial)) {
+        processedWireframe.add(wireframeMaterial);
         wireframeMaterial.metalness = metalness;
         wireframeMaterial.roughness = 0.2;
         wireframeMaterial.needsUpdate = true;
@@ -68,16 +70,17 @@ export function useMaterialUpdates(objectsRef, materialProps) {
     const emissiveColor = new THREE.Color(baseColor).multiplyScalar(
       emissiveIntensity
     );
-
-    objectsRef.current.forEach(({ material, wireframeMaterial }, index) => {
-      // Update solid material
-      if (material) {
-        material.emissive = emissiveColor.clone();
+    const processedSolid = new Set();
+    const processedWireframe = new Set();
+    objectsRef.current.forEach(({ material, wireframeMaterial }) => {
+      if (material && !processedSolid.has(material)) {
+        processedSolid.add(material);
+        material.emissive.copy(emissiveColor);
         material.needsUpdate = true;
       }
-      // Update wireframe material
-      if (wireframeMaterial) {
-        wireframeMaterial.emissive = emissiveColor.clone();
+      if (wireframeMaterial && !processedWireframe.has(wireframeMaterial)) {
+        processedWireframe.add(wireframeMaterial);
+        wireframeMaterial.emissive.copy(emissiveColor);
         wireframeMaterial.needsUpdate = true;
       }
     });
@@ -88,31 +91,16 @@ export function useMaterialUpdates(objectsRef, materialProps) {
     // Convert hex color string to Three.js color number
     const convertedColor = parseInt(baseColor.replace("#", ""), 16);
 
-    objectsRef.current.forEach(({ material, wireframeMaterial }, index) => {
-      // Update solid material
-      if (material) {
+    const processedSolid = new Set();
+    const processedWireframe = new Set();
+    objectsRef.current.forEach(({ material, wireframeMaterial }) => {
+      if (material && !processedSolid.has(material)) {
+        processedSolid.add(material);
         material.color.setHex(convertedColor);
         material.needsUpdate = true;
       }
-      // Update wireframe material
-      if (wireframeMaterial) {
-        wireframeMaterial.color.setHex(convertedColor);
-        wireframeMaterial.needsUpdate = true;
-      }
-    });
-  }, [baseColor]);
-
-  // BASE COLOR DEBUGGER (duplicate for debugging)
-  useEffect(() => {
-    const convertedColor = parseInt(baseColor.replace("#", ""), 16);
-
-    objectsRef.current.forEach(({ material, wireframeMaterial }, index) => {
-      if (material) {
-        material.color.setHex(convertedColor);
-        material.needsUpdate = true;
-      }
-
-      if (wireframeMaterial) {
+      if (wireframeMaterial && !processedWireframe.has(wireframeMaterial)) {
+        processedWireframe.add(wireframeMaterial);
         wireframeMaterial.color.setHex(convertedColor);
         wireframeMaterial.needsUpdate = true;
       }
@@ -123,59 +111,47 @@ export function useMaterialUpdates(objectsRef, materialProps) {
   useEffect(() => {
     const intensity = wireframeIntensity / 100; // Convert 0-100 range to 0-1 range
 
+    const processedSolid = new Set();
+    const processedWireframe = new Set();
+    const processedCenter = new Set();
+    const processedCurved = new Set();
+
     objectsRef.current.forEach(
-      (
-        {
-          material,
-          wireframeMaterial,
-          centerLinesMaterial,
-          curvedLinesMaterial,
-        },
-        index
-      ) => {
-        if (material && wireframeMaterial) {
-          // DUAL-MESH BLENDING: Smooth transition between solid and wireframe
+      ({
+        material,
+        wireframeMaterial,
+        centerLinesMaterial,
+        curvedLinesMaterial,
+      }) => {
+        if (material && wireframeMaterial && !processedSolid.has(material)) {
+          processedSolid.add(material);
+          processedWireframe.add(wireframeMaterial);
+
           if (intensity === 0) {
-            // Full solid: solid mesh visible, wireframe mesh invisible
             material.transparent = false;
             material.opacity = 1;
             wireframeMaterial.transparent = true;
             wireframeMaterial.opacity = 0;
           } else if (intensity === 1) {
-            // Full wireframe: solid mesh invisible, wireframe mesh visible
             material.transparent = true;
             material.opacity = 0;
             wireframeMaterial.transparent = true;
             wireframeMaterial.opacity = 1;
           } else {
-            // Blended: both meshes partially visible
             material.transparent = true;
-            material.opacity = 1 - intensity; // Solid fades out as wireframe increases
+            material.opacity = 1 - intensity;
             wireframeMaterial.transparent = true;
-            wireframeMaterial.opacity = intensity; // Wireframe fades in as intensity increases
-          }
-
-          // UPDATE HYPERFRAME ELEMENTS
-          if (centerLinesMaterial) {
-            // Preserve base opacity (e.g., 0.18 for floating city, 0.6 for others)
-            const baseOpacity =
-              centerLinesMaterial.userData?.baseOpacity ?? 0.8;
-            centerLinesMaterial.opacity = baseOpacity;
-            centerLinesMaterial.needsUpdate = true;
-          }
-
-          if (curvedLinesMaterial) {
-            // Preserve base opacity (e.g., 0.12 for floating city, 0.4 for others)
-            const baseOpacity =
-              curvedLinesMaterial.userData?.baseOpacity ?? 0.8;
-            curvedLinesMaterial.opacity = baseOpacity;
-            curvedLinesMaterial.needsUpdate = true;
+            wireframeMaterial.opacity = intensity;
           }
 
           material.needsUpdate = true;
           wireframeMaterial.needsUpdate = true;
-        } else if (material) {
-          // Legacy single-mesh fallback (old wireframe behavior)
+        } else if (
+          material &&
+          !processedSolid.has(material) &&
+          !wireframeMaterial
+        ) {
+          processedSolid.add(material);
           if (intensity === 0) {
             material.wireframe = false;
             material.transparent = false;
@@ -187,6 +163,20 @@ export function useMaterialUpdates(objectsRef, materialProps) {
           }
           material.needsUpdate = true;
         }
+
+        if (centerLinesMaterial && !processedCenter.has(centerLinesMaterial)) {
+          processedCenter.add(centerLinesMaterial);
+          const baseOpacity = centerLinesMaterial.userData?.baseOpacity ?? 0.8;
+          centerLinesMaterial.opacity = baseOpacity;
+          centerLinesMaterial.needsUpdate = true;
+        }
+
+        if (curvedLinesMaterial && !processedCurved.has(curvedLinesMaterial)) {
+          processedCurved.add(curvedLinesMaterial);
+          const baseOpacity = curvedLinesMaterial.userData?.baseOpacity ?? 0.8;
+          curvedLinesMaterial.opacity = baseOpacity;
+          curvedLinesMaterial.needsUpdate = true;
+        }
       }
     );
   }, [wireframeIntensity]);
@@ -195,8 +185,10 @@ export function useMaterialUpdates(objectsRef, materialProps) {
   useEffect(() => {
     const convertedColor = new THREE.Color(hyperframeColor);
 
-    objectsRef.current.forEach(({ centerLinesMaterial }, index) => {
-      if (centerLinesMaterial) {
+    const processedCenter = new Set();
+    objectsRef.current.forEach(({ centerLinesMaterial }) => {
+      if (centerLinesMaterial && !processedCenter.has(centerLinesMaterial)) {
+        processedCenter.add(centerLinesMaterial);
         centerLinesMaterial.color.copy(convertedColor);
         centerLinesMaterial.needsUpdate = true;
       }
@@ -207,8 +199,10 @@ export function useMaterialUpdates(objectsRef, materialProps) {
   useEffect(() => {
     const convertedColor = new THREE.Color(hyperframeLineColor);
 
-    objectsRef.current.forEach(({ curvedLinesMaterial }, index) => {
-      if (curvedLinesMaterial) {
+    const processedCurved = new Set();
+    objectsRef.current.forEach(({ curvedLinesMaterial }) => {
+      if (curvedLinesMaterial && !processedCurved.has(curvedLinesMaterial)) {
+        processedCurved.add(curvedLinesMaterial);
         curvedLinesMaterial.color.copy(convertedColor);
         curvedLinesMaterial.needsUpdate = true;
       }

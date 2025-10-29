@@ -1,18 +1,24 @@
 import { jest } from "@jest/globals";
 import * as THREE from "three";
-import initializeScene from "./ThreeScene/sceneSetup";
+import { initializeScene } from "./features/sceneControls/sceneSetup";
 
 // Mock Three.js classes and methods
 jest.mock("three", () => ({
   WebGLRenderer: jest.fn(() => ({
-    domElement: document.createElement("canvas"),
+    domElement: {
+      getContext: jest.fn(),
+      style: {},
+    },
     setSize: jest.fn(),
     render: jest.fn(),
     dispose: jest.fn(),
+    setClearColor: jest.fn(),
     shadowMap: { enabled: false, type: 0 },
   })),
   Scene: jest.fn(() => ({ add: jest.fn(), children: [] })),
-  PerspectiveCamera: jest.fn(),
+  PerspectiveCamera: jest.fn(() => ({
+    position: { set: jest.fn() },
+  })),
   AmbientLight: jest.fn(),
   DirectionalLight: jest.fn(),
   PCFSoftShadowMap: 2,

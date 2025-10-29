@@ -29,6 +29,159 @@ import { createCompound600CellHyperframe } from "./hyperframeBuilders/compoundCe
 import { createMegaTesseractCenterline } from "./hyperframeBuilders/megaTesseractCenterline";
 import { createCpdTesseractCenterline } from "./hyperframeBuilders/cpdTesseractCenterline";
 
+// Shared pools keep mega tesseract variants responsive during slider edits.
+const solidMaterialPool = new Map();
+const wireframeMaterialPool = new Map();
+const hyperframeCache = new Map();
+
+function ensureSolidMaterialConfig(material, config) {
+  if (!material) return null;
+  const { baseColor, metalness, emissiveIntensity, wireframeIntensity } =
+    config;
+  const color = new THREE.Color(baseColor);
+  material.color.copy(color);
+  material.metalness = metalness;
+  material.roughness = 0.2;
+  material.emissive.copy(color).multiplyScalar(emissiveIntensity);
+  const opacity = 1 - wireframeIntensity / 100;
+  material.opacity = opacity;
+  material.transparent = opacity < 1;
+  material.needsUpdate = true;
+  return material;
+}
+
+function ensureWireframeMaterialConfig(material, config) {
+  if (!material) return null;
+  const { baseColor, metalness, emissiveIntensity, wireframeIntensity } =
+    config;
+  const color = new THREE.Color(baseColor);
+  material.color.copy(color);
+  material.metalness = metalness;
+  material.roughness = 0.2;
+  material.emissive.copy(color).multiplyScalar(emissiveIntensity);
+  const opacity = wireframeIntensity / 100;
+  material.opacity = opacity;
+  material.transparent = true;
+  material.needsUpdate = true;
+  return material;
+}
+
+function getMaterialPoolKey(geometry, objectType) {
+  if (!geometry || !geometry.userData) return null;
+  const { isMegaTesseract, isCompoundMegaTesseract, isCpdTesseract, variant } =
+    geometry.userData;
+  const isMegaFamily =
+    isMegaTesseract || isCompoundMegaTesseract || isCpdTesseract;
+  if (!isMegaFamily) return null;
+  const variantKey = variant ? `-${variant}` : "";
+  return `${objectType || geometry.type}${variantKey}`;
+}
+
+function getSolidMaterial(materialKey, materialConfig) {
+  if (!materialKey) {
+    return createSolidMaterial(materialConfig);
+  }
+  if (!solidMaterialPool.has(materialKey)) {
+    solidMaterialPool.set(materialKey, createSolidMaterial(materialConfig));
+  }
+  return ensureSolidMaterialConfig(
+    solidMaterialPool.get(materialKey),
+    materialConfig
+  );
+}
+
+function getWireframeMaterial(materialKey, materialConfig, overrides = {}) {
+  if (!materialKey || overrides.isStandardWireframe) {
+    return ensureWireframeMaterialConfig(
+      createWireframeMaterial({ ...materialConfig, ...overrides }),
+      { ...materialConfig, ...overrides }
+    );
+  }
+  if (!wireframeMaterialPool.has(materialKey)) {
+    wireframeMaterialPool.set(
+      materialKey,
+      createWireframeMaterial(materialConfig)
+    );
+  }
+  return ensureWireframeMaterialConfig(
+    wireframeMaterialPool.get(materialKey),
+    materialConfig
+  );
+}
+
+function cloneGroupWithUserData(group) {
+  if (!group) return null;
+  const cloned = group.clone(true);
+  cloned.userData = { ...group.userData };
+  cloned.traverse((child) => {
+    if (child !== cloned) {
+      child.userData = { ...child.userData };
+    }
+  });
+  return cloned;
+}
+
+function getHyperframeKey(geometry, hyperframeColor, hyperframeLineColor) {
+  if (!geometry || !geometry.userData) return null;
+  const { isMegaTesseract, isCompoundMegaTesseract, isCpdTesseract, variant } =
+    geometry.userData;
+  if (!isMegaTesseract && !isCompoundMegaTesseract && !isCpdTesseract) {
+    return null;
+  }
+  let prefix = "cpd";
+  if (isCompoundMegaTesseract) prefix = "compoundMega";
+  else if (isMegaTesseract) prefix = "mega";
+
+  const signatureFields = [
+    "translationStep",
+    "layerGap",
+    "baseOffset",
+    "translationAxis",
+    "sweepScales",
+    "sweepOffsets",
+    "radialStep",
+    "twistStep",
+    "duplicateScale",
+    "duplicateRotation",
+    "duplicateOffset",
+    "mirrorEnabled",
+    "baseTranslationStep",
+    "baseLayerGap",
+    "baseSweepScales",
+    "baseTranslationAxis",
+    "componentCount",
+  ];
+
+  const signature = { variant: variant || "baseline" };
+  signatureFields.forEach((field) => {
+    if (field in geometry.userData && geometry.userData[field] !== undefined) {
+      signature[field] = geometry.userData[field];
+    }
+  });
+
+  // Include colors in cache key so hyperframe updates when colors change
+  if (hyperframeColor !== undefined)
+    signature.hyperframeColor = hyperframeColor;
+  if (hyperframeLineColor !== undefined)
+    signature.hyperframeLineColor = hyperframeLineColor;
+
+  return `${prefix}:${JSON.stringify(signature)}`;
+}
+
+function getHyperframeFromCache(key, builder) {
+  if (!key) return builder();
+  if (!hyperframeCache.has(key)) {
+    hyperframeCache.set(key, builder());
+  }
+  const cached = hyperframeCache.get(key);
+  return {
+    centerLines: cloneGroupWithUserData(cached.centerLines),
+    centerLinesMaterial: cached.centerLinesMaterial,
+    curvedLines: cloneGroupWithUserData(cached.curvedLines),
+    curvedLinesMaterial: cached.curvedLinesMaterial,
+  };
+}
+
 /**
  * Creates a complete 3D object with all components:
  * - Solid mesh
@@ -98,8 +251,8 @@ export function createSceneObject(config) {
     emissiveIntensity,
     wireframeIntensity,
   };
-
-  const solidMaterial = createSolidMaterial(materialConfig);
+  const materialKey = getMaterialPoolKey(geometry, objectType);
+  const solidMaterial = getSolidMaterial(materialKey, materialConfig);
 
   // ========================================
   // 3. SOLID MESH CREATION
@@ -141,7 +294,7 @@ export function createSceneObject(config) {
 
   // Create appropriate wireframe based on geometry type
   if (geometry.type === "SphereGeometry") {
-    wireframeMaterial = createWireframeMaterial(materialConfig);
+    wireframeMaterial = getWireframeMaterial(null, materialConfig);
     wireframeMesh = createSphereWireframe(geometry, wireframeMaterial);
   } else if (
     geometry.type === "BoxGeometry" ||
@@ -149,57 +302,57 @@ export function createSceneObject(config) {
   ) {
     // Check if it's a mega tesseract (4 tesseracts)
     if (geometry.userData && geometry.userData.isMegaTesseract) {
-      wireframeMaterial = createWireframeMaterial(materialConfig);
+      wireframeMaterial = getWireframeMaterial(materialKey, materialConfig);
       wireframeMesh = createCpdTesseractWireframe(geometry, wireframeMaterial);
     }
     // Check if it's a compound mega tesseract (8 tesseracts)
     else if (geometry.userData && geometry.userData.isCompoundMegaTesseract) {
-      wireframeMaterial = createWireframeMaterial(materialConfig);
+      wireframeMaterial = getWireframeMaterial(materialKey, materialConfig);
       wireframeMesh = createCpdTesseractWireframe(geometry, wireframeMaterial);
     }
     // Check if it's a compound tesseract (2 tesseracts)
     else if (geometry.userData && geometry.userData.isCpdTesseract) {
-      wireframeMaterial = createWireframeMaterial(materialConfig);
+      wireframeMaterial = getWireframeMaterial(materialKey, materialConfig);
       wireframeMesh = createCpdTesseractWireframe(geometry, wireframeMaterial);
     } else {
-      wireframeMaterial = createWireframeMaterial(materialConfig);
+      wireframeMaterial = getWireframeMaterial(null, materialConfig);
       wireframeMesh = createBoxWireframe(geometry, wireframeMaterial);
     }
   } else if (
     geometry.type === "OctahedronGeometry" ||
     (geometry.userData && geometry.userData.baseType === "OctahedronGeometry")
   ) {
-    wireframeMaterial = createWireframeMaterial(materialConfig);
+    wireframeMaterial = getWireframeMaterial(null, materialConfig);
     wireframeMesh = createOctahedronWireframe(geometry, wireframeMaterial);
   } else if (
     geometry.type === "TetrahedronGeometry" ||
     (geometry.userData && geometry.userData.baseType === "TetrahedronGeometry")
   ) {
-    wireframeMaterial = createWireframeMaterial(materialConfig);
+    wireframeMaterial = getWireframeMaterial(null, materialConfig);
     wireframeMesh = createTetrahedronWireframe(geometry, wireframeMaterial);
   } else if (
     geometry.type === "IcosahedronGeometry" ||
     (geometry.userData && geometry.userData.baseType === "IcosahedronGeometry")
   ) {
-    wireframeMaterial = createWireframeMaterial(materialConfig);
+    wireframeMaterial = getWireframeMaterial(null, materialConfig);
     // 600-cell uses same icosahedron wireframe as compound icosahedron
     wireframeMesh = createIcosahedronWireframe(geometry, wireframeMaterial);
   } else if (
     geometry.type === "DodecahedronGeometry" ||
     (geometry.userData && geometry.userData.baseType === "DodecahedronGeometry")
   ) {
-    wireframeMaterial = createWireframeMaterial(materialConfig);
+    wireframeMaterial = getWireframeMaterial(null, materialConfig);
     wireframeMesh = createDodecahedronWireframe(geometry, wireframeMaterial);
   } else {
     // Standard thin wireframe for other geometries
-    wireframeMaterial = createWireframeMaterial({
+    wireframeMaterial = getWireframeMaterial(null, materialConfig, {
       ...materialConfig,
       isStandardWireframe: true,
     });
     wireframeMesh = createCommonWireframe(
       geometry,
       wireframeMaterial,
-      geometry.userData.isFloatingCity ? 0.3 : 1.0 // Scale cylinder radius by 70% for floating city
+      geometry.userData?.isFloatingCity ? 0.3 : 1.0 // Scale cylinder radius by 70% for floating city
     );
   }
 
@@ -267,6 +420,11 @@ export function createSceneObject(config) {
     if (geometry.userData && geometry.userData.isCpdTesseract) {
       const isMega = geometry.userData.isMegaTesseract;
       const isCompoundMega = geometry.userData.isCompoundMegaTesseract;
+      const hyperframeKey = getHyperframeKey(
+        geometry,
+        hyperframeColor,
+        hyperframeLineColor
+      );
 
       if (isCompoundMega) {
         ({
@@ -274,10 +432,12 @@ export function createSceneObject(config) {
           centerLinesMaterial,
           curvedLines,
           curvedLinesMaterial,
-        } = createCpdTesseractCenterline(
-          geometry,
-          hyperframeColor,
-          hyperframeLineColor
+        } = getHyperframeFromCache(hyperframeKey, () =>
+          createCpdTesseractCenterline(
+            geometry,
+            hyperframeColor,
+            hyperframeLineColor
+          )
         ));
       } else if (isMega && !isCompoundMega) {
         ({
@@ -285,10 +445,12 @@ export function createSceneObject(config) {
           centerLinesMaterial,
           curvedLines,
           curvedLinesMaterial,
-        } = createMegaTesseractCenterline(
-          geometry,
-          hyperframeColor,
-          hyperframeLineColor
+        } = getHyperframeFromCache(hyperframeKey, () =>
+          createMegaTesseractCenterline(
+            geometry,
+            hyperframeColor,
+            hyperframeLineColor
+          )
         ));
       } else if (!isMega && !isCompoundMega) {
         ({
@@ -296,10 +458,12 @@ export function createSceneObject(config) {
           centerLinesMaterial,
           curvedLines,
           curvedLinesMaterial,
-        } = createCpdTesseractCenterline(
-          geometry,
-          hyperframeColor,
-          hyperframeLineColor
+        } = getHyperframeFromCache(hyperframeKey, () =>
+          createCpdTesseractCenterline(
+            geometry,
+            hyperframeColor,
+            hyperframeLineColor
+          )
         ));
       } else {
         // For other tesseract-based geometries, keep hyperframe disabled
@@ -474,7 +638,7 @@ export function createSceneObject(config) {
   if (
     objectType === "sphere" ||
     objectType === "compoundsphere" ||
-    objectType === "floatingcity"
+    (geometry && geometry.userData && geometry.userData.isFloatingCity)
   ) {
     try {
       const extrasGroup = createCompoundSphereExtras(geometry);

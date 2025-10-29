@@ -5,11 +5,9 @@ import {
 } from "three/examples/jsm/utils/BufferGeometryUtils";
 
 // Geometry modules
-import { createFloatingCity } from "./geometries/curved/floatingCity.js";
 import { createCompoundFloatingCity } from "./geometries/curved/compoundFloatingCity.js";
 import { createCompoundSphere } from "./geometries/compound/compoundSphere.js";
-import { createCompoundTorus } from "./geometries/compound/compoundTorus.js";
-import { createTorus } from "./geometries/curved/torus.js";
+import { createHessianPolychoron } from "./geometries/polytopes/hessianPolychoron.js";
 import { createSphere } from "./geometries/compound/sphere.js";
 import { createIcosahedron } from "./geometries/polytopes/icosahedron.js";
 import { createCompoundTesseract } from "./geometries/polytopes/compoundTesseract.js";
@@ -24,11 +22,12 @@ import { createCompound24Cell } from "./geometries/polytopes/compoundCell24.js";
 import { create16Cell } from "./geometries/polytopes/cell16.js";
 import { create600Cell } from "./geometries/polytopes/cell600.js";
 import { createCompound600Cell } from "./geometries/polytopes/compoundCell600.js";
-import { createCapsule } from "./geometries/curved/capsule.js";
 import { createMobiusSphere } from "./geometries/manifolds/mobiusSphere.js";
 import { createMegaTesseract } from "./geometries/polytopes/megaTesseract.js";
 import { createCompoundMegaTesseract } from "./geometries/polytopes/compoundMegaTesseract.js";
 import { createCompoundMegaTesseractNested } from "./geometries/polytopes/compoundMegaTesseract2.js";
+import { createCompoundMegaTesseractExperimental } from "./geometries/polytopes/compoundMegaTesseract3.js";
+import { createCompoundMegaTesseractAxisShift } from "./geometries/polytopes/compoundMegaTesseract4.js";
 
 /**
  * Create a tesseract with connecting frustum faces between outer and inner cubes
@@ -78,8 +77,8 @@ function createTesseractWithFaces(outerSize, innerSize, rotation = null) {
 
   // Front face frustum (Z+)
   const frontFrustum = new THREE.CylinderGeometry(
-    halfInner,
     halfOuter,
+    halfInner,
     depth,
     4
   );
@@ -91,8 +90,8 @@ function createTesseractWithFaces(outerSize, innerSize, rotation = null) {
 
   // Back face frustum (Z-)
   const backFrustum = new THREE.CylinderGeometry(
-    halfOuter,
     halfInner,
+    halfOuter,
     depth,
     4
   );
@@ -155,10 +154,6 @@ export function createGeometry(type = "icosahedron", options = {}) {
       // Use modular geometry - see geometries/compound/compoundSphere.js
       return createCompoundSphere(options);
 
-    case "floatingcity":
-      // Use modular geometry - see geometries/curved/floatingCity.js
-      return createFloatingCity(options);
-
     case "compoundfloatingcity":
       // Use modular geometry - see geometries/curved/compoundFloatingCity.js
       return createCompoundFloatingCity(options);
@@ -172,13 +167,9 @@ export function createGeometry(type = "icosahedron", options = {}) {
       // Use modular geometry - see geometries/polytopes/compoundTesseract.js
       return createCompoundTesseract(options);
 
-    case "torus":
-      // Use modular geometry - see geometries/curved/torus.js
-      return createTorus(options);
-
-    case "compoundtorus":
-      // Use modular geometry - see geometries/compound/compoundTorus.js
-      return createCompoundTorus(options);
+    case "hessianpolychoron":
+      // Use modular geometry - see geometries/polytopes/hessianPolychoron.js
+      return createHessianPolychoron(options);
 
     case "hypercube":
       // OLD HYPERCUBE (simple concentric cubes) - kept for reference
@@ -200,6 +191,10 @@ export function createGeometry(type = "icosahedron", options = {}) {
       return createCompoundMegaTesseract(options);
     case "cpd-megatesseract-2":
       return createCompoundMegaTesseractNested(options);
+    case "cpd-megatesseract-3":
+      return createCompoundMegaTesseractExperimental(options);
+    case "cpd-megatesseract-4":
+      return createCompoundMegaTesseractAxisShift(options);
     case "octahedron":
       // Use modular geometry - see geometries/polytopes/octahedron.js
       return createOctahedron(options);
@@ -207,10 +202,6 @@ export function createGeometry(type = "icosahedron", options = {}) {
     case "tetrahedron":
       // Use modular geometry - see geometries/polytopes/tetrahedron.js
       return createTetrahedron(options);
-
-    case "capsule":
-      // Use modular geometry - see geometries/curved/capsule.js
-      return createCapsule(options);
 
     case "mobiussphere":
       // Use modular geometry - see geometries/manifolds/mobiusSphere.js

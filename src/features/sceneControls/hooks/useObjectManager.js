@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { createSceneObject } from "../factories/objectFactory";
 
 /**
@@ -37,6 +37,13 @@ export function useObjectManager(refs, objectProps) {
     cpdTK_gap,
   } = objectProps;
 
+  // Track latest base color separately so we avoid rebuilding geometry on color tweaks.
+  const baseColorRef = useRef(baseColor);
+
+  useEffect(() => {
+    baseColorRef.current = baseColor;
+  }, [baseColor]);
+
   useEffect(() => {
     if (!sceneRef.current) return; // Safety check
 
@@ -56,13 +63,15 @@ export function useObjectManager(refs, objectProps) {
     objectsRef.current = [];
 
     // CREATE NEW OBJECTS using current prop values
+    const resolvedBaseColor = baseColorRef.current;
+
     for (let i = 0; i < objectCount; i++) {
       // Create object using factory
       const objectData = createSceneObject({
         objectType,
         objectCount,
         objectIndex: i,
-        baseColor,
+        baseColor: resolvedBaseColor,
         metalness,
         emissiveIntensity,
         wireframeIntensity,
@@ -89,14 +98,8 @@ export function useObjectManager(refs, objectProps) {
     if (objectsRef.current.length > 0) {
       materialRef.current = objectsRef.current[0].material;
     }
-  }, [
-    objectCount,
-    baseColor,
-    objectType,
-    cpdTK_p,
-    cpdTK_q,
-    cpdTK_tubeRadius,
-    cpdTK_gap,
-  ]);
+    // Only rebuild when geometry-affecting inputs change. Color and material
+    // adjustments route through useMaterialUpdates to avoid expensive rebuilds.
+  }, [objectCount, objectType, cpdTK_p, cpdTK_q, cpdTK_tubeRadius, cpdTK_gap]);
   // Effect runs when these props change
 }

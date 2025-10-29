@@ -11,9 +11,10 @@ import { mergeGeometries } from "three/examples/jsm/utils/BufferGeometryUtils";
  * @returns {THREE.BufferGeometry}
  */
 export function createIcosahedron(options = {}) {
-  // Create two icosahedra
-  const ico1 = new THREE.IcosahedronGeometry();
-  const ico2 = new THREE.IcosahedronGeometry();
+  // Create two icosahedra with 15% larger scale
+  const scale = 1.15;
+  const ico1 = new THREE.IcosahedronGeometry(scale);
+  const ico2 = new THREE.IcosahedronGeometry(scale);
 
   // Rotate second icosahedron to create stella octangula / merkaba effect
   ico2.rotateX(Math.PI / 2);

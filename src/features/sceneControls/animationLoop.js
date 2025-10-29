@@ -84,19 +84,26 @@ const animationStyles = {
       geometry.attributes.position.needsUpdate = true;
     }
 
-    // Gentle floating motion
-    const floatY = Math.sin(t * 0.001 + (phase || 0)) * 0.5;
+    // Gentle floating dance motion
+    const floatY = Math.sin(t * 0.5 + (phase || 0)) * 0.5;
+    const floatX = Math.cos(t * 0.3 + (phase || 0)) * 0.3;
+    const floatZ = Math.sin(t * 0.4 + (phase || 0)) * 0.3;
+
     const meshes = [solidMesh, wireframeMesh, centerLines, curvedLines].filter(
       Boolean
     );
     meshes.forEach((mesh) => {
       if (originalPosition) {
         mesh.position.set(
-          originalPosition.x,
+          originalPosition.x + floatX,
           originalPosition.y + floatY,
-          originalPosition.z
+          originalPosition.z + floatZ
         );
       }
+
+      // Gentle rotation while floating
+      mesh.rotation.y += 0.005;
+      mesh.rotation.x += 0.002 * Math.sin(t * 0.1 + (phase || 0));
     });
 
     const objectId = objData.objectId || (solidMesh && solidMesh.uuid);
@@ -211,11 +218,16 @@ const animationStyles = {
       const minSpeed = 0.05 + speedVariation * 0.05;
       const maxSpeed = reactionSpeed * 0.05;
 
-      const currentSpinSpeed = THREE.MathUtils.lerp(
-        minSpeed,
-        maxSpeed * longWaveModulator,
-        buildUpFactor
-      );
+      // Boost rotation speed for super-compounds (Hessian polychoron, etc.)
+      const isSuperCompound = geometry?.userData?.isSuperCompound || false;
+      const speedMultiplier = isSuperCompound ? 3.0 : 1.0;
+
+      const currentSpinSpeed =
+        THREE.MathUtils.lerp(
+          minSpeed,
+          maxSpeed * longWaveModulator,
+          buildUpFactor
+        ) * speedMultiplier;
 
       solidMesh.rotation.x +=
         currentSpinSpeed * 0.375 * Math.sin(t * 0.2 + phase);

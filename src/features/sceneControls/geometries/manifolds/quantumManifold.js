@@ -22,7 +22,7 @@ import { mergeGeometries } from "three/examples/jsm/utils/BufferGeometryUtils";
 export function createQuantumManifold(options = {}) {
   const uSegments = Math.max(32, options.uSegments || 160);
   const vSegments = Math.max(16, options.vSegments || 80);
-  const scale = options.scale || 0.52; // Reduced from 0.65 by 20%
+  const scale = options.scale || 0.479; // Scaled to match compound icosahedron visual size (1.15 * 0.416)
 
   // Klein bottle parametric function
   const klein = (u, v) => {

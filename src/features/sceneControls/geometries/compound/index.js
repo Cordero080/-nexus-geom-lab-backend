@@ -10,7 +10,3 @@ export {
   createCompoundSphere,
   metadata as compoundSphereMetadata,
 } from "./compoundSphere.js";
-export {
-  createCompoundTorus,
-  metadata as compoundTorusMetadata,
-} from "./compoundTorus.js";

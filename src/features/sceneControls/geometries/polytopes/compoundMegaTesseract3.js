@@ -3,6 +3,7 @@ import { mergeGeometries } from "three/examples/jsm/utils/BufferGeometryUtils";
 
 // Cache built geometries to avoid recomputing the expensive sweep on reselection.
 const geometryCache = new Map();
+const CACHE_LABEL = "compoundMegaTesseractExperimental";
 
 function stableStringify(value) {
   if (value === null) return "null";
@@ -33,7 +34,10 @@ function createCacheKey(options) {
     const signature = stableStringify(options);
     return signature === "{}" ? "default" : `opts:${signature}`;
   } catch (error) {
-    console.warn("megaTesseract: failed to stringify options for cache", error);
+    console.warn(
+      `${CACHE_LABEL}: failed to stringify options for cache`,
+      error
+    );
     return null;
   }
 }
@@ -53,46 +57,28 @@ function cloneWithUserData(source) {
   return geometryClone;
 }
 
-/**
- * Helper function to create a tesseract with connecting frustum faces
- *
- * Creates a complete tesseract (4D hypercube) with:
- * - Outer cube
- * - Inner cube
- * - 6 connecting frustum faces (one for each cube face)
- *
- * @param {number} outerSize - Size of outer cube
- * @param {number} innerSize - Size of inner cube
- * @param {number} rotation - Optional rotation to apply (in radians)
- * @returns {THREE.BufferGeometry} Complete tesseract
- */
 function createTesseractWithFaces(outerSize, innerSize, rotation = null) {
   const geometries = [];
 
-  // Outer cube
   const outer = new THREE.BoxGeometry(outerSize, outerSize, outerSize);
   if (rotation) outer.rotateY(rotation);
   geometries.push(outer);
 
-  // Inner cube
   const inner = new THREE.BoxGeometry(innerSize, innerSize, innerSize);
   if (rotation) inner.rotateY(rotation);
-  inner.translate(0, 0.01, 0); // Slight offset to prevent z-fighting
+  inner.translate(0, 0.01, 0);
   geometries.push(inner);
 
-  // Create 6 connecting frustums (one for each face of the cube)
   const halfOuter = outerSize / 2;
   const halfInner = innerSize / 2;
   const depth = (outerSize - innerSize) / 2;
 
-  // Top face frustum (Y+)
   const topFrustum = new THREE.CylinderGeometry(halfInner, halfOuter, depth, 4);
   topFrustum.rotateY(Math.PI / 4);
   topFrustum.translate(0, halfOuter + depth / 2, 0);
   if (rotation) topFrustum.rotateY(rotation);
   geometries.push(topFrustum);
 
-  // Bottom face frustum (Y-)
   const bottomFrustum = new THREE.CylinderGeometry(
     halfOuter,
     halfInner,
@@ -104,7 +90,6 @@ function createTesseractWithFaces(outerSize, innerSize, rotation = null) {
   if (rotation) bottomFrustum.rotateY(rotation);
   geometries.push(bottomFrustum);
 
-  // Front face frustum (Z+)
   const frontFrustum = new THREE.CylinderGeometry(
     halfInner,
     halfOuter,
@@ -117,7 +102,6 @@ function createTesseractWithFaces(outerSize, innerSize, rotation = null) {
   if (rotation) frontFrustum.rotateY(rotation);
   geometries.push(frontFrustum);
 
-  // Back face frustum (Z-)
   const backFrustum = new THREE.CylinderGeometry(
     halfOuter,
     halfInner,
@@ -130,7 +114,6 @@ function createTesseractWithFaces(outerSize, innerSize, rotation = null) {
   if (rotation) backFrustum.rotateY(rotation);
   geometries.push(backFrustum);
 
-  // Right face frustum (X+)
   const rightFrustum = new THREE.CylinderGeometry(
     halfInner,
     halfOuter,
@@ -143,7 +126,6 @@ function createTesseractWithFaces(outerSize, innerSize, rotation = null) {
   if (rotation) rightFrustum.rotateY(rotation);
   geometries.push(rightFrustum);
 
-  // Left face frustum (X-)
   const leftFrustum = new THREE.CylinderGeometry(
     halfOuter,
     halfInner,
@@ -159,63 +141,121 @@ function createTesseractWithFaces(outerSize, innerSize, rotation = null) {
   return mergeGeometries(geometries, false);
 }
 
-/**
- * Creates a mega tesseract - compound tesseract with outer encasing layer
- *
- * This version keeps only the large compound pairing. It merges two full-size
- * tesseracts (outer cube, inner cube, and frustum bridges) at offset rotations,
- * removing the smaller inner pair entirely.
- *
- * @param {Object} options - Configuration options
- * @returns {THREE.BufferGeometry}
- */
-export function createMegaTesseract(options = {}) {
-  const cacheKey = createCacheKey(options);
+export function createCompoundMegaTesseractExperimental(options = {}) {
+  const { cpdMega3TranslationStep, cpdMega3LayerGap, cpdMega3BaseOffset } =
+    options || {};
+
+  const translationStep =
+    typeof cpdMega3TranslationStep === "number"
+      ? Math.max(0.0001, cpdMega3TranslationStep)
+      : 0.01;
+  const layerGap =
+    typeof cpdMega3LayerGap === "number"
+      ? Math.max(0, cpdMega3LayerGap)
+      : 0.065;
+  const baseOffset =
+    typeof cpdMega3BaseOffset === "number"
+      ? Math.max(0, cpdMega3BaseOffset)
+      : 0.01;
+
+  const normalizedOptions = { translationStep, layerGap, baseOffset };
+  const cacheKey = createCacheKey(normalizedOptions);
   const cachedGeometry = cacheKey ? geometryCache.get(cacheKey) : null;
   if (cachedGeometry) return cloneWithUserData(cachedGeometry);
 
-  // LARGE COMPOUND PAIR ONLY - remove smaller inner pair entirely
-  const primaryTesseract = createTesseractWithFaces(2.0, 1.5, Math.PI / 8);
-  primaryTesseract.translate(0, 0.01, 0);
-
-  const rotatedTesseract = createTesseractWithFaces(
+  const basePrimary = createTesseractWithFaces(2.0, 1.5, Math.PI / 8);
+  const baseRotated = createTesseractWithFaces(
     2.0,
     1.5,
     Math.PI / 8 + Math.PI / 4
   );
-  rotatedTesseract.translate(0, 0.02, 0);
 
-  // Merge only the two large tesseracts
-  const mergedMegaTesseract = mergeGeometries(
-    [primaryTesseract, rotatedTesseract],
-    false
-  );
+  const sweepOffset = Math.PI / 6; // 30° phased rotation cadence
 
-  // Recompute normals for proper lighting
-  mergedMegaTesseract.computeVertexNormals();
+  const sweepScales = [1.0, 0.72, 0.52];
 
-  // Mark it as mega tesseract for wireframe builders
-  mergedMegaTesseract.userData.isCompound = true;
-  mergedMegaTesseract.userData.isCpdTesseract = true;
-  mergedMegaTesseract.userData.baseType = "BoxGeometry";
-  mergedMegaTesseract.userData.isMegaTesseract = true;
-  mergedMegaTesseract.userData.componentCount = 2;
+  const sweeps = [];
 
-  if (cacheKey) geometryCache.set(cacheKey, mergedMegaTesseract);
+  const addSweep = (scale, startOffset) => {
+    const scaledPrimary = basePrimary.clone();
+    const scaledRotated = baseRotated.clone();
+    scaledPrimary.scale(scale, scale, scale);
+    scaledRotated.scale(scale, scale, scale);
 
-  return cloneWithUserData(mergedMegaTesseract);
+    const sweepGeoms = [];
+
+    const pushGeom = (geom, translateUnits) => {
+      const instance = geom.clone();
+      instance.translate(0, startOffset + translateUnits * translationStep, 0);
+      sweepGeoms.push(instance);
+    };
+
+    // Base orientation pair
+    pushGeom(scaledPrimary, 0);
+    pushGeom(scaledRotated, 1);
+
+    // Positive phase pair
+    const posPrimary = scaledPrimary.clone();
+    posPrimary.rotateY(sweepOffset);
+    pushGeom(posPrimary, 2);
+
+    const posRotated = scaledRotated.clone();
+    posRotated.rotateY(sweepOffset);
+    pushGeom(posRotated, 3);
+
+    // Negative phase pair
+    const negPrimary = scaledPrimary.clone();
+    negPrimary.rotateY(-sweepOffset);
+    pushGeom(negPrimary, 4);
+
+    const negRotated = scaledRotated.clone();
+    negRotated.rotateY(-sweepOffset);
+    pushGeom(negRotated, 5);
+
+    sweeps.push(...sweepGeoms);
+  };
+
+  const sweepOffsets = [
+    baseOffset,
+    baseOffset + layerGap,
+    baseOffset + layerGap * 2,
+  ];
+
+  sweepScales.forEach((scale, index) => {
+    addSweep(scale, sweepOffsets[index]);
+  });
+
+  const mergedCompoundMega = mergeGeometries(sweeps, false);
+
+  mergedCompoundMega.computeVertexNormals();
+
+  mergedCompoundMega.userData.isCompound = true;
+  mergedCompoundMega.userData.isCpdTesseract = true;
+  mergedCompoundMega.userData.baseType = "BoxGeometry";
+  mergedCompoundMega.userData.isMegaTesseract = true;
+  mergedCompoundMega.userData.isCompoundMegaTesseract = true;
+  mergedCompoundMega.userData.componentCount = sweeps.length;
+  mergedCompoundMega.userData.variant = "experimental-nested";
+  mergedCompoundMega.userData.sweepScales = sweepScales;
+  mergedCompoundMega.userData.sweepOffsets = sweepOffsets;
+  mergedCompoundMega.userData.translationStep = translationStep;
+  mergedCompoundMega.userData.layerGap = layerGap;
+  mergedCompoundMega.userData.baseOffset = baseOffset;
+  mergedCompoundMega.userData.optionSignature = normalizedOptions;
+
+  if (cacheKey) geometryCache.set(cacheKey, mergedCompoundMega);
+
+  return cloneWithUserData(mergedCompoundMega);
 }
 
-/**
- * Metadata for the mega tesseract geometry
- */
 export const metadata = {
-  name: "cpdtesseract",
-  displayName: "📦📦 Mega Tesseract",
+  name: "cpd-megatesseract-3",
+  displayName: "💎💎💎 Compound Mega-Tesseract III",
   category: "polytopes",
   description:
-    "Dual large tesseracts merged at offset rotations—outer compound only (no inner pair)",
+    "Recursive phased sweeps nested at multiple scales for concentric resonance",
   isCompound: true,
   isSuperCompound: true,
+  isUltraCompound: true,
   defaultOptions: {},
 };

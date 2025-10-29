@@ -68,9 +68,9 @@ function GeomLab() {
     setHasUnsavedChanges(true);
   }, [metalness, emissiveIntensity, baseColor, wireframeIntensity, hyperframeColor,
       hyperframeLineColor, cameraView, environment, environmentHue, objectCount,
-      animationStyle, objectType, ambientLightColor, ambientLightIntensity,
-      directionalLightColor, directionalLightIntensity, directionalLightX,
-      directionalLightY, directionalLightZ, scale]);
+  animationStyle, objectType, ambientLightColor, ambientLightIntensity,
+  directionalLightColor, directionalLightIntensity, directionalLightX,
+  directionalLightY, directionalLightZ, scale]);
 
   // Intercept link clicks for navigation blocking
   useEffect(() => {
@@ -257,7 +257,7 @@ function GeomLab() {
   // Handle exit with save prompt
   const handleExit = async () => {
     setShowSavePrompt(true);
-    setPendingNavigation('/');
+    setNextPath('/');
   };
 
   return (

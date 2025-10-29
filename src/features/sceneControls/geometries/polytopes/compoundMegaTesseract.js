@@ -1,6 +1,61 @@
 import * as THREE from "three";
 import { mergeGeometries } from "three/examples/jsm/utils/BufferGeometryUtils";
 
+// Cache built geometries to avoid recomputing the expensive sweep on reselection.
+const geometryCache = new Map();
+
+function stableStringify(value) {
+  if (value === null) return "null";
+  const type = typeof value;
+  if (type === "number" || type === "boolean") return JSON.stringify(value);
+  if (type === "string") return JSON.stringify(value);
+  if (type === "undefined") return '"__undefined__"';
+  if (type === "function") return '"__function__"';
+  if (Array.isArray(value)) {
+    return `[${value.map((item) => stableStringify(item)).join(",")}]`;
+  }
+  if (value instanceof Date) {
+    return JSON.stringify(value.toISOString());
+  }
+  if (value && typeof value === "object") {
+    const keys = Object.keys(value).sort();
+    const entries = keys.map(
+      (key) => `${JSON.stringify(key)}:${stableStringify(value[key])}`
+    );
+    return `{${entries.join(",")}}`;
+  }
+  return JSON.stringify(value);
+}
+
+function createCacheKey(options) {
+  if (!options || typeof options !== "object") return "default";
+  try {
+    const signature = stableStringify(options);
+    return signature === "{}" ? "default" : `opts:${signature}`;
+  } catch (error) {
+    console.warn(
+      "compoundMegaTesseract: failed to stringify options for cache",
+      error
+    );
+    return null;
+  }
+}
+
+function cloneUserData(data = {}) {
+  const cloned = { ...data };
+  for (const key of Object.keys(cloned)) {
+    const value = cloned[key];
+    if (Array.isArray(value)) cloned[key] = value.slice();
+  }
+  return cloned;
+}
+
+function cloneWithUserData(source) {
+  const geometryClone = source.clone();
+  geometryClone.userData = cloneUserData(source.userData);
+  return geometryClone;
+}
+
 /**
  * Helper function to create a tesseract with connecting frustum faces
  *
@@ -116,6 +171,10 @@ function createTesseractWithFaces(outerSize, innerSize, rotation = null) {
  * @returns {THREE.BufferGeometry}
  */
 export function createCompoundMegaTesseract(options = {}) {
+  const cacheKey = createCacheKey(options);
+  const cachedGeometry = cacheKey ? geometryCache.get(cacheKey) : null;
+  if (cachedGeometry) return cloneWithUserData(cachedGeometry);
+
   // Duplicate the mega tesseract construction so this file can evolve separately.
   const primaryTesseract = createTesseractWithFaces(2.0, 1.5, Math.PI / 8);
   primaryTesseract.translate(0, 0.01, 0);
@@ -166,7 +225,9 @@ export function createCompoundMegaTesseract(options = {}) {
   mergedCompoundMega.userData.isCompoundMegaTesseract = true;
   mergedCompoundMega.userData.componentCount = 6;
 
-  return mergedCompoundMega;
+  if (cacheKey) geometryCache.set(cacheKey, mergedCompoundMega);
+
+  return cloneWithUserData(mergedCompoundMega);
 }
 
 /**

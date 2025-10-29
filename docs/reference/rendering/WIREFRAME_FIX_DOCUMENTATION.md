@@ -19,7 +19,7 @@ The animation loop was iterating through `meshesToAnimate` array which included 
 Added a check at the start of the omni animation case to skip execution for non-solidMesh objects:
 
 ```javascript
-case 'alien': // renamed "omni" eventually 
+case 'alien': // renamed "omni" eventually
   // Only animate solidMesh - wireframes will be synchronized after
   if (currentMesh !== solidMesh) break;
 
@@ -237,8 +237,6 @@ If a single (non-compound) icosahedron is needed later, it can be easily impleme
 3. The compound contains the single version - just render half
 
 This approach keeps the more complex compound version as the foundation, making it easier to simplify down rather than build up.
-
-## Related Commits
 
 ## Related Commits
 
@@ -786,14 +784,3 @@ merged.userData.baseType = "OriginalGeometryType";
 
 - Latest commit - Fix compound tetrahedron using scale inversion to create true dual
 - Previous attempts with Y-rotation and X+Y rotation failed to create interpenetrating structure
-
-```
-
-```
-
-````
-
-```
-
-```
-````
