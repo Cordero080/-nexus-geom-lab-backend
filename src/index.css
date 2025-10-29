@@ -258,6 +258,60 @@ h1.quantum-title::after {
   z-index: 100001;
 }
 
+.title-char {
+  display: inline-block;
+  font-family: inherit;
+  letter-spacing: inherit;
+}
+
+.title-inverted-v {
+  display: inline-block;
+  transform: scaleY(-1) translateY(0.0em);
+  transform-origin: center;
+  font-family: 'Future Z', 'Orbitron', 'Rajdhani', sans-serif !important;
+  line-height: 1;
+  background: inherit;
+  color: inherit;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  letter-spacing: inherit;
+  margin: 0;
+}
+
+/* Apply upside-down A transform to all Orbitron text elements */
+.nav-link,
+.quote-highlight,
+.zero-char {
+  --orbitron-a-transform: scaleY(-1) translateY(0.08em);
+}
+
+/* This uses CSS content replacement to flip A's - use class approach instead */
+.nav-inverted-a,
+.quote-inverted-a,
+.orbitron-inverted-a {
+  display: inline-block !important;
+  transform: scaleY(-1) translateY(0.0em) !important;
+  transform-origin: center !important;
+  line-height: 1 !important;
+  font-family: inherit !important;
+}
+
+/* BeamScanButton label variant */
+.beamScanLabel .nav-inverted-a {
+  color: inherit !important;
+}
+
+/* Nav link variant */
+.nav-link .nav-inverted-a {
+  background: inherit;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: inherit;
+  transform: scaleY(-1) translateY(0.05em) !important;
+}
+
 .zero-char {
   font-family: 'Orbitron', sans-serif !important;
   font-weight: 900;

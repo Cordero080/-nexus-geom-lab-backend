@@ -191,7 +191,7 @@ export function createMobiusSphere(options = {}) {
     const h1 = Math.sin(t * 2) * 0.15;
     const h2 = Math.sin(t * 3 + Math.PI / 4) * 0.08;
     const h3 = Math.cos(t * 5) * 0.05;
-    const h4 = Math.sin(t * 7 + Math.PI / 3) * .03; // Added 4th harmonic
+    const h4 = Math.sin(t * 7 + Math.PI / 3) * 0.03; // Added 4th harmonic
     const twist = h1 + h2 + h3 + h4;
 
     // Strange attractor influence on radius

@@ -259,8 +259,8 @@ export default function HomePage() {
         <div className="nav-links">
           {/* Hide HOME link since we're on this page */}
           <Link to="/scenes" className="nav-link" data-dimension="1">// SCENES</Link>
-          <Link to="/showcase" className="nav-link" data-dimension="2">// SHOWCASE</Link>
-          <Link to="/geom-lab" className="nav-link" data-dimension="3">// GEOM LAB</Link>
+          <Link to="/showcase" className="nav-link" data-dimension="2">// SHOWC<span className="nav-inverted-a">V</span>SE</Link>
+          <Link to="/geom-lab" className="nav-link" data-dimension="3">// GEOM L<span className="nav-inverted-a">V</span>B</Link>
           {isAuthenticated && (
             <div className="nav-terminal">
               <button 
@@ -325,7 +325,7 @@ export default function HomePage() {
                 <ScrambleOnHover originalText="N3XUS" finalText="アトリエ" delay={3000} />
               </span><br></br>
               <span className="title-word" data-word="1">GE<span className="zero-char">0</span>M</span><br></br>
-              <span className="title-word" data-word="2">3D</span>
+              <span className="title-word" data-word="2">L<span className="title-inverted-v">V</span>B</span>
               {/* Show quantum glyphs globally */}
               
             </h1>
@@ -361,7 +361,7 @@ export default function HomePage() {
               }}>
                 <BeamScanButton
                   onClick={() => window.location.href = '/geom-lab'}
-                  label="ENTER GE0M LAB"
+                  label={<>ENTER GE0M L<span className="nav-inverted-a">V</span>B</>}
                   style={{
                     fontSize: '24px',
                     padding: '24px 180px',

@@ -29,7 +29,7 @@ export default function NavBar() {
   return (
     <nav className="quantum-nav">
       <div className="nav-logo">
-        <span className="logo-text" data-text="Nexus Geom 3D">Nexus Geom-3D</span>
+        <span className="logo-text" data-text="Nexus Geom Lab">Nexus Geom Lab</span>
       </div>
       <div className="nav-links">
          {/* ALWAYS show these - public links (hide if on current page) */}
