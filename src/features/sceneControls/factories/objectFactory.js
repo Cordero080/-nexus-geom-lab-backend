@@ -268,7 +268,18 @@ export function createSceneObject(config) {
       const isMega = geometry.userData.isMegaTesseract;
       const isCompoundMega = geometry.userData.isCompoundMegaTesseract;
 
-      if (isMega && !isCompoundMega) {
+      if (isCompoundMega) {
+        ({
+          centerLines,
+          centerLinesMaterial,
+          curvedLines,
+          curvedLinesMaterial,
+        } = createCpdTesseractCenterline(
+          geometry,
+          hyperframeColor,
+          hyperframeLineColor
+        ));
+      } else if (isMega && !isCompoundMega) {
         ({
           centerLines,
           centerLinesMaterial,

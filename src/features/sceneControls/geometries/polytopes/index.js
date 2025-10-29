@@ -31,6 +31,10 @@ export {
   createCompoundMegaTesseract,
   metadata as compoundMegaTesseractMetadata,
 } from "./compoundMegaTesseract.js";
+export {
+  createCompoundMegaTesseractNested,
+  metadata as compoundMegaTesseractNestedMetadata,
+} from "./compoundMegaTesseract2.js";
 export { create120Cell, metadata as cell120Metadata } from "./cell120.js";
 export {
   createCompound120Cell,

@@ -1,46 +1,28 @@
 import * as THREE from "three";
 import { mergeGeometries } from "three/examples/jsm/utils/BufferGeometryUtils";
 
-/**
- * Helper function to create a tesseract with connecting frustum faces
- *
- * Creates a complete tesseract (4D hypercube) with:
- * - Outer cube
- * - Inner cube
- * - 6 connecting frustum faces (one for each cube face)
- *
- * @param {number} outerSize - Size of outer cube
- * @param {number} innerSize - Size of inner cube
- * @param {number} rotation - Optional rotation to apply (in radians)
- * @returns {THREE.BufferGeometry} Complete tesseract
- */
 function createTesseractWithFaces(outerSize, innerSize, rotation = null) {
   const geometries = [];
 
-  // Outer cube
   const outer = new THREE.BoxGeometry(outerSize, outerSize, outerSize);
   if (rotation) outer.rotateY(rotation);
   geometries.push(outer);
 
-  // Inner cube
   const inner = new THREE.BoxGeometry(innerSize, innerSize, innerSize);
   if (rotation) inner.rotateY(rotation);
-  inner.translate(0, 0.01, 0); // Slight offset to prevent z-fighting
+  inner.translate(0, 0.01, 0);
   geometries.push(inner);
 
-  // Create 6 connecting frustums (one for each face of the cube)
   const halfOuter = outerSize / 2;
   const halfInner = innerSize / 2;
   const depth = (outerSize - innerSize) / 2;
 
-  // Top face frustum (Y+)
   const topFrustum = new THREE.CylinderGeometry(halfInner, halfOuter, depth, 4);
   topFrustum.rotateY(Math.PI / 4);
   topFrustum.translate(0, halfOuter + depth / 2, 0);
   if (rotation) topFrustum.rotateY(rotation);
   geometries.push(topFrustum);
 
-  // Bottom face frustum (Y-)
   const bottomFrustum = new THREE.CylinderGeometry(
     halfOuter,
     halfInner,
@@ -52,7 +34,6 @@ function createTesseractWithFaces(outerSize, innerSize, rotation = null) {
   if (rotation) bottomFrustum.rotateY(rotation);
   geometries.push(bottomFrustum);
 
-  // Front face frustum (Z+)
   const frontFrustum = new THREE.CylinderGeometry(
     halfInner,
     halfOuter,
@@ -65,7 +46,6 @@ function createTesseractWithFaces(outerSize, innerSize, rotation = null) {
   if (rotation) frontFrustum.rotateY(rotation);
   geometries.push(frontFrustum);
 
-  // Back face frustum (Z-)
   const backFrustum = new THREE.CylinderGeometry(
     halfOuter,
     halfInner,
@@ -78,7 +58,6 @@ function createTesseractWithFaces(outerSize, innerSize, rotation = null) {
   if (rotation) backFrustum.rotateY(rotation);
   geometries.push(backFrustum);
 
-  // Right face frustum (X+)
   const rightFrustum = new THREE.CylinderGeometry(
     halfInner,
     halfOuter,
@@ -91,7 +70,6 @@ function createTesseractWithFaces(outerSize, innerSize, rotation = null) {
   if (rotation) rightFrustum.rotateY(rotation);
   geometries.push(rightFrustum);
 
-  // Left face frustum (X-)
   const leftFrustum = new THREE.CylinderGeometry(
     halfOuter,
     halfInner,
@@ -107,16 +85,7 @@ function createTesseractWithFaces(outerSize, innerSize, rotation = null) {
   return mergeGeometries(geometries, false);
 }
 
-/**
- * Creates a compound mega tesseract starting from the mega baseline. This mirrors the
- * mega tesseract geometry verbatim so that future tweaks can diverge independently without
- * touching the original mega implementation.
- *
- * @param {Object} options - Configuration options (currently unused)
- * @returns {THREE.BufferGeometry}
- */
-export function createCompoundMegaTesseract(options = {}) {
-  // Duplicate the mega tesseract construction so this file can evolve separately.
+export function createCompoundMegaTesseractNested(options = {}) {
   const primaryTesseract = createTesseractWithFaces(2.0, 1.5, Math.PI / 8);
   primaryTesseract.translate(0, 0.01, 0);
 
@@ -127,33 +96,18 @@ export function createCompoundMegaTesseract(options = {}) {
   );
   rotatedTesseract.translate(0, 0.02, 0);
 
-  const sweepOffset = Math.PI / 6; // 30° phase shift for additional copies
+  const innerScale = 0.85;
 
-  const positivePrimary = primaryTesseract.clone();
-  positivePrimary.rotateY(sweepOffset);
-  positivePrimary.translate(0, 0.03, 0);
+  const innerPrimary = primaryTesseract.clone();
+  innerPrimary.scale(innerScale, innerScale, innerScale);
+  innerPrimary.translate(0, 0.03, 0);
 
-  const positiveRotated = rotatedTesseract.clone();
-  positiveRotated.rotateY(sweepOffset);
-  positiveRotated.translate(0, 0.04, 0);
-
-  const negativePrimary = primaryTesseract.clone();
-  negativePrimary.rotateY(-sweepOffset);
-  negativePrimary.translate(0, 0.05, 0);
-
-  const negativeRotated = rotatedTesseract.clone();
-  negativeRotated.rotateY(-sweepOffset);
-  negativeRotated.translate(0, 0.06, 0);
+  const innerRotated = rotatedTesseract.clone();
+  innerRotated.scale(innerScale, innerScale, innerScale);
+  innerRotated.translate(0, 0.04, 0);
 
   const mergedCompoundMega = mergeGeometries(
-    [
-      primaryTesseract,
-      rotatedTesseract,
-      positivePrimary,
-      positiveRotated,
-      negativePrimary,
-      negativeRotated,
-    ],
+    [primaryTesseract, rotatedTesseract, innerPrimary, innerRotated],
     false
   );
 
@@ -164,20 +118,18 @@ export function createCompoundMegaTesseract(options = {}) {
   mergedCompoundMega.userData.baseType = "BoxGeometry";
   mergedCompoundMega.userData.isMegaTesseract = true;
   mergedCompoundMega.userData.isCompoundMegaTesseract = true;
-  mergedCompoundMega.userData.componentCount = 6;
+  mergedCompoundMega.userData.componentCount = 4;
+  mergedCompoundMega.userData.variant = "nested";
 
   return mergedCompoundMega;
 }
 
-/**
- * Metadata for the compound mega tesseract geometry
- */
 export const metadata = {
-  name: "cpd-megatesseract",
-  displayName: "💎💎💎 Compound Mega-Tesseract",
+  name: "cpd-megatesseract-2",
+  displayName: "💎💎 Compound Mega-Tesseract II",
   category: "polytopes",
   description:
-    "Phased rotation sweep of mega-tesseract pairs rotated ±30° for rhythmic overlap",
+    "Layered mega tesseract with a scaled inner pair for nested depth",
   isCompound: true,
   isSuperCompound: true,
   isUltraCompound: true,
