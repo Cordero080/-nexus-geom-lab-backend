@@ -157,25 +157,35 @@ if (isCompoundMegaTesseract) {
 
 ---
 
+## 2025-10-28 · Centerline Refresh (see docs/technical)
+
+- Mega tesseract centerline now samples real edge vertices and links every inner corner to the next outward lattice point, so no joints are skipped.
+- Compound tesseract centerline inherits hyperframe slider colors for both the red skeleton and green connectors.
+- Touchpoints: `src/features/sceneControls/factories/hyperframeBuilders/megaTesseractCenterline.js`, `.../cpdTesseractCenterline.js`.
+
+---
+
 ## Related Geometries
 
 This consistency now applies across all tesseract variants:
 
-| Geometry                    | Components Merged                               | Hyperframe Inner Structures | Status         |
-| --------------------------- | ----------------------------------------------- | --------------------------- | -------------- |
-| Compound Icosahedron        | 2 icosahedrons                                  | 2 inner icosahedrons        | ✅ Consistent  |
-| Compound Tesseract          | 2 tesseracts                                    | 2 inner cubes               | ✅ Consistent  |
-| Mega Tesseract              | 4 tesseracts (2 small + 2 large pairs)          | 4 inner cubes               | ✅ **Fixed**   |
-| **Compound Mega Tesseract** | **8 tesseracts (4 mega set + 4 cross set)**     | **8 inner cubes**           | ✅ **Fixed**   |
+| Geometry                    | Components Merged                           | Hyperframe Inner Structures | Status        |
+| --------------------------- | ------------------------------------------- | --------------------------- | ------------- |
+| Compound Icosahedron        | 2 icosahedrons                              | 2 inner icosahedrons        | ✅ Consistent |
+| Compound Tesseract          | 2 tesseracts                                | 2 inner cubes               | ✅ Consistent |
+| Mega Tesseract              | 4 tesseracts (2 small + 2 large pairs)      | 4 inner cubes               | ✅ **Fixed**  |
+| **Compound Mega Tesseract** | **8 tesseracts (4 mega set + 4 cross set)** | **8 inner cubes**           | ✅ **Fixed**  |
 
 ### Implementation Details
 
 **Compound Tesseract** (Already Consistent):
+
 - Merges 2 complete tesseracts with Y rotations (0°, 45°)
 - Hyperframe shows 2 inner cubes at innerSize=0.375
 - Uses `createCpdTesseractHyperframe`
 
 **Mega Tesseract** (Now Fixed):
+
 - Merges 4 complete tesseracts:
   - Inner pair: 2 smaller (rotation: 0°, 45°, innerSize=0.375)
   - Outer pair: 2 larger (rotation: 22.5°, 67.5°, innerSize=1.5)
@@ -184,6 +194,7 @@ This consistency now applies across all tesseract variants:
 - Hyperframe now accurately reflects: 2 cubes at innerSize1=0.375, 2 cubes at innerSize2=1.5
 
 **Compound Mega Tesseract** (Now Fixed):
+
 - Merges 8 complete tesseracts (first mega set + cross set with X/Z rotations)
 - Hyperframe shows all 8 inner cubes with correct rotations
 - Uses dedicated `createCompoundMegaTesseractHyperframe`
