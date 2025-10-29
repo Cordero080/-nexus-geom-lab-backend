@@ -10,7 +10,11 @@ import { nearestVertexIndex } from "../../utils/geometryHelpers";
  * @param {THREE.Material} wireframeMaterial - Material for the wireframe
  * @returns {THREE.Group} The wireframe group
  */
-export function createCpdTesseractWireframe(geometry, wireframeMaterial) {
+export function createCpdTesseractWireframe(
+  geometry,
+  wireframeMaterial,
+  options = {}
+) {
   console.log(
     "Creating compound tesseract wireframe from actual geometry edges"
   );
@@ -18,12 +22,23 @@ export function createCpdTesseractWireframe(geometry, wireframeMaterial) {
   const wireframeGroup = new THREE.Group();
   const edgePairs = [];
 
+  const edgeMaterial = wireframeMaterial.clone?.() || wireframeMaterial;
+  if (edgeMaterial) {
+    edgeMaterial.transparent = false;
+    edgeMaterial.opacity = 1;
+    edgeMaterial.depthWrite = true;
+    edgeMaterial.needsUpdate = true;
+  }
+
+  const { radiusScale = 1 } = options;
+
   // Extract all edges from the merged geometry
   const edgesGeometry = new THREE.EdgesGeometry(geometry);
   const positions = edgesGeometry.attributes.position.array;
 
   // Halo material and settings
-  const MAIN_RADIUS = 0.008;
+  const BASE_RADIUS = 0.008;
+  const MAIN_RADIUS = BASE_RADIUS * radiusScale;
   const HALO_RADIUS_FACTOR = 1.35; // slightly slimmer halo
   const haloMaterial = new THREE.MeshBasicMaterial({
     color: wireframeMaterial.color?.clone?.() || new THREE.Color("#ffffff"),
@@ -63,7 +78,7 @@ export function createCpdTesseractWireframe(geometry, wireframeMaterial) {
       distance,
       8
     );
-    const cylinderMesh = new THREE.Mesh(cylinderGeom, wireframeMaterial);
+    const cylinderMesh = new THREE.Mesh(cylinderGeom, edgeMaterial);
 
     // Position cylinder between start and end points
     const midpoint = start.clone().add(end).multiplyScalar(0.5);

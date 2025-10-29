@@ -110,39 +110,28 @@ function createTesseractWithFaces(outerSize, innerSize, rotation = null) {
 /**
  * Creates a mega tesseract - compound tesseract with outer encasing layer
  *
- * This is a scaled-down version of the compound tesseract with an additional
- * outer layer, creating a 4-layer structure:
- * - Inner pair: Two smaller tesseracts (compound)
- * - Outer pair: Two larger encasing tesseracts
- *
- * Each tesseract has outer cube, inner cube, and 6 connecting frustum faces.
- * Total: 4 complete tesseracts merged together.
+ * This version keeps only the large compound pairing. It merges two full-size
+ * tesseracts (outer cube, inner cube, and frustum bridges) at offset rotations,
+ * removing the smaller inner pair entirely.
  *
  * @param {Object} options - Configuration options
  * @returns {THREE.BufferGeometry}
  */
 export function createMegaTesseract(options = {}) {
-  // INNER PAIR - First tesseract with connecting faces (SMALLER)
-  const megaTess1 = createTesseractWithFaces(0.75, 0.375, null);
+  // LARGE COMPOUND PAIR ONLY - remove smaller inner pair entirely
+  const primaryTesseract = createTesseractWithFaces(2.0, 1.5, Math.PI / 8);
+  primaryTesseract.translate(0, 0.01, 0);
 
-  // Second tesseract rotated 45° on Y axis (simulates 4D rotation)
-  const megaTess2 = createTesseractWithFaces(0.75, 0.375, Math.PI / 4);
-  megaTess2.translate(0, 0.01, 0); // Slight offset to prevent z-fighting
-
-  // OUTER PAIR - Larger encasing layer
-  const megaTess3 = createTesseractWithFaces(2.0, 1.5, Math.PI / 8);
-  megaTess3.translate(0, 0.02, 0);
-
-  const megaTess4 = createTesseractWithFaces(
+  const rotatedTesseract = createTesseractWithFaces(
     2.0,
     1.5,
     Math.PI / 8 + Math.PI / 4
   );
-  megaTess4.translate(0, 0.03, 0);
+  rotatedTesseract.translate(0, 0.02, 0);
 
-  // Merge all four tesseracts
+  // Merge only the two large tesseracts
   const mergedMegaTesseract = mergeGeometries(
-    [megaTess1, megaTess2, megaTess3, megaTess4],
+    [primaryTesseract, rotatedTesseract],
     false
   );
 
@@ -151,9 +140,10 @@ export function createMegaTesseract(options = {}) {
 
   // Mark it as mega tesseract for wireframe builders
   mergedMegaTesseract.userData.isCompound = true;
+  mergedMegaTesseract.userData.isCpdTesseract = true;
   mergedMegaTesseract.userData.baseType = "BoxGeometry";
   mergedMegaTesseract.userData.isMegaTesseract = true;
-  mergedMegaTesseract.userData.componentCount = 4;
+  mergedMegaTesseract.userData.componentCount = 2;
 
   return mergedMegaTesseract;
 }
@@ -166,7 +156,7 @@ export const metadata = {
   displayName: "📦📦 Mega Tesseract",
   category: "polytopes",
   description:
-    "4-layer compound tesseract with outer encasing - 4 complete 4D hypercubes merged",
+    "Dual large tesseracts merged at offset rotations—outer compound only (no inner pair)",
   isCompound: true,
   isSuperCompound: true,
   defaultOptions: {},

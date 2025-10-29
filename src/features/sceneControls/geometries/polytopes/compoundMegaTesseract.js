@@ -136,11 +136,7 @@ export function createCompoundMegaTesseract(options = {}) {
   // FIRST MEGA SET - Original 4 tesseracts from mega-tesseract
   // Inner pair (now larger for better proportion)
   const mega1 = createTesseractWithFaces(smallOuter, smallInner, null);
-  const mega2 = createTesseractWithFaces(
-    smallOuter,
-    smallInner,
-    Math.PI / 4
-  );
+  const mega2 = createTesseractWithFaces(smallOuter, smallInner, Math.PI / 4);
   mega2.translate(0, 0.01, 0);
 
   // Outer pair
@@ -155,11 +151,7 @@ export function createCompoundMegaTesseract(options = {}) {
 
   // SECOND MEGA SET - 4 tesseracts rotated at cross angles (90° perpendicular)
   // Rotate on X axis to create cross effect
-  const cross1 = createTesseractWithFaces(
-    smallOuter,
-    smallInner,
-    Math.PI / 6
-  );
+  const cross1 = createTesseractWithFaces(smallOuter, smallInner, Math.PI / 6);
   cross1.rotateX(Math.PI / 2); // 90° rotation on X
   cross1.translate(0, 0.04, 0);
 
@@ -172,11 +164,7 @@ export function createCompoundMegaTesseract(options = {}) {
   cross2.translate(0, 0.05, 0);
 
   // Larger cross pair - rotated on Z axis
-  const cross3 = createTesseractWithFaces(
-    largeOuter,
-    largeInner,
-    Math.PI / 5
-  );
+  const cross3 = createTesseractWithFaces(largeOuter, largeInner, Math.PI / 5);
   cross3.rotateZ(Math.PI / 2); // 90° rotation on Z
   cross3.translate(0, 0.06, 0);
 

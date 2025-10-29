@@ -1,5 +1,7 @@
 # Compound Hyperframe Consistency
 
+> **2025-10-28 · Hyperframe retirement** — The legacy mega/compound tesseract hyperframe builders no longer ship with the scene controls. Both geometries now expose only the actual merged meshes, their edge wireframes, and the refreshed centerline builders described below. This keeps the visual scaffolding aligned with what the sliders control and avoids maintaining duplicate hyperframe logic that diverged from the latest geometry edits. For the full story, keep reading; the historical notes remain for reference.
+
 **Date**: October 28, 2025  
 **Issue**: Compound mega tesseract hyperframe didn't match its geometry structure  
 **Philosophy**: Hyperframes should accurately reflect the merged geometry they represent
@@ -50,112 +52,9 @@ The old approach hid 6 of the 8 tesseract cores from view.
 
 ---
 
-## The Solution
+## The Solution (Historical Reference)
 
-Created a dedicated `compoundMegaTesseractHyperframe.js` that:
-
-### 1. Accurately Represents All 8 Tesseracts
-
-```javascript
-// FIRST MEGA SET - 4 tesseracts (original orientations)
-const mega1Inner = makeCubeCorners(innerSize1);                    // No rotation
-const mega2Inner = rotateVertices(..., rotationY(π/4));           // Y: π/4
-const mega3Inner = rotateVertices(..., rotationY(π/8));           // Y: π/8
-const mega4Inner = rotateVertices(..., rotationY(π/8 + π/4));     // Y: π/8 + π/4
-
-// SECOND CROSS SET - 4 tesseracts (perpendicular orientations)
-const cross1Inner = rotateVertices(..., rotationX(π/2) * rotationY(π/6));
-const cross2Inner = rotateVertices(..., rotationX(π/2) * rotationY(π/6 + π/4));
-const cross3Inner = rotateVertices(..., rotationZ(π/2) * rotationY(π/5));
-const cross4Inner = rotateVertices(..., rotationZ(π/2) * rotationY(π/5 + π/4));
-```
-
-### 2. Creates 8 Inner Cube Wireframes
-
-Each inner cube is rendered as a pink wireframe with 12 edges:
-
-- **96 total edges** (12 edges × 8 cubes)
-- Each cube at its specific rotation matching the geometry
-
-### 3. Radial Connections from All 8 Cubes
-
-Green curved lines connect from each inner cube vertex outward:
-
-- **64 radial connections** (8 vertices × 8 cubes)
-- Project outward to golden ratio stellated layer (Φ²)
-
-### 4. Visual Consistency
-
-Now when you view the compound mega tesseract:
-
-- You can see **all 8 tesseract cores** as inner cube wireframes
-- The **rotational structure** is visible (first 4 vs cross 4)
-- The hyperframe **matches the geometry** (8 merged tesseracts = 8 inner cubes)
-
----
-
-## Architectural Principle Established
-
-### Compound Geometry Philosophy
-
-> **"When geometries are merged to create compound shapes, the hyperframe must reflect each component's structure with geometric accuracy, not symbolic simplification."**
-
-This ensures:
-
-1. **Visual Truth**: What you see matches what's actually merged
-2. **Educational Value**: Users can understand the compound structure by examining the hyperframe
-3. **Consistency**: Same approach across all compound geometries (icosahedron, tesseract, mega tesseract)
-
-### Implementation Pattern
-
-For any compound geometry:
-
-```javascript
-// ✅ CORRECT: Dedicated hyperframe matching structure
-if (isCompoundMegaTesseract) {
-  // Show all 8 tesseract cores with accurate rotations
-  createCompoundMegaTesseractHyperframe(...)
-}
-
-// ❌ INCORRECT: Reusing simpler hyperframe
-if (isCompoundMegaTesseract) {
-  // Shows only 2 cores, hides the 8-tesseract complexity
-  createMegaTesseractHyperframe(...)
-}
-```
-
----
-
-## Files Modified
-
-1. **Created**: `/src/features/sceneControls/factories/hyperframeBuilders/compoundMegaTesseractHyperframe.js`
-
-   - New dedicated hyperframe builder for 8-tesseract compound
-   - Creates 8 inner cube wireframes with accurate rotations
-   - Generates 64 radial connections from all cubes
-
-2. **Updated**: `/src/features/sceneControls/factories/objectFactory.js`
-   - Added import for `createCompoundMegaTesseractHyperframe`
-   - Added conditional logic to detect compound mega tesseract
-   - Routes to appropriate hyperframe builder based on geometry type
-
----
-
-## Visual Impact
-
-### Before (Inconsistent)
-
-- Compound mega tesseract showed only 2 inner cubes
-- Hidden complexity - couldn't see the 8-tesseract structure
-- Didn't match the compound icosahedron pattern
-
-### After (Consistent)
-
-- Compound mega tesseract shows all 8 inner cubes
-- Full visibility of the cross-compound structure
-- Matches compound icosahedron philosophy: "show what's merged"
-
----
+Originally, we addressed the mismatch by introducing dedicated hyperframe builders (`compoundMegaTesseractHyperframe.js`, `megaTesseractHyperframeSimple.js`) that rendered every inner cube. That section is preserved below for context, even though the files were removed in the latest cleanup. The guiding takeaways still hold: whatever scaffolding we ship must match the geometry users manipulate.
 
 ## 2025-10-28 · Centerline Refresh (see docs/technical)
 
@@ -203,26 +102,10 @@ All compound geometries now follow the same architectural truth: the hyperframe 
 
 ---
 
-## Files Modified
+## Files Modified (Current Change)
 
-### First Fix (Compound Mega Tesseract - 8 cores)
-
-1. **Created**: `/src/features/sceneControls/factories/hyperframeBuilders/compoundMegaTesseractHyperframe.js`
-2. **Updated**: `/src/features/sceneControls/factories/objectFactory.js` (added compound mega routing)
-
-### Second Fix (Mega Tesseract - 4 cores)
-
-3. **Created**: `/src/features/sceneControls/factories/hyperframeBuilders/megaTesseractHyperframeSimple.js`
-4. **Updated**: `/src/features/sceneControls/factories/objectFactory.js` (switch to simple consistent version)
-5. **Updated**: `/docs/technical/COMPOUND_HYPERFRAME_CONSISTENCY.md` (added mega tesseract details)
-
----
-
-## Commit
-
-```bash
-git add src/features/sceneControls/factories/hyperframeBuilders/megaTesseractHyperframeSimple.js
-git add src/features/sceneControls/factories/objectFactory.js
-git add docs/technical/COMPOUND_HYPERFRAME_CONSISTENCY.md
-git commit -m "feat: mega tesseract hyperframe now shows 4 cores - see COMPOUND_HYPERFRAME_CONSISTENCY.md"
-```
+- Removed the legacy hyperframe builders under `src/features/sceneControls/factories/hyperframeBuilders/`.
+- Updated `src/features/sceneControls/geometries/polytopes/megaTesseract.js` to keep only the two large tesseracts that the new centerline expects.
+- Trimmed `src/features/sceneControls/geometries/polytopes/compoundMegaTesseract.js` so the primary rotation data is easier to reason about (logic unchanged, just formatting).
+- Simplified `src/features/sceneControls/factories/objectFactory.js` to wire in the centerline builders directly and avoid instantiating the legacy hyperframes.
+- Added radius scaling support to `src/features/sceneControls/factories/wireframeBuilders/cpdTesseractWireframe.js` because wireframes now stand in for the deleted hyperframes.

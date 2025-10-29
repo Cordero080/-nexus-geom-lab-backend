@@ -25,10 +25,9 @@ import { createCompound24CellHyperframe } from "./hyperframeBuilders/compoundCel
 import { create16CellHyperframe } from "./hyperframeBuilders/cell16Hyperframe";
 import { create600CellHyperframe } from "./hyperframeBuilders/cell600Hyperframe";
 import { createCompound600CellHyperframe } from "./hyperframeBuilders/compoundCell600Hyperframe";
-import { createCpdTesseractHyperframe } from "./hyperframeBuilders/cpdTesseractHyperframe";
-import { createMegaTesseractHyperframe } from "./hyperframeBuilders/megaTesseractHyperframe";
-import { createMegaTesseractHyperframeSimple } from "./hyperframeBuilders/megaTesseractHyperframeSimple";
-import { createCompoundMegaTesseractHyperframe } from "./hyperframeBuilders/compoundMegaTesseractHyperframe";
+// Tesseract hyperframes removed: render only mesh + wireframe (no inner center-lines/connectors)
+import { createMegaTesseractCenterline } from "./hyperframeBuilders/megaTesseractCenterline";
+import { createCpdTesseractCenterline } from "./hyperframeBuilders/cpdTesseractCenterline";
 
 /**
  * Creates a complete 3D object with all components:
@@ -266,37 +265,38 @@ export function createSceneObject(config) {
   ) {
     // Check if it's a compound tesseract (two interpenetrating 4D hypercubes) or regular tesseract (single 4D hypercube)
     if (geometry.userData && geometry.userData.isCpdTesseract) {
-      // Use dedicated hyperframe based on specific tesseract type
-      const isCompoundMegaTesseract = geometry.userData.isCompoundMegaTesseract;
-      const isMegaTesseract =
-        objectType === "cpdtesseract" || objectType === "cpd-megatesseract";
+      const isMega = geometry.userData.isMegaTesseract;
+      const isCompoundMega = geometry.userData.isCompoundMegaTesseract;
 
-      let result;
-      if (isCompoundMegaTesseract) {
-        // 8-tesseract compound mega: use dedicated hyperframe with 8 inner cubes
-        result = createCompoundMegaTesseractHyperframe(
+      if (isMega && !isCompoundMega) {
+        ({
+          centerLines,
+          centerLinesMaterial,
+          curvedLines,
+          curvedLinesMaterial,
+        } = createMegaTesseractCenterline(
           geometry,
           hyperframeColor,
           hyperframeLineColor
-        );
-      } else if (isMegaTesseract) {
-        // 4-tesseract mega: use simple consistent hyperframe with 4 inner cubes
-        result = createMegaTesseractHyperframeSimple(
+        ));
+      } else if (!isMega && !isCompoundMega) {
+        ({
+          centerLines,
+          centerLinesMaterial,
+          curvedLines,
+          curvedLinesMaterial,
+        } = createCpdTesseractCenterline(
           geometry,
           hyperframeColor,
           hyperframeLineColor
-        );
+        ));
       } else {
-        // 2-tesseract compound: use simple hyperframe
-        result = createCpdTesseractHyperframe(
-          geometry,
-          hyperframeColor,
-          hyperframeLineColor
-        );
+        // For other tesseract-based geometries, keep hyperframe disabled
+        centerLines = new THREE.Group();
+        curvedLines = new THREE.Group();
+        centerLinesMaterial = null;
+        curvedLinesMaterial = null;
       }
-
-      ({ centerLines, centerLinesMaterial, curvedLines, curvedLinesMaterial } =
-        result);
     } else {
       const result = createBoxHyperframe(
         geometry,
