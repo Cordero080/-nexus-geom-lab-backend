@@ -9,10 +9,6 @@
 }
 
 /* Global Styles */
-* {
-  font-family: 'Orbitron', 'JetBrains Mono', monospace !important;
-}
-
 body {
   min-height: 100vh;
   display: flex;
@@ -26,6 +22,19 @@ body {
   overflow-x: hidden;
   position: relative;
   cursor: none;
+  animation: mysteriousFadeIn 3s ease-out forwards;
+  opacity: 0;
+}
+
+@keyframes mysteriousFadeIn {
+  0% {
+    opacity: 0;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
 
 /* Cursor Styles */
@@ -212,16 +221,18 @@ h1.quantum-title {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 12px 24px;
+  padding: 30px 60px;
   isolation: isolate;
   perspective: 1000px;
   z-index: 100000;
   will-change: transform, filter;
+  overflow: visible;
 }
 
 .title-word {
   display: inline-block;
   margin: 0 5px;
+  padding: 0 20px;
   font-family: 'Future Z', 'Orbitron', 'Rajdhani', sans-serif !important;
   font-weight: normal;
   letter-spacing: inherit;
@@ -234,17 +245,89 @@ h1.quantum-title {
   position: relative;
   z-index: 100001;
   isolation: isolate;
+  overflow: visible;
+  opacity: 0;
 }
 
-/* Only apply 3D effect to the last word (LVB) for balance */
+.title-word[data-word="NEXUS"] {
+  animation: pageTitleShimmer 5s ease-in-out infinite, particleArrivalTopLeft 1.8s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  animation-delay: 0s, 0s;
+}
+
+.title-word[data-word="GE0M"] {
+  animation: pageTitleShimmer 5s ease-in-out infinite, particleArrivalRight 1.8s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  animation-delay: 0s, 0.3s;
+}
+
+.title-word[data-word="LVB"] {
+  animation: pageTitleShimmer 5s ease-in-out infinite, particleArrivalBottomLeft 2s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  animation-delay: 0s, 0.6s;
+}
+
+@keyframes particleArrivalTopLeft {
+  0% {
+    opacity: 0;
+    transform: translate3d(-800px, -600px, -2000px) scale(0.2) rotate(-15deg);
+    filter: blur(25px);
+  }
+  60% {
+    opacity: 0.8;
+    filter: blur(4px);
+  }
+  100% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1) rotate(0deg);
+    filter: blur(0);
+  }
+}
+
+@keyframes particleArrivalRight {
+  0% {
+    opacity: 0;
+    transform: translate3d(1000px, 0px, -2500px) scale(0.15) rotate(70deg);
+    filter: blur(2px);
+  }
+  60% {
+    opacity: 0.8;
+    filter: blur(1px);
+  }
+  100% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1) rotate(0deg);
+    filter: blur(0);
+  }
+}
+
+@keyframes particleArrivalBottomLeft {
+  0% {
+    opacity: 0;
+    transform: translate3d(-800px, 600px, -9000px) scale(0.25) rotate(313deg);
+    filter: blur(11px);
+  }
+  60% {
+    opacity: 0.7;
+    filter: blur(0px);
+  }
+  100% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1) rotate(0deg);
+    filter: blur(0);
+  }
+}
+
+/* Apply 3D effect to all three words */
+.title-word[data-word="NEXUS"]::before,
+.title-word[data-word="NEXUS"]::after,
+.title-word[data-word="GE0M"]::before,
+.title-word[data-word="GE0M"]::after,
 .title-word[data-word="LVB"]::before,
 .title-word[data-word="LVB"]::after {
   content: attr(data-word);
   position: absolute;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  white-space: nowrap;
   pointer-events: none;
   letter-spacing: inherit;
   text-transform: inherit;
@@ -258,18 +341,22 @@ h1.quantum-title {
   -webkit-text-fill-color: inherit;
 }
 
+.title-word[data-word="NEXUS"]::before,
+.title-word[data-word="GE0M"]::before,
 .title-word[data-word="LVB"]::before {
   z-index: -2;
   filter: blur(18px);
   opacity: 0.45;
-  transform: translateY(6px) translateX(-2px) scale(1.05);
+  transform: translate(-50%, -50%) translateY(6px) translateX(-2px) scale(1.05);
 }
 
+.title-word[data-word="NEXUS"]::after,
+.title-word[data-word="GE0M"]::after,
 .title-word[data-word="LVB"]::after {
   z-index: -2;
   opacity: 0.4;
-  transform: translateY(4px) translateX(0px);
-  text-shadow: 0 0 20px rgba(22, 10, 27, 0.503), 0 0 60px rgba(0, 132, 255, 0.5);
+  transform: translate(-50%, -50%) translateY(10px) translateX(0px);
+  text-shadow: 0 0 20px rgba(22, 10, 27, 0.146), 0 0 60px rgba(5, 1, 49, 0.89);
 }
 
 .title-char {
@@ -278,9 +365,35 @@ h1.quantum-title {
   letter-spacing: inherit;
 }
 
+.slashed-zero {
+  position: relative;
+  display: inline-block;
+  background: linear-gradient(135deg, #07a2c1 0%, #fd0a6f 55%, #2eaca4 75%, #c8922e 100%);
+  background-size: 200% 200%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: pageTitleShimmer 5s ease-in-out infinite;
+}
+
+.slashed-zero::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 65%;
+  height: 8px;
+  background: linear-gradient(135deg, #c1077dc1 0%, #9c65f4 55%, #2eaca4 75%, #c82e76 90%);
+  transform: translate(-65%, -90%) rotate(-30deg);
+  z-index: 2;
+  pointer-events: none;
+  
+}
+
 .title-inverted-v {
   display: inline-block;
-  transform: scaleY(-1) translateY(0.0em);
+  position: relative;
+  transform: scaleY(-1.10) translateY(0.0em);
   transform-origin: center;
   font-family: 'Future Z', 'Orbitron', 'Rajdhani', sans-serif !important;
   line-height: 1;
@@ -291,6 +404,8 @@ h1.quantum-title {
   -webkit-text-fill-color: transparent;
   letter-spacing: inherit;
   margin: 0;
+  isolation: isolate;
+  overflow: visible;
 }
 
 /* Apply upside-down A transform to all Orbitron text elements */
@@ -328,9 +443,52 @@ h1.quantum-title {
 
 .zero-char {
   font-family: 'Orbitron', sans-serif !important;
-  font-weight: 900;
+  font-weight: 900 !important;
   vertical-align: -8px;
   font-size: 1.05em;
+  position: relative;
+  display: inline-block;
+  isolation: isolate;
+  overflow: visible;
+  background: inherit;
+  background-size: inherit;
+  background-position: inherit;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.zero-char::before,
+.zero-char::after {
+  content: '0';
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  white-space: nowrap;
+  pointer-events: none;
+  font-family: 'Orbitron', sans-serif !important;
+  font-weight: 900 !important;
+  background: inherit;
+  background-size: inherit;
+  background-position: inherit;
+  background-clip: inherit;
+  -webkit-background-clip: inherit;
+  -webkit-text-fill-color: inherit;
+}
+
+.zero-char::before {
+  z-index: -2;
+  filter: blur(18px);
+  opacity: 0.45;
+  transform: translate(-50%, -50%) translateY(6px) translateX(-2px) scale(1.05);
+}
+
+.zero-char::after {
+  z-index: -2;
+  opacity: 0.4;
+  transform: translate(-50%, -50%) translateY(10px) translateX(0px);
+  text-shadow: 0 0 20px rgba(22, 10, 27, 0.146), 0 0 60px rgba(5, 1, 49, 0.89);
 }
 
 .quantum-subtitle {

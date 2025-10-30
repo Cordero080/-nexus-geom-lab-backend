@@ -89,7 +89,7 @@ function ScrambleOnHover({ originalText, finalText, delay = 3000 }) {
     <span 
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
-      style={{ cursor: 'pointer' }}
+      style={{ cursor: 'pointer', fontFamily: "'Future Z', 'Orbitron', 'Rajdhani', sans-serif" }}
     >
       {displayText}
     </span>
@@ -403,10 +403,10 @@ export default function HomePage() {
               <span className="timestamp" id="timestamp"></span>
             </div>
             <h1 className="quantum-title">
-              <span className="title-word" data-word="N3XUS">
-                <ScrambleOnHover originalText="N3XUS" finalText="アトリエ" delay={3000} />
+              <span className="title-word" data-word="NEXUS">
+                <ScrambleOnHover originalText="NEXUS" finalText="アトリエ" delay={3000} />
               </span><br></br>
-              <span className="title-word" data-word="GE0M">GE<span className="zero-char">0</span>M</span><br></br>
+              <span className="title-word" data-word="GE0M">GE<span className="slashed-zero">0</span>M</span><br></br>
               <span className="title-word" data-word="LVB">L<span className="title-inverted-v">V</span>B</span>
               {/* Show quantum glyphs globally */}
               
