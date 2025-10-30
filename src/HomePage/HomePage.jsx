@@ -339,19 +339,21 @@ export default function HomePage() {
           <div className="logo-particles"></div>
         </div>
         <div className="nav-links">
-          {/* Hide HOME link since we're on this page */}
-          <Link to="/scenes" className="nav-link" data-dimension="1">// SCENES</Link>
-          <Link to="/showcase" className="nav-link" data-dimension="2">{SHOWCASE_LINK_TEXT}</Link>
-          <Link to="/geom-lab" className="nav-link" data-dimension="3">{GEOM_LAB_LINK_TEXT}</Link>
           {isAuthenticated && (
-            <div className="nav-terminal">
-              <button 
-                onClick={logout}
-                className="terminal-cursor"
-              >
-                [L0GOUT]
-              </button>
-            </div>
+            <>
+              {/* Hide HOME link since we're on this page */}
+              <Link to="/scenes" className="nav-link" data-dimension="1">// SCENES</Link>
+              <Link to="/showcase" className="nav-link" data-dimension="2">{SHOWCASE_LINK_TEXT}</Link>
+              <Link to="/geom-lab" className="nav-link" data-dimension="3">{GEOM_LAB_LINK_TEXT}</Link>
+              <div className="nav-terminal">
+                <button 
+                  onClick={logout}
+                  className="terminal-cursor"
+                >
+                  [L0GOUT]
+                </button>
+              </div>
+            </>
           )}
         </div>
         <div className="nav-quantum-field"></div>
@@ -459,11 +461,21 @@ export default function HomePage() {
                 <BeamScanButton
                   onClick={() => window.location.href = '/login'}
                   label={<>LOGI<span style={{ display: 'inline-block', transform: 'scaleX(-1)' }}>N</span></>}
+                  style={{
+                    transform: 'perspective(500px) translateZ(20px)',
+                    boxShadow: '0 8px 32px rgba(0, 255, 255, 0.3), 0 0 60px rgba(255, 0, 204, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.1)',
+                    border: '2px solid rgba(0, 255, 255, 0.4)'
+                  }}
                 />
                 <BeamScanButton
                   onClick={() => window.location.href = '/signup'}
                   label="SIGN UP"
                   delayedString={true}
+                  style={{
+                    transform: 'perspective(500px) translateZ(20px)',
+                    boxShadow: '0 8px 32px rgba(0, 255, 255, 0.3), 0 0 60px rgba(255, 0, 204, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.1)',
+                    border: '2px solid rgba(0, 255, 255, 0.4)'
+                  }}
                 />
               </div>
             )}
