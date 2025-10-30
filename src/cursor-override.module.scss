@@ -1,8 +1,14 @@
 /* Global cursor behavior - see CSS_MODULES_FINAL_PHASE.md */
 :global(html) {
   cursor: none !important;
-  overflow-y: scroll; // Force scrollbar to always show
-  scrollbar-gutter: stable; // Reserve space for scrollbar
+  overflow-y: auto;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE/Edge */
+}
+
+/* Hide scrollbar for Chrome, Safari, Opera */
+:global(html::-webkit-scrollbar) {
+  display: none;
 }
 
 :global(body) {
@@ -11,6 +17,13 @@
   width: 100%;
   margin: 0;
   padding: 0;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE/Edge */
+}
+
+/* Hide scrollbar for Chrome, Safari, Opera */
+:global(body::-webkit-scrollbar) {
+  display: none;
 }
 
 /* Show regular cursor ONLY in geom-lab */
