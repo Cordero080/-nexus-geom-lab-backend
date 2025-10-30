@@ -402,12 +402,12 @@ export default function HomePage() {
               <span className="coordinates">37.7749° N, 122.4194° W</span>
               <span className="timestamp" id="timestamp"></span>
             </div>
-            <h1 className="quantum-title" data-text="MODERN JAVASCRIPT SYNTAX LAB">
-              <span className="title-word" data-word="0">
+            <h1 className="quantum-title">
+              <span className="title-word" data-word="N3XUS">
                 <ScrambleOnHover originalText="N3XUS" finalText="アトリエ" delay={3000} />
               </span><br></br>
-              <span className="title-word" data-word="1">GE<span className="zero-char">0</span>M</span><br></br>
-              <span className="title-word" data-word="2">L<span className="title-inverted-v">V</span>B</span>
+              <span className="title-word" data-word="GE0M">GE<span className="zero-char">0</span>M</span><br></br>
+              <span className="title-word" data-word="LVB">L<span className="title-inverted-v">V</span>B</span>
               {/* Show quantum glyphs globally */}
               
             </h1>

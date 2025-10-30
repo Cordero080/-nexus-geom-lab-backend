@@ -200,62 +200,76 @@ body {
 
 /* Title Styles */
 h1.quantum-title {
-  font-size: clamp(46px, 7.6vw, 114px);
-  font-weight: 800;
   font-family: 'Future Z', 'Orbitron', 'Rajdhani', sans-serif !important;
-  margin-bottom: 30px;
-  perspective: 1000px;
+  font-size: clamp(46px, 7.6vw, 114px);
+  font-weight: normal;
+  line-height: 0.75;
+  margin: 0 0 30px 0;
+  text-transform: uppercase;
+  letter-spacing: 10px;
   position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 24px;
+  isolation: isolate;
+  perspective: 1000px;
   z-index: 100000;
-  background: linear-gradient(135deg, #00ffff72, #ff00668d, #ffff0094, #00ff33, #cc00ff, #ff3300);
-  background-size: 300% 300%;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  color: #fff;
-  text-shadow: none;
-  animation: quantumTitleFloat 7.5s cubic-bezier(.77,0,.18,1) infinite alternate, quantumTitleGlitch 3.2s steps(1, end) infinite;
   will-change: transform, filter;
-}
-
-h1.quantum-title::before,
-h1.quantum-title::after {
-  content: attr(data-text);
-  position: absolute;
-  left: 0; top: 0; width: 100%; height: 100%;
-  pointer-events: none;
-  z-index: -1;
-  opacity: 0.7;
-  mix-blend-mode: lighten;
-  color: #00fff7;
-  filter: blur(0.5px) brightness(1.2);
-  clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
-  animation: quantumTitleGlitchBefore 2.7s steps(1, end) infinite;
-}
-
-h1.quantum-title::after {
-  color: #ff00ff;
-  opacity: 0.5;
-  filter: blur(1.2px) brightness(1.1);
-  z-index: -2;
-  animation: quantumTitleGlitchAfter 2.2s steps(1, end) infinite;
 }
 
 .title-word {
   display: inline-block;
-  margin: 0 15px;
+  margin: 0 5px;
   font-family: 'Future Z', 'Orbitron', 'Rajdhani', sans-serif !important;
-  font-weight: 800;
-  background: linear-gradient(135deg, #00ffff, #ff0099, #ffff00, #00ff00, #9900ff);
+  font-weight: normal;
+  letter-spacing: inherit;
+  background: linear-gradient(135deg, #07a2c1 0%, #f00b6b 55%, #2eaca4 75%, #c8922e 100%);
   background-size: 200% 200%;
   -webkit-background-clip: text;
   background-clip: text;
-  color: #00ffff;
-  animation: quantumFloat 4s ease-in-out infinite, gradientShift 3s ease-in-out infinite;
-  animation-delay: calc(var(--word-index, 0) * 0.2s);
-  letter-spacing: 2px;
+  -webkit-text-fill-color: transparent;
+  animation: pageTitleShimmer 5s ease-in-out infinite;
   position: relative;
   z-index: 100001;
+  isolation: isolate;
+}
+
+/* Only apply 3D effect to the last word (LVB) for balance */
+.title-word[data-word="LVB"]::before,
+.title-word[data-word="LVB"]::after {
+  content: attr(data-word);
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  letter-spacing: inherit;
+  text-transform: inherit;
+  font-family: inherit;
+  font-size: inherit;
+  background: inherit;
+  background-size: inherit;
+  background-position: inherit;
+  background-clip: inherit;
+  -webkit-background-clip: inherit;
+  -webkit-text-fill-color: inherit;
+}
+
+.title-word[data-word="LVB"]::before {
+  z-index: -2;
+  filter: blur(18px);
+  opacity: 0.45;
+  transform: translateY(6px) translateX(-2px) scale(1.05);
+}
+
+.title-word[data-word="LVB"]::after {
+  z-index: -2;
+  opacity: 0.4;
+  transform: translateY(4px) translateX(0px);
+  text-shadow: 0 0 20px rgba(22, 10, 27, 0.503), 0 0 60px rgba(0, 132, 255, 0.5);
 }
 
 .title-char {
@@ -326,6 +340,48 @@ h1.quantum-title::after {
   font-family: 'JetBrains Mono', monospace;
   letter-spacing: 2px;
   opacity: 0.8;
+}
+
+.coordinates {
+  font-size: 14px;
+  color: #00ffff;
+  font-family: 'JetBrains Mono', monospace;
+  letter-spacing: 1px;
+  opacity: 0.6;
+  margin-bottom: 20px;
+  display: inline-block;
+  transform: translateY(-30px);
+}
+
+/* Hero Stats */
+.hero-stats {
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+  margin-top: 24px;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.stat-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.stat-label {
+  font-size: 12px;
+  color: #4a9999;
+  opacity: 0.6;
+  letter-spacing: 1px;
+  margin-bottom: 4px;
+}
+
+.stat-value {
+  font-size: 16px;
+  color: #5dbaba;
+  opacity: 0.8;
+  font-weight: 600;
+  letter-spacing: 0.5px;
 }
 
 /* Quote Styles */
