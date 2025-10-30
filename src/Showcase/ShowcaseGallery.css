@@ -164,7 +164,8 @@
 
 .showcase-main-subtitle {
   /* Use shared pageSubtitle; override color for showcase theme */
-  color: #7fe6ff;
+  color: #7ffdff92;
+  font-size: 1.1em;
   margin: 0;
   text-shadow: 0 0 20px rgba(0, 212, 255, 0.4);
 }
@@ -183,12 +184,12 @@
   text-transform: uppercase;
   letter-spacing: 10px;
   /* Vibrant gradient like Home page */
-  background: linear-gradient(135deg, #7ff3df 0%, #ff7fb4 55%, #5fbab4 75%, #ffd27f 100%);
+  background: linear-gradient(135deg, #48f0d4 0%, #ff7fb4 55%, #5fbab4 75%, #ffd27f 100%);
   background-size: 200% 200%;
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
-  text-shadow: 0 0 16px rgba(241, 239, 246, 0.06), 0 0 48px rgba(0, 132, 255, 0.5);
+  
   animation: pageTitleShimmer 5s ease-in-out infinite;
   filter: drop-shadow(0 6px 24px rgba(6, 21, 185, 0.32));
   position: relative;
@@ -224,14 +225,14 @@
   z-index: -2;
   filter: blur(18px);
   opacity: 0.45;
-  transform: translateY(8px) scale(1.08);
+  transform: translateY(6px) translateX(3px) scale(1.05);
 }
 
 .showcase-main-title::after {
-  z-index: -1;
+  z-index: -2;
   opacity: 0.4;
-  transform: translateY(3px);
-  text-shadow: 0 0 24px rgba(255, 255, 255, 0.65), 0 0 60px rgba(0, 132, 255, 0.5);
+  transform: translateY(4px) translateX(5px);
+  text-shadow: 0 0 24px rgba(22, 10, 27, 0.503), 0 0 60px rgba(0, 132, 255, 0.5);
 }
 
 .showcase-main-title .showcase-title-inverted {
@@ -243,7 +244,7 @@
   -webkit-background-clip: inherit;
   color: inherit;
   animation: inherit;
-  transform: scaleY(-.9) translateY(-0.09em);
+  transform: scaleY(-0.89) translateY(-0.01em);
   transform-origin: center;
   -webkit-text-fill-color: inherit;
 }
@@ -628,17 +629,64 @@
 }
 
 .parallax-title {
+  position: relative;
+  font-family: 'Future Z', 'Orbitron', 'Rajdhani', sans-serif !important;
   font-size: 2rem;
-  font-weight: 700;
-  background: linear-gradient(135deg, #00ffff, #ff00ff, #ffff00);
+  font-weight: normal;
+  line-height: 1.2;
+  margin: 0 0 6px 0;
+  text-transform: uppercase;
+  letter-spacing: 10px;
+  /* Vibrant gradient like showcase main title */
+  background: linear-gradient(135deg, #48f0d4 0%, #ff7fb4 55%, #5fbab4 75%, #ffd27f 100%);
+  background-size: 200% 200%;
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
-  margin-bottom: 6px;
-  text-transform: uppercase;
-  letter-spacing: 3px;
+  animation: pageTitleShimmer 5s ease-in-out infinite;
+  filter: drop-shadow(0 6px 24px rgba(6, 21, 185, 0.32));
   transform: perspective(400px) rotateX(15deg);
   transform-origin: center bottom;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 24px;
+  isolation: isolate;
+}
+
+.parallax-title::before,
+.parallax-title::after {
+  content: attr(data-text);
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  letter-spacing: inherit;
+  text-transform: inherit;
+  font-family: inherit;
+  font-size: inherit;
+  background: inherit;
+  background-size: inherit;
+  background-position: inherit;
+  background-clip: inherit;
+  -webkit-background-clip: inherit;
+  -webkit-text-fill-color: inherit;
+}
+
+.parallax-title::before {
+  z-index: -2;
+  filter: blur(18px);
+  opacity: 0.45;
+  transform: translateY(6px) translateX(3px) scale(1.05);
+}
+
+.parallax-title::after {
+  z-index: -2;
+  opacity: 0.4;
+  transform: translateY(4px) translateX(5px);
+  text-shadow: 0 0 24px rgba(22, 10, 27, 0.503), 0 0 60px rgba(0, 132, 255, 0.5);
 }
 
 .parallax-animation {
