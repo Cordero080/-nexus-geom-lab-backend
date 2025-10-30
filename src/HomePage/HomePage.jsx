@@ -349,7 +349,7 @@ export default function HomePage() {
                 onClick={logout}
                 className="terminal-cursor"
               >
-                [LOGOUT]
+                [L0GOUT]
               </button>
             </div>
           )}
@@ -403,8 +403,8 @@ export default function HomePage() {
               <span className="timestamp" id="timestamp"></span>
             </div>
             <h1 className="quantum-title">
-              <span className="title-word" data-word="NEXUS">
-                <ScrambleOnHover originalText="NEXUS" finalText="アトリエ" delay={3000} />
+              <span className="title-word" data-word="N3XUS">
+                <ScrambleOnHover originalText="N3XUS" finalText="アトリエ" delay={3000} />
               </span><br></br>
               <span className="title-word" data-word="GE0M">GE<span className="slashed-zero">0</span>M</span><br></br>
               <span className="title-word" data-word="LVB">L<span className="title-inverted-v">V</span>B</span>

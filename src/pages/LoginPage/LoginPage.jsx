@@ -244,9 +244,9 @@ const LoginPage = () => {
         <div className="login-container">
           <div className="login-header">
             <h1 className="login-title">
-              <span className="title-glow">ACCESS</span>
+              <span className="title-glow title-word-left" data-word="VCCESS"><span className="title-inverted-v">V</span>CCESS</span>
               <span className="title-separator">//</span>
-              <span className="title-glow">PORTAL</span>
+              <span className="title-glow title-word-right" data-word="PORTVL">PORT<span className="title-inverted-v">V</span>L</span>
             </h1>
             <p className="login-subtitle">
               / / ENTER THE QUANTUM REALM
@@ -296,7 +296,7 @@ const LoginPage = () => {
               <div className="submit-error">{errors.submit}</div>
             )}
 
-            <div style={{ marginTop: '10px', display: 'flex', justifyContent: 'center' }}>
+            <div style={{ marginTop: '20px', display: 'flex', justifyContent: 'center' }}>
               <BeamScanButton
                 onClick={handleSubmit}
                 label={isLoading ? "ACCESSING..." : "LOGIN"}

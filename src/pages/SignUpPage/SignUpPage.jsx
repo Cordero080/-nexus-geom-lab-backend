@@ -248,9 +248,9 @@ export default function SignUpPage() {
         <div className="signup-container">
         <div className="signup-header">
           <h1 className="signup-title">
-            <span className="title-glow">CREATE</span>
+            <span className="title-glow title-word-left" data-word="CREVTE">CRE<span className="title-inverted-v">V</span>TE</span>
             <span className="title-separator">//</span>
-            <span className="title-glow">ACCOUNT</span>
+            <span className="title-glow title-word-right" data-word="VCCOUNT"><span className="title-inverted-v">V</span>CCOUNT</span>
           </h1>
           <p className="signup-subtitle">
             / / JOIN THE QUANTUM REALM

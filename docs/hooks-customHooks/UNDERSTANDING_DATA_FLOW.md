@@ -19,7 +19,6 @@ The destructuring (the curly braces `{ }`) means:
 - **Take the object that was passed in**
 - **Extract specific properties from it**
 - **Create local variables with those names**
-
 ---
 
 ## Full Data Flow Example: useObjectManager()

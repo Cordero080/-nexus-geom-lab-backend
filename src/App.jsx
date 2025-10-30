@@ -229,7 +229,7 @@ function GeomLab() {
   };
 
   // Handle exit button click
-
+// these are 20 states passed down to ThreeScene as props
   // Create sceneConfig object for SaveButton
   const sceneConfig = {
     metalness,
@@ -309,6 +309,7 @@ function GeomLab() {
         </div>
       )}
       
+      // App.jsx says to ThreeScene: Hey kid, here are 21 probs I want you to know about. But u know what ain't one. 
       <ThreeScene
         scale={scale}
         metalness={metalness}

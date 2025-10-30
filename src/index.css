@@ -249,7 +249,7 @@ h1.quantum-title {
   opacity: 0;
 }
 
-.title-word[data-word="NEXUS"] {
+.title-word[data-word="N3XUS"] {
   animation: pageTitleShimmer 5s ease-in-out infinite, particleArrivalTopLeft 1.8s cubic-bezier(0.22, 1, 0.36, 1) forwards;
   animation-delay: 0s, 0s;
 }
@@ -316,8 +316,8 @@ h1.quantum-title {
 }
 
 /* Apply 3D effect to all three words */
-.title-word[data-word="NEXUS"]::before,
-.title-word[data-word="NEXUS"]::after,
+.title-word[data-word="N3XUS"]::before,
+.title-word[data-word="N3XUS"]::after,
 .title-word[data-word="GE0M"]::before,
 .title-word[data-word="GE0M"]::after,
 .title-word[data-word="LVB"]::before,
@@ -341,7 +341,7 @@ h1.quantum-title {
   -webkit-text-fill-color: inherit;
 }
 
-.title-word[data-word="NEXUS"]::before,
+.title-word[data-word="N3XUS"]::before,
 .title-word[data-word="GE0M"]::before,
 .title-word[data-word="LVB"]::before {
   z-index: -2;
@@ -350,7 +350,7 @@ h1.quantum-title {
   transform: translate(-50%, -50%) translateY(6px) translateX(-2px) scale(1.05);
 }
 
-.title-word[data-word="NEXUS"]::after,
+.title-word[data-word="N3XUS"]::after,
 .title-word[data-word="GE0M"]::after,
 .title-word[data-word="LVB"]::after {
   z-index: -2;

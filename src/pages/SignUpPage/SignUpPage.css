@@ -155,11 +155,12 @@
   min-height: 100vh;
   width: 100vw;
   display: flex;
+  
   flex-direction: column;
   align-items: center;
   justify-content: center;
   background: transparent; /* Remove background to show clip-path scene background */
-  padding: 120px 20px 40px;
+  padding: 80px 20px 40px;
   position: relative;
   overflow: hidden;
   cursor: none;
@@ -200,9 +201,9 @@
   width: 200%;
   height: 200%;
   background: 
-    radial-gradient(circle at 20% 30%, rgba(255, 0, 110, 0.08) 0%, transparent 50%),
-    radial-gradient(circle at 80% 70%, rgba(131, 56, 236, 0.08) 0%, transparent 50%),
-    radial-gradient(circle at 50% 50%, rgba(58, 134, 255, 0.05) 0%, transparent 50%);
+    radial-gradient(circle at 20% 30%, rgba(7, 162, 193, 0.08) 0%, transparent 50%),
+    radial-gradient(circle at 80% 70%, rgba(253, 10, 111, 0.08) 0%, transparent 50%),
+    radial-gradient(circle at 50% 50%, rgba(46, 172, 164, 0.05) 0%, transparent 50%);
   animation: gradientShift 15s ease infinite;
   pointer-events: none;
 }
@@ -228,17 +229,27 @@
   position: relative;
   z-index: 1;
   width: 100%;
-  max-width: 480px;
-  background: rgba(10, 0, 30, 0.85);
-  border: 1px solid rgba(131, 56, 236, 0.3);
+  max-width: 650px;
+  background: rgba(10, 15, 26, 0.85);
+  border: 1px solid rgba(7, 162, 193, 0.3);
   border-radius: 24px;
-  padding: 48px 40px;
+  padding: 56px 48px;
   box-shadow: 
-    0 0 60px rgba(131, 56, 236, 0.15),
-    0 0 100px rgba(255, 0, 110, 0.1),
-    inset 0 0 60px rgba(131, 56, 236, 0.03);
+    0 8px 32px rgba(7, 162, 193, 0.2),
+    0 0 80px rgba(253, 10, 111, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(20px);
-  animation: containerFloat 3s ease-in-out infinite;
+  animation: containerFloat 6s ease-in-out infinite;
+  
+  /* Angled corners clip-path */
+  clip-path: polygon(
+    14px 0,
+    100% 0,
+    100% calc(100% - 14px),
+    calc(100% - 14px) 100%,
+    0 100%,
+    0 14px
+  );
 }
 
 @keyframes containerFloat {
@@ -252,24 +263,111 @@
 }
 
 .signup-title {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 42px;
+  font-family: 'Future Z', 'Orbitron', 'Rajdhani', monospace;
+  font-size: 38px;
   font-weight: 700;
-  letter-spacing: 2px;
+  letter-spacing: 3px;
   margin: 0 0 12px 0;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 16px;
+  flex-wrap: nowrap;
+}
+
+.title-word-left {
+  position: relative;
+  animation: slideInFromLeft 1.5s cubic-bezier(0.22, 1, 0.36, 1) !important;
+}
+
+.title-word-right {
+  position: relative;
+  animation: slideInFromRight 1.5s cubic-bezier(0.22, 1, 0.36, 1) !important;
+}
+
+/* 3D depth pseudo-elements for signup title words */
+.title-word-left::before,
+.title-word-left::after,
+.title-word-right::before,
+.title-word-right::after {
+  content: attr(data-word);
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  white-space: nowrap;
+  pointer-events: none;
+  letter-spacing: inherit;
+  text-transform: inherit;
+  font-family: inherit;
+  font-size: inherit;
+  background: inherit;
+  background-size: inherit;
+  background-position: inherit;
+  background-clip: inherit;
+  -webkit-background-clip: inherit;
+  -webkit-text-fill-color: inherit;
+}
+
+.title-word-left::before,
+.title-word-right::before {
+  z-index: -2;
+  filter: blur(18px);
+  opacity: 0.45;
+  transform: translate(-50%, -50%) translateY(6px) translateX(-2px) scale(1.05);
+}
+
+.title-word-left::after,
+.title-word-right::after {
+  z-index: -2;
+  opacity: 0.4;
+  transform: translate(-50%, -50%) translateY(10px) translateX(0px);
+  text-shadow: 0 0 20px rgba(22, 10, 27, 0.146), 0 0 60px rgba(5, 1, 49, 0.89);
+}
+
+@keyframes slideInFromLeft {
+  0% {
+    opacity: 0;
+    transform: translateY(300px);
+    filter: blur(10px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0px);
+  }
+}
+
+@keyframes slideInFromRight {
+  0% {
+    opacity: 0;
+    transform: translateY(-300px);
+    filter: blur(10px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0px);
+  }
 }
 
 .title-glow {
-  background: linear-gradient(45deg, #ff006e, #8338ec, #3a86ff);
+  background: linear-gradient(135deg, #07a2c1 0%, #fd0a6f 55%, #2eaca4 75%, #c8922e 100%);
+  background-size: 200% 200%;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  text-shadow: 0 0 30px rgba(131, 56, 236, 0.5);
-  animation: titlePulse 2s ease-in-out infinite;
+  animation: pageTitleShimmer 5s ease-in-out infinite, titlePulse 2s ease-in-out infinite;
+}
+
+.signup-title .title-inverted-v {
+  transform: scaleY(-1.02) translateY(0.06em);
+}
+
+@keyframes pageTitleShimmer {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
 }
 
 @keyframes titlePulse {
@@ -278,7 +376,7 @@
 }
 
 .title-separator {
-  color: rgba(131, 56, 236, 0.6);
+  color: rgba(7, 162, 193, 0.6);
   font-size: 24px;
 }
 
@@ -453,15 +551,32 @@
 }
 
 /* BeamScanButton styling overrides for signup page */
-.signup-form .beam-scan-btn {
-  width: 90%;
-  padding: 6px 28px;
-  font-size: 14px;
-  filter: brightness(1.1);
+.signup-page button {
+  cursor: pointer !important;
 }
 
-.signup-form .beam-scan-btn:hover {
+/* Match homepage button 3D styling exactly */
+.signup-page button[class*="beamScanBtn"] {
+  /* Remove width constraint - let button size naturally */
+  filter: brightness(1.1);
+  transition: filter 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+  
+  /* Homepage 3D effect */
+  transform: perspective(500px) translateZ(20px) !important;
+  box-shadow: 
+    0 8px 32px rgba(0, 255, 255, 0.3), 
+    0 0 60px rgba(255, 0, 204, 0.2), 
+    inset 0 1px 0 rgba(255, 255, 255, 0.1) !important;
+  border: 2px solid rgba(0, 255, 255, 0.4) !important;
+}
+
+.signup-page button[class*="beamScanBtn"]:hover {
   filter: brightness(1.3);
+  transform: perspective(500px) translateZ(30px) !important;
+  box-shadow: 
+    0 12px 40px rgba(0, 255, 255, 0.4), 
+    0 0 80px rgba(255, 0, 204, 0.3), 
+    inset 0 1px 0 rgba(255, 255, 255, 0.15) !important;
 }
 
 .loading-text {
