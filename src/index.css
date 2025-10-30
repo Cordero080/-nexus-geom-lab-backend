@@ -225,7 +225,7 @@ h1.quantum-title {
   font-family: 'Future Z', 'Orbitron', 'Rajdhani', sans-serif !important;
   font-weight: normal;
   letter-spacing: inherit;
-  background: linear-gradient(135deg, #07a2c1 0%, #f00b6b 55%, #2eaca4 75%, #c8922e 100%);
+  background: linear-gradient(135deg, #07a2c1 0%, #fd0a6f 55%, #2eaca4 75%, #c8922e 100%);
   background-size: 200% 200%;
   -webkit-background-clip: text;
   background-clip: text;
@@ -507,7 +507,7 @@ h1.quantum-title {
 
 @keyframes quantumTitleGlitch {
   0%, 100% { filter: none; }
-  2% { filter: brightness(1.2) hue-rotate(10deg); }
+  2% { filter: brightness(2.2) hue-rotate(0deg); }
   3% { filter: brightness(0.8) hue-rotate(-10deg); }
   4% { filter: none; }
   10% { filter: brightness(1.1) contrast(1.2); }
