@@ -32,7 +32,16 @@ $border-color-active: rgba(0, 255, 255, 0.6);
     justify-content: space-between;
     padding: 8px 16px;
     border-radius: 8px;
-    border: 1px solid $border-color;
+    /* Holographic cosmic black style */
+    background:
+      linear-gradient(145deg, rgba(10, 10, 10, 0.7), rgba(0, 0, 0, 0.55)),
+      radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.1), transparent 50%),
+      radial-gradient(circle at 70% 70%, rgba(0, 0, 0, 0.5), transparent 50%),
+      linear-gradient(45deg, rgba(138, 43, 226, 0.05), rgba(0, 212, 255, 0.05), rgba(138, 43, 226, 0.05));
+    background-size: 100% 100%, 150% 150%, 150% 150%, 200% 200%;
+    background-blend-mode: overlay, multiply, overlay;
+    background-position: 0% 50%, 75% 75%, 75% 75%, 50% 50%;
+    border: 1px solid rgba(0, 212, 255, 0.25);
     color: #ffffff;
     font-family: 'Orbitron', 'JetBrains Mono', monospace;
     font-size: 0.875rem;
@@ -40,23 +49,27 @@ $border-color-active: rgba(0, 255, 255, 0.6);
     cursor: pointer;
     transition: all 0.2s ease;
     user-select: none;
-    @include glass-morphism;
-    @include glow-shadow($primary-color);
+    backdrop-filter: blur(10px);
+    box-shadow:
+      0 2px 8px rgba(0, 0, 0, 0.8),
+      inset 0 1px 3px rgba(255, 255, 255, 0.2),
+      inset 0 -1px 3px rgba(0, 0, 0, 0.5);
 
     &:hover {
-      border-color: $border-color-hover;
-      background: $bg-dark-solid;
+      border-color: rgba(0, 212, 255, 0.5);
       box-shadow: 
-        0 4px 16px rgba($primary-color, 0.2),
-        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        0 4px 16px rgba(0, 255, 255, 0.3),
+        inset 0 1px 3px rgba(255, 255, 255, 0.3),
+        inset 0 -1px 3px rgba(0, 0, 0, 0.5);
     }
 
     &.open {
-      border-color: $border-color-active;
+      border-color: rgba(0, 212, 255, 0.8);
       box-shadow: 
-        0 0 0 3px rgba($primary-color, 0.1),
-        0 4px 16px rgba($primary-color, 0.3),
-        inset 0 1px 0 rgba(255, 255, 255, 0.15);
+        0 0 0 3px rgba(0, 212, 255, 0.2),
+        0 4px 16px rgba(0, 255, 255, 0.4),
+        inset 0 1px 3px rgba(255, 255, 255, 0.3),
+        inset 0 -1px 3px rgba(0, 0, 0, 0.5);
 
       .customSelect__arrow {
         transform: rotate(180deg);

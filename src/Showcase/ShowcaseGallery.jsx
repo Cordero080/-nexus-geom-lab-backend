@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader';
 import { Canvas } from '@react-three/fiber';
 import { useLocation } from 'react-router-dom';
@@ -12,30 +12,81 @@ import { quantumCollapse, getCardPosition } from './utils/showcaseHelpers';
 import './ShowcaseGallery.css';
 import sharedStyles from '../styles/shared.module.scss';
 
+const HERO_TAGLINES = [
+  'The Noetech Digital Pantheon',
+  'The Cypher Animate',
+  'Moyocoya, monemilia in Ometeotl',
+  // The dual god dreams us into existence through creation
+  '青龍の魂' // “blue dragon spirit” (Japanese, with Chinese roots)
+];
+
+const CUTOUT_VARIANTS = ['reality', 'probability', 'entanglement', 'superposition'];
+
 export default function ShowcaseGallery() {
+  // Stores current randomly-selected portal world colors (tweak by editing portalWorlds in ./data/portalWorlds.js)
   const [portalState, setPortalState] = useState(() => quantumCollapse(portalWorlds));
+  // Stores current randomly-selected glyph set (tweak by editing glyphSets in ./data/portalWorlds.js)
   const [glyphState, setGlyphState] = useState(() => quantumCollapse(glyphSets));
+  // Tracks which tagline is currently displayed, cycles through HERO_TAGLINES (change interval timing at useEffect line ~64)
+  const [taglineIndex, setTaglineIndex] = useState(0);
 
   // Parallax layer refs
+  // Refs to background/foreground layers for parallax animation (tweak parallax speed in handleParallax effect at line ~128)
   const bgRef = useRef(null);
+  // Ref to foreground parallax layer (tweak opacity/speed in handleParallax effect)
   const fgRef = useRef(null);
-  const bgCutoutRef = useRef(null);
+  // Array of refs for scene background cutouts (used for individual clip-path transformations)
+  const bgCutoutRefs = useRef([]);
+  // Helper to assign cutout refs by index (used when rendering scenes)
+  const assignCutoutRef = useCallback((index) => (el) => {
+    bgCutoutRefs.current[index] = el || null;
+  }, []);
+
+  // Tracks which 3D model card is currently being viewed in fullscreen viewer
   const [selectedAnimation, setSelectedAnimation] = useState(null);
+  // Tracks which card is being hovered (used to trigger model animation on hover)
   const [hoveredCard, setHoveredCard] = useState(null);
+  // Cache of preloaded FBX models to avoid re-loading (tweak preload strategy in useEffect at line ~255)
   const [preloadedModels, setPreloadedModels] = useState({});
+  // Tracks which models have finished loading (used for loading spinner display)
   const [modelLoaded, setModelLoaded] = useState({});
+  // Set of model IDs currently being loaded (prevents duplicate loading requests)
   const [loadingModels, setLoadingModels] = useState(new Set());
+  // Set of card IDs visible on screen (lazy-loads 3D models only for visible cards)
   const [visibleCards, setVisibleCards] = useState(new Set([1])); // Only render first card initially
+  // Router location hook to detect navigation and close fullscreen viewer
   const location = useLocation();
+  // Ref to main scroll container (used for scroll calculations and event listeners)
   const containerRef = useRef(null);
+  // Gets current authenticated user and their unlocked Noetechs
   const { user } = useAuth();
+  
+  // Card refs for 3D tilt effect
+  // Object storing refs to each card element (used for parallax transform calculations)
+  const cardRefs = useRef({});
 
   // Close viewer when navigating and manage document body overflow
+  // Closes fullscreen viewer when user navigates to a different page (clean up on route change)
   useEffect(() => {
     setSelectedAnimation(null);
   }, [location]);
+
+  // Tagline rotation effect
+  // Cycles through HERO_TAGLINES array every 4200ms (change interval timing to speed up/slow down tagline rotation)
+  useEffect(() => {
+    if (HERO_TAGLINES.length <= 1) {
+      return undefined;
+    }
+
+    const intervalId = window.setInterval(() => {
+      setTaglineIndex((prev) => (prev + 1) % HERO_TAGLINES.length);
+    }, 4200);
+
+    return () => window.clearInterval(intervalId);
+  }, []);
   
-  // Prevent background scrolling and manage visibility when viewer is open
+  // Manage scroll lock when fullscreen viewer is open
+  // Prevents background scrolling and hides content behind viewer when selectedAnimation is set (improve UX during fullscreen)
   useEffect(() => {
     if (selectedAnimation) {
       // Disable scrolling on body when viewer is open
@@ -61,7 +112,8 @@ export default function ShowcaseGallery() {
     };
   }, [selectedAnimation]);
 
-  // Scroll progress bar (non-visual, for future use)
+  // Track scroll progress for future scroll-based animations
+  // Updates width of .scroll-progress element to show scroll position (currently non-visual but useful for debugging)
   useEffect(() => {
     const handleScroll = () => {
       const container = containerRef.current;
@@ -78,7 +130,8 @@ export default function ShowcaseGallery() {
     return () => container?.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Quantum parallax background (scroll + mouse driven)
+  // Multi-layer parallax effect on scroll and mouse movement
+  // Creates depth effect by moving background/foreground layers at different speeds - tweak multipliers (mx*15, mx*45, etc) to adjust parallax intensity
   useEffect(() => {
     const handleParallax = (e) => {
       const container = containerRef.current;
@@ -90,48 +143,122 @@ export default function ShowcaseGallery() {
         mx = (e.clientX / window.innerWidth) - 0.5;
         my = (e.clientY / window.innerHeight) - 0.5;
       }
-      // Slightly reduce motion and opacity as user scrolls down (like Home)
-      const motionDampen = 1 - progress * 0.5; // up to 50% less motion at bottom
+      
+      // Subtle motion damping (less aggressive than before)
+      const motionDampen = 1 - progress * 0.3;
+      
+      // REFINED MULTI-LAYER PARALLAX
+      // Background layer moves slow (0.04x scroll) - tweak 15, 8 multipliers for mouse parallax intensity
       if (bgRef.current) {
-        bgRef.current.style.transform = `translate3d(${mx * 30 * motionDampen}px, ${-scrollY * 0.08 * motionDampen + my * 20 * motionDampen}px, 0)`;
-        bgRef.current.style.opacity = String(1 - progress * 0.75); // fade out by ~75%
+        bgRef.current.style.transform = `translate3d(${mx * 15 * motionDampen}px, ${-scrollY * 0.04 + my * 8 * motionDampen}px, 0)`;
+        bgRef.current.style.opacity = String(1 - progress * 0.4); // Less fade
       }
+      
+      // Foreground layer moves faster (0.12x scroll) - tweak 45, 25 multipliers for stronger parallax
       if (fgRef.current) {
-        fgRef.current.style.transform = `translate3d(${mx * 80 * motionDampen}px, ${-scrollY * 0.18 * motionDampen + my * 40 * motionDampen}px, 0)`;
-        fgRef.current.style.opacity = String(0.9 - progress * 0.9); // fade to ~0
+        fgRef.current.style.transform = `translate3d(${mx * 45 * motionDampen}px, ${-scrollY * 0.12 + my * 25 * motionDampen}px, 0)`;
+        fgRef.current.style.opacity = String(0.9 - progress * 0.6); // Less fade
       }
-      // Clip-path layer fade-in like Home/Scenes
-      if (bgCutoutRef.current) {
-        const progress = Math.min(1, scrollY / (maxScroll * 0.25)); // appear over first 25% scroll
-        bgCutoutRef.current.style.opacity = String(progress);
+      
+      // Clip-path layer parallax (mirroring Home page geometric cutout system)
+      // Backgrounds are now inside each scene, so they transition naturally as scenes scroll
+      // No need for separate parallax calculation—just let scenes flow
+      
+      // Subtle scene depth effect
+      // Apply subtle scale/opacity based on distance from viewport center - tweak 0.02, 0.1 for stronger depth
+      const scenes = document.querySelectorAll('.parallax-scene');
+      scenes.forEach((scene, index) => {
+        if (!scene) return;
+        
+        const rect = scene.getBoundingClientRect();
+        const sceneCenter = rect.top + rect.height / 2;
+        const viewportCenter = window.innerHeight / 2;
+        const distFromCenter = sceneCenter - viewportCenter;
+        const normalizedDist = Math.min(1, Math.abs(distFromCenter) / (window.innerHeight / 2));
+        
+        // Very subtle scale and depth - no rotation that breaks viewport
+        const sceneScale = 1 - normalizedDist * 0.02; // Minimal scaling
+        const sceneOpacity = 1 - normalizedDist * 0.1; // Subtle opacity shift
+        
+        scene.style.transform = `scale(${sceneScale})`;
+        scene.style.opacity = String(sceneOpacity);
+      });
+      
+      // Card parallax with entrance animation
+      // Each card slides in from sides as it approaches viewport center - tweak 30 for slide distance, 0.8 for fade intensity
+      Object.entries(cardRefs.current).forEach(([cardId, cardElement]) => {
+        if (!cardElement) return;
+        
+        const rect = cardElement.getBoundingClientRect();
+        const viewportCenter = window.innerHeight / 2;
+        const cardCenter = rect.top + rect.height / 2;
+        const distFromCenter = cardCenter - viewportCenter;
+        const normalizedDist = Math.min(1, Math.abs(distFromCenter) / (window.innerHeight / 2));
+        
+        // Subtle reveal effect without breaking transforms
+        const isAboveCenter = distFromCenter < 0;
+        const slideDistance = normalizedDist * 30; // Reduced from 80
+        const translateX = isAboveCenter ? -slideDistance : slideDistance;
+        
+        // Fade in as cards approach center
+        const opacity = Math.max(0.3, 1 - normalizedDist * 0.8); // Increased min opacity
+        
+        // Subtle glow that doesn't overwhelm
+        const glowOpacity = (1 - normalizedDist) * 0.5; // Reduced intensity
+        
+        // Apply subtle entrance animation (no translateZ)
+        cardElement.style.transform = `translateX(${translateX}px)`;
+        cardElement.style.opacity = String(opacity);
+        
+        // Refined glow effect
+        cardElement.style.boxShadow = `
+          0 8px 32px rgba(0, 0, 0, 0.4),
+          0 0 ${15 + normalizedDist * 25}px rgba(0, 255, 255, ${0.2 * glowOpacity}),
+          0 0 ${8 + normalizedDist * 15}px rgba(255, 0, 255, ${0.15 * glowOpacity})
+        `;
+      });
+      
+      // Keep title styling clean
+      const showcaseTitle = document.querySelector('.showcase-main-title');
+      if (showcaseTitle) {
+        // Reset any dynamic styling to keep it clean white
+        showcaseTitle.style.textShadow = '';
       }
     };
-    const container = containerRef.current;
-    container?.addEventListener('scroll', handleParallax);
+    
+    const parallaxContainer = containerRef.current;
+    parallaxContainer?.addEventListener('scroll', handleParallax);
     window.addEventListener('mousemove', handleParallax);
     handleParallax();
     return () => {
-      container?.removeEventListener('scroll', handleParallax);
+      parallaxContainer?.removeEventListener('scroll', handleParallax);
       window.removeEventListener('mousemove', handleParallax);
     };
   }, []);
 
   // Quantum collapse on scroll/click (theme color shift)
+  // Changes background colors whenever user scrolls or clicks - tweak portalState colors in ./data/portalWorlds.js or disable by commenting out event listeners
   useEffect(() => {
+    let lastChangeTime = 0;
     const collapse = () => {
+      const now = Date.now();
+      // Only allow color change every 500ms for smooth frequent transitions
+      if (now - lastChangeTime < 500) return;
+      lastChangeTime = now;
       setPortalState(quantumCollapse(portalWorlds));
       setGlyphState(quantumCollapse(glyphSets));
     };
-    const container = containerRef.current;
-    container?.addEventListener('scroll', collapse);
+    const collapseContainer = containerRef.current;
+    collapseContainer?.addEventListener('scroll', collapse);
     window.addEventListener('click', collapse);
     return () => {
-      container?.removeEventListener('scroll', collapse);
+      collapseContainer?.removeEventListener('scroll', collapse);
       window.removeEventListener('click', collapse);
     };
   }, []);
 
-  // Intersection Observer for scroll animations
+  // Lazy load card visibility - only render 3D models for cards currently visible on screen
+  // Uses IntersectionObserver to detect when cards enter viewport then adds them to visibleCards set - tweak threshold: 0.05 or rootMargin: '800px' to change preload distance
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
@@ -155,7 +282,8 @@ export default function ShowcaseGallery() {
     return () => observer.disconnect();
   }, []);
 
-  // Load first model immediately, others on-demand (lazy loading)
+  // Preload first 3D model immediately to avoid blank card on initial load
+  // Only preloads mockAnimations[0] initially - others load on-demand - tweak to preload more models by editing firstModel selection
   useEffect(() => {
     let isMounted = true;
     const loader = new FBXLoader();
@@ -176,7 +304,8 @@ export default function ShowcaseGallery() {
     return () => { isMounted = false; };
   }, []);
 
-  // Load model on demand when user interacts with a card
+  // Load model on demand when user hovers or clicks a card
+  // Prevents loading all 3D models at once - only loads when needed - disable by commenting out loadModelOnDemand() calls to preload everything
   const loadModelOnDemand = (animationId) => {
     if (preloadedModels[animationId] || loadingModels.has(animationId)) {
       return; // Already loaded or loading
@@ -213,17 +342,23 @@ export default function ShowcaseGallery() {
     );
   };
 
+  // Compute display values for title coordinate chips
+  // glyphSignature joins glyph array with pipes - portalLabel shows portal name - cycleLabel tracks tagline count - these update when state changes
+  const glyphSignature = Array.isArray(glyphState) ? glyphState.join(' | ') : '';
+  const portalLabel = portalState?.label ?? 'Nexus';
+  const cycleLabel = `Cycle ${String(taglineIndex + 1).padStart(2, '0')}`;
+
   return (
     <>
       {/* Scroll Progress Bar */}
       {/* Geometric Background Layers (consistency with Home/Scenes) */}
       <div ref={bgRef} className="parallax-bg-layer" aria-hidden="true">
-        {/* Abstract SVG/gradient background shapes */}
-        <svg width="100%" height="100%" viewBox="0 0 1920 400" style={{position:'absolute',top:0,left:0,width:'100vw',height:'40vh',pointerEvents:'none', background: `linear-gradient(120deg, ${portalState.colors[0]} 0%, ${portalState.colors[1]} 60%, ${portalState.colors[2]} 100%)`, transition: 'background 1.2s cubic-bezier(0.4,0,0.2,1)'}}>
+        {/* Abstract SVG/gradient background shapes, now quantum-reactive */}
+        <svg width="100%" height="100%" viewBox="0 0 1920 400" style={{position:'absolute',top:0,left:0,width:'100vw',height:'40vh',pointerEvents:'none', background: `linear-gradient(120deg, ${portalState.colors[0]} 0%, ${portalState.colors[1]} 60%, ${portalState.colors[2]} 100%)`, transition: 'background 3s cubic-bezier(0.4,0,0.2,1)'}}>
           <defs>
             <linearGradient id="showcase-bg-grad1" x1="0" y1="0" x2="1" y2="1">
-              <stop offset="0%" stopColor="#00d4ff" stopOpacity="0.18"/>
-              <stop offset="100%" stopColor="#ff00ff" stopOpacity="0.08"/>
+              <stop offset="0%" stopColor={portalState.colors[0]} stopOpacity="0.18"/>
+              <stop offset="100%" stopColor={portalState.colors[1]} stopOpacity="0.08"/>
             </linearGradient>
           </defs>
           <polygon points="0,0 1920,0 1600,400 0,300" fill="url(#showcase-bg-grad1)"/>
@@ -243,8 +378,7 @@ export default function ShowcaseGallery() {
           <ellipse cx="320" cy="120" rx="180" ry="40" fill="#ffffff22"/>
         </svg>
       </div>
-    {/* Sectioned geometric background layers (match Home's multiple diagonal cuts) */}
-
+    {/* Geometric cutout backgrounds with clip-paths (matching Home page) */}
       <div className="scroll-progress" style={{ visibility: selectedAnimation ? 'hidden' : 'visible' }} />
 
       <div 
@@ -252,15 +386,36 @@ export default function ShowcaseGallery() {
         ref={containerRef}
         style={{ visibility: selectedAnimation ? 'hidden' : 'visible' }}
       >
-        {/* Layered cutouts aligned to hero + each scene */}
-        <div className="bg-gallery-layer bg-gallery-reality" aria-hidden="true" style={{ top: '0vh' }} />
-        <div className="bg-gallery-layer bg-gallery-probability" aria-hidden="true" style={{ top: '100vh' }} />
-        <div className="bg-gallery-layer bg-gallery-entanglement" aria-hidden="true" style={{ top: '200vh' }} />
-        <div className="bg-gallery-layer bg-gallery-superposition" aria-hidden="true" style={{ top: '300vh' }} />
-        {/* Hero Title Section (separate from scenes to avoid overlap) */}
         <header className="showcase-hero">
-          <h1 className={`${sharedStyles.pageTitle} showcase-main-title`}>Machina NEXUS</h1>
-          <p className={`${sharedStyles.pageSubtitle} showcase-main-subtitle`}>The Noetech Digital Pantheon</p>
+          <div className="showcase-title-stack">
+            <h1
+              className="showcase-main-title"
+              data-text="MVCHINV NEXUS"
+              aria-label="MVCHINV NEXUS"
+            >
+              M<span className="showcase-title-inverted">V</span>CHIN
+              <span className="showcase-title-inverted">V</span>&nbsp;NEXUS
+            </h1>
+            <div className="showcase-title-coordinates" aria-hidden="true">
+              <span className="coordinate-chip">Portal: {portalLabel}</span>
+              {glyphSignature ? (
+                <span className="coordinate-chip">Glyphs {glyphSignature}</span>
+              ) : null}
+              <span className="coordinate-chip">{cycleLabel}</span>
+            </div>
+          </div>
+          <p className={`${sharedStyles.pageSubtitle} showcase-main-subtitle`}>
+            {HERO_TAGLINES.map((tagline, idx) => (
+              <span
+                key={tagline}
+                className={`showcase-tagline${idx === taglineIndex ? ' is-active' : ''}`}
+                aria-hidden={idx !== taglineIndex}
+              >
+                {tagline}
+              </span>
+            ))}
+            <span className="sr-only" aria-live="polite">{HERO_TAGLINES[taglineIndex]}</span>
+          </p>
         </header>
 
         {/* Parallax Scenes */}
@@ -271,6 +426,8 @@ export default function ShowcaseGallery() {
             ? user.unlockedNoetechs
             : [];
           const isUnlocked = unlocked.includes(animation.noetechKey);
+          const cutoutVariantIndex = index % CUTOUT_VARIANTS.length;
+          const cutoutVariant = CUTOUT_VARIANTS[cutoutVariantIndex];
           
           return (
             <div
@@ -278,7 +435,11 @@ export default function ShowcaseGallery() {
               className={`parallax-scene parallax-scene-${position} scene-${animation.id}`}
               data-card-id={animation.id}
             >
+              <div className={`scene-background bg-gallery-${cutoutVariant}`} ref={assignCutoutRef(cutoutVariantIndex)} aria-hidden="true" />
               <div
+                ref={(el) => {
+                  if (el) cardRefs.current[animation.id] = el;
+                }}
                 className={`parallax-model-card parallax-model-card-${animation.id} ${isUnlocked ? '' : 'locked'}`}
                 onClick={() => {
                   if (!isUnlocked) {

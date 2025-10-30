@@ -212,15 +212,13 @@ const LoginPage = () => {
           <div className="nav-logo">
             <span
               className="logo-text"
-              data-text="JS_LAB_V2.0"
+              data-text="N3XUS_GEOM"
               style={{
                 color: '#fff',
                 filter: `drop-shadow(0 0 4px ${portalState.colors[1]}66)`,
                 transition: 'filter 1.2s'
               }}
-            >
-              PVBL0_P!ST0LA_V2.0
-            </span>
+            >N3XUS_GEOM</span>
             <span style={{
               marginLeft: 10,
               fontSize: 16,

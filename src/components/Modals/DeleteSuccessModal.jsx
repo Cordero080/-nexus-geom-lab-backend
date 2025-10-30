@@ -25,7 +25,7 @@ const DeleteSuccessModal = ({ isOpen, onClose, sceneName }) => {
             💥
           </div>
           <p className={styles.modalMessage}>
-            "{sceneName}" has been obliterated from existence.
+            "{sceneName}" has been deleted.
           </p>
         </div>
         

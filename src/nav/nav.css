@@ -39,6 +39,18 @@
   animation: logoGlitch 6s ease-in-out infinite, gradientShift 4s ease-in-out infinite;
 }
 
+.logo-text .nav-inverted-a {
+  display: inline-block !important;
+  transform: scaleY(-1) translateY(-0.02em) !important;
+  transform-origin: center !important;
+  line-height: 1 !important;
+  font-family: inherit !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  background: inherit !important;
+}
+
 .nav-links {
   display: flex;
   align-items: center;

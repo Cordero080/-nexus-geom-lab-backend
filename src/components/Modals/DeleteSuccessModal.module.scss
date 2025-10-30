@@ -18,66 +18,46 @@
   to { opacity: 1; }
 }
 
-@keyframes destructionSlide {
-  from { 
-    opacity: 0;
-    transform: translateY(-50px) scale(0.8) rotate(-5deg);
-  }
-  to { 
-    opacity: 1;
-    transform: translateY(0) scale(1) rotate(0deg);
-  }
-}
-
 .modalContainer {
-  background: linear-gradient(135deg, 
-    rgba(40, 0, 0, 0.95) 0%, 
-    rgba(80, 10, 10, 0.95) 50%, 
-    rgba(40, 0, 0, 0.95) 100%
-  );
-  border: 2px solid rgba(255, 0, 0, 0.6);
+  background:
+    linear-gradient(145deg, rgba(78, 11, 11, 0.85), rgba(20, 0, 0, 0.75)),
+    radial-gradient(circle at 30% 30%, rgba(255, 100, 100, 0.15), transparent 50%),
+    radial-gradient(circle at 70% 70%, rgba(80, 0, 0, 0.6), transparent 50%),
+    linear-gradient(45deg, rgba(255, 60, 60, 0.08), rgba(255, 0, 0, 0.08), rgba(255, 60, 60, 0.08));
+  background-size: 100% 100%, 150% 150%, 150% 150%, 200% 200%;
+  background-blend-mode: overlay, multiply, overlay;
+  background-position: 0% 50%, 75% 75%, 75% 75%, 50% 50%;
+  border: 1px solid rgba(255, 0, 0, 0.4);
   border-radius: 12px;
-  max-width: 450px;
+  backdrop-filter: blur(10px);
+  max-width: 500px;
   width: 90%;
   max-height: 80vh;
   overflow: hidden;
   position: relative;
   box-shadow: 
-    0 10px 40px rgba(255, 0, 0, 0.4),
-    0 0 80px rgba(255, 100, 0, 0.2);
-  animation: destructionSlide 0.5s ease-out;
-
-  &::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: linear-gradient(45deg, 
-      transparent 0%, 
-      rgba(255, 0, 0, 0.1) 50%, 
-      transparent 100%
-    );
-    pointer-events: none;
-  }
+    0 18px 48px rgba(30, 1, 1, 0.757),
+    0 0 120px rgba(255, 80, 40, 0.25),
+    inset 0 1px 8px rgba(255, 255, 255, 0.1),
+    inset 0 -1px 8px rgba(0, 0, 0, 0.3);
 }
 
 .modalHeader {
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
-  padding: 20px 24px;
+  padding: 12px 18px;
   border-bottom: 1px solid rgba(255, 0, 0, 0.3);
   background: linear-gradient(90deg, 
     rgba(255, 0, 0, 0.2) 0%, 
     rgba(255, 100, 0, 0.1) 100%
   );
+  position: relative;
 }
 
 .modalTitle {
   margin: 0;
-  font-size: 2rem;
+  font-size: 1.8rem;
   font-weight: 900;
   color: #ffffff;
   text-transform: uppercase;
@@ -87,22 +67,12 @@
   background-clip: text;
   -webkit-text-fill-color: transparent;
   text-shadow: 0 0 30px rgba(255, 0, 0, 0.8);
-  animation: destructionGlow 1.5s ease-in-out infinite alternate;
   font-family: 'Orbitron', monospace;
 }
 
-@keyframes destructionGlow {
-  from { 
-    filter: brightness(1) saturate(1) drop-shadow(0 0 10px rgba(255, 0, 0, 0.5));
-  }
-  to { 
-    filter: brightness(1.5) saturate(1.5) drop-shadow(0 0 20px rgba(255, 0, 0, 0.8));
-  }
-}
-
 .closeButton {
-  background: rgba(255, 0, 0, 0.3);
-  border: 1px solid rgba(255, 0, 0, 0.5);
+  background: rgba(255, 0, 0, 0.2);
+  border: 1px solid rgba(255, 0, 0, 0.4);
   border-radius: 50%;
   width: 36px;
   height: 36px;
@@ -114,57 +84,44 @@
   justify-content: center;
   transition: all 0.3s ease;
   font-weight: 300;
+  position: absolute;
+  right: 16px;
+  top: 50%;
+  transform: translateY(-50%);
 
   &:hover {
     background: rgba(255, 0, 0, 0.5);
-    transform: rotate(90deg) scale(1.1);
+    transform: translateY(-50%) rotate(90deg) scale(1.1);
     box-shadow: 0 0 20px rgba(255, 0, 0, 0.7);
   }
 }
 
 .modalContent {
-  padding: 30px 24px;
+  padding: 16px 20px;
   color: rgba(255, 255, 255, 0.9);
   line-height: 1.6;
-  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .destructionEffect {
-  font-size: 4rem;
-  margin-bottom: 20px;
-  animation: explode 2s ease-in-out infinite;
+  font-size: 2.8rem;
+  margin-bottom: 12px;
   filter: drop-shadow(0 0 20px rgba(255, 100, 0, 0.8));
-}
-
-@keyframes explode {
-  0%, 100% { 
-    transform: scale(1) rotate(0deg);
-    filter: drop-shadow(0 0 20px rgba(255, 100, 0, 0.8));
-  }
-  25% { 
-    transform: scale(1.2) rotate(90deg);
-    filter: drop-shadow(0 0 30px rgba(255, 0, 0, 1));
-  }
-  50% { 
-    transform: scale(0.9) rotate(180deg);
-    filter: drop-shadow(0 0 40px rgba(255, 200, 0, 0.9));
-  }
-  75% { 
-    transform: scale(1.1) rotate(270deg);
-    filter: drop-shadow(0 0 25px rgba(255, 50, 0, 0.8));
-  }
 }
 
 .modalMessage {
   margin: 0;
-  font-size: 1.1rem;
+  font-size: 0.95rem;
   color: rgba(255, 255, 255, 0.9);
   font-weight: 500;
   text-shadow: 0 0 10px rgba(255, 0, 0, 0.3);
+  text-align: center;
 }
 
 .modalFooter {
-  padding: 20px 24px;
+  padding: 14px 20px;
   border-top: 1px solid rgba(255, 0, 0, 0.3);
   display: flex;
   justify-content: center;
@@ -175,15 +132,14 @@
 }
 
 .confirmButton {
-  background: linear-gradient(135deg, 
-    rgba(255, 0, 0, 0.3) 0%, 
-    rgba(255, 100, 0, 0.3) 100%
-  );
-  border: 2px solid transparent;
-  border-image: linear-gradient(135deg, #ff0000, #ff6600) 1;
-  padding: 12px 28px;
+  background:
+    linear-gradient(135deg, rgba(255, 90, 90, 0.65) 0%, rgba(255, 40, 40, 0.55) 45%, rgba(255, 140, 0, 0.6) 100%),
+    radial-gradient(120% 160% at 20% 30%, rgba(255, 140, 120, 0.45) 0%, rgba(255, 0, 0, 0) 60%);
+  border: 1px solid transparent;
+  border-image: linear-gradient(135deg, rgba(255, 0, 60, 0.9), rgba(255, 130, 0, 0.8)) 1;
+  padding: 10px 24px;
   color: #ffffff;
-  font-size: 1rem;
+  font-size: 0.95rem;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
@@ -193,14 +149,13 @@
   text-shadow: 0 0 10px rgba(255, 0, 0, 0.5);
 
   &:hover {
-    background: linear-gradient(135deg, 
-      rgba(255, 0, 0, 0.5) 0%, 
-      rgba(255, 100, 0, 0.5) 100%
-    );
+    background:
+      linear-gradient(135deg, rgba(255, 110, 110, 0.8) 0%, rgba(255, 60, 60, 0.7) 45%, rgba(255, 180, 60, 0.75) 100%),
+      radial-gradient(120% 160% at 20% 30%, rgba(255, 180, 140, 0.55) 0%, rgba(255, 0, 0, 0) 60%);
     transform: translateY(-2px);
     box-shadow: 
-      0 8px 24px rgba(255, 0, 0, 0.4),
-      0 0 30px rgba(255, 100, 0, 0.3);
+      0 10px 28px rgba(255, 0, 70, 0.45),
+      0 0 40px rgba(255, 120, 40, 0.35);
     text-shadow: 0 0 15px rgba(255, 255, 255, 0.7);
   }
 }
@@ -217,19 +172,18 @@
   }
   
   .modalTitle {
-    font-size: 1.6rem;
-    letter-spacing: 2px;
+    font-size: 1.4rem;
   }
   
   .modalContent {
-    padding: 24px 20px;
+    padding: 16px 20px;
   }
   
   .destructionEffect {
-    font-size: 3rem;
+    font-size: 2.6rem;
   }
   
   .modalFooter {
-    padding: 16px 20px;
+    padding: 12px 20px;
   }
 }

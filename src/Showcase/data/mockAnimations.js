@@ -2,8 +2,8 @@ export const mockAnimations = [
   {
     id: 1,
     noetechKey: "icarus-x",
-    name: "Icarus-X #001",
-    animation: "Solar Ascension",
+    name: "Icᐱrus-X #001",
+    animation: "Solar ᐱscension",
     variant: "Golden Phoenix",
     description:
       "The Transcendent Seraph...Reborn from Digital Ashes to Touch the Infinite",
@@ -23,7 +23,7 @@ export const mockAnimations = [
   {
     id: 2,
     noetechKey: "vectra",
-    name: "Vectra APEX #002",
+    name: "Vectrᐱ   ᐱPEX #002",
     animation: "Break Dance",
     variant: "Spectral",
     description: "The Ominous Anomaly Woven from Pure Hologram",
@@ -46,7 +46,7 @@ export const mockAnimations = [
     animation: "Warrior Flip",
     variant: "Shadow Striker",
     description:
-      "The Quantum Architect of the Digital Nexus...Master of hyperdimensional Combat",
+      "The Quantum ᐱrchitect of the Digital Nexus...Master of hyperdimensional Combat",
     fbxUrl: "/models/iron-man-2.fbx",
     scale: 0.023,
     galleryScale: 0.018,

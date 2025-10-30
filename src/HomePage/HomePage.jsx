@@ -14,6 +14,7 @@ import sharedStyles from '../styles/shared.module.scss';
 import './Home.css';
 import { BeamScanButton } from '../components/HUD';
 import { Link } from 'react-router-dom';
+import { GEOM_LAB_LINK_TEXT, SHOWCASE_LINK_TEXT } from '../nav/navLabels';
 import { useAuth } from '../context/AuthContext';
 
 // Scrambling component for N3XUS title
@@ -161,25 +162,108 @@ export default function HomePage() {
     };
   }, []);
 
-  // 3D Parallax Layers: scroll and mousemove
+  // Enhanced Multi-Layer Parallax: scroll and mousemove
   useEffect(() => {
     const handleParallax = (e) => {
       const scrollY = window.scrollY;
       const wh = window.innerHeight;
+      const maxScroll = document.documentElement.scrollHeight - wh;
+      const progress = Math.min(1, scrollY / maxScroll);
+      
       // Mouse position (centered -0.5 to 0.5)
       let mx = 0, my = 0;
       if (e && e.type === 'mousemove') {
         mx = (e.clientX / window.innerWidth) - 0.5;
         my = (e.clientY / window.innerHeight) - 0.5;
       }
-      // Parallax: background moves slowest, foreground fastest
+      
+      // Motion damping based on scroll progress
+      const motionDampen = 1 - progress * 1.3;
+      
+      // MULTI-LAYER PARALLAX DEPTH SYSTEM
+      // Layer 1 (Slowest - Furthest back): Background
       if (bgRef.current) {
-        bgRef.current.style.transform = `translate3d(${mx * 30}px, ${-scrollY * 0.08 + my * 20}px, 0)`;
+        bgRef.current.style.transform = `translate3d(${mx * 8 * motionDampen}px, ${-scrollY * 0.015 + my * 6 * motionDampen}px, 0)`;
+        bgRef.current.style.opacity = String(1 - progress * 0.4);
       }
+      
+      // Layer 2 (Medium speed): Foreground
       if (fgRef.current) {
-        fgRef.current.style.transform = `translate3d(${mx * 80}px, ${-scrollY * 0.18 + my * 40}px, 0)`;
+        fgRef.current.style.transform = `translate3d(${mx * 20 * motionDampen}px, ${-scrollY * 0.04 + my * 12 * motionDampen}px, 0)`;
+        fgRef.current.style.opacity = String(0.9 - progress * 0.6);
+      }
+      
+      // Layer 3 (Fast): Apply depth to quantum scenes
+      const scenes = document.querySelectorAll('.quantum-scene');
+      scenes.forEach((scene, index) => {
+        if (!scene) return;
+        
+        const rect = scene.getBoundingClientRect();
+        const sceneCenter = rect.top + rect.height / 2;
+        const viewportCenter = wh / 2;
+        const distFromCenter = sceneCenter - viewportCenter;
+        const normalizedDist = Math.min(1, Math.abs(distFromCenter) / (wh / 2));
+        
+        // Scene depth layering (different scenes at different depths)
+        const sceneDepth = index * 100 + (progress * 200);
+        const sceneScale = 1 - normalizedDist * 0.08;
+        const sceneTilt = -(distFromCenter / viewportCenter) * 1.5;  // Reduced from 5 to 1.5 and inverted
+        
+        // Apply 3D transforms to scenes - Skip for superposition scene
+        if (index !== 3) {
+          scene.style.transform = `
+            perspective(1500px) 
+            translateZ(${sceneDepth}px) 
+            scale(${sceneScale})
+            rotateX(${sceneTilt}deg)
+          `;
+          scene.style.opacity = String(1 - normalizedDist * 0.3);
+        } else {
+          // Keep superposition scene flat
+          scene.style.transform = 'none';
+          scene.style.opacity = '1';
+        }
+      });
+      
+      // Layer 4 (Fastest): N3XUS Title Enhancement
+      const titleElement = document.querySelector('.n3xus-title, .scramble-title');
+      if (titleElement) {
+        const titleDepth = 300 - scrollY * 0.5;
+        const titleGlow = Math.max(0, 1 - progress * 2);
+        const titleScale = 1 + progress * 0.2;
+        
+        titleElement.style.transform = `
+          perspective(1000px)
+          translateZ(${titleDepth}px)
+          scale(${titleScale})
+          rotateY(${mx * 8}deg)
+        `;
+        
+        // Add holographic glow that responds to scroll
+        titleElement.style.textShadow = `
+          0 0 ${20 + progress * 40}px rgba(0, 255, 247, ${titleGlow}),
+          0 0 ${40 + progress * 80}px rgba(255, 0, 204, ${titleGlow * 0.7}),
+          0 0 4px #fff
+        `;
+      }
+      
+      // Layer 5: Ensure "Be the defiance" is always visible
+      const defianceText = document.querySelector('.floating-code');
+      if (defianceText) {
+        // Ensure it stays on top and visible
+        defianceText.style.zIndex = '100';
+        defianceText.style.position = 'relative';
+        
+        // Add slight parallax but keep it visible
+        const defianceGlow = Math.max(0.5, 1 - progress * 0.5);
+        defianceText.style.textShadow = `
+          0 0 ${30}px rgba(0, 255, 247, ${defianceGlow}),
+          0 0 ${50}px rgba(255, 0, 204, ${defianceGlow * 0.8}),
+          0 0 8px #fff
+        `;
       }
     };
+    
     window.addEventListener('scroll', handleParallax);
     window.addEventListener('mousemove', handleParallax);
     handleParallax();
@@ -232,15 +316,13 @@ export default function HomePage() {
         <div className="nav-logo">
           <span
             className="logo-text"
-            data-text="JS_LAB_V2.0"
+            data-text="N3XUS_GEOM"
             style={{
               color: '#fff',
               filter: `drop-shadow(0 0 4px ${portalState.colors[1]}66)`,
               transition: 'filter 1.2s'
             }}
-          >
-            PVBL0_P!ST0LA_V2.0
-          </span>
+          >N3XUS_GEOM</span>
           {/* Subtle quantum glyphs in navbar */}
           <span style={{
             marginLeft: 10,
@@ -259,8 +341,8 @@ export default function HomePage() {
         <div className="nav-links">
           {/* Hide HOME link since we're on this page */}
           <Link to="/scenes" className="nav-link" data-dimension="1">// SCENES</Link>
-          <Link to="/showcase" className="nav-link" data-dimension="2">// SHOWC<span className="nav-inverted-a">V</span>SE</Link>
-          <Link to="/geom-lab" className="nav-link" data-dimension="3">// GEOM L<span className="nav-inverted-a">V</span>B</Link>
+          <Link to="/showcase" className="nav-link" data-dimension="2">{SHOWCASE_LINK_TEXT}</Link>
+          <Link to="/geom-lab" className="nav-link" data-dimension="3">{GEOM_LAB_LINK_TEXT}</Link>
           {isAuthenticated && (
             <div className="nav-terminal">
               <button 

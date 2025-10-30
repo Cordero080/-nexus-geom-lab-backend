@@ -13,115 +13,70 @@ import { useObjectInteraction } from './hooks/useObjectInteraction';
 
 
 
-// ========================================================================
-// THREESCENE.JSX - THE 3D RENDERER (RECEIVES PROPS FROM APP.JSX)
-// ========================================================================
-// This component ONLY receives data - it doesn't manage any state itself.
-// All the values come from App.jsx as props, and when App.jsx changes them,
-// this component automatically re-renders the 3D scene with new values.
-
+// ThreeScene: 3D renderer that receives props from App.jsx
 function ThreeScene({ 
-	// MATERIAL PROPS - How the 3D objects should look (FROM App.jsx state)
-	scale,                 // Current scale value → will update Three.js object scale
-	metalness,           // Current metalness value → will update Three.js material.metalness (0-1)
-	emissiveIntensity,   // Current emissive intensity → will update Three.js material.emissive (multiplied by baseColor)
-	baseColor,           // Current base color → will update Three.js material.color
-	wireframeIntensity,  // Current wireframe intensity → will update Three.js material.wireframe
-	
-	// HYPERFRAME PROPS - How the hyperframe should look (FROM App.jsx state)
-	hyperframeColor,  // Current spiral color → will update hyperframe spiral lines
-	hyperframeLineColor,    // Current edge color → will update hyperframe edge connections
-	
-	// SCENE BEHAVIOR PROPS - How the scene should behave (FROM App.jsx state)
-	cameraView,          // Current camera view → will position/animate camera
-	environment,         // Current environment → will change background/lighting
-	environmentHue,      // Current environment hue shift (0-360) → will shift colors of background and orbs
-	objectCount,         // Current object count → will create this many objects
-	animationStyle,      // Current animation → will control how objects move
-	objectType,          // Current object type → will determine which 3D shape to show
-
-	// LIGHTING PROPS - How the scene should be lit (FROM App.jsx state)
-	ambientLightColor,       // Current ambient light color → will update ambient light
-	ambientLightIntensity,   // Current ambient light intensity → will update ambient light
-	directionalLightColor,   // Current directional light color → will update directional light
-	directionalLightIntensity, // Current directional light intensity → will update directional light
-	directionalLightX,       // Current light X position → will position directional light
-	directionalLightY,       // Current light Y position → will position directional light
-	directionalLightZ        // Current light Z position → will position directional light
+	// Material props
+	scale, metalness, emissiveIntensity, baseColor, wireframeIntensity,
+	// Hyperframe props
+	hyperframeColor, hyperframeLineColor,
+	// Scene behavior props
+	cameraView, environment, environmentHue, objectCount, animationStyle, objectType,
+	// Lighting props
+	ambientLightColor, ambientLightIntensity, directionalLightColor, directionalLightIntensity,
+	directionalLightX, directionalLightY, directionalLightZ
 }) {
-	// ========================================
-	// REFS - STORING THREE.JS OBJECTS
-	// ========================================
-	// useRef lets us store Three.js objects that persist between re-renders
-	// These are NOT React state - they're just containers for Three.js objects
+	// Three.js object references
+	const mountRef = useRef(null);
+	const sceneRef = useRef(null);
+	const materialRef = useRef(null);
+	const cameraRef = useRef(null);
+	const rendererRef = useRef(null);
+	const objectsRef = useRef([]);
+	const animationIdRef = useRef(null);
+	const ambientLightRef = useRef(null);
+	const directionalLightRef = useRef(null);
 	
-	const mountRef = useRef(null)              // Where to attach the 3D canvas to the DOM
-	const sceneRef = useRef(null)              // The Three.js scene object
-	const materialRef = useRef(null)           // Reference to main material for debugging
-	const cameraRef = useRef(null)             // The Three.js camera object
-	const rendererRef = useRef(null)           // The Three.js renderer object
-	const objectsRef = useRef([])              // Array of all 3D objects in the scene
-	const animationIdRef = useRef(null)        // ID for the animation loop (so we can cancel it)
-	const ambientLightRef = useRef(null)       // Reference to ambient light (so we can update it)
-	const directionalLightRef = useRef(null)   // Reference to directional light (so we can update it)
-
-	// =============================================
-	// CUSTOM HOOKS - ORGANIZED SCENE MANAGEMENT
-	// =============================================
-	
-	// Initialize scene, camera, renderer, lights (runs once on mount)
+	// Initialize scene, camera, renderer, and lights
 	useSceneInitialization(
 		{ sceneRef, cameraRef, rendererRef, mountRef, ambientLightRef, directionalLightRef, animationIdRef },
 		{ ambientLightColor, ambientLightIntensity, directionalLightColor, directionalLightIntensity, 
 		  directionalLightX, directionalLightY, directionalLightZ }
 	);
 
-	// Track mouse for orb interaction
 	useMouseTracking(rendererRef, cameraRef);
-
-	// Update environment (background and orbs)
 	useEnvironmentUpdate(sceneRef, environment, environmentHue);
-
-	// Manage object creation and updates
+	
 	useObjectManager(
 		{ sceneRef, objectsRef, materialRef },
 		{ objectCount, objectType, baseColor, metalness, emissiveIntensity, 
 		  wireframeIntensity, hyperframeColor, hyperframeLineColor }
 	);
 
-	// Control camera position
 	useCameraController(cameraRef, cameraView);
-
-	// Update material properties
+	
 	useMaterialUpdates(objectsRef, {
 		scale, metalness, emissiveIntensity, baseColor, wireframeIntensity,
 		hyperframeColor, hyperframeLineColor
 	});
 
-	// Update lighting
 	useLightingUpdates(
 		{ ambientLightRef, directionalLightRef },
 		{ ambientLightColor, ambientLightIntensity, directionalLightColor, directionalLightIntensity,
 		  directionalLightX, directionalLightY, directionalLightZ }
 	);
 
-	// Handle object interaction (mouse-over rotation interference)
+	// Handle mouse-over object rotation
 	const { getUserRotation, decayUserRotations } = useObjectInteraction(
 		{ sceneRef, cameraRef, rendererRef }
 	);
 
-	// Start animation loop with user rotation support
 	useAnimationLoop(
 		{ rendererRef, sceneRef, cameraRef, animationIdRef, objectsRef },
 		{ animationStyle, cameraView },
 		{ getUserRotation, decayUserRotations }
 	);
 
-	// ===============================================
-	// RENDER METHOD - WHAT GETS DISPLAYED IN THE DOM
-	// ===============================================
-	// This component renders a parent div with a CSS gradient background, and the Three.js canvas inside
-	// Helper: map environment names to CSS class names
+	// Map environment to CSS background class
 	function getBackgroundClass(env) {
 		switch (env) {
 			case 'nebula': return 'bg-gradient bg-gradient-nebula';

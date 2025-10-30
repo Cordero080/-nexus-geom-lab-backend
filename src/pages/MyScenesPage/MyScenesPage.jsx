@@ -10,6 +10,7 @@ import { quantumCollapse } from "../../utils/coreHelpers";
 import "./MyScenesPage.css";
 import sharedStyles from "../../styles/shared.module.scss";
 import "../../nav/nav.css";
+import { GEOM_LAB_LINK_TEXT, SHOWCASE_LINK_TEXT } from "../../nav/navLabels";
 
 // quantumCollapse now imported from utils/coreHelpers.js
 
@@ -316,15 +317,13 @@ export default function MyScenesPage() {
         <div className="nav-logo">
           <span
             className="logo-text"
-            data-text="Scenes_v2.0"
+            data-text="N3XUS_GEOM"
             style={{
               color: '#fff',
               filter: `drop-shadow(0 0 4px ${portalState.colors[1]}66)`,
               transition: 'filter 1.2s'
             }}
-          >
-            Scenes_V2.0
-          </span>
+          >N3XUS_GEOM</span>
           {/* Subtle quantum glyphs in navbar */}
           <span style={{
             marginLeft: 10,
@@ -343,8 +342,8 @@ export default function MyScenesPage() {
         <div className="nav-links">
           <Link to="/" className="nav-link nav-link--home" data-dimension="0">// HOME</Link>
           {/* Hide SCENES link since we're on this page */}
-          <Link to="/showcase" className="nav-link" data-dimension="2">// SHOWCASE</Link>
-          <Link to="/geom-lab" className="nav-link" data-dimension="3">// GEOM LAB</Link>
+          <Link to="/showcase" className="nav-link" data-dimension="2">{SHOWCASE_LINK_TEXT}</Link>
+          <Link to="/geom-lab" className="nav-link" data-dimension="3">{GEOM_LAB_LINK_TEXT}</Link>
           {isAuthenticated && (
             <div className="nav-terminal">
               <button 
@@ -394,7 +393,7 @@ export default function MyScenesPage() {
       <div className="my-scenes-page__header">
         <h1 className={`${sharedStyles.pageTitle} my-scenes-page__title`}>My Scenes</h1>
         <p className={`${sharedStyles.pageSubtitle} my-scenes-page__subtitle`}>
-          Your collection of geometric creations
+          Your collection of geometric creations``
         </p>
       </div>
 

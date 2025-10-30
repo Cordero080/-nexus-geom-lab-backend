@@ -5,6 +5,7 @@ import sharedStyles from "../styles/shared.module.scss";
 import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import ScrambleButton from "../components/ScrambleButton/ScrambleButton";
+import { GEOM_LAB_LINK_TEXT, SHOWCASE_LINK_TEXT } from "./navLabels";
 
 export default function NavBar() {
   const { isAuthenticated, user, logout, login } = useAuth();
@@ -29,13 +30,15 @@ export default function NavBar() {
   return (
     <nav className="quantum-nav">
       <div className="nav-logo">
-        <span className="logo-text" data-text="Nexus Geom Lab">Nexus Geom Lab</span>
+        <span className="logo-text" data-text="N3XUS_GEOM">N3XUS_GEOM</span>
       </div>
       <div className="nav-links">
          {/* ALWAYS show these - public links (hide if on current page) */}
   {location.pathname !== '/' && <Link to="/" className="nav-link nav-link--home">// HOME</Link>}
-        {location.pathname !== '/geometry-lab' && <Link to="/geometry-lab" className="nav-link">// GEOM LAB</Link>}
-        {location.pathname !== '/showcase' && <Link to="/showcase" className="nav-link">// SHOWCASE</Link>}
+        {location.pathname !== '/geometry-lab' && (
+          <Link to="/geometry-lab" className="nav-link">{GEOM_LAB_LINK_TEXT}</Link>
+        )}
+  <Link to="/showcase" className="nav-link">{SHOWCASE_LINK_TEXT}</Link>
          {/* Conditional links based on authentication */}
         {isAuthenticated ? (
           <>

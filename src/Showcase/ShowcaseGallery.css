@@ -35,7 +35,7 @@
   25%, 75% { opacity: 0.6; }
 }
 
-/* Parallax Showcase Styles */
+/* Parallax showcase container with 3D support */
 .parallax-showcase-container {
   width: 100vw;
   height: 100vh;
@@ -48,6 +48,9 @@
   /* Hide scrollbar completely for immersive experience */
   scrollbar-width: none; /* Firefox */
   -ms-overflow-style: none; /* IE/Edge */
+  /* Enable 3D perspective for depth effects */
+  perspective: 1200px;
+  transform-style: preserve-3d;
 }
 
 /* Hide scrollbar for Chrome, Safari, Opera */
@@ -57,8 +60,8 @@
 
 /* Hero Title Section */
 .showcase-hero {
-  height: 45vh;
-  min-height: 360px;
+  height: 30vh;
+  min-height: 240px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -67,11 +70,15 @@
   position: relative;
   z-index: 2;
   text-align: center;
-  padding: 40px 20px 0;
+  padding: 90px 20px 0;
   /* Make hero a snap point so scroll doesn't skip it */
   scroll-snap-align: start;
   scroll-snap-stop: always;
   overflow: hidden; /* contain soft overlays */
+}
+
+.showcase-title-stack {
+  margin-top: 40px;
 }
   .parallax-bg-layer,
   .parallax-fg-layer {
@@ -93,11 +100,14 @@
 
   .parallax-fg-layer {
     z-index: -1; /* In front of background layer */
+    mix-blend-mode: screen; /* Let colors blend through instead of covering */
+    opacity: 0.5; /* More transparent to show colorful background */
   }
 
-  /* Layered geometric backgrounds (match Home’s multiple diagonal cuts) */
+  /* Layered geometric backgrounds matching Scenes page approach */
   .bg-gallery-layer {
-    position: absolute;
+    position: fixed;
+    top: 0;
     left: 0;
     width: 100vw;
     height: 100vh;
@@ -106,6 +116,26 @@
     z-index: -3; /* Behind parallax layers, below content */
     background: linear-gradient(120deg, #0a0f1a 60%, #1a2a3a 100%),
       repeating-linear-gradient(-30deg, #00f0ff22 0 2px, transparent 2px 40px);
+    opacity: 0.38;
+    will-change: transform, opacity, filter;
+    transition: transform 1.2s cubic-bezier(0.4, 0, 0.2, 1),
+      opacity 0.9s ease,
+      filter 0.9s ease;
+    transform-origin: center;
+  }
+
+  /* Scene background layers inside parallax-scenes */
+  .scene-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100%;
+    z-index: 0;
+    pointer-events: none;
+    /* Fade mask at top to blend into quantum SVG gradients above */
+    -webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,0.3) 15%, rgba(0,0,0,1) 35%);
+    mask-image: linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,0.3) 15%, rgba(0,0,0,1) 35%);
   }
 
   /* Variants reusing Home’s clip-path shapes */
@@ -127,16 +157,9 @@
   content: '';
   position: absolute;
   inset: 0;
-  background:
-    radial-gradient(1000px 380px at 50% 38%, rgba(255,255,255,0.06), rgba(255,255,255,0) 60%),
-    linear-gradient(180deg, rgba(0,0,0,0.22) 0%, rgba(0,0,0,0.12) 55%, rgba(0,0,0,0.04) 100%);
+  background: none;
   pointer-events: none;
   z-index: 0;
-}
-
-.showcase-main-title {
-  /* Use shared pageTitle for typography; keep only local overrides */
-  margin: 0 0 14px 0;
 }
 
 .showcase-main-subtitle {
@@ -144,6 +167,184 @@
   color: #7fe6ff;
   margin: 0;
   text-shadow: 0 0 20px rgba(0, 212, 255, 0.4);
+}
+
+/* Ensure title gradient displays properly */
+.parallax-showcase-container h1 {
+  color: red !important;
+}
+
+.showcase-main-title {
+  font-family: 'Future Z', 'Orbitron', 'Rajdhani', sans-serif !important;
+  font-size: 4.2rem;
+  font-weight: normal;
+  line-height: 1.2;
+  margin: 0 0 14px 0;
+  text-transform: uppercase;
+  letter-spacing: 10px;
+  /* Vibrant gradient like Home page */
+  background: linear-gradient(135deg, #7ff3df 0%, #ff7fb4 55%, #5fbab4 75%, #ffd27f 100%);
+  background-size: 200% 200%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: 0 0 16px rgba(241, 239, 246, 0.06), 0 0 48px rgba(0, 132, 255, 0.5);
+  animation: pageTitleShimmer 5s ease-in-out infinite;
+  filter: drop-shadow(0 6px 24px rgba(6, 21, 185, 0.32));
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 24px;
+  isolation: isolate;
+}
+
+.showcase-main-title::before,
+.showcase-main-title::after {
+  content: attr(data-text);
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  letter-spacing: inherit;
+  text-transform: inherit;
+  font-family: inherit;
+  font-size: inherit;
+  background: inherit;
+  background-size: inherit;
+  background-position: inherit;
+  background-clip: inherit;
+  -webkit-background-clip: inherit;
+  -webkit-text-fill-color: inherit;
+}
+
+.showcase-main-title::before {
+  z-index: -2;
+  filter: blur(18px);
+  opacity: 0.45;
+  transform: translateY(8px) scale(1.08);
+}
+
+.showcase-main-title::after {
+  z-index: -1;
+  opacity: 0.4;
+  transform: translateY(3px);
+  text-shadow: 0 0 24px rgba(255, 255, 255, 0.65), 0 0 60px rgba(0, 132, 255, 0.5);
+}
+
+.showcase-main-title .showcase-title-inverted {
+  display: inline-block;
+  background: inherit;
+  background-size: inherit;
+  background-position: inherit;
+  background-clip: inherit;
+  -webkit-background-clip: inherit;
+  color: inherit;
+  animation: inherit;
+  transform: scaleY(-.9) translateY(-0.09em);
+  transform-origin: center;
+  -webkit-text-fill-color: inherit;
+}
+
+.showcase-title-stack {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  position: relative;
+}
+
+.showcase-title-coordinates {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+  color: rgba(127, 230, 255, 0.85);
+  font-size: 0.75rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+.coordinate-chip {
+  padding: 4px 12px;
+  border-radius: 999px;
+  border: 1px solid rgba(127, 230, 255, 0.4);
+  background: linear-gradient(135deg, rgba(8, 40, 60, 0.6), rgba(8, 10, 30, 0.4));
+  box-shadow: 0 0 18px rgba(0, 132, 255, 0.25);
+  backdrop-filter: blur(6px);
+}
+
+.showcase-main-subtitle {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 1.8em;
+  overflow: visible;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  padding: 4px 18px;
+}
+
+.showcase-main-subtitle::after {
+  content: '';
+  position: absolute;
+  bottom: -8px;
+  left: 50%;
+  width: 120px;
+  height: 1px;
+  border-radius: 999px;
+  transform: translateX(-50%);
+  background: linear-gradient(90deg, transparent, rgba(127, 230, 255, 0.9), transparent);
+  opacity: 0.5;
+  animation: heroUnderlinePulse 4.2s ease-in-out infinite;
+}
+
+.showcase-tagline {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, 40%);
+  opacity: 0;
+  transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1), transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+  white-space: nowrap;
+  text-shadow: 0 0 12px rgba(0, 132, 255, 0.35);
+  pointer-events: none;
+}
+
+.showcase-tagline.is-active {
+  opacity: 1;
+  transform: translate(-50%, -50%);
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+@keyframes heroUnderlinePulse {
+  0%, 100% {
+    opacity: 0.25;
+    width: 110px;
+  }
+  50% {
+    opacity: 0.85;
+    width: 160px;
+  }
+}
+
+@keyframes pageTitleShimmer {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
 }
 
 .parallax-scene {
@@ -165,6 +366,8 @@
   background-attachment: unset;
   /* Scenes themselves are transparent; global cutout provides the geometry */
   overflow: hidden;
+  /* Enable 3D perspective for child cards */
+  perspective: 1200px;
 }
 
 /* Remove horizontal transition bands; the global cutout handles transitions */
@@ -178,6 +381,7 @@
   justify-content: center;
   flex-direction: column;
   padding-top: 20px; /* Hero section provides headroom */
+  margin-top: -60px; /* Bring card up */
 }
 
 .parallax-scene-center .parallax-model-card {
@@ -185,10 +389,9 @@
 }
 
 .parallax-scene-center .parallax-info {
-  order: -1; /* Move description above model */
   text-align: center;
   max-width: 620px;
-  margin: 0 auto 24px;
+  margin: 24px auto 0;
 }
 
 /* Left position - second model */
@@ -231,16 +434,107 @@
   background: rgba(0, 0, 0, 0.3);
   backdrop-filter: blur(10px);
   cursor: pointer;
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
   z-index: 2; /* Above transition overlays */
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+  will-change: transform, opacity, box-shadow;
 }
 
 .parallax-model-card:hover {
-  transform: scale(1.05) translateY(-10px);
+  transform: scale(1.03) !important;
   border-color: rgba(255, 0, 255, 0.6);
   box-shadow: 0 20px 60px rgba(255, 0, 255, 0.5), 0 0 40px rgba(0, 255, 255, 0.3);
+}
+
+/* Holographic shimmer overlay */
+.parallax-model-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 20px;
+  background: linear-gradient(
+    45deg,
+    rgba(0, 255, 255, 0.1),
+    transparent 50%,
+    rgba(255, 0, 255, 0.1)
+  );
+  background-size: 200% 200%;
+  animation: holographic-shimmer 8s ease-in-out infinite;
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.parallax-model-card:hover::before {
+  opacity: 1;
+}
+
+/* Holographic border glow pulse */
+.parallax-model-card::after {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  border-radius: 22px;
+  background: linear-gradient(90deg, rgba(0, 255, 255, 0.5), rgba(255, 0, 255, 0.5));
+  background-size: 200% 100%;
+  z-index: -1;
+  opacity: 0;
+  animation: border-pulse 3s ease-in-out infinite;
+  filter: blur(8px);
+}
+
+.parallax-model-card:hover::after {
+  opacity: 0.6;
+}
+
+@keyframes holographic-shimmer {
+  0% {
+    background-position: 0% 0%;
+  }
+  50% {
+    background-position: 100% 100%;
+  }
+  100% {
+    background-position: 0% 0%;
+  }
+}
+
+@keyframes border-pulse {
+  0%, 100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+/* Light reflection effect */
+.parallax-model-card {
+  position: relative;
+  background: linear-gradient(
+    135deg,
+    rgba(0, 0, 0, 0.3) 0%,
+    rgba(0, 0, 0, 0.2) 50%,
+    rgba(0, 255, 255, 0.05) 100%
+  );
+}
+
+/* Subtle light sweep animation */
+.parallax-model-card::before {
+  animation: light-reflection 6s ease-in-out infinite, holographic-shimmer 8s ease-in-out infinite;
+}
+
+@keyframes light-reflection {
+  0%, 100% {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+  50% {
+    transform: translateX(100%);
+    opacity: 0.5;
+  }
 }
 
 /* Locked state styling */
@@ -370,10 +664,27 @@
   .showcase-main-title {
     font-size: 2rem;
     letter-spacing: 2px;
+    padding: 10px 16px;
   }
 
   .showcase-main-subtitle {
     font-size: 1rem;
+    padding: 4px 12px;
+    letter-spacing: 1.5px;
+    min-height: 1.6em;
+  }
+
+  .showcase-title-coordinates {
+    gap: 6px;
+    font-size: 0.65rem;
+  }
+
+  .coordinate-chip {
+    padding: 3px 10px;
+  }
+
+  .showcase-tagline {
+    font-size: 0.85rem;
   }
 
   /* Parallax responsive */
