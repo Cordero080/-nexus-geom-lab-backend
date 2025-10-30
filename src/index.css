@@ -264,6 +264,27 @@ h1.quantum-title {
   animation-delay: 0s, 0.6s;
 }
 
+.title-word[data-word="MY"] {
+  animation: pageTitleShimmer 5s ease-in-out infinite, simpleFadeIn 1s ease-out forwards;
+  animation-delay: 0s, 0s;
+}
+
+.title-word[data-word="SCENES"] {
+  animation: pageTitleShimmer 5s ease-in-out infinite, simpleFadeIn 1s ease-out forwards;
+  animation-delay: 0s, 0.2s;
+}
+
+@keyframes simpleFadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 @keyframes particleArrivalTopLeft {
   0% {
     opacity: 0;
@@ -315,13 +336,17 @@ h1.quantum-title {
   }
 }
 
-/* Apply 3D effect to all three words */
+/* Apply 3D effect to all title words */
 .title-word[data-word="N3XUS"]::before,
 .title-word[data-word="N3XUS"]::after,
 .title-word[data-word="GE0M"]::before,
 .title-word[data-word="GE0M"]::after,
 .title-word[data-word="LVB"]::before,
-.title-word[data-word="LVB"]::after {
+.title-word[data-word="LVB"]::after,
+.title-word[data-word="MY"]::before,
+.title-word[data-word="MY"]::after,
+.title-word[data-word="SCENES"]::before,
+.title-word[data-word="SCENES"]::after {
   content: attr(data-word);
   position: absolute;
   left: 50%;
@@ -343,7 +368,9 @@ h1.quantum-title {
 
 .title-word[data-word="N3XUS"]::before,
 .title-word[data-word="GE0M"]::before,
-.title-word[data-word="LVB"]::before {
+.title-word[data-word="LVB"]::before,
+.title-word[data-word="MY"]::before,
+.title-word[data-word="SCENES"]::before {
   z-index: -2;
   filter: blur(18px);
   opacity: 0.45;
@@ -352,7 +379,9 @@ h1.quantum-title {
 
 .title-word[data-word="N3XUS"]::after,
 .title-word[data-word="GE0M"]::after,
-.title-word[data-word="LVB"]::after {
+.title-word[data-word="LVB"]::after,
+.title-word[data-word="MY"]::after,
+.title-word[data-word="SCENES"]::after {
   z-index: -2;
   opacity: 0.4;
   transform: translate(-50%, -50%) translateY(10px) translateX(0px);

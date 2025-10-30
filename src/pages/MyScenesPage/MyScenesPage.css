@@ -65,6 +65,12 @@
   padding: 40px 20px 60px;
 }
 
+/* Remove ugly blue drop shadow from shared styles */
+.my-scenes-page__title {
+  filter: none !important;
+  text-shadow: none !important;
+}
+
 .my-scenes-page__subtitle {
   /* Typography from shared.pageSubtitle; keep spacing only */
   margin: 0;

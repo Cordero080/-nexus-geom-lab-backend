@@ -391,7 +391,11 @@ export default function MyScenesPage() {
 
       {/* Header */}
       <div className="my-scenes-page__header">
-        <h1 className={`${sharedStyles.pageTitle} my-scenes-page__title`}>My Scenes</h1>
+        <h1 className={`${sharedStyles.pageTitle} my-scenes-page__title`}>
+          <span className="title-word" data-word="MY">MY</span>
+          {' '}
+          <span className="title-word" data-word="SCENES">SCENES</span>
+        </h1>
         <p className={`${sharedStyles.pageSubtitle} my-scenes-page__subtitle`}>
           Your collection of geometric creations``
         </p>
