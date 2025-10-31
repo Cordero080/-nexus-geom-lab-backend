@@ -13,8 +13,6 @@ export function createBoxHyperframe(
   hyperframeColor,
   hyperframeLineColor
 ) {
-  console.log("Creating hypercube (tesseract) hyperframe");
-
   // Tesseract: Outer cube (1.5 units) and inner cube (0.75 units)
   const outerSize = 0.75; // Half of 1.5
   const innerSize = 0.375; // Half of 0.75

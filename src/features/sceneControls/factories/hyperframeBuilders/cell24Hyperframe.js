@@ -14,8 +14,6 @@ export function create24CellHyperframe(
   hyperframeColor,
   hyperframeLineColor
 ) {
-  console.log("Creating 24-cell hyperframe");
-
   // Get layer sizes from geometry metadata
   const layers = geometry.userData.layers || {
     outer: 1.0,

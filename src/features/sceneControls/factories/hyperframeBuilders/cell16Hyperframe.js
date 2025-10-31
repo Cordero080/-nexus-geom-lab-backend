@@ -9,12 +9,12 @@ import * as THREE from "three";
  * @param {string} hyperframeLineColor - Color for vertex connections
  * @returns {Object} { centerLines, centerLinesMaterial, curvedLines, curvedLinesMaterial }
  */
-export function create16CellHyperframe(
-  geometry,
-  hyperframeColor,
-  hyperframeLineColor
-) {
-  console.log("Creating 16-cell hyperframe");
+export function create16CellHyperframe(config = {}) {
+  const {
+    geometry,
+    hyperframeColor = '#ff6b6b',
+    hyperframeLineColor = '#4ecdc4'
+  } = config;
 
   // Get layer sizes from geometry metadata
   const layers = geometry.userData.layers || {

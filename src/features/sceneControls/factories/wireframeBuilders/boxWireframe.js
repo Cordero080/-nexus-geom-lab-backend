@@ -190,8 +190,6 @@ export function createBoxWireframe(geometry, wireframeMaterial) {
   instancesRot.instanceMatrix.needsUpdate = true;
   nodesGroup.add(instancesRot);
 
-  console.log("Added rotated compound cube wireframe to group");
-
   // === DUPLICATE 2: Symmetric -45° Y-rotation for balanced triple-merge ===
   const rotNeg = new THREE.Matrix4().makeRotationY(-Math.PI / 4);
   const scaleNeg = 0.98;
@@ -244,8 +242,6 @@ export function createBoxWireframe(geometry, wireframeMaterial) {
   }
   instancesRotNeg.instanceMatrix.needsUpdate = true;
   nodesGroup.add(instancesRotNeg);
-
-  console.log("Added symmetric -45° rotated cube wireframe to group");
 
   // === DUPLICATE 3: +45° X-rotation ===
   const rotX = new THREE.Matrix4().makeRotationX(Math.PI / 4);
@@ -346,8 +342,6 @@ export function createBoxWireframe(geometry, wireframeMaterial) {
   }
   instancesRotZ.instanceMatrix.needsUpdate = true;
   nodesGroup.add(instancesRotZ);
-
-  console.log("Added +45° X and +45° Z rotated cube wireframes to group");
 
   return cubeWireframeGroup;
 }

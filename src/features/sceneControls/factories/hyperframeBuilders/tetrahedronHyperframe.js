@@ -13,8 +13,6 @@ export function createTetrahedronHyperframe(
   hyperframeColor,
   hyperframeLineColor
 ) {
-  console.log("Creating compound tetrahedron hyperframe");
-
   // Canonical vertices for tetrahedron (4 vertices forming a pyramid)
   // Use Three.js standard tetrahedron vertex calculation
   const a = 1.2 / Math.sqrt(3); // radius 1.2 to match geometry size
