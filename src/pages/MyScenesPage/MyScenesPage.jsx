@@ -5,6 +5,7 @@ import { useAuth } from "../../context/AuthContext";
 import { getMyScenes } from "../../services/sceneApi"; // Import API function
 import SceneCard from "../../components/Scenes/SceneCard"; // Corrected import path to Scenes
 import CustomSelect from "../../components/CustomSelect/CustomSelect";
+import ScrambleButton from "../../components/ScrambleButton/ScrambleButton";
 import { DeleteSuccessModal } from "../../components/Modals";
 import { quantumCollapse } from "../../utils/coreHelpers";
 import "./MyScenesPage.css";
@@ -206,20 +207,17 @@ export default function MyScenesPage() {
     try {
       // Check if user is authenticated and has token
       if (!token) {
-        console.error('No token available');
         setLoading(false);
         return;
       }
 
       // Call the real API
       const data = await getMyScenes(token);
-      console.log('📦 Fetched scenes:', data);
       
       // Backend returns { success: true, scenes: [...] }
       const scenesArray = data.scenes || data || [];
       setScenes(scenesArray);
     } catch (error) {
-      console.error('Error fetching scenes:', error);
       // Set empty array on error
       setScenes([]);
     } finally {
@@ -292,7 +290,6 @@ export default function MyScenesPage() {
       // Show success modal
       setShowDeleteSuccessModal(true);
     } catch (error) {
-      console.error("Failed to delete scene:", error);
       alert("Failed to delete scene. Please try again.");
     }
   };
@@ -465,26 +462,28 @@ export default function MyScenesPage() {
       {showDeleteModal && (
         <div className="delete-modal-overlay" onClick={cancelDelete}>
           <div className="delete-modal" onClick={(e) => e.stopPropagation()}>
-            <div className="delete-modal__icon">⚠️</div>
-            <h2 className="delete-modal__title">Delete Scene?</h2>
+            <div className="delete-modal__icon">⬢</div>
+            <h2 className="delete-modal__title">¿Delete Scene?</h2>
             <p className="delete-modal__message">
               Are you sure you want to delete <strong>"{sceneToDelete?.name}"</strong>?
               <br />
               This action cannot be undone.
             </p>
             <div className="delete-modal__actions">
-              <button
-                className={`delete-modal__btn delete-modal__btn--cancel ${sharedStyles.angledCorners}`}
+              <ScrambleButton
+                variant="secondary"
                 onClick={cancelDelete}
+                className="delete-modal__btn"
               >
                 Cancel
-              </button>
-              <button
-                className={`delete-modal__btn delete-modal__btn--delete ${sharedStyles.angledCorners}`}
+              </ScrambleButton>
+              <ScrambleButton
+                variant="danger"
                 onClick={confirmDelete}
+                className="delete-modal__btn"
               >
                 Delete Forever
-              </button>
+              </ScrambleButton>
             </div>
           </div>
         </div>

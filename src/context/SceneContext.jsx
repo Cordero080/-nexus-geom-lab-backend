@@ -111,7 +111,6 @@ export function SceneProvider({ children }) {
    * @returns {Object} - The scene config to be applied
    */
   const loadScene = useCallback((scene, currentUserId = null) => {
-    console.log('🎬 Loading scene:', scene);
     
     setCurrentSceneId(scene.id || scene._id);
     setSceneOwner(scene.userId);
@@ -127,7 +126,6 @@ export function SceneProvider({ children }) {
       setSceneMode("remixed"); // User is remixing someone else's scene
     }
 
-    console.log('✅ Scene config loaded:', scene.config);
     
     // Return the config so caller can apply it
     return scene.config || {};

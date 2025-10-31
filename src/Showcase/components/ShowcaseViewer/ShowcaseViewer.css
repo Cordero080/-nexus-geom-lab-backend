@@ -105,54 +105,144 @@
   }
 }
 
-/* Animation 3 - Fire-Tech Warrior #003 (Red-Orange) */
-/* Static Fire/Warm */
+/* Animation 3 - Nexus-Prime #003 (Matrix Geometry Green) */
 .viewer-overlay-3 {
+  width: 100vw;
+  height: 100vh;
+  min-height: 100vh;
+  max-height: 100vh;
   background: 
-    radial-gradient(ellipse at 20% 30%, rgba(255, 157, 0, 0.4) 0%, transparent 50%),
-    radial-gradient(ellipse at 80% 70%, rgba(92, 12, 55, 0.6) 0%, transparent 50%),
-    radial-gradient(ellipse at 50% 50%, rgba(75, 4, 38, 0.3) 0%, transparent 60%),
-    linear-gradient(25deg, #07154ea7 10%, #5c0c37 50%, #ff9d00a5 90%, #4b0426 100%);
-}
-
-/* Animation 4 - Nexus-Prime #004 (Deep Space with Crimson Solar Flares) */
-.viewer-overlay-3 {
-  background: 
-    /* 1. Subtle Radial Glow (for a centered focal point) */
-    radial-gradient(circle at 50% 50%, rgba(255, 69, 0, 0.2) 0%, transparent 25%),
-    /* 2. Primary Angular, Fiery Diamond Gradient (Conic) */
-    conic-gradient(
-      at 50% 50%,
-      #ff7700f5 0deg,      /* Lava Orange (Center) */
-      #ee072a5d 30deg,     /* Fire Engine Red */
-      #b3000063 60deg,     /* Ember Crimson */
-      #34025da8 90deg,     /* Obsidian/Deep Violet (Sharp Edge) */
-      #2c011f 270deg,      /* Black continues */
-      #b3000098 300deg,
-      #ff0090a1 330deg,
-      #ff8c00c5 360deg
+    /* Core energy center */
+    radial-gradient(circle at 50% 50%, rgba(0, 255, 127, 0.4) 0%, transparent 20%),
+    /* Concentric rings */
+    repeating-radial-gradient(circle at 50% 50%,
+      transparent 0%,
+      transparent 8%,
+      rgba(0, 255, 127, 0.1) 8.5%,
+      transparent 19%
+    ),
+    /* Grid lines - vertical */
+    repeating-linear-gradient(
+      90deg,
+      transparent 0px,
+      transparent 48px,
+      rgba(0, 255, 127, 0.15) 48px,
+      rgba(0, 255, 127, 0.15) 50px,
+      transparent 50px,
+      transparent 98px
+    ),
+    /* Grid lines - horizontal */
+    repeating-linear-gradient(
+      0deg,
+      transparent 0px,
+      transparent 48px,
+      rgba(0, 255, 127, 0.15) 48px,
+      rgba(0, 255, 127, 0.15) 50px,
+      transparent 50px,
+      transparent 98px
+    ),
+    /* Horizon glow */
+    linear-gradient(
+      to bottom,
+      #000a05 0%,
+      #001a0d 40%,
+      #003d1a 50%,
+      #001a0d 60%,
+      #000a05 100%
     );
   
-  /* Missing lines start here: */
-  background-color: #000000;
-  animation: digitalSurge 8s ease-in-out infinite alternate;
+  background-color: #000a05;
+  background-size: 
+    100% 100%,          /* Core energy center - full viewport */
+    1% 10%,          /* Concentric rings - larger for smooth pattern */
+  50px 80px,          /* Grid vertical - smaller for finer detail */
+    80px 80px,          /* Grid horizontal - smaller for finer detail */ 
+    100% 20%;          /* Horizon glow - full viewport */
+  
+  background-position:
+    center center,      /* Core energy center */
+    center center,      /* Concentric rings */
+    0 0,               /* Grid vertical */
+    0 0,               /* Grid horizontal */
+    center center;      /* Horizon glow */
+  
+  animation: matrixPulse 4s ease-in-out infinite alternate;
 }
 
-@keyframes digitalSurge {
+@keyframes matrixPulse {
   0% {
-    /* Baseline: Sharp, highly contrasted metallic look */
-    filter: brightness(1.0) contrast(1.2) saturate(1.1);
+    filter: brightness(0.9) contrast(1.2) saturate(1.2);
+    background-position: 
+      center center,    /* Core energy */
+      center center,    /* Concentric rings */
+      0 0,             /* Grid vertical */
+      0 0,             /* Grid horizontal */
+      center center;    /* Horizon glow */
+  }
+  50% {
+    filter: brightness(1.3) contrast(1.4) saturate(1.5) hue-rotate(10deg);
+    background-position: 
+      center center,    /* Core energy */
+      center center,    /* Concentric rings */
+      3px 3px,         /* Grid vertical shift */
+      -3px 3px,        /* Grid horizontal shift */
+      center center;    /* Horizon glow */
+  }
+  100% {
+    filter: brightness(1.0) contrast(1.3) saturate(1.3) hue-rotate(-5deg);
+    background-position: 
+      center center,    /* Core energy */
+      center center,    /* Concentric rings */
+      0 0,             /* Grid vertical */
+      0 0,             /* Grid horizontal */
+      center center;    /* Horizon glow */
+  }
+}
+
+@keyframes ninjaMovement {
+  0% {
+    /* Stealth mode: dim and mysterious */
+    filter: brightness(0.9) contrast(1.1) saturate(1.2);
     transform: scale(1.0);
   }
   50% {
-    /* Midpoint: Intense flare with a deep color shift */
-    filter: brightness(1.6) contrast(1.8) saturate(1.6) hue-rotate(15deg);
-    transform: scale(1.01); /* Subtle zoom effect */
+    /* Ninja strike: brief flash of green energy */
+    filter: brightness(1.3) contrast(1.4) saturate(1.5) hue-rotate(10deg);
+    transform: scale(1.005); /* Very subtle movement */
   }
   100% {
-    /* End State: Slightly cooled-off state */
-    filter: brightness(1.2) contrast(1.4) saturate(1.3) hue-rotate(-10deg);
+    /* Return to shadows: cool and misty */
+    filter: brightness(1.0) contrast(1.2) saturate(1.3) hue-rotate(-5deg);
     transform: scale(1.0);
+  }
+}
+
+
+.viewer-overlay-3::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: 
+    radial-gradient(circle at 25% 25%, rgba(0, 255, 127, 0.2) 0%, transparent 10%),
+    radial-gradient(circle at 75% 25%, rgba(0, 255, 127, 0.2) 0%, transparent 10%),
+    radial-gradient(circle at 25% 75%, rgba(0, 255, 127, 0.2) 0%, transparent 10%),
+    radial-gradient(circle at 75% 75%, rgba(0, 255, 127, 0.2) 0%, transparent 10%);
+  animation: particleFloat 8s ease-in-out infinite alternate;
+  pointer-events: none;
+}
+
+@keyframes particleFloat {
+  0% {
+    opacity: 0.3;
+    transform: translateY(0px);
+  }
+  50% {
+    opacity: 0.6;
+    transform: translateY(-10px);
+  }
+  100% {
+    opacity: 0.4;
+    transform: translateY(0px);
   }
 }
 /* Animation 5 - Icarus-X #005 (Code Breaker Geometry Matrix) */
@@ -203,43 +293,33 @@
   }
 }
 
-.viewer-back-button-bottom {
+.viewer-back-button-container {
   position: fixed;
   bottom: 30px;
   left: 30px;
-  color: #00ffff;
-  text-decoration: none;
-  font-size: 1rem;
-  font-weight: 600;
-  padding: 14px 28px;
-  border: 2px solid transparent;
-  border-radius: 8px;
-  background: 
-    linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)) padding-box,
-    linear-gradient(135deg, #00ffff, #ff00ff) border-box;
-  transition: all 0.3s ease;
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
   z-index: 1200;
-  backdrop-filter: blur(15px);
-  cursor: pointer;
-  box-shadow: 0 4px 20px rgba(0, 255, 255, 0.3);
-  text-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
 }
 
-.viewer-back-button-bottom:hover {
-  background: 
-    linear-gradient(rgba(0, 255, 255, 0.15), rgba(255, 0, 255, 0.1)) padding-box,
-    linear-gradient(135deg, #00ffff, #ff00ff) border-box;
-  transform: translateX(-8px) scale(1.05);
-  box-shadow: 
-    0 6px 30px rgba(0, 255, 255, 0.5),
-    0 0 40px rgba(255, 0, 255, 0.3);
-  text-shadow: 0 0 15px rgba(0, 255, 255, 0.8);
+.viewer-back-button {
+  font-family: 'Orbitron', monospace !important;
+  color: #00ffff !important;
+  background: rgba(0, 0, 0, 0.7) !important;
+  backdrop-filter: blur(10px) !important;
+  border: 1px solid rgba(0, 255, 255, 0.3) !important;
+}
+
+.viewer-back-button span {
+  font-family: 'Orbitron', monospace !important;
+  color: #00ffff !important;
+}
+
+.viewer-back-button:hover {
+  background: rgba(0, 0, 0, 0.85) !important;
+  border-color: rgba(0, 255, 255, 0.5) !important;
 }
 
 .viewer-close {
+  font-family: 'Orbitron', monospace !important;
   position: absolute;
   top: 20px;
   right: 20px;
@@ -367,64 +447,47 @@
   box-shadow: 0 2px 12px rgba(255, 60, 0, 0.3);
 }
 
-/* Nexus-Prime #003 - Crimson/Red Theme */
+/* Nexus-Prime #003 - Ninja Green Theme */
 .viewer-overlay-3 .viewer-info {
-  background: linear-gradient(180deg, rgba(255, 100, 0, 0.25) 0%, rgba(255, 0, 100, 0.35) 100%);
-  border-top: 2px solid rgba(255, 140, 70, 0.5);
-  backdrop-filter: blur(10px);
-  box-shadow: 0 -5px 30px rgba(255, 100, 0, 0.3);
+  background: 
+    radial-gradient(ellipse at top center, rgba(0, 255, 127, 0.1) 0%, transparent 50%),
+    linear-gradient(180deg, rgba(0, 100, 50, 0.2) 0%, rgba(0, 50, 25, 0.3) 100%);
+  border-top: 2px solid rgba(0, 255, 127, 0.4);
+  backdrop-filter: blur(12px) saturate(150%);
+  box-shadow: 0 -5px 30px rgba(0, 255, 127, 0.2);
 }
 
 .viewer-overlay-3 .viewer-title {
-  background: linear-gradient(360deg, #ffcc00fb, #ff2b00, #ffc400c6, #ff2f00);
+  background: linear-gradient(135deg, #00ff7f, #32cd32, #228b22, #00ff7f);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
-  text-shadow: 0 0 15px rgba(3, 109, 67, 0.4);
+  text-shadow: 0 0 20px rgba(0, 255, 127, 0.5);
   font-family: inherit; /* Default: Orbitron */
 }
 
 .viewer-overlay-3 .viewer-description {
-  color: rgba(255, 255, 255, 0.9);
-  text-shadow: 0 0 10px rgba(255, 100, 0, 0.5);
+  color: rgba(200, 255, 200, 0.9);
+  text-shadow: 0 0 10px rgba(0, 255, 127, 0.3);
   font-family: inherit; /* Default: system font */
 }
 
 .viewer-overlay-3 .meta-tag {
-  background: rgba(255, 100, 0, 0.15);
-  border: 1px solid rgba(255, 80, 0, 0.4);
-  color: #ff7700;
-  box-shadow: 0 2px 8px rgba(255, 60, 0, 0.2);
+  background: rgba(0, 255, 127, 0.1);
+  border: 1px solid rgba(0, 255, 127, 0.3);
+  color: #00ff7f;
+  box-shadow: 0 2px 8px rgba(0, 255, 127, 0.2);
   font-family: inherit; /* Default: system font */
 }
 
 .viewer-overlay-3 .meta-tag:hover {
-  background: rgba(255, 100, 0, 0.25);
-  box-shadow: 0 2px 12px rgba(255, 60, 0, 0.3);
+  background: rgba(0, 255, 127, 0.2);
+  box-shadow: 0 2px 12px rgba(0, 255, 127, 0.4);
 }
 
-/* 
--------------------------------------------------------
-TEXT & META STYLES 
-Could be customized per animation viewer
--------------------------------------------------------
-Animation 1 (Cosmic Entity #001): 
-  - Title gradient: Could use blue-purple (#3b78ff, #1c0038, #8844ff)
-  - Text shadow: Could use blue glow (rgba(59, 120, 255, 0.6))
-  - Meta tags: Could use blue theme (#3b78ff)
-
-Animation 2 (Tech Feline #002):
-  - Title gradient: Could use cyan-teal (#00e5ff, #003045, #00a0c8)
-  - Text shadow: Could use cyan glow (rgba(0, 229, 255, 0.6))
-  - Meta tags: Could use cyan theme (#00e5ff)
-
-Animation 3 (Fire-Tech Warrior #003):
-  - Title gradient: Currently orange-red (#ff6a00, #ff2b00, #ffcc00) - matches this theme
-  - Text shadow: Currently orange glow (rgba(255, 100, 0, 0.5)) - matches this theme
-  - Meta tags: Currently orange theme (#ff7700) - matches this theme
-*/
 
 .viewer-title {
+  font-family: 'Future Z', 'Orbitron', 'Rajdhani', sans-serif !important;
   font-size: 1.8rem;
   font-weight: 700;
   background: linear-gradient(135deg, #ff6a00, #ff2b00, #ffcc00); /* Orange-red gradient - fits Animation 3 */
@@ -435,10 +498,11 @@ Animation 3 (Fire-Tech Warrior #003):
   text-transform: uppercase;
   letter-spacing: 2px;
   text-shadow: 0 0 15px rgba(255, 100, 0, 0.4);
-  display: inline-block; /* Ensures gradient only applies to text */
+  display: inline; /* Changed from inline-block to inline */
 }
 
 .viewer-description {
+  font-family: 'Orbitron', monospace !important;
   font-size: 0.95rem;
   color: rgba(255, 255, 255, 0.9);
   margin: 0 0 16px 0;
@@ -458,6 +522,7 @@ Animation 3 (Fire-Tech Warrior #003):
 }
 
 .meta-tag {
+  font-family: 'Orbitron', monospace !important;
   padding: 6px 16px;
   background: rgba(255, 100, 0, 0.15); /* Orange theme - fits Animation 3 */
   border: 1px solid rgba(255, 80, 0, 0.4);
@@ -477,11 +542,9 @@ Animation 3 (Fire-Tech Warrior #003):
 
 /* Responsive */
 @media (max-width: 768px) {
-  .viewer-back-button {
-    top: 10px;
+  .viewer-back-button-container {
+    bottom: 10px;
     left: 10px;
-    padding: 10px 16px;
-    font-size: 0.9rem;
   }
   
   .viewer-close {

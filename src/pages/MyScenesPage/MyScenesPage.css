@@ -320,19 +320,53 @@
 }
 
 .delete-modal {
-  background: rgba(20, 0, 40, 0.95);
+  background:
+    linear-gradient(145deg, #0a0a0a, #000000),
+    radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.1), transparent 50%),
+    radial-gradient(circle at 70% 70%, rgba(0, 0, 0, 0.5), transparent 50%),
+    linear-gradient(45deg, rgba(255, 68, 68, 0.05), rgba(255, 0, 0, 0.05), rgba(255, 68, 68, 0.05));
+  background-size: 100% 100%, 150% 150%, 150% 150%, 200% 200%;
+  background-blend-mode: overlay, multiply, overlay;
   backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 0, 0, 0.3);
-  border-radius: 24px;
+  border: 1px solid rgba(255, 68, 68, 0.4);
+  border-radius: 12px;
   padding: 32px;
   max-width: 480px;
   width: 100%;
   text-align: center;
+  box-shadow:
+    0 4px 8px rgba(0, 0, 0, 0.8),
+    inset 0 1px 3px rgba(255, 255, 255, 0.2),
+    inset 0 -1px 3px rgba(0, 0, 0, 0.5);
 }
 
 .delete-modal__icon {
   font-size: 4rem;
   margin-bottom: 16px;
+  color: #ff4444;
+  text-shadow: 0 0 20px rgba(255, 68, 68, 0.5);
+  animation: deleteIconPulse 2s ease-in-out infinite;
+}
+
+@keyframes deleteIconPulse {
+  0%, 100% {
+    text-shadow: 0 0 20px rgba(255, 68, 68, 0.5);
+  }
+  50% {
+    text-shadow: 0 0 30px rgba(255, 68, 68, 0.8), 0 0 40px rgba(255, 68, 68, 0.3);
+  }
+}
+
+@keyframes dark-holographic-shimmer {
+  0% {
+    background-position: 0% 50%, 50% 50%, 50% 50%, 0% 50%;
+  }
+  50% {
+    background-position: 0% 50%, 100% 100%, 100% 100%, 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%, 50% 50%, 50% 50%, 0% 50%;
+  }
 }
 
 .delete-modal__title {
@@ -340,6 +374,7 @@
   font-weight: 700;
   margin: 0 0 16px;
   color: #ff4444;
+  font-family: 'Orbitron', 'JetBrains Mono', monospace !important;
 }
 
 .delete-modal__message {
@@ -347,10 +382,13 @@
   color: rgba(255, 255, 255, 0.8);
   margin: 0 0 32px;
   line-height: 1.6;
+  font-family: 'Orbitron', 'JetBrains Mono', monospace !important;
+  text-shadow: 0 0 5px rgba(255, 68, 68, 0.3), 0 0 10px rgba(255, 255, 255, 0.2);
 }
 
 .delete-modal__message strong {
   color: #ffffff;
+  text-shadow: 0 0 8px rgba(255, 68, 68, 0.5);
 }
 
 .delete-modal__actions {
@@ -360,37 +398,9 @@
 
 .delete-modal__btn {
   flex: 1;
-  padding: 12px 24px;
-  border: none;
-  border-radius: 0;
-  font-size: 1rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s ease;
 }
 
-.delete-modal__btn--cancel {
-  background: rgba(255, 255, 255, 0.1);
-  color: #ffffff;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-}
-
-.delete-modal__btn--cancel:hover {
-  background: rgba(255, 255, 255, 0.15);
-  border-color: rgba(255, 255, 255, 0.3);
-}
-
-.delete-modal__btn--delete {
-  background: rgba(255, 0, 0, 0.2);
-  color: #ff4444;
-  border: 1px solid rgba(255, 0, 0, 0.4);
-}
-
-.delete-modal__btn--delete:hover {
-  background: rgba(255, 0, 0, 0.3);
-  border-color: rgba(255, 0, 0, 0.6);
-  transform: scale(1.02);
-}
+/* Button styles now handled by ScrambleButton component */
 
 /* Responsive */
 @media (max-width: 1200px) {

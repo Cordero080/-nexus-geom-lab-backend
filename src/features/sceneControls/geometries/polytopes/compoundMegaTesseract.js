@@ -33,10 +33,7 @@ function createCacheKey(options) {
     const signature = stableStringify(options);
     return signature === "{}" ? "default" : `opts:${signature}`;
   } catch (error) {
-    console.warn(
-      "compoundMegaTesseract: failed to stringify options for cache",
-      error
-    );
+    // Failed to stringify options for cache
     return null;
   }
 }

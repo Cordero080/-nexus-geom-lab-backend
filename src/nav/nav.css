@@ -15,7 +15,7 @@
   justify-content: space-between;
   padding: 0 40px;
   height: 110px;
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'Orbitron', monospace;
 }
 
 .nav-logo {
@@ -26,7 +26,7 @@
 
 .logo-text {
   position: relative;
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'Future Z', 'Orbitron', monospace;
   font-size: 28px;
   font-weight: 800;
   background: linear-gradient(135deg, #00ffff72, #ff00668d, #ffff0094, #00ff33, #cc00ff, #ff3300);
@@ -61,7 +61,7 @@
   color: #00ffff;
   text-decoration: none;
   font-size: 18px; /* Standardize font size */
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'Orbitron', monospace;
   font-weight: 700;
   letter-spacing: 1px;
   position: relative;
@@ -106,7 +106,7 @@
   font-size: 18px; /* Match link size */
   color: #00ffff;
   margin-left: 20px;
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'Orbitron', monospace;
 }
 
 /* Default logout/button style shared across pages */
@@ -114,7 +114,7 @@
   background: none;
   border: none;
   cursor: pointer;
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'Orbitron', monospace;
   font-size: 18px;
   color: #00ffff;
   letter-spacing: 1px;

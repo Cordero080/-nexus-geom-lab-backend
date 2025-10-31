@@ -24,14 +24,7 @@ export function AuthProvider({ children }) {
   // Check if user is authenticated
   const isAuthenticated = !!user && !!token;
 
-  // Debug logging
-  React.useEffect(() => {
-    console.log('🔐 Auth State:', { 
-      user: user, 
-      token: token ? `${token.substring(0, 20)}...` : null, 
-      isAuthenticated: isAuthenticated 
-    });
-  }, [user, token, isAuthenticated]);
+  // Debug logging removed for production
 
   /**
    * Login user
@@ -43,13 +36,10 @@ export function AuthProvider({ children }) {
     // Mock login for now
     try {
       const data = await loginApi(email, password);
-      console.log('📥 Login API response:', data);
       
       // Extract user token from response
       const { user: userData, token: userToken } = data;
       
-      console.log('👤 User data:', userData);
-      console.log('🔑 Token:', userToken);
       
       setUser(userData);
       setToken(userToken);
@@ -58,11 +48,9 @@ export function AuthProvider({ children }) {
       localStorage.setItem("user", JSON.stringify(userData));
       localStorage.setItem("token", userToken);
 
-      console.log('✅ Login complete, stored in localStorage');
 
       return data;
     } catch (error) {
-      console.error("Login failed", error);
       throw error;
     }
   }, []);
@@ -80,13 +68,10 @@ export function AuthProvider({ children }) {
     try {
       // Call API
       const data = await signupApi(username, email, password);
-      console.log('📥 Signup API response:', data);
       
       //extract user and token from response
       const { user: userData, token: userToken } = data;
       
-      console.log('👤 User data:', userData);
-      console.log('🔑 Token:', userToken);
       
       // Update state
       setUser(userData);
@@ -96,11 +81,9 @@ export function AuthProvider({ children }) {
       localStorage.setItem("user", JSON.stringify(userData));
       localStorage.setItem("token", userToken);
       
-      console.log('✅ Signup complete, stored in localStorage');
       
       return data;
     } catch (error) {
-      console.error("Signup failed:", error);
       throw error;
     }
   }, []);
@@ -120,22 +103,13 @@ export function AuthProvider({ children }) {
   React.useEffect(() => {
     const storedUser = localStorage.getItem("user");
     const storedToken = localStorage.getItem("token");
-    
-    console.log('🔄 Initializing auth from localStorage:', {
-      hasUser: !!storedUser,
-      hasToken: !!storedToken,
-      storedUser: storedUser,
-      storedToken: storedToken ? `${storedToken.substring(0, 20)}...` : null
-    });
 
     if (storedUser && storedToken) {
       try {
         const parsedUser = JSON.parse(storedUser);
         setUser(parsedUser);
         setToken(storedToken);
-        console.log('✅ Auth restored from localStorage');
       } catch (error) {
-        console.error("Failed to parse stored user:", error);
         localStorage.removeItem("user");
         localStorage.removeItem("token");
       }

@@ -57,7 +57,7 @@
 
 .logo-text {
   position: relative;
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'Orbitron', monospace;
   font-size: 28px;
   font-weight: 800;
   background: linear-gradient(135deg, #00ffff72, #ff00668d, #ffff0094, #00ff33, #cc00ff, #ff3300);
@@ -102,7 +102,7 @@
   color: #00ffff;
   text-decoration: none;
   font-size: 18px;
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'Orbitron', monospace;
   font-weight: 700;
   letter-spacing: 1px;
   position: relative;
@@ -368,7 +368,7 @@
 }
 
 .login-subtitle {
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'Orbitron', monospace;
   font-size: 12px;
   letter-spacing: 2px;
   color: rgba(255, 255, 255, 0.5);
@@ -388,7 +388,7 @@
 }
 
 .form-label {
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'Orbitron', monospace;
   font-size: 17px;
   font-weight: 700;
   letter-spacing: 1.5px;
@@ -397,7 +397,7 @@
 }
 
 .form-input {
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'Orbitron', monospace;
   font-size: 20px;
   padding: 18px 22px;
   background:
@@ -507,7 +507,7 @@
 }
 
 .error-message {
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'Orbitron', monospace;
   font-size: 14px;
   color: #ff0044;
   margin-top: 4px;
@@ -531,7 +531,7 @@
   border: 1px solid rgba(255, 0, 68, 0.4);
   border-radius: 8px;
   color: #ff0044;
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'Orbitron', monospace;
   font-size: 15px;
   text-align: center;
   animation: errorSlide 0.3s ease;

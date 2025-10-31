@@ -63,8 +63,7 @@ try {
   // Return the saved scne date to whoever called this function
 return data;
 } catch (error) {
-  // IF API fails, log error and throw a user message for user to see
-  console.error('Error saving scene:', error);
+  // IF API fails, throw a user message for user to see
 throw new Error('Failed to save scene. Please try again.');
 }
 
@@ -88,7 +87,6 @@ export const deleteScene = async (sceneId, token) => {
     const data = await response.json();
     return data;
   } catch (error) {
-    console.error('Error deleting scene:', error);
     throw new Error('Failed to delete scene. Please try again.');
   }
 };
@@ -124,8 +122,7 @@ try {
   // Return the array of user's scenes to whoever called this function
   return data.scenes || [];
 } catch (error) {
-  // IF API fails, log error and throw a user message for user to see
-  console.error('Error fetching my scenes:', error);
+  // IF API fails, throw a user message for user to see
 throw new Error('Failed to fetch your scenes. Please try again.');
 }
 
@@ -167,8 +164,7 @@ try {
   // Return the updated scene data to whoever called this function
 return data;
 } catch (error) {
-  // IF API fails, log error and throw a user message for user to see
-  console.error('Error updating scene:', error);
+  // IF API fails, throw a user message for user to see
 throw new Error('Failed to update scene. Please try again.');
 }
 
@@ -210,7 +206,6 @@ try {
 return data;
 } catch (error) {
   // IF API fails, log error and throw a user message for user to see
-  console.error('Error signing up:', error);
 throw new Error('Failed to create account. Please try again.');
 }
 
@@ -252,7 +247,6 @@ try {
 return data;
 } catch (error) {
   // IF API fails, log error and throw a user message for user to see
-  console.error('Error logging in:', error);
 throw new Error('Failed to log in. Please check your credentials.');
 }
 
@@ -289,8 +283,7 @@ try {
   // Return the user data to whoever called this function
 return data;
 } catch (error) {
-  // IF API fails, log error and throw a user message for user to see
-  console.error('Error fetching current user:', error);
+  // IF API fails, throw a user message for user to see
 throw new Error('Failed to fetch user data. Please try again.');
 }
 

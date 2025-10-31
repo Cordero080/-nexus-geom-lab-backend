@@ -164,6 +164,7 @@
 
 .showcase-main-subtitle {
   /* Use shared pageSubtitle; override color for showcase theme */
+  font-family: 'Orbitron', monospace !important;
   color: #7ffdff92;
   font-size: 1.1em;
   margin: 0;
@@ -231,12 +232,12 @@
 .showcase-main-title::after {
   z-index: -2;
   opacity: 0.4;
-  transform: translateY(4px) translateX(5px);
+  transform: translateY(4px) translateX(0px);
   text-shadow: 0 0 24px rgba(22, 10, 27, 0.503), 0 0 60px rgba(0, 132, 255, 0.5);
 }
 
 .showcase-main-title .showcase-title-inverted {
-  display: inline-block;
+  display: inline;
   background: inherit;
   background-size: inherit;
   background-position: inherit;
@@ -647,49 +648,13 @@
   filter: drop-shadow(0 6px 24px rgba(6, 21, 185, 0.32));
   transform: perspective(400px) rotateX(15deg);
   transform-origin: center bottom;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
+  display: inline;
   padding: 12px 24px;
   isolation: isolate;
 }
 
-.parallax-title::before,
-.parallax-title::after {
-  content: attr(data-text);
-  position: absolute;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  pointer-events: none;
-  letter-spacing: inherit;
-  text-transform: inherit;
-  font-family: inherit;
-  font-size: inherit;
-  background: inherit;
-  background-size: inherit;
-  background-position: inherit;
-  background-clip: inherit;
-  -webkit-background-clip: inherit;
-  -webkit-text-fill-color: inherit;
-}
-
-.parallax-title::before {
-  z-index: -2;
-  filter: blur(18px);
-  opacity: 0.45;
-  transform: translateY(6px) translateX(3px) scale(1.05);
-}
-
-.parallax-title::after {
-  z-index: -2;
-  opacity: 0.4;
-  transform: translateY(4px) translateX(5px);
-  text-shadow: 0 0 24px rgba(22, 10, 27, 0.503), 0 0 60px rgba(0, 132, 255, 0.5);
-}
-
 .parallax-animation {
+  font-family: 'Orbitron', monospace !important;
   font-size: 1.2rem;
   color: #ff00ff;
   font-weight: 600;
@@ -697,6 +662,7 @@
 }
 
 .parallax-description {
+  font-family: 'Orbitron', monospace !important;
   font-size: 1rem;
   color: rgba(255, 255, 255, 0.8);
   line-height: 1.6;

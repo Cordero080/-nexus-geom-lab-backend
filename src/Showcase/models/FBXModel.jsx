@@ -3,6 +3,10 @@ import { useFrame } from '@react-three/fiber';
 import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader';
 import * as THREE from 'three';
 
+// Y-AXIS MOVEMENT CONFIGURATION
+// Configure allowNaturalYMovement in: src/Showcase/data/mockAnimations.js
+// Used by: src/Showcase/components/ShowcaseViewer/ShowcaseViewer.jsx
+
 export default function FBXModel({ url, scale = 0.01, rotation = [0, 0, 0], positionY = -1.8, offsetX = 0, offsetZ = 0, isPlaying = true, onModelLoaded, allowNaturalYMovement = false }) {
   const groupRef = useRef();
   const mixerRef = useRef();
@@ -24,15 +28,17 @@ export default function FBXModel({ url, scale = 0.01, rotation = [0, 0, 0], posi
         // Apply rotation if needed
         fbx.rotation.set(rotation[0], rotation[1], rotation[2]);
 
-        // Center the model and place at bottom
+        // INITIAL MODEL POSITIONING:
+        // Center the model and place at bottom (this is the starting position)
         const box = new THREE.Box3().setFromObject(fbx);
         const center = box.getCenter(new THREE.Vector3());
         const size = box.getSize(new THREE.Vector3());
 
         // Center horizontally, place at bottom of cube
-        fbx.position.x = -center.x;
-        fbx.position.z = -center.z;
-        fbx.position.y = -box.min.y; // Put feet at y=0
+        fbx.position.x = -center.x;  // Center on X-axis
+        fbx.position.z = -center.z;  // Center on Z-axis
+        fbx.position.y = -box.min.y; // Y-ANCHOR: Put feet at y=0 (initial ground position)
+        // NOTE: If allowNaturalYMovement=true, animation can move model up/down from this base
 
         // Setup animation mixer if animations exist
         if (fbx.animations && fbx.animations.length > 0) {
@@ -41,23 +47,29 @@ export default function FBXModel({ url, scale = 0.01, rotation = [0, 0, 0], posi
 
           // Clone the animation and remove root position tracks to prevent position drift
           const clip = fbx.animations[0].clone();
+          
+          // ANIMATION Y-AXIS CONTROL SYSTEM:
+          // This filter controls whether models can move naturally in Y-axis or stay grounded
           // Remove only the root translation so characters stay centered while limb motion persists
           clip.tracks = clip.tracks.filter((track) => {
             const parts = track.name.split('.');
             const property = parts.length ? parts[parts.length - 1].toLowerCase() : '';
             if (property !== 'position') {
-              return true;
+              return true; // Keep all non-position tracks (rotation, scale, etc.)
             }
 
             const nodePath = parts.slice(0, -1).join('.').toLowerCase();
             const isRootPosition = nodePath.endsWith('hips') || nodePath.endsWith('root') || nodePath.endsWith('pelvis');
             
-            // If allowNaturalYMovement is true, keep Y position for root
+            // Y-AXIS MOVEMENT DECISION POINT:
+            // Configure this setting in: src/Showcase/data/mockAnimations.js
+            // If allowNaturalYMovement is true, preserve Y-axis animation for acrobatic moves
             if (allowNaturalYMovement && isRootPosition) {
-              // Keep only Y-axis movement, remove X and Z
+              // Keep only Y-axis movement, remove X and Z to prevent drifting
               return track.name.includes('.position');
             }
             
+            // Default: Remove all root position tracks to keep model grounded
             return !isRootPosition;
           });
 
@@ -80,7 +92,7 @@ export default function FBXModel({ url, scale = 0.01, rotation = [0, 0, 0], posi
         // This makes the model appear faster in the gallery
         if (onModelLoaded) onModelLoaded();
 
-        // Optimize textures for faster rendering (optional background task)
+        // Optimize textures and adjust materials for specific models
         fbx.traverse((child) => {
           if (child.isMesh && child.material) {
             const materials = Array.isArray(child.material) ? child.material : [child.material];
@@ -90,13 +102,15 @@ export default function FBXModel({ url, scale = 0.01, rotation = [0, 0, 0], posi
                 mat.map.minFilter = THREE.LinearFilter;
                 mat.map.generateMipmaps = false;
               }
+              
+
             });
           }
         });
       },
       undefined, // Progress callback
       (error) => {
-        console.error('Error loading FBX:', error);
+        // FBX loading failed silently
       }
     );
 

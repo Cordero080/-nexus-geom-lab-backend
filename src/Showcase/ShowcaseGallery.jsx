@@ -298,7 +298,7 @@ export default function ShowcaseGallery() {
           setPreloadedModels({ [firstModel.id]: fbx });
         },
         undefined,
-        (err) => console.error(`Failed to preload first model:`, err)
+        (err) => {/* Model preload failed silently */}
       );
     }
     return () => { isMounted = false; };
@@ -332,7 +332,6 @@ export default function ShowcaseGallery() {
       },
       undefined,
       (err) => {
-        console.error(`Failed to load model ${animationId}:`, err);
         setLoadingModels(prev => {
           const newSet = new Set(prev);
           newSet.delete(animationId);
@@ -479,7 +478,12 @@ export default function ShowcaseGallery() {
                       fbxUrl={animation.fbxUrl}
                       scale={animation.galleryScale || animation.scale}
                       rotation={animation.rotation}
-                      positionY={animation.galleryPositionY || animation.positionY}
+                      positionY={
+                        // HOVER POSITION ADJUSTMENT: Use original position when hovered for better visibility
+                        hoveredCard === animation.id && animation.positionY 
+                          ? animation.positionY 
+                          : (animation.galleryPositionY || animation.positionY)
+                      }
                       offsetX={animation.offsetX}
                       offsetZ={animation.offsetZ}
                       cubeY={0.3}
@@ -490,6 +494,7 @@ export default function ShowcaseGallery() {
                       }}
                       preloadedModel={preloadedModels[animation.id]}
                       allowNaturalYMovement={animation.allowNaturalYMovement}
+                      modelId={animation.id}
                     />
                   </Canvas>
                 ) : (

@@ -4,7 +4,6 @@ import { useAuth } from "../../../context/AuthContext";
 import { useScene } from "../../../context/SceneContext";
 import { saveScene, updateScene } from "../../../services/sceneApi";
 import ScrambleButton from '../../ScrambleButton/ScrambleButton';
-import { SuccessModal } from '../../Modals';
 import styles from "./SaveButton.module.scss";
 import sharedStyles from "../../../styles/shared.module.scss";
 
@@ -28,8 +27,9 @@ function SaveControls({ sceneConfig, textColor }) {
   const [newSceneName, setNewSceneName] = useState('');
   const [showUnlockModal, setShowUnlockModal] = useState(false);
   const [unlockedNoetechs, setUnlockedNoetechs] = useState([]);
-  const [showSuccessModal, setShowSuccessModal] = useState(false);
-  const [successData, setSuccessData] = useState({ title: '', unlockedNoetechs: [], sceneId: null });
+  const [showSuccessSaveModal, setShowSuccessSaveModal] = useState(false);
+  const [savedSceneName, setSavedSceneName] = useState('');
+  const [savedSceneId, setSavedSceneId] = useState(null);
 
   // Check if user owns the currently loaded scene
   const canUpdate = currentSceneId && isOwnScene(user?.id);
@@ -59,7 +59,6 @@ function SaveControls({ sceneConfig, textColor }) {
   const handleSave = async () => {
     // Check if auth is still loading
     if (isLoading) {
-      console.log('Auth still loading, please wait...');
       return;
     }
 
@@ -78,8 +77,6 @@ function SaveControls({ sceneConfig, textColor }) {
     setIsSaving(true);
 
     try {
-      console.log('🔐 Updating with token:', token ? `${token.substring(0, 20)}...` : 'NO TOKEN');
-      
       // Prepare scene data for update
       const sceneData = {
         name: sceneName, // Keep existing name
@@ -89,39 +86,31 @@ function SaveControls({ sceneConfig, textColor }) {
 
       // Call API to update existing scene
       const result = await updateScene(currentSceneId, sceneData, token);
-
-      console.log('Update result:', result);
-      console.log('Unlocked Noetechs:', result.unlockedNoetechs);
       
       // Handle unlocked noetechs if any
       if (result.unlockedNoetechs && result.unlockedNoetechs.length > 0) {
-        console.log('Setting unlocked noetechs:', result.unlockedNoetechs);
         try {
           addUnlockedNoetechs(result.unlockedNoetechs);
           setUnlockedNoetechs(result.unlockedNoetechs);
         } catch (e) {
-          console.error('Error adding unlocked noetechs:', e);
+          // Silently handle noetech unlock errors
         }
       }
       
-      // Show success modal with unlock info
-      setSuccessData({
-        title: sceneName,
-        unlockedNoetechs: result.unlockedNoetechs || [],
-        sceneId: currentSceneId // Pass the scene ID for highlighting
-      });
-      setShowSuccessModal(true);
-
       // Close save modal
       handleCloseModal();
       
-      // Show unlock modal if noetechs were unlocked (keep existing logic)
+      // Show unlock modal if noetechs were unlocked
       if (result.unlockedNoetechs && result.unlockedNoetechs.length > 0) {
-        console.log('Showing unlock modal');
+        setUnlockedNoetechs(result.unlockedNoetechs);
+        setSavedSceneId(currentSceneId);
         setShowUnlockModal(true);
+      } else {
+        // Show success save modal if no unlocks
+        setSavedSceneName(sceneName);
+        setSavedSceneId(currentSceneId);
+        setShowSuccessSaveModal(true);
       }
-      
-      // Note: Navigation now handled by success modal onClose
 
     } catch (error) {
       alert(`Failed to update scene: ${error.message}`);
@@ -137,7 +126,6 @@ function SaveControls({ sceneConfig, textColor }) {
   const handleSaveAsNew = async () => {
     // Check if auth is still loading
     if (isLoading) {
-      console.log('Auth still loading, please wait...');
       return;
     }
 
@@ -158,7 +146,6 @@ function SaveControls({ sceneConfig, textColor }) {
     setIsSaving(true);
 
     try {
-      console.log('🔐 Saving with token:', token ? `${token.substring(0, 20)}...` : 'NO TOKEN');
       
       // Prepare scene data for new scene
       const sceneData = {
@@ -170,38 +157,32 @@ function SaveControls({ sceneConfig, textColor }) {
       // Call API to save as new scene
       const result = await saveScene(sceneData, token);
 
-      console.log('Save result:', result);
-      console.log('Unlocked Noetechs:', result.unlockedNoetechs);
       
       // Handle unlocked noetechs if any
       if (result.unlockedNoetechs && result.unlockedNoetechs.length > 0) {
-        console.log('Setting unlocked noetechs:', result.unlockedNoetechs);
         try {
           addUnlockedNoetechs(result.unlockedNoetechs);
           setUnlockedNoetechs(result.unlockedNoetechs);
         } catch (e) {
-          console.error('Error adding unlocked noetechs:', e);
         }
       }
       
-      // Show success modal with unlock info
-      setSuccessData({
-        title: name,
-        unlockedNoetechs: result.unlockedNoetechs || [],
-        sceneId: result.scene._id || result.scene.id // Pass the newly created scene ID for highlighting
-      });
-      setShowSuccessModal(true);
-
       // Close save modal
       handleCloseModal();
       
-      // Show unlock modal if noetechs were unlocked (keep existing logic)
+      // Show unlock modal if noetechs were unlocked
       if (result.unlockedNoetechs && result.unlockedNoetechs.length > 0) {
-        console.log('Showing unlock modal');
+        setUnlockedNoetechs(result.unlockedNoetechs);
+        const newSceneId = result.scene._id || result.scene.id;
+        setSavedSceneId(newSceneId);
         setShowUnlockModal(true);
+      } else {
+        // Show success save modal if no unlocks
+        setSavedSceneName(name);
+        const newSceneId = result.scene._id || result.scene.id;
+        setSavedSceneId(newSceneId);
+        setShowSuccessSaveModal(true);
       }
-      
-      // Note: Navigation now handled by success modal onClose
 
     } catch (error) {
       alert(`Failed to save scene: ${error.message}`);
@@ -240,7 +221,7 @@ function SaveControls({ sceneConfig, textColor }) {
                 <input
                   id="scene-name"
                   type="text"
-                  className={`save-modal__input ${sharedStyles.angledCorners}`}
+                  className={`save-modal__input holographic-input ${sharedStyles.angledCorners}`}
                   value={newSceneName}
                   onChange={(e) => setNewSceneName(e.target.value)}
                   placeholder="Enter scene name..."
@@ -276,7 +257,7 @@ function SaveControls({ sceneConfig, textColor }) {
                 <div className="save-modal__save-as-new-section">
                   <input
                     type="text"
-                    className={`save-modal__input ${sharedStyles.angledCorners}`}
+                    className={`save-modal__input holographic-input ${sharedStyles.angledCorners}`}
                     value={newSceneName}
                     onChange={(e) => setNewSceneName(e.target.value)}
                     placeholder="New scene name..."
@@ -318,7 +299,7 @@ function SaveControls({ sceneConfig, textColor }) {
       {showUnlockModal && (
         <div className="save-modal-overlay unlock-modal-overlay" onClick={() => {
           setShowUnlockModal(false);
-          navigate('/scenes');
+          navigate('/scenes', { state: { highlightSceneId: savedSceneId } });
         }}>
           <div className="save-modal unlock-modal" onClick={(e) => e.stopPropagation()}>
             <div className="unlock-modal__content">
@@ -346,7 +327,7 @@ function SaveControls({ sceneConfig, textColor }) {
                   variant="secondary"
                   onClick={() => {
                     setShowUnlockModal(false);
-                    navigate('/scenes');
+                    navigate('/scenes', { state: { highlightSceneId: savedSceneId } });
                   }}
                   className="save-modal__btn"
                 >
@@ -358,19 +339,48 @@ function SaveControls({ sceneConfig, textColor }) {
         </div>
       )}
 
-      {/* Success Modal */}
-      <SuccessModal
-        isOpen={showSuccessModal}
-        onClose={() => {
-          setShowSuccessModal(false);
-          // Navigate to scenes page with highlight ID after closing success modal
-          navigate('/scenes', { 
-            state: { highlightSceneId: successData.sceneId } 
-          });
-        }}
-        title={successData.title}
-        unlockedNoetechs={successData.unlockedNoetechs}
-      />
+      {/* Success Save Modal */}
+      {showSuccessSaveModal && (
+        <div className="save-modal-overlay unlock-modal-overlay" onClick={() => {
+          setShowSuccessSaveModal(false);
+          navigate('/scenes', { state: { highlightSceneId: savedSceneId } });
+        }}>
+          <div className="save-modal unlock-modal" onClick={(e) => e.stopPropagation()}>
+            <div className="unlock-modal__content">
+              <div className="unlock-modal__icon">⬢</div>
+              <h2 className="unlock-modal__title">Scene Saved!</h2>
+              <div className="unlock-modal__noetechs">
+                <div className="unlock-modal__noetech-name">
+                  {savedSceneName.toUpperCase()}
+                </div>
+              </div>
+              <p className="unlock-modal__message">
+                Your masterpiece has been saved successfully!
+              </p>
+              <div className="unlock-modal__actions">
+                <ScrambleButton
+                  variant="primary"
+                  onClick={() => navigate('/scenes', { state: { highlightSceneId: savedSceneId } })}
+                  className="save-modal__btn"
+                >
+                  View My Scenes
+                </ScrambleButton>
+                <ScrambleButton
+                  variant="secondary"
+                  onClick={() => {
+                    setShowSuccessSaveModal(false);
+                    // Stay on current page
+                  }}
+                  className="save-modal__btn"
+                >
+                  Continue Creating
+                </ScrambleButton>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
     </>
   );
 }

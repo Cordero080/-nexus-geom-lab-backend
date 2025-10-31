@@ -630,7 +630,6 @@ export function createSceneObject(config) {
     } catch (e) {
       // Fail-safe: do not crash scene if extras fail to build
       // eslint-disable-next-line no-console
-      console.warn("QuantumManifold extras error:", e);
     }
   }
 
@@ -648,7 +647,6 @@ export function createSceneObject(config) {
       }
     } catch (e) {
       // eslint-disable-next-line no-console
-      console.warn("CompoundSphere extras error:", e);
     }
   }
 

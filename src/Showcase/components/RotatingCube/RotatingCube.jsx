@@ -3,7 +3,7 @@ import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 import FBXModel from '../../models/FBXModel';
 
-export default function RotatingCube({ size = 3, fbxUrl = null, scale = 0.001275, rotation = [0, 0, 0], positionY = -1.8, offsetX = 0, offsetZ = 0, cubeY = -0.5, isPlaying = true, onModelLoaded, preloadedModel = null, allowNaturalYMovement = false }) {
+export default function RotatingCube({ size = 3, fbxUrl = null, scale = 0.001275, rotation = [0, 0, 0], positionY = -1.8, offsetX = 0, offsetZ = 0, cubeY = -0.5, isPlaying = true, onModelLoaded, preloadedModel = null, allowNaturalYMovement = false, animationId = null }) {
   const cubeRef = useRef();
   const innerLightRef = useRef();
   const edgeMaterialRef = useRef();
@@ -520,14 +520,21 @@ export default function RotatingCube({ size = 3, fbxUrl = null, scale = 0.001275
         />
       </group>
       
-      {/* Interior point light */}
-      <pointLight
-        ref={innerLightRef}
-        position={[0, 0, 0]}
-        color="#ff00ff"
-        intensity={1.5}
-        distance={size}
-      />
+      {/* Interior point light - removed pink for Nexus Prime only */}
+      {animationId !== 3 && (
+        <pointLight
+          ref={innerLightRef}
+          position={[0, 0, 0]}
+          color="#ff00ff"
+          intensity={1.5}
+          distance={size}
+        />
+      )}
+      
+      {/* Green reflective lighting for Nexus Prime only - optimized */}
+      {animationId === 3 && (
+        <pointLight position={[4, 12, 4]} color="#10c22eff" intensity={1.5} distance={size} />
+      )}
       
       {/* FBX Model or placeholder sphere */}
       {fbxUrl ? (

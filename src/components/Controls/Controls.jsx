@@ -238,18 +238,18 @@ function Controls({
             🌀 Cpd-Quantum Manifold
           </option>
           <option value="icosahedron">🔯 Cpd-Icosahedron</option>
-          <option value="sphere">⚪ Cpd-Sphere (Cross)</option>
-          <option value="compoundsphere">💫 Super-Cpd-Sphere</option>
-          <option value="compoundfloatingcity">🌆 Compound Curves</option>
+          <option value="sphere">Cpd-Sphere (Cross)</option>
+          <option value="compoundsphere"> Super-Cpd-Sphere</option>
+          <option value="compoundfloatingcity"> Compound Curves</option>
           <option value="hessianpolychoron">✦ Hessian Polychoron</option>
-          <option value="mobiussphere">🌀 Möbius Sphere</option>
-          <option value="cube">🧊 Cube</option>
-          <option value="box">🔷 Cpd-Tesseract</option>
+          <option value="mobiussphere"> Möbius Sphere</option>
+          <option value="cube"> Cube</option>
+          <option value="box"> Cpd-Tesseract</option>
           <option value="cpdtesseract">💎 Mega-Tesseract</option>
-          <option value="cpd-megatesseract">💎💎💎 Cpd-Mega-Tesseract</option>
-          <option value="cpd-megatesseract-2">💎💎 Cpd-Mega-Tesseract II</option>
-          <option value="cpd-megatesseract-3">💎💎💎 Cpd-Mega-Tesseract III</option>
-          <option value="cpd-megatesseract-4">💎💎💎 Cpd-Mega-Tesseract IV</option>
+          <option value="cpd-megatesseract"> Cpd-Mega-Tesseract</option>
+          <option value="cpd-megatesseract-2">Cpd-Mega-Tesseract II</option>
+          <option value="cpd-megatesseract-3"> Cpd-Mega-Tesseract III</option>
+          <option value="cpd-megatesseract-4"> Cpd-Mega-Tesseract IV</option>
           <option value="octahedron">🔸 Cpd-Octahedron</option>
           <option value="tetrahedron">🔻 Cpd-Tetrahedron</option>
           <option value="120cell">🌐 120-Cell</option>
@@ -277,7 +277,7 @@ function Controls({
         className={`${styles.sectionHeader} ${sceneOpen ? styles.sectionHeaderSceneOpen : styles.sectionHeaderSceneClosed}`}
         onClick={() => setSceneOpen(!sceneOpen)}
       >
-        <span>🎬 CAMERA & SCENE</span>
+        <span>🎬 CAMERA/SCENE</span>
         <span>{sceneOpen ? '▼' : '▶'}</span>
       </div>
       

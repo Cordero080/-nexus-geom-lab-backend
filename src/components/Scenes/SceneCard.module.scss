@@ -216,6 +216,15 @@
   border-top: 1px solid rgba(255, 255, 255, 0.1);
   flex-wrap: nowrap; /* Keep buttons inline, no wrapping */
   min-height: 48px; /* Ensure minimum height for buttons */
+  
+  /* Override ScrambleButton font to use Orbitron */
+  button {
+    font-family: 'Orbitron', monospace !important;
+    
+    span {
+      font-family: 'Orbitron', monospace !important;
+    }
+  }
 }
 
 .sceneCardBtn {

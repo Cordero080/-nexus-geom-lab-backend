@@ -1,3 +1,6 @@
+// ANIMATION CONFIGURATION
+// Y-axis movement implementation: src/Showcase/models/FBXModel.jsx
+// Usage in showcase viewer: src/Showcase/components/ShowcaseViewer/ShowcaseViewer.jsx
 export const mockAnimations = [
   {
     id: 1,
@@ -24,7 +27,7 @@ export const mockAnimations = [
     id: 2,
     noetechKey: "vectra",
     name: "Vectrᐱ   ᐱPEX #002",
-    animation: "Break Dance",
+    animation: "Holographic Spellcast",
     variant: "Spectral",
     description: "The Ominous Anomaly Woven from Pure Hologram",
     fbxUrl: "/models/diabla-roja.fbx",
@@ -35,6 +38,10 @@ export const mockAnimations = [
     galleryPositionY: -1.5,
     offsetX: 0,
     offsetZ: 0,
+    // Y-AXIS MOVEMENT CONTROL:
+    // allowNaturalYMovement: true  = Model moves naturally in Y-axis (spellcasting gestures)
+    // allowNaturalYMovement: false = Model feet anchored to ground (y=0)
+    // Implementation: src/Showcase/models/FBXModel.jsx (line ~50-65)
     allowNaturalYMovement: true,
     background:
       "linear-gradient(180deg, rgba(0, 102, 255, 0.5) 0%, rgba(117, 250, 217, 0.7) 30%, rgba(214, 67, 243, 0.6) 70%, rgba(0, 255, 255, 0.5) 100%)",
@@ -47,17 +54,23 @@ export const mockAnimations = [
     variant: "Shadow Striker",
     description:
       "The Quantum ᐱrchitect of the Digital Nexus...Master of hyperdimensional Combat",
-    fbxUrl: "/models/iron-man-2.fbx",
-    scale: 0.023,
+    fbxUrl: "/models/green-plexus-upper.fbx",
+    scale: 0.024,
     galleryScale: 0.018,
     rotation: [0, 0, 0],
-    positionY: -2.6,
-    galleryPositionY: -1.8,
+    positionY: -3.1,
+    galleryPositionY: -1.9,
     offsetX: 0.2,
     offsetZ: -0.1,
+    // Y-AXIS MOVEMENT CONTROL:
+    // allowNaturalYMovement: true  = Model moves naturally in Y-axis (jumps, flips, etc.)
+    // allowNaturalYMovement: false = Model feet anchored to ground (y=0)
+    // Set to false for grounded animations, true for acrobatic/flying animations
+    // Implementation: src/Showcase/models/FBXModel.jsx (line ~50-65)
+    allowNaturalYMovement: false,
     background:
-      "linear-gradient(180deg, rgba(5, 5, 15, 0.95) 0%, rgba(139, 0, 0, 0.8) 20%, rgba(220, 20, 60, 0.6) 40%, rgba(178, 34, 34, 0.7) 60%, rgba(25, 25, 112, 0.8) 80%, rgba(0, 0, 0, 0.9) 100%)",
+      "linear-gradient(180deg, rgba(0, 20, 10, 0.95) 0%, rgba(0, 100, 50, 0.8) 15%, rgba(34, 139, 34, 0.7) 30%, rgba(0, 255, 127, 0.5) 45%, rgba(46, 125, 50, 0.7) 65%, rgba(0, 50, 25, 0.9) 85%, rgba(0, 0, 0, 0.95) 100%)",
     viewerBackground:
-      "linear-gradient(135deg, #000008 0%, #1a0000 15%, #8b0000 30%, #dc143c 50%, #8b0000 70%, #1a0000 85%, #000008 100%)",
+      "linear-gradient(135deg, #001a0d 0%, #003d1a 20%, #228b22 40%, #00ff7f 50%, #32cd32 60%, #006400 80%, #001a0d 100%)",
   },
 ];

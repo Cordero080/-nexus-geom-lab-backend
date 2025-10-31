@@ -14,6 +14,15 @@
   &:hover {
     opacity: 1;
   }
+  
+  /* Override ScrambleButton font to use Orbitron */
+  button {
+    font-family: 'Orbitron', monospace !important;
+    
+    span {
+      font-family: 'Orbitron', monospace !important;
+    }
+  }
 }
 
 /* Saving state for ScrambleButton override */

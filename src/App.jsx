@@ -109,8 +109,6 @@ function GeomLab() {
   // Apply loaded config when it changes
   useEffect(() => {
     if (loadedConfig) {
-      console.log('🎨 Applying loaded config:', loadedConfig);
-      
       // Apply material properties
       if (loadedConfig.metalness !== undefined) setMetalness(loadedConfig.metalness);
       if (loadedConfig.emissiveIntensity !== undefined) setEmissiveIntensity(loadedConfig.emissiveIntensity);
@@ -138,8 +136,6 @@ function GeomLab() {
       if (loadedConfig.directionalLightY !== undefined) setDirectionalLightY(loadedConfig.directionalLightY);
       if (loadedConfig.directionalLightZ !== undefined) setDirectionalLightZ(loadedConfig.directionalLightZ);
       if (loadedConfig.scale !== undefined) setScale(loadedConfig.scale);
-      
-      console.log('✅ Config applied successfully');
       
       // Clear the loaded config so it doesn't re-apply
       // We'll do this after a short delay to ensure it's applied

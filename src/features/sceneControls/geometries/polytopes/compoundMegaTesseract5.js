@@ -35,7 +35,6 @@ function createCacheKey(options, label) {
     const signature = stableStringify(options);
     return signature === "{}" ? "default" : `opts:${signature}`;
   } catch (error) {
-    console.warn(`${label}: failed to stringify options for cache`, error);
     return null;
   }
 }

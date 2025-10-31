@@ -2,6 +2,7 @@ import React from 'react';
 import { Canvas } from '@react-three/fiber';
 import { OrbitControls } from '@react-three/drei';
 import RotatingCube from '../RotatingCube/RotatingCube';
+import ScrambleButton from '../../../components/ScrambleButton/ScrambleButton';
 import './ShowcaseViewer.css';
 import sharedStyles from '../../../styles/shared.module.scss';
 
@@ -34,9 +35,15 @@ export default function ShowcaseViewer({ animation, onClose }) {
           opacity: mounted ? 1 : 0
         }}
       >
-        <button className={`viewer-back-button-bottom ${sharedStyles.angledCorners}`} onClick={onClose}>
-          ← Back
-        </button>
+        <div className="viewer-back-button-container">
+          <ScrambleButton
+            className="viewer-back-button"
+            onClick={onClose}
+            variant="secondary"
+          >
+            ← Back
+          </ScrambleButton>
+        </div>
         
         <button className={`viewer-close ${sharedStyles.angledCorners}`} onClick={onClose}>
           ✕
@@ -92,8 +99,34 @@ export default function ShowcaseViewer({ animation, onClose }) {
           <pointLight position={[-5, 0, 3]} intensity={1.2} color="#ffffff" />
           <pointLight position={[0, 0, -5]} intensity={0.8} color="#ffff00" />
           
+          {/* Character-specific lighting for nexus-prime (ninja) */}
+          {animation?.id === 3 && (
+            <>
+              {/* Purple ninja spotlight - illuminates mesh against green background */}
+              <spotLight 
+                position={[2, 4, 3]} 
+                angle={0.6} 
+                penumbra={0.3} 
+                intensity={4.5} 
+                color="#8b00ff"
+                target-position={[0, -1, 0]}
+              />
+              {/* Secondary purple rim light */}
+              <spotLight 
+                position={[-2, 3, 2]} 
+                angle={0.5} 
+                penumbra={0.4} 
+                intensity={3.2} 
+                color="#9932cc"
+                target-position={[0, -1, 0]}
+              />
+              {/* Purple ambient boost for mesh visibility */}
+              <pointLight position={[0, 2, 1]} intensity={2.8} color="#6a0dad" distance={8} />
+            </>
+          )}
+          
           {/* Big cube - pass size as prop */}
-          <RotatingCube size={4.5} fbxUrl={animation?.fbxUrl} scale={animation?.scale} rotation={animation?.rotation} positionY={animation?.positionY} offsetX={animation?.offsetX} offsetZ={animation?.offsetZ} cubeY={-0.1} allowNaturalYMovement={animation?.allowNaturalYMovement} />
+          <RotatingCube size={4.5} fbxUrl={animation?.fbxUrl} scale={animation?.scale} rotation={animation?.rotation} positionY={animation?.positionY} offsetX={animation?.offsetX} offsetZ={animation?.offsetZ} cubeY={-0.1} allowNaturalYMovement={animation?.allowNaturalYMovement} animationId={animation?.id} />
           
           {/* OrbitControls lets user rotate with mouse */}
           <OrbitControls 
