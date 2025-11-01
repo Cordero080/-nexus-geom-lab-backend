@@ -557,4 +557,10 @@
   letter-spacing: 0.05em;
 }
 
+/* Home page Enter Geom Lab button styling */
+.home-enter-geom-lab-btn {
+  font-size: 24px !important;
+  padding: 24px 180px !important;
+  letter-spacing: 0.05em !important;
+}
 

@@ -259,6 +259,53 @@ h1.quantum-title {
   z-index: 100000;
   will-change: transform, filter;
   overflow: visible;
+  animation: titleFloat 6s ease-in-out infinite;
+}
+
+@keyframes titleFloat {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-15px);
+  }
+}
+
+/* Parallax layer animations - each word floats independently */
+@keyframes titleFloatLayer1 {
+  0%, 100% {
+    transform: translateY(0px) translateX(0px);
+  }
+  33% {
+    transform: translateY(-5px) translateX(1px);
+  }
+  66% {
+    transform: translateY(-3px) translateX(-1px);
+  }
+}
+
+@keyframes titleFloatLayer2 {
+  0%, 100% {
+    transform: translateY(0px) translateX(0px);
+  }
+  40% {
+    transform: translateY(-7px) translateX(-1.5px);
+  }
+  70% {
+    transform: translateY(-4px) translateX(1px);
+  }
+}
+
+@keyframes titleFloatLayer3 {
+  0%, 100% {
+    transform: translateY(0px) translateX(0px);
+  }
+  35% {
+    transform: translateY(-6px) translateX(1px);
+  }
+  65% {
+    transform: translateY(-3px) translateX(-1.5px);
+  }
 }
 
 .title-word {
@@ -268,7 +315,7 @@ h1.quantum-title {
   font-family: 'Future Z', 'Orbitron', 'Rajdhani', sans-serif !important;
   font-weight: normal;
   letter-spacing: inherit;
-  background: linear-gradient(135deg, #07a2c1 0%, #fd0a6f 55%, #2eaca4 75%, #c8922e 100%);
+  background: linear-gradient(135deg, #00d4ff 0%, #ff0066 55%, #3dd4cc 75%, #f0a738 100%);
   background-size: 200% 200%;
   -webkit-background-clip: text;
   background-clip: text;
@@ -279,21 +326,23 @@ h1.quantum-title {
   isolation: isolate;
   overflow: visible;
   opacity: 0;
+  filter: saturate(3.0) brightness(1.4) contrast(1.2);
+  -webkit-font-smoothing: antialiased;
 }
 
 .title-word[data-word="N3XUS"] {
-  animation: pageTitleShimmer 5s ease-in-out infinite, particleArrivalTopLeft 1.8s cubic-bezier(0.22, 1, 0.36, 1) forwards;
-  animation-delay: 0s, 0s;
+  animation: pageTitleShimmer 5s ease-in-out infinite, particleArrivalTopLeft 1.8s cubic-bezier(0.22, 1, 0.36, 1) forwards, titleFloatLayer1 7s ease-in-out infinite;
+  animation-delay: 0s, 0s, 1.8s;
 }
 
 .title-word[data-word="GE0M"] {
-  animation: pageTitleShimmer 5s ease-in-out infinite, particleArrivalRight 1.8s cubic-bezier(0.22, 1, 0.36, 1) forwards;
-  animation-delay: 0s, 0.3s;
+  animation: pageTitleShimmer 5s ease-in-out infinite, particleArrivalRight 1.8s cubic-bezier(0.22, 1, 0.36, 1) forwards, titleFloatLayer2 5.5s ease-in-out infinite;
+  animation-delay: 0s, 0.3s, 2.1s;
 }
 
 .title-word[data-word="LVB"] {
-  animation: pageTitleShimmer 5s ease-in-out infinite, particleArrivalBottomLeft 2s cubic-bezier(0.22, 1, 0.36, 1) forwards;
-  animation-delay: 0s, 0.6s;
+  animation: pageTitleShimmer 5s ease-in-out infinite, particleArrivalBottomLeft 2s cubic-bezier(0.22, 1, 0.36, 1) forwards, titleFloatLayer3 6.5s ease-in-out infinite;
+  animation-delay: 0s, 0.6s, 2.6s;
 }
 
 .title-word[data-word="MY"] {

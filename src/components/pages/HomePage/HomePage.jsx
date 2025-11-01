@@ -613,11 +613,7 @@ export default function HomePage() {
                 <BeamScanButton
                   onClick={() => window.location.href = '/geom-lab'}
                   label={<>ENTER GE0M L<span className="nav-inverted-a">V</span>B</>}
-                  style={{
-                    fontSize: '24px',
-                    padding: '24px 180px',
-                    letterSpacing: '0.2em'
-                  }}
+                  className="home-enter-geom-lab-btn"
                 />
               </div>
             ) : (

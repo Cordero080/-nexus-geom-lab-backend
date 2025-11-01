@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../../context/AuthContext";
 import { useScene } from "../../../context/SceneContext";
 import { saveScene, updateScene } from "../../../services/sceneApi";
-import ScrambleButton from "../../ScrambleButton/ScrambleButton";
+import ScrambleButton from "../../ui/ScrambleButton/ScrambleButton";
 import styles from "./SaveButton.module.scss";
 import sharedStyles from "../../../styles/shared.module.scss";
 
@@ -32,6 +32,17 @@ function SaveControls({ sceneConfig, textColor }) {
   const [showSuccessSaveModal, setShowSuccessSaveModal] = useState(false);
   const [savedSceneName, setSavedSceneName] = useState('');
   const [savedSceneId, setSavedSceneId] = useState(null);
+
+  // Play unlock sound effect
+  const playUnlockSound = () => {
+    try {
+      const audio = new Audio('/soundEffects/unlock.wav');
+      audio.volume = 0.5;
+      audio.play().catch(err => console.log('Audio play failed:', err));
+    } catch (err) {
+      console.log('Audio creation failed:', err);
+    }
+  };
 
   // Check if user owns the currently loaded scene
   const canUpdate = currentSceneId && isOwnScene(user?.id);
@@ -116,11 +127,12 @@ function SaveControls({ sceneConfig, textColor }) {
       if (result.unlockedAnimations && result.unlockedAnimations.length > 0) {
         setUnlockedAnimations(result.unlockedAnimations);
         setSavedSceneId(currentSceneId);
+        playUnlockSound();
         setShowAnimationUnlockModal(true);
       } else if (result.unlockedNoetechs && result.unlockedNoetechs.length > 0) {
-        // Show noetech unlock modal if noetechs were unlocked (legacy)
         setUnlockedNoetechs(result.unlockedNoetechs);
         setSavedSceneId(currentSceneId);
+        playUnlockSound();
         setShowUnlockModal(true);
       } else {
         // Show success save modal if no unlocks
@@ -202,12 +214,13 @@ function SaveControls({ sceneConfig, textColor }) {
         setUnlockedAnimations(result.unlockedAnimations);
         const newSceneId = result.scene._id || result.scene.id;
         setSavedSceneId(newSceneId);
+        playUnlockSound();
         setShowAnimationUnlockModal(true);
       } else if (result.unlockedNoetechs && result.unlockedNoetechs.length > 0) {
-        // Show noetech unlock modal if noetechs were unlocked (legacy)
         setUnlockedNoetechs(result.unlockedNoetechs);
         const newSceneId = result.scene._id || result.scene.id;
         setSavedSceneId(newSceneId);
+        playUnlockSound();
         setShowUnlockModal(true);
       } else {
         // Show success save modal if no unlocks

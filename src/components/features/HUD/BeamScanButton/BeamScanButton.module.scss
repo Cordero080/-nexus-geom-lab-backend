@@ -2,10 +2,10 @@
 // Interactive button with code-reveal animation on hover
 
 // Variables
-$primary-gradient: linear-gradient(90deg, #00ffff 0%, #ff00cc 100%);
+$primary-gradient: linear-gradient(90deg, #00e6e6 0%, #e600b8 100%);
 $glow-color: #00ffffcc;
 $text-color: #fff;
-$text-gradient: linear-gradient(135deg, #000000 0%, #3C003C 25%, #00005C 50%, #390039 75%, #000000 100%);
+$text-gradient: linear-gradient(135deg, #000000 0%, #1a003a 50%, #0a0f1a 100%);
 $beam-color: #00ffff;
 $font-primary: 'Orbitron', 'JetBrains Mono', 'Roboto Mono', monospace;
 $font-code: 'Roboto Mono', 'JetBrains Mono', monospace;
@@ -38,14 +38,17 @@ $font-code: 'Roboto Mono', 'JetBrains Mono', monospace;
   font-weight: 700;
   color: $text-color;
   background: $primary-gradient;
-  border: none;
+  border-right: none;
+  border-bottom: 8px solid rgba(0, 0, 0, 0.6);
+  border-top: 2px solid rgba(255, 255, 255, 0.2);
+  border-left: 2px solid rgba(255, 255, 255, 0.2);
   border-radius: 0 !important;
   box-shadow: 
     0 2px 16px $glow-color,
     0 0 30px rgba(0, 255, 255, 0.5),
     0 0 60px rgba(255, 0, 204, 0.3);
   cursor: pointer !important;
-  letter-spacing: 0.15em;
+  letter-spacing: 0.08em;
   overflow: visible !important;
   z-index: 1;
   isolation: isolate;
@@ -112,7 +115,8 @@ $font-code: 'Roboto Mono', 'JetBrains Mono', monospace;
     }
 
     .beamScanEffect {
-      opacity: 1;
+      opacity: 0.8;
+      animation-play-state: running;
     }
   }
   
@@ -199,13 +203,16 @@ $font-code: 'Roboto Mono', 'JetBrains Mono', monospace;
   }
 }
 
-// Holographic shimmer effect
+// Holographic shimmer effect for text
 @keyframes holographicShimmer {
   0% {
-    left: -100%;
+    background-position: 0% 50%, 50% 50%, 50% 50%, 0% 50%;
+  }
+  50% {
+    background-position: 0% 50%, 100% 100%, 100% 100%, 100% 50%;
   }
   100% {
-    left: 100%;
+    background-position: 0% 50%, 50% 50%, 50% 50%, 0% 50%;
   }
 }
 
@@ -450,24 +457,19 @@ $font-code: 'Roboto Mono', 'JetBrains Mono', monospace;
 // Label (visible by default)
 .beamScanLabel {
   z-index: 2;
-  background: $text-gradient;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  color: transparent;
-  text-shadow: none;
+  color: #ffffff;
+  text-shadow: 
+    0 0 10px rgba(255, 255, 255, 0.5),
+    0 1px 2px rgba(0, 0, 0, 0.3);
   font-weight: 900;
   opacity: 1;
   clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
   @include clip-transition;
   
-  // Ensure nested spans inherit the gradient styling
+  // Ensure nested spans inherit the styling
   span {
-    background: inherit;
-    -webkit-background-clip: inherit;
-    -webkit-text-fill-color: inherit;
-    background-clip: inherit;
     color: inherit;
+    text-shadow: inherit;
   }
 }
 
@@ -493,32 +495,87 @@ $font-code: 'Roboto Mono', 'JetBrains Mono', monospace;
   }
 }
 
-// Beam scan effect animation
+// Beam scan effect animation - vertical bar that scans horizontally
 .beamScanEffect {
   position: absolute;
+  left: -60%;
   top: 0;
-  left: 0;
-  width: 100%;
-  height: 2px;
-  background: linear-gradient(
-    90deg,
-    transparent 0%,
-    $beam-color 50%,
-    transparent 100%
-  );
-  transform: translateX(-100%);
-  animation: beamScan 0.0002s linear infinite;
+  width: 4px;
+  height: 100%;
+  background: rgba(255, 255, 255, 1);
+  box-shadow: 
+    0 0 20px 8px rgba(255, 255, 255, 0.8),
+    0 0 40px 16px rgba(0, 255, 247, 0.6);
+  opacity: 0.6;
   z-index: 7;
-  opacity: 0;
+  pointer-events: none;
+  animation: 
+    beamScan 2s linear infinite, 
+    beamFlicker 0.05s steps(1, end) infinite,
+    beamColorShift 3s linear infinite,
+    beamPulse 1.5s ease-in-out infinite;
   transition: opacity 0.3s;
 }
 
-// Beam scan animation
+// Beam scan animation - smooth continuous loop
 @keyframes beamScan {
+  0% { 
+    left: -60%; 
+  }
+  100% { 
+    left: 100%; 
+  }
+}
+
+// Static flicker effect
+@keyframes beamFlicker {
+  0% { opacity: 0.6; }
+  10% { opacity: 0.5; }
+  20% { opacity: 0.7; }
+  30% { opacity: 0.55; }
+  40% { opacity: 0.65; }
+  50% { opacity: 0.6; }
+  60% { opacity: 0.7; }
+  70% { opacity: 0.5; }
+  80% { opacity: 0.65; }
+  90% { opacity: 0.55; }
+  100% { opacity: 0.6; }
+}
+
+// Color shift animation - cyan → white → bright magenta
+@keyframes beamColorShift {
   0% {
-    transform: translateX(-100%);
+    background: rgba(0, 255, 255, 1);
+    box-shadow: 
+      0 0 20px 8px rgba(0, 255, 255, 0.8),
+      0 0 40px 16px rgba(0, 255, 247, 0.6);
+  }
+  33% {
+    background: rgba(255, 255, 255, 1);
+    box-shadow: 
+      0 0 20px 8px rgba(255, 255, 255, 0.8),
+      0 0 40px 16px rgba(255, 255, 255, 0.6);
+  }
+  66% {
+    background: rgba(255, 180, 255, 1);
+    box-shadow: 
+      0 0 20px 8px rgba(255, 200, 255, 0.9),
+      0 0 40px 16px rgba(255, 150, 255, 0.7);
   }
   100% {
-    transform: translateX(100%);
+    background: rgba(0, 255, 255, 1);
+    box-shadow: 
+      0 0 20px 8px rgba(0, 255, 255, 0.8),
+      0 0 40px 16px rgba(0, 255, 247, 0.6);
+  }
+}
+
+// Width pulse animation
+@keyframes beamPulse {
+  0%, 100% {
+    width: 2px;
+  }
+  50% {
+    width: 8px;
   }
 }
