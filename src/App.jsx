@@ -384,7 +384,6 @@ function HomePageWithNav() {
   
   return (
     <>
-      <NavBar />
       <HomePage onEnter={handleEnter} />
     </>
   );

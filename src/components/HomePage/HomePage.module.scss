@@ -91,248 +91,6 @@
   /* Enable 3D perspective for quantum scenes */
   perspective: 1500px;
   transform-style: preserve-3d;
-  pointer-events: auto; /* Allow interactions with scenes */
-  z-index: 1; /* Above parallax layers but below navbar */
-}
-
-/* Enhanced Multi-Layer Parallax System */
-.parallax-layer {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  pointer-events: none !important; /* Ensure no mouse blocking */
-  will-change: transform, opacity, filter;
-  transform-style: preserve-3d;
-  z-index: -100; /* Push all layers far back */
-}
-
-/* Layer 1: Atmospheric Base */
-.parallax-layer-1 {
-  z-index: -150; /* Furthest back */
-}
-
-.atmospheric-base {
-  width: 100%;
-  height: 100%;
-  position: relative;
-  overflow: hidden;
-}
-
-.particle-field {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  top: 0;
-  left: 0;
-}
-
-.bg-particle {
-  position: absolute;
-  width: 2px;
-  height: 2px;
-  background: #00ffff;
-  border-radius: 50%;
-  animation: float-particle 20s infinite linear;
-  filter: blur(0.5px);
-}
-
-@keyframes float-particle {
-  0%, 100% { 
-    transform: translateY(0px) rotate(0deg); 
-    opacity: 0;
-  }
-  10%, 90% { 
-    opacity: 1;
-  }
-  50% { 
-    transform: translateY(-100px) rotate(180deg);
-  }
-}
-
-/* Layer 2: Geometric Shapes */
-.parallax-layer-2 {
-  z-index: -140;
-}
-
-.shape-morph-1, .shape-morph-2 {
-  animation: subtle-morph 15s ease-in-out infinite;
-  transform-origin: center;
-}
-
-.floating-orb-1, .floating-orb-2 {
-  animation: float-orb 12s ease-in-out infinite;
-  transform-origin: center;
-}
-
-@keyframes subtle-morph {
-  0%, 100% { transform: scale(1) rotate(0deg); }
-  33% { transform: scale(1.02) rotate(0.5deg); }
-  66% { transform: scale(0.98) rotate(-0.5deg); }
-}
-
-@keyframes float-orb {
-  0%, 100% { transform: translateY(0px) scale(1); }
-  50% { transform: translateY(-20px) scale(1.05); }
-}
-
-/* Layer 3: Quantum Grid */
-.parallax-layer-3 {
-  z-index: -130;
-}
-
-.quantum-grid {
-  width: 100%;
-  height: 100%;
-  position: relative;
-  animation: grid-pulse 8s ease-in-out infinite;
-}
-
-.energy-lines {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  top: 0;
-  left: 0;
-}
-
-.energy-line {
-  position: absolute;
-  width: 100%;
-  height: 2px;
-  animation: energy-flow 6s linear infinite;
-  opacity: 0.4;
-}
-
-@keyframes grid-pulse {
-  0%, 100% { opacity: 0.3; }
-  50% { opacity: 0.6; }
-}
-
-@keyframes energy-flow {
-  0% { transform: translateX(-100%); opacity: 0; }
-  10%, 90% { opacity: 0.6; }
-  100% { transform: translateX(100%); opacity: 0; }
-}
-
-/* Layer 4: Foreground Shapes */
-.parallax-layer-4 {
-  z-index: -120;
-}
-
-.fg-shape-1, .fg-shape-2 {
-  animation: fg-breathe 10s ease-in-out infinite;
-}
-
-.floating-orb-3, .floating-orb-4 {
-  animation: orb-glow 8s ease-in-out infinite;
-}
-
-@keyframes fg-breathe {
-  0%, 100% { opacity: 0.8; transform: scale(1); }
-  50% { opacity: 1; transform: scale(1.03); }
-}
-
-@keyframes orb-glow {
-  0%, 100% { 
-    filter: brightness(1) blur(0px);
-    transform: scale(1);
-  }
-  50% { 
-    filter: brightness(1.3) blur(2px);
-    transform: scale(1.1);
-  }
-}
-
-/* Layer 5: Detail Elements */
-.parallax-layer-5 {
-  z-index: -110;
-}
-
-.detail-elements {
-  width: 100%;
-  height: 100%;
-  position: relative;
-}
-
-.quantum-sparks {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-}
-
-.spark {
-  position: absolute;
-  width: 3px;
-  height: 3px;
-  animation: spark-twinkle 4s ease-in-out infinite;
-  border-radius: 50%;
-  filter: blur(0.5px);
-}
-
-@keyframes spark-twinkle {
-  0%, 100% { opacity: 0; transform: scale(0.5); }
-  50% { opacity: 1; transform: scale(1.5); }
-}
-
-.holographic-frames {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-}
-
-.holo-frame {
-  position: absolute;
-  border: 1px solid;
-  background: transparent;
-  animation: frame-scan 12s linear infinite;
-}
-
-.frame-1 {
-  top: 20%; left: 10%; width: 200px; height: 150px;
-  animation-delay: 0s;
-}
-
-.frame-2 {
-  top: 60%; right: 15%; width: 180px; height: 120px;
-  animation-delay: 4s;
-}
-
-.frame-3 {
-  bottom: 25%; left: 50%; width: 160px; height: 100px;
-  animation-delay: 8s;
-}
-
-@keyframes frame-scan {
-  0%, 90%, 100% { opacity: 0; transform: rotateY(0deg); }
-  10%, 80% { opacity: 0.6; transform: rotateY(5deg); }
-  50% { opacity: 1; transform: rotateY(-5deg); }
-}
-
-/* Ensure all interactive elements are properly layered */
-.nav-links, .nav-link, .terminal-cursor, .quantum-title, .scene-content, 
-.beam-scan-button, button, a, input, .scramble-button {
-  position: relative;
-  z-index: 100;
-  pointer-events: auto !important;
-}
-
-/* Make sure scene backgrounds don't block interactions */
-.scene-background {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none !important;
-  z-index: -1;
-}
-
-/* Ensure quantum cursor and wormhole effects work */
-.cursor, .wormhole, .gravity-field, .dimensional-rift {
-  pointer-events: none !important;
-  z-index: 99999;
 }
 
 /* Creative, dark, cool, angular gradient backgrounds for each scene */
@@ -405,9 +163,43 @@
 }
 /* HomePage-specific nav bar styles extracted from index.css */
 
-/* Removed HomePage-specific quantum-nav styles to use the more colorful global ones from index.css */
+.quantum-nav {
+  width: 100vw;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 10000;
+  background: rgba(0,0,0,0.2);
+  border-bottom: 2px solid #00ffff44;
+  box-shadow: 0 2px 24px #00ffff22;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 40px;
+  height: 110px;
+  font-family: 'JetBrains Mono', monospace;
+}
 
-/* Removed HomePage-specific nav logo styles to use global ones */
+.nav-logo {
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+
+.logo-text {
+  position: relative;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 28px;
+  font-weight: 800;
+  background: linear-gradient(135deg, #00ffff72, #ff00668d, #ffff0094, #00ff33, #cc00ff, #ff3300);
+  background-size: 300% 300%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  color: #ffffff;
+  text-shadow: 0 0 20px rgba(45, 86, 86, 0.4);
+  animation: logoGlitch 6s ease-in-out infinite, gradientShift 4s ease-in-out infinite;
+}
 
 .logo-text::before {
   content: attr(data-text);
@@ -431,49 +223,44 @@
   opacity: 0.5;
 }
 
-/* Removed HomePage-specific nav link styles to use global colorful ones */
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 30px;
+}
+
+.nav-link {
+  color: #00ffff;
+  text-decoration: none;
+  font-size: 18px;
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 700;
+  letter-spacing: 1px;
+  position: relative;
+  transition: color 0.2s;
+}
+
+.nav-link:hover {
+  color: #ff00cc;
+  text-shadow: 0 0 10px #ff00cc;
+}
+
+.nav-terminal {
+  font-size: 14px;
+  color: #00ff99;
+  margin-left: 20px;
+  font-family: 'JetBrains Mono', monospace;
+}
 
 .nav-quantum-field {
   position: absolute;
   left: 0;
   bottom: 0;
   width: 100%;
-  height: 4px;
-  background: transparent;
-}
-
-/* Top line - simple right flow */
-.nav-quantum-field::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  width: 50%;
-  height: 1px;
-  background: #00ffff;
-  animation: slide-right 2s linear infinite;
-}
-
-/* Bottom line - simple left flow */
-.nav-quantum-field::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  width: 50%;
-  height: 1px;
-  background: #ff00cc;
-  animation: slide-left 2s linear infinite;
-}
-
-/* Slide right animation */
-@keyframes slide-right {
-  0% { left: -50%; }
-  100% { left: 100%; }
-}
-
-/* Slide left animation */
-@keyframes slide-left {
-  0% { right: -50%; }
-  100% { right: 100%; }
+  height: 2px;
+  background: linear-gradient(90deg, #00ffff, #ff00cc, #ffff00, #00ff00, #9900ff);
+  opacity: 0.5;
+  filter: blur(1px);
 }
 
 @keyframes logoGlitch {
