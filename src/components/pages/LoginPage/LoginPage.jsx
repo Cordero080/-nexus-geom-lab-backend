@@ -1,10 +1,10 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { useAuth } from '../../context/AuthContext';
-import BeamScanButton from '../../components/features/HUD/BeamScanButton/BeamScanButton';
-import './LoginPage.css';
-import sharedStyles from '../../styles/shared.module.scss';
-import '../../nav/nav.css';
+import React, { useState, useRef, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../../../context/AuthContext";
+import BeamScanButton from "../../features/HUD/BeamScanButton/BeamScanButton";
+import "./LoginPage.css";
+import sharedStyles from "../../../styles/shared.module.scss";
+import "../../layout/NavBar/nav.css";
 
 const LoginPage = () => {
   const { login } = useAuth();

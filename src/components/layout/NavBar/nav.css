@@ -1,5 +1,5 @@
 /* Shared nav styles matching Home/Scenes quantum nav */
-@import '../styles/shared.module.scss';
+@import '../../../styles/shared.module.scss';
 
 .quantum-nav {
   /* REMOVED BACKGROUND - USING GLOBAL STYLES FROM INDEX.CSS */

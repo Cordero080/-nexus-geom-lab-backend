@@ -8,14 +8,14 @@ function quantumCollapse(states) {
 import Quote from './Quote';
 import ProgressBar from './ProgressBar';
 import Scene from './Scene';
-import sharedStyles from '../styles/shared.module.scss';
+import sharedStyles from '../../../styles/shared.module.scss';
 // import './bg.css';
 // import './index.css';
 import './Home.css';
-import { BeamScanButton } from '../components/features/HUD';
+import { BeamScanButton } from '../../features/HUD';
 import { Link } from 'react-router-dom';
-import { GEOM_LAB_LINK_TEXT, SHOWCASE_LINK_TEXT } from '../nav/navLabels';
-import { useAuth } from '../context/AuthContext';
+import { GEOM_LAB_LINK_TEXT, SHOWCASE_LINK_TEXT } from '../../layout/NavBar/navLabels';
+import { useAuth } from '../../../context/AuthContext';
 
 // Scrambling component for N3XUS title
 function ScrambleOnHover({ originalText, finalText, delay = 3000 }) {

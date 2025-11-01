@@ -1,10 +1,10 @@
 
 import React, { useState } from "react";
 import "./nav.css";
-import sharedStyles from "../styles/shared.module.scss";
+import sharedStyles from "../../../styles/shared.module.scss";
 import { Link, useLocation } from "react-router-dom";
-import { useAuth } from "../context/AuthContext";
-import ScrambleButton from "../components/ui/ScrambleButton/ScrambleButton";
+import { useAuth } from "../../../context/AuthContext";
+import ScrambleButton from "../../ui/ScrambleButton/ScrambleButton";
 import { GEOM_LAB_LINK_TEXT, SHOWCASE_LINK_TEXT } from "./navLabels";
 
 export default function NavBar() {

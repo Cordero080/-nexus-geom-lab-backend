@@ -4,7 +4,7 @@ import { OrbitControls } from '@react-three/drei';
 import RotatingCube from '../RotatingCube/RotatingCube';
 import ScrambleButton from '../../ui/ScrambleButton/ScrambleButton';
 import { useAuth } from '../../../context/AuthContext';
-import { mockAnimations } from '../../../Showcase/data/mockAnimations';
+import { mockAnimations } from '../Showcase/data/mockAnimations';
 import './ShowcaseViewer.css';
 import sharedStyles from '../../../styles/shared.module.scss';
 

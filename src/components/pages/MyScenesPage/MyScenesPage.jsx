@@ -1,19 +1,19 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useNavigate, Link, useLocation } from "react-router-dom";
-import { useScene } from "../../context/SceneContext";
-import { useAuth } from "../../context/AuthContext";
-import { getMyScenes } from "../../services/sceneApi"; // Import API function
-import SceneCard from "../../components/features/Scenes/SceneCard"; // Corrected import path to Scenes
-import CustomSelect from "../../components/ui/CustomSelect/CustomSelect";
-import ScrambleButton from "../../components/ui/ScrambleButton/ScrambleButton";
-import { BeamScanButton } from "../../components/features/HUD";
-import { DeleteSuccessModal } from "../../components/ui/Modals";
-import NavBar from "../../nav/NavBar";
-import { quantumCollapse } from "../../utils/coreHelpers";
+import { useScene } from "../../../context/SceneContext";
+import { useAuth } from "../../../context/AuthContext";
+import { getMyScenes } from "../../../services/sceneApi"; // Import API function
+import SceneCard from "../../features/Scenes/SceneCard"; // Corrected import path to Scenes
+import CustomSelect from "../../ui/CustomSelect/CustomSelect";
+import ScrambleButton from "../../ui/ScrambleButton/ScrambleButton";
+import { BeamScanButton } from "../../features/HUD";
+import { DeleteSuccessModal } from "../../ui/Modals";
+import NavBar from "../../layout/NavBar/NavBar";
+import { quantumCollapse } from "../../../utils/coreHelpers";
 import "./MyScenesPage.css";
-import sharedStyles from "../../styles/shared.module.scss";
-import "../../nav/nav.css";
-import { GEOM_LAB_LINK_TEXT, SHOWCASE_LINK_TEXT } from "../../nav/navLabels";
+import sharedStyles from "../../../styles/shared.module.scss";
+import "../../layout/NavBar/nav.css";
+import { GEOM_LAB_LINK_TEXT, SHOWCASE_LINK_TEXT } from "../../layout/NavBar/navLabels";
 
 // quantumCollapse now imported from utils/coreHelpers.js
 
