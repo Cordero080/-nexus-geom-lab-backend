@@ -86,7 +86,7 @@ export const mockAnimations = [
     scale: 0.024,
     galleryScale: 0.018,
     rotation: [0, 0, 0],
-    positionY: -3.1,
+    positionY: -2.6,
     galleryPositionY: -1.9,
     offsetX: 0.2,
     offsetZ: -0.1,

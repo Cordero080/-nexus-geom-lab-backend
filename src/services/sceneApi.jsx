@@ -6,13 +6,13 @@
 // Basically a variable that stores the address of the backend server
 
 // Frontend (React app) runs on one port (like 5173)
-// Backend (Express server) runs on another port (like 5000)
+// Backend (Express server) runs on another port (like 3000)
 // They need to talk to each other, so we store the backend's address
 
 // The || part (OR operator):
 
 // First, try to get URL from environment variable (for production)
-// If that doesn't exist, use http://localhost:5000 (for development)
+// If that doesn't exist, use http://localhost:3000 (for development)
 
 // Real example:
 

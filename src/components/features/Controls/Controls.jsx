@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import styles from './Controls.module.scss';
 import LightingControls from './LightingControls';
-import SaveButton from './SaveButton/SaveButton';
 import {
   createMetalnessHandler,
   createScaleHandler,
