@@ -33,11 +33,7 @@
   z-index: -3; /* Behind parallax layers */
 }
 
-/* Ensure quantum nav backdrop consistency */
-.my-scenes-page .quantum-nav {
-  backdrop-filter: blur(8px) saturate(150%);
-  background: rgba(0,0,0,0.3);
-}
+/* Removed - using global navbar styles */
 
 .my-scenes-page {
   min-height: 100vh;
@@ -264,22 +260,7 @@
   margin: 0 0 32px;
 }
 
-.my-scenes-page__cta {
-  padding: 12px 32px;
-  border: none;
-  border-radius: 0;
-  background: linear-gradient(135deg, #00ffff 0%, #ff00ff 100%);
-  color: #000000;
-  font-size: 1rem;
-  font-weight: 700;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.my-scenes-page__cta:hover {
-  transform: scale(1.05);
-  box-shadow: 0 8px 32px rgba(0, 255, 255, 0.3);
-}
+/* Removed .my-scenes-page__cta - now using shared BeamScanButton component */
 
 /* Scene Grid */
 .my-scenes-page__grid {

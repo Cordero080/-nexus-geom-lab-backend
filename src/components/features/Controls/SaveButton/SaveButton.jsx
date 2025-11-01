@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../../../context/AuthContext';
-import { useScene } from '../../../context/SceneContext';
-import { saveScene } from '../../../services/sceneApi';
-import { createSaveHandler } from '../../../utils/handlers/saveButtonHandlers';
-import ScrambleButton from '../../ScrambleButton/ScrambleButton';
+import { useAuth } from '../../../../context/AuthContext';
+import { useScene } from '../../../../context/SceneContext';
+import { saveScene } from '../../../../services/sceneApi';
+import { createSaveHandler } from '../../../../utils/handlers/saveButtonHandlers';
+import ScrambleButton from '../../../ui/ScrambleButton/ScrambleButton';
 import styles from './SaveButton.module.scss';
 
 // Save button component - handles saving scenes to backend

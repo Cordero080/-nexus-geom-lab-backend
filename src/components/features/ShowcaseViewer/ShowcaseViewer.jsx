@@ -2,9 +2,9 @@ import React, { useState } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { OrbitControls } from '@react-three/drei';
 import RotatingCube from '../RotatingCube/RotatingCube';
-import ScrambleButton from '../../../components/ScrambleButton/ScrambleButton';
+import ScrambleButton from '../../ui/ScrambleButton/ScrambleButton';
 import { useAuth } from '../../../context/AuthContext';
-import { mockAnimations } from '../../data/mockAnimations';
+import { mockAnimations } from '../../../Showcase/data/mockAnimations';
 import './ShowcaseViewer.css';
 import sharedStyles from '../../../styles/shared.module.scss';
 

@@ -1,12 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { getScrambledText, scrambleText } from '../../utils/textScrambler';
+import { getScrambledText, scrambleText } from '../../../utils/textScrambler';
 import {
   createMouseMoveHandler,
   createClickHandler,
   createHoverHandlers,
 } from './scrambleButtonHandlers';
 import styles from './ScrambleButton.module.scss';
-import sharedStyles from '../../styles/shared.module.scss';
+import sharedStyles from '../../../styles/shared.module.scss';
 
 const ScrambleButton = ({ 
   children, 

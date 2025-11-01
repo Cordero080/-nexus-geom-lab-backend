@@ -1,7 +1,7 @@
 import React, { useRef } from 'react';
 import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
-import FBXModel from '../../models/FBXModel';
+import FBXModel from '../../../Showcase/models/FBXModel';
 
 export default function RotatingCube({ size = 3, fbxUrl = null, scale = 0.001275, rotation = [0, 0, 0], positionY = -1.8, offsetX = 0, offsetZ = 0, cubeY = -0.5, isPlaying = true, onModelLoaded, preloadedModel = null, allowNaturalYMovement = false, animationId = null }) {
   const cubeRef = useRef();

@@ -4,7 +4,7 @@ import "./nav.css";
 import sharedStyles from "../styles/shared.module.scss";
 import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
-import ScrambleButton from "../components/ScrambleButton/ScrambleButton";
+import ScrambleButton from "../components/ui/ScrambleButton/ScrambleButton";
 import { GEOM_LAB_LINK_TEXT, SHOWCASE_LINK_TEXT } from "./navLabels";
 
 export default function NavBar() {
@@ -27,8 +27,11 @@ export default function NavBar() {
     return '';
   };
 
+  // Check if we're on geom lab routes
+  const isGeomLab = location.pathname === '/geom-lab' || location.pathname === '/geometry-lab';
+  
   return (
-    <nav className="quantum-nav">
+    <nav className={`quantum-nav${isGeomLab ? ' geom-lab-navbar' : ''}`}>
       <div className="nav-logo">
         <span className="logo-text" data-text="N3XUS_GEOM">N3XUS_GEOM</span>
       </div>

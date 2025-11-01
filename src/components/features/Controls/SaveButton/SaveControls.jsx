@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from "../../../context/AuthContext";
-import { useScene } from "../../../context/SceneContext";
-import { saveScene, updateScene } from "../../../services/sceneApi";
-import ScrambleButton from '../../ScrambleButton/ScrambleButton';
+import { useAuth } from "../../../../context/AuthContext";
+import { useScene } from "../../../../context/SceneContext";
+import { saveScene, updateScene } from "../../../../services/sceneApi";
+import ScrambleButton from '../../../ui/ScrambleButton/ScrambleButton';
 import styles from "./SaveButton.module.scss";
-import sharedStyles from "../../../styles/shared.module.scss";
+import sharedStyles from "../../../../styles/shared.module.scss";
 
 /**
  * SaveControls Component

@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
-import { BeamScanButton } from '../../components/HUD';
+import { BeamScanButton } from '../../components/features/HUD';
 import './SignUpPage.css';
 import sharedStyles from '../../styles/shared.module.scss';
 import '../../nav/nav.css';

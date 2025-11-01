@@ -12,7 +12,7 @@ import sharedStyles from '../styles/shared.module.scss';
 // import './bg.css';
 // import './index.css';
 import './Home.css';
-import { BeamScanButton } from '../components/HUD';
+import { BeamScanButton } from '../components/features/HUD';
 import { Link } from 'react-router-dom';
 import { GEOM_LAB_LINK_TEXT, SHOWCASE_LINK_TEXT } from '../nav/navLabels';
 import { useAuth } from '../context/AuthContext';
@@ -616,33 +616,20 @@ export default function HomePage() {
                   style={{
                     fontSize: '24px',
                     padding: '24px 180px',
-                    letterSpacing: '0.2em',
-                    boxShadow: '0 8px 32px rgba(0, 255, 255, 0.3), 0 0 60px rgba(255, 0, 204, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.1)',
-                    transform: 'perspective(500px) translateZ(20px)',
-                    border: '2px solid rgba(0, 255, 255, 0.4)'
+                    letterSpacing: '0.2em'
                   }}
                 />
               </div>
             ) : (
-              <div style={{ display: 'flex', gap: '16px', justifyContent: 'center', marginTop: '32px' }}>
+              <div style={{ display: 'flex', gap: '48px', justifyContent: 'center', marginTop: '32px' }}>
                 <BeamScanButton
                   onClick={() => window.location.href = '/login'}
                   label={<>LOGI<span style={{ display: 'inline-block', transform: 'scaleX(-1)' }}>N</span></>}
-                  style={{
-                    transform: 'perspective(500px) translateZ(20px)',
-                    boxShadow: '0 8px 32px rgba(0, 255, 255, 0.3), 0 0 60px rgba(255, 0, 204, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.1)',
-                    border: '2px solid rgba(0, 255, 255, 0.4)'
-                  }}
                 />
                 <BeamScanButton
                   onClick={() => window.location.href = '/signup'}
                   label="SIGN UP"
                   delayedString={true}
-                  style={{
-                    transform: 'perspective(500px) translateZ(20px)',
-                    boxShadow: '0 8px 32px rgba(0, 255, 255, 0.3), 0 0 60px rgba(255, 0, 204, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.1)',
-                    border: '2px solid rgba(0, 255, 255, 0.4)'
-                  }}
                 />
               </div>
             )}

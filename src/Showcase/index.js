@@ -1,7 +1,7 @@
 // Clean exports for Showcase components
 export { default as ShowcaseGallery } from "./ShowcaseGallery";
-export { default as ShowcaseViewer } from "./components/ShowcaseViewer/ShowcaseViewer";
-export { default as RotatingCube } from "./components/RotatingCube/RotatingCube";
+export { default as ShowcaseViewer } from "../components/features/ShowcaseViewer/ShowcaseViewer";
+export { default as RotatingCube } from "../components/features/RotatingCube/RotatingCube";
 export { default as BackgroundCanvas } from "./backgrounds/BackgroundCanvas";
 export { default as AnimatedBackground } from "./backgrounds/AnimatedBackground";
 export { default as FBXModel } from "./models/FBXModel";

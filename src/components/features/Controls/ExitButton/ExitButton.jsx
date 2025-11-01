@@ -1,5 +1,5 @@
 import React from 'react';
-import ScrambleButton from '../../ScrambleButton/ScrambleButton';
+import ScrambleButton from '../../../ui/ScrambleButton/ScrambleButton';
 import styles from './ExitButton.module.scss';
 
 function ExitButton({ onClick, textColor }) {

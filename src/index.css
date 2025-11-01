@@ -70,16 +70,18 @@ body::before {
   transition: opacity 0.2s;
 }
 
-/* Navigation Bar */
+/* Navigation Bar - DEFAULT DARK (like HomePage) */
 .quantum-nav {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   height: 100px;
-  background: rgba(0, 0, 0, 0.093);
-  backdrop-filter: blur(30px);
-  border-bottom: 1px solid rgba(0, 255, 255, 0.15);
+  background: rgba(0,0,0,0.65);
+  backdrop-filter: blur(8px);
+  box-shadow: 0 2px 16px 0 var(--portal-color-2, #1a003a)08, inset 0 1px 0 var(--portal-color-0, #ff00cc)06;
+  border: 1px solid var(--portal-color-1, #00fff7)06;
+  border-bottom: 2px solid #00ffff44;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -90,23 +92,16 @@ body::before {
   transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
-/* Enhanced navbar styling for HomePage and other pages (not GeomLab) */
-body:not(.geom-lab-page) .quantum-nav {
-  background: rgba(0,0,0,0.65);
-  backdrop-filter: blur(8px);
-  box-shadow: 0 2px 16px 0 var(--portal-color-2, #1a003a)08, inset 0 1px 0 var(--portal-color-0, #ff00cc)06;
-  border: 1px solid var(--portal-color-1, #00fff7)06;
-  border-bottom: none;
-}
-
-/* GeomLab navbar - force original styling */
-.geom-lab-page .quantum-nav {
+/* Geom lab navbar ONLY - light/transparent override */
+.quantum-nav.geom-lab-navbar {
   background: rgba(0, 0, 0, 0.093) !important;
   backdrop-filter: blur(30px) !important;
-  border: none !important;
+  border: 1px solid rgba(0, 255, 255, 0.15) !important;
   border-bottom: 1px solid rgba(0, 255, 255, 0.15) !important;
   box-shadow: none !important;
 }
+
+/* ===== CLEANED UP - BeamScanButton now handles its own styling ===== */
 
 .quantum-nav::before {
   content: '';

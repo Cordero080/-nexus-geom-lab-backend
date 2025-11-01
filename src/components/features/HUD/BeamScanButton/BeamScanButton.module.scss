@@ -5,6 +5,7 @@
 $primary-gradient: linear-gradient(90deg, #00ffff 0%, #ff00cc 100%);
 $glow-color: #00ffffcc;
 $text-color: #fff;
+$text-gradient: linear-gradient(135deg, #000000 0%, #3C003C 25%, #00005C 50%, #390039 75%, #000000 100%);
 $beam-color: #00ffff;
 $font-primary: 'Orbitron', 'JetBrains Mono', 'Roboto Mono', monospace;
 $font-code: 'Roboto Mono', 'JetBrains Mono', monospace;
@@ -101,11 +102,13 @@ $font-code: 'Roboto Mono', 'JetBrains Mono', monospace;
     .beamScanLabel {
       clip-path: polygon(100% 0, 100% 0, 100% 100%, 100% 100%);
       opacity: 0;
+      font-size: 0.9em; /* 10% smaller */
     }
 
     .beamScanCode {
       clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
       opacity: 1;
+      font-size: 0.9em; /* 10% smaller */
     }
 
     .beamScanEffect {
@@ -447,11 +450,25 @@ $font-code: 'Roboto Mono', 'JetBrains Mono', monospace;
 // Label (visible by default)
 .beamScanLabel {
   z-index: 2;
-  color: $text-color;
-  background: none;
+  background: $text-gradient;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  color: transparent;
+  text-shadow: none;
+  font-weight: 900;
   opacity: 1;
   clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
   @include clip-transition;
+  
+  // Ensure nested spans inherit the gradient styling
+  span {
+    background: inherit;
+    -webkit-background-clip: inherit;
+    -webkit-text-fill-color: inherit;
+    background-clip: inherit;
+    color: inherit;
+  }
 }
 
 // Code snippet (hidden by default, revealed on hover)

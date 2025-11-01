@@ -1,12 +1,12 @@
 /* HomePage-specific nav bar styles extracted from index.css */
 
 .quantum-nav {
+  /* REMOVED BACKGROUND - USING GLOBAL STYLES FROM INDEX.CSS */
   width: 100vw;
   position: fixed;
   top: 0;
   left: 0;
   z-index: 10000;
-  background: rgba(0,0,0,0.2);
   border-bottom: 2px solid #00ffff44;
   box-shadow: 0 2px 24px #00ffff22;
   display: flex;

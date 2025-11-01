@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { Routes, Route, useNavigate, Navigate, useLocation } from 'react-router-dom';
 import ThreeScene from './features/sceneControls/ThreeScene';
-import Controls from './components/Controls/Controls';
-import SaveControls from './components/Controls/SaveButton/SaveControls';
-import ExitButton from './components/Controls/ExitButton/ExitButton';
-import ScrambleButton from './components/ScrambleButton/ScrambleButton';
+import Controls from './components/features/Controls/Controls';
+import SaveControls from './components/features/Controls/SaveButton/SaveControls';
+import ExitButton from './components/features/Controls/ExitButton/ExitButton';
+import ScrambleButton from './components/ui/ScrambleButton/ScrambleButton';
 import HomePage from './HomePage/HomePage';
 import NavBar from './nav/NavBar';
 import ShowcaseGallery from './Showcase/ShowcaseGallery';
@@ -13,7 +13,7 @@ import SignUpPage from './pages/SignUpPage/SignUpPage';
 import LoginPage from './pages/LoginPage/LoginPage';
 import { SceneProvider, useScene } from './context/SceneContext';
 import { AuthProvider, useAuth } from './context/AuthContext';
-import { QuantumCursor } from "./components/Effects";
+import { QuantumCursor } from "./components/ui/Effects";
 import './cursor-override.module.scss';
 import sharedStyles from './styles/shared.module.scss';
 
@@ -395,7 +395,7 @@ function AppContent() {
 
   const currentPath = window.location.pathname;
   const isHomePage = currentPath === '/' || currentPath === '';
-  const isGeomLabPage = currentPath === '/geom-lab';
+  const isGeomLabPage = currentPath === '/geom-lab' || currentPath === '/geometry-lab';
   
   // Set cursor style and body class based on current route
   useEffect(() => {

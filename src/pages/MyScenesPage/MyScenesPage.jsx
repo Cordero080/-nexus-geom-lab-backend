@@ -3,10 +3,12 @@ import { useNavigate, Link, useLocation } from "react-router-dom";
 import { useScene } from "../../context/SceneContext";
 import { useAuth } from "../../context/AuthContext";
 import { getMyScenes } from "../../services/sceneApi"; // Import API function
-import SceneCard from "../../components/Scenes/SceneCard"; // Corrected import path to Scenes
-import CustomSelect from "../../components/CustomSelect/CustomSelect";
-import ScrambleButton from "../../components/ScrambleButton/ScrambleButton";
-import { DeleteSuccessModal } from "../../components/Modals";
+import SceneCard from "../../components/features/Scenes/SceneCard"; // Corrected import path to Scenes
+import CustomSelect from "../../components/ui/CustomSelect/CustomSelect";
+import ScrambleButton from "../../components/ui/ScrambleButton/ScrambleButton";
+import { BeamScanButton } from "../../components/features/HUD";
+import { DeleteSuccessModal } from "../../components/ui/Modals";
+import NavBar from "../../nav/NavBar";
 import { quantumCollapse } from "../../utils/coreHelpers";
 import "./MyScenesPage.css";
 import sharedStyles from "../../styles/shared.module.scss";
@@ -301,59 +303,7 @@ export default function MyScenesPage() {
 
   return (
     <div className="my-scenes-page">
-      {/* QUANTUM NAVIGATION */}
-      <nav
-        className="quantum-nav"
-        id="quantum-nav"
-        style={{
-          background: `linear-gradient(90deg, rgba(0,0,0,0.82) 80%, ${portalState.colors[1]}22 100%)`,
-          boxShadow: `0 2px 16px 0 ${portalState.colors[2]}11`,
-          transition: 'background 1.2s cubic-bezier(0.4,0,0.2,1), box-shadow 1.2s'
-        }}
-      >
-        <div className="nav-logo">
-          <span
-            className="logo-text"
-            data-text="N3XUS_GEOM"
-            style={{
-              color: '#fff',
-              filter: `drop-shadow(0 0 4px ${portalState.colors[1]}66)`,
-              transition: 'filter 1.2s'
-            }}
-          >N3XUS_GEOM</span>
-          {/* Subtle quantum glyphs in navbar */}
-          <span style={{
-            marginLeft: 10,
-            fontSize: 16,
-            color: portalState.colors[2] + '99',
-            letterSpacing: '0.12em',
-            verticalAlign: 'middle',
-            opacity: 0.55,
-            filter: `blur(0.2px) drop-shadow(0 0 2px ${portalState.colors[1]}44)`,
-            transition: 'color 1.2s, filter 1.2s, opacity 1.2s'
-          }}>
-            {glyphState.join(' ')}
-          </span>
-          <div className="logo-particles"></div>
-        </div>
-        <div className="nav-links">
-          <Link to="/" className="nav-link nav-link--home" data-dimension="0">// HOME</Link>
-          {/* Hide SCENES link since we're on this page */}
-          <Link to="/showcase" className="nav-link" data-dimension="2">{SHOWCASE_LINK_TEXT}</Link>
-          <Link to="/geom-lab" className="nav-link" data-dimension="3">{GEOM_LAB_LINK_TEXT}</Link>
-          {isAuthenticated && (
-            <div className="nav-terminal">
-              <button 
-                onClick={logout}
-                className="terminal-cursor"
-              >
-                [LOGOUT]
-              </button>
-            </div>
-          )}
-        </div>
-        <div className="nav-quantum-field"></div>
-      </nav>
+      <NavBar />
 
       {/* Geometric Background Layers */}
       <div ref={bgRef} className="parallax-bg-layer" aria-hidden="true">
@@ -427,15 +377,13 @@ export default function MyScenesPage() {
       {/* Empty State */}
       {!loading && sortedScenes.length === 0 && (
         <div className="my-scenes-page__empty">
-          <span className="my-scenes-page__empty-icon">🌌</span>
+          <span className="my-scenes-page__empty-icon">�</span>
           <h2>No scenes yet</h2>
           <p>Create your first geometric masterpiece in the Geometry Lab!</p>
-          <button
-            className={`my-scenes-page__cta ${sharedStyles.angledCorners}`}
+          <BeamScanButton
             onClick={() => navigate("/geometry-lab")}
-          >
-            Start Creating
-          </button>
+            label="CREATE"
+          />
         </div>
       )}
 
