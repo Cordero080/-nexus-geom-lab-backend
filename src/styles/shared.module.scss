@@ -475,3 +475,47 @@
   padding: 14px 20px;
   font-size: 13px;
 }
+
+/* Animation unlock modal specific styles */
+:global(.unlock-modal__animation-details) {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 15px 0 10px 0;
+}
+
+:global(.unlock-modal__animation-name) {
+  font-family: 'Orbitron', monospace;
+  font-size: 18px;
+  font-weight: 600;
+  font-style: italic;
+  letter-spacing: 0.1em;
+  color: #00ffff;
+  text-shadow: 
+    0 0 10px rgba(0, 255, 255, 0.6),
+    0 0 20px rgba(0, 255, 255, 0.3);
+  padding: 8px 16px;
+  background: rgba(0, 255, 255, 0.08);
+  border: 1px solid rgba(0, 255, 255, 0.2);
+  border-radius: 6px;
+  animation: fade-in-up 0.6s ease-out backwards;
+}
+
+:global(.unlock-modal__animation-name:nth-child(2)) {
+  animation-delay: 0.15s;
+}
+
+:global(.unlock-modal__animation-name:nth-child(3)) {
+  animation-delay: 0.3s;
+}
+
+@keyframes fade-in-up {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}

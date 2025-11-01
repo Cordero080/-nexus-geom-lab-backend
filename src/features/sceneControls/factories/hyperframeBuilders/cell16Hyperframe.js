@@ -12,8 +12,8 @@ import * as THREE from "three";
 export function create16CellHyperframe(config = {}) {
   const {
     geometry,
-    hyperframeColor = '#ff6b6b',
-    hyperframeLineColor = '#4ecdc4'
+    hyperframeColor = "#ff6b6b",
+    hyperframeLineColor = "#4ecdc4",
   } = config;
 
   // Get layer sizes from geometry metadata

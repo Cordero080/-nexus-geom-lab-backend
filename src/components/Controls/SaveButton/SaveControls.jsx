@@ -17,7 +17,7 @@ import sharedStyles from "../../../styles/shared.module.scss";
  * Props: sceneConfig (object with all scene settings), textColor (optional custom color)
  */
 function SaveControls({ sceneConfig, textColor }) {
-  const { token, isAuthenticated, addUnlockedNoetechs, user, isLoading } = useAuth();
+  const { token, isAuthenticated, addUnlockedNoetechs, addUnlockedAnimations, user, isLoading } = useAuth();
   const navigate = useNavigate();
   const { currentSceneId, sceneName, isOwnScene } = useScene();
 
@@ -27,6 +27,8 @@ function SaveControls({ sceneConfig, textColor }) {
   const [newSceneName, setNewSceneName] = useState('');
   const [showUnlockModal, setShowUnlockModal] = useState(false);
   const [unlockedNoetechs, setUnlockedNoetechs] = useState([]);
+  const [showAnimationUnlockModal, setShowAnimationUnlockModal] = useState(false);
+  const [unlockedAnimations, setUnlockedAnimations] = useState([]);
   const [showSuccessSaveModal, setShowSuccessSaveModal] = useState(false);
   const [savedSceneName, setSavedSceneName] = useState('');
   const [savedSceneId, setSavedSceneId] = useState(null);
@@ -87,7 +89,17 @@ function SaveControls({ sceneConfig, textColor }) {
       // Call API to update existing scene
       const result = await updateScene(currentSceneId, sceneData, token);
       
-      // Handle unlocked noetechs if any
+      // Handle unlocked animations if any
+      if (result.unlockedAnimations && result.unlockedAnimations.length > 0) {
+        try {
+          addUnlockedAnimations(result.unlockedAnimations);
+          setUnlockedAnimations(result.unlockedAnimations);
+        } catch (e) {
+          // Silently handle animation unlock errors
+        }
+      }
+
+      // Handle unlocked noetechs if any (legacy support)
       if (result.unlockedNoetechs && result.unlockedNoetechs.length > 0) {
         try {
           addUnlockedNoetechs(result.unlockedNoetechs);
@@ -100,8 +112,13 @@ function SaveControls({ sceneConfig, textColor }) {
       // Close save modal
       handleCloseModal();
       
-      // Show unlock modal if noetechs were unlocked
-      if (result.unlockedNoetechs && result.unlockedNoetechs.length > 0) {
+      // Show animation unlock modal if animations were unlocked
+      if (result.unlockedAnimations && result.unlockedAnimations.length > 0) {
+        setUnlockedAnimations(result.unlockedAnimations);
+        setSavedSceneId(currentSceneId);
+        setShowAnimationUnlockModal(true);
+      } else if (result.unlockedNoetechs && result.unlockedNoetechs.length > 0) {
+        // Show noetech unlock modal if noetechs were unlocked (legacy)
         setUnlockedNoetechs(result.unlockedNoetechs);
         setSavedSceneId(currentSceneId);
         setShowUnlockModal(true);
@@ -157,21 +174,37 @@ function SaveControls({ sceneConfig, textColor }) {
       // Call API to save as new scene
       const result = await saveScene(sceneData, token);
 
-      
-      // Handle unlocked noetechs if any
+      // Handle unlocked animations if any
+      if (result.unlockedAnimations && result.unlockedAnimations.length > 0) {
+        try {
+          addUnlockedAnimations(result.unlockedAnimations);
+          setUnlockedAnimations(result.unlockedAnimations);
+        } catch (e) {
+          // Silently handle animation unlock errors
+        }
+      }
+
+      // Handle unlocked noetechs if any (legacy support)
       if (result.unlockedNoetechs && result.unlockedNoetechs.length > 0) {
         try {
           addUnlockedNoetechs(result.unlockedNoetechs);
           setUnlockedNoetechs(result.unlockedNoetechs);
         } catch (e) {
+          // Silently handle noetech unlock errors
         }
       }
       
       // Close save modal
       handleCloseModal();
       
-      // Show unlock modal if noetechs were unlocked
-      if (result.unlockedNoetechs && result.unlockedNoetechs.length > 0) {
+      // Show animation unlock modal if animations were unlocked
+      if (result.unlockedAnimations && result.unlockedAnimations.length > 0) {
+        setUnlockedAnimations(result.unlockedAnimations);
+        const newSceneId = result.scene._id || result.scene.id;
+        setSavedSceneId(newSceneId);
+        setShowAnimationUnlockModal(true);
+      } else if (result.unlockedNoetechs && result.unlockedNoetechs.length > 0) {
+        // Show noetech unlock modal if noetechs were unlocked (legacy)
         setUnlockedNoetechs(result.unlockedNoetechs);
         const newSceneId = result.scene._id || result.scene.id;
         setSavedSceneId(newSceneId);
@@ -327,6 +360,57 @@ function SaveControls({ sceneConfig, textColor }) {
                   variant="secondary"
                   onClick={() => {
                     setShowUnlockModal(false);
+                    navigate('/scenes', { state: { highlightSceneId: savedSceneId } });
+                  }}
+                  className="save-modal__btn"
+                >
+                  View My Scenes
+                </ScrambleButton>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Animation Unlock Modal */}
+      {showAnimationUnlockModal && (
+        <div className="save-modal-overlay unlock-modal-overlay" onClick={() => {
+          setShowAnimationUnlockModal(false);
+          navigate('/showcase');
+        }}>
+          <div className="save-modal unlock-modal" onClick={(e) => e.stopPropagation()}>
+            <div className="unlock-modal__content">
+              <div className="unlock-modal__icon">🎭</div>
+              <h2 className="unlock-modal__title">Animation Unlocked!</h2>
+              <div className="unlock-modal__noetechs">
+                {unlockedAnimations.map((animation, index) => (
+                  <div key={index} className="unlock-modal__noetech-name">
+                    {animation.noetechName.toUpperCase()}
+                  </div>
+                ))}
+              </div>
+              <div className="unlock-modal__animation-details">
+                {unlockedAnimations.map((animation, index) => (
+                  <div key={index} className="unlock-modal__animation-name">
+                    "{animation.animationName}"
+                  </div>
+                ))}
+              </div>
+              <p className="unlock-modal__message">
+                New animation now available for this Noetech in the showcase!
+              </p>
+              <div className="unlock-modal__actions">
+                <ScrambleButton
+                  variant="primary"
+                  onClick={() => navigate('/showcase')}
+                  className="save-modal__btn"
+                >
+                  View Showcase
+                </ScrambleButton>
+                <ScrambleButton
+                  variant="secondary"
+                  onClick={() => {
+                    setShowAnimationUnlockModal(false);
                     navigate('/scenes', { state: { highlightSceneId: savedSceneId } });
                   }}
                   className="save-modal__btn"

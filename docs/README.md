@@ -25,7 +25,7 @@ This project explores the intersection of **geometric mathematics**, **character
 
 - Ethereal transparent cubes with interior lighting
 - Character-specific gradient backgrounds (blue tech, cyan glow, fire orange)
-- Spectral lighting systems (cyan/magenta spotlights, blue directional, multi-point white lighting)
+- Spectral lighting systems (cyan/magenta and green spotlights, blue directional, multi-point white lighting)
 - Glassmorphic UI elements with custom quantum cursor
 
 **Architecture Philosophy:**
@@ -39,7 +39,7 @@ This project explores the intersection of **geometric mathematics**, **character
 
 **Feature Complete:**
 
-- ✅ Interactive 3D geometry editor with 7 animation algorithms
+- ✅ Interactive 3D geometry editor with 3 animation algorithms
 - ✅ Showcase gallery with 3 animated characters (expandable to 50+)
 - ✅ Full-screen viewer with orbital camera controls
 - ✅ Custom cursor system with quantum particle effects

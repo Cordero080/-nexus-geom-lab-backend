@@ -1,14 +1,40 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { OrbitControls } from '@react-three/drei';
 import RotatingCube from '../RotatingCube/RotatingCube';
 import ScrambleButton from '../../../components/ScrambleButton/ScrambleButton';
+import { useAuth } from '../../../context/AuthContext';
+import { mockAnimations } from '../../data/mockAnimations';
 import './ShowcaseViewer.css';
 import sharedStyles from '../../../styles/shared.module.scss';
 
 export default function ShowcaseViewer({ animation, onClose }) {
   // Store the mounted state to handle animations properly
   const [mounted, setMounted] = React.useState(false);
+  
+  // Animation switcher state
+  const { getUnlockedAnimationsForNoetech, user } = useAuth();
+  const [currentAnimation, setCurrentAnimation] = useState(animation);
+  
+  // Get all unlocked animations for this Noetech
+  const unlockedAnimationsForNoetech = getUnlockedAnimationsForNoetech(animation.noetechKey);
+  
+  // Check if the Noetech itself is unlocked (for default animation)
+  const isNoetechUnlocked = user?.unlockedNoetechs?.includes(animation.noetechKey);
+  
+  // Get all animations for this Noetech that are unlocked
+  const availableAnimations = mockAnimations.filter(anim => {
+    if (anim.noetechKey !== animation.noetechKey) return false;
+    
+    // Default animation is available if Noetech is unlocked
+    if (anim.isDefaultAnimation && isNoetechUnlocked) return true;
+    
+    // Additional animations are available if in unlockedAnimations array
+    return unlockedAnimationsForNoetech.some(ua => ua.animationId === anim.animationId);
+  });
+  
+  // Show switcher only if multiple animations are available
+  const showAnimationSwitcher = availableAnimations.length > 1;
   
   // Run once component mounts
   React.useEffect(() => {
@@ -30,7 +56,7 @@ export default function ShowcaseViewer({ animation, onClose }) {
       <div className="viewer-backdrop" />
       
       <div 
-        className={`viewer-overlay viewer-overlay-${animation?.id || 1}`}
+        className={`viewer-overlay viewer-overlay-${currentAnimation?.id || 1}`}
         style={{
           opacity: mounted ? 1 : 0
         }}
@@ -44,6 +70,25 @@ export default function ShowcaseViewer({ animation, onClose }) {
             ← Back
           </ScrambleButton>
         </div>
+        
+        {/* Animation Switcher - only show if multiple animations available */}
+        {showAnimationSwitcher && (
+          <div className="animation-switcher">
+            <h3 className="switcher-title">Available Animations:</h3>
+            <div className="animation-buttons">
+              {availableAnimations.map((anim) => (
+                <button
+                  key={anim.id}
+                  className={`animation-button ${currentAnimation.id === anim.id ? 'active' : ''}`}
+                  onClick={() => setCurrentAnimation(anim)}
+                >
+                  <span className="button-animation">{anim.animation}</span>
+                  <span className="button-variant">{anim.variant}</span>
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
         
         <button className={`viewer-close ${sharedStyles.angledCorners}`} onClick={onClose}>
           ✕
@@ -100,7 +145,7 @@ export default function ShowcaseViewer({ animation, onClose }) {
           <pointLight position={[0, 0, -5]} intensity={0.8} color="#ffff00" />
           
           {/* Character-specific lighting for nexus-prime (ninja) */}
-          {animation?.id === 3 && (
+          {currentAnimation?.id === 3 && (
             <>
               {/* Purple ninja spotlight - illuminates mesh against green background */}
               <spotLight 
@@ -126,7 +171,7 @@ export default function ShowcaseViewer({ animation, onClose }) {
           )}
           
           {/* Big cube - pass size as prop */}
-          <RotatingCube size={4.5} fbxUrl={animation?.fbxUrl} scale={animation?.scale} rotation={animation?.rotation} positionY={animation?.positionY} offsetX={animation?.offsetX} offsetZ={animation?.offsetZ} cubeY={-0.1} allowNaturalYMovement={animation?.allowNaturalYMovement} animationId={animation?.id} />
+          <RotatingCube size={4.5} fbxUrl={currentAnimation?.fbxUrl} scale={currentAnimation?.scale} rotation={currentAnimation?.rotation} positionY={currentAnimation?.positionY} offsetX={currentAnimation?.offsetX} offsetZ={currentAnimation?.offsetZ} cubeY={-0.1} allowNaturalYMovement={currentAnimation?.allowNaturalYMovement} animationId={currentAnimation?.id} />
           
           {/* OrbitControls lets user rotate with mouse */}
           <OrbitControls 
@@ -141,13 +186,13 @@ export default function ShowcaseViewer({ animation, onClose }) {
       </div>
       
       <div className="viewer-info">
-        <h2 className="viewer-title">{animation?.name || 'Cosmic Entity #001'}</h2>
+        <h2 className="viewer-title">{currentAnimation?.name || 'Cosmic Entity #001'}</h2>
         <p className="viewer-description">
-          {animation?.description || 'A consciousness evolving inside a geometric vessel'}
+          {currentAnimation?.description || 'A consciousness evolving inside a geometric vessel'}
         </p>
         <div className="viewer-meta">
-          <span className="meta-tag">Animation: {animation?.animation || 'Idle'}</span>
-          <span className="meta-tag">Variant: {animation?.variant || 'Cosmic Blue'}</span>
+          <span className="meta-tag">Animation: {currentAnimation?.animation || 'Idle'}</span>
+          <span className="meta-tag">Variant: {currentAnimation?.variant || 'Cosmic Blue'}</span>
         </div>
       </div>
     </div>

@@ -20,9 +20,22 @@ export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
   const [token, setToken] = useState(null);
   const [isLoading, setIsLoading] = useState(true); // Add loading state
+  const [unlockedAnimations, setUnlockedAnimations] = useState([]);
 
   // Check if user is authenticated
   const isAuthenticated = !!user && !!token;
+
+  // Helper function to check if specific animation is unlocked
+  const isAnimationUnlocked = useCallback((noetechKey, animationId) => {
+    return unlockedAnimations.some(
+      ua => ua.noetechKey === noetechKey && ua.animationId === animationId
+    );
+  }, [unlockedAnimations]);
+
+  // Helper function to get all unlocked animations for a Noetech
+  const getUnlockedAnimationsForNoetech = useCallback((noetechKey) => {
+    return unlockedAnimations.filter(ua => ua.noetechKey === noetechKey);
+  }, [unlockedAnimations]);
 
   // Debug logging removed for production
 
@@ -43,6 +56,7 @@ export function AuthProvider({ children }) {
       
       setUser(userData);
       setToken(userToken);
+      setUnlockedAnimations(userData.unlockedAnimations || []);
 
       // Store in localStorage
       localStorage.setItem("user", JSON.stringify(userData));
@@ -76,6 +90,7 @@ export function AuthProvider({ children }) {
       // Update state
       setUser(userData);
       setToken(userToken);
+      setUnlockedAnimations(userData.unlockedAnimations || []);
 
       // Store local storage
       localStorage.setItem("user", JSON.stringify(userData));
@@ -93,6 +108,7 @@ export function AuthProvider({ children }) {
   const logout = useCallback(() => {
     setUser(null);
     setToken(null);
+    setUnlockedAnimations([]);
     localStorage.removeItem("user");
     localStorage.removeItem("token");
   }, []);
@@ -109,6 +125,7 @@ export function AuthProvider({ children }) {
         const parsedUser = JSON.parse(storedUser);
         setUser(parsedUser);
         setToken(storedToken);
+        setUnlockedAnimations(parsedUser.unlockedAnimations || []);
       } catch (error) {
         localStorage.removeItem("user");
         localStorage.removeItem("token");
@@ -119,7 +136,7 @@ export function AuthProvider({ children }) {
     setIsLoading(false);
   }, []);
 
-  // Merge new unlocked noetechs into the current user and persist
+  // Merge new unlocked noetechs into the current user and persist (LEGACY)
   const addUnlockedNoetechs = useCallback((newKeys) => {
     if (!newKeys || newKeys.length === 0) return;
     setUser((prev) => {
@@ -134,6 +151,33 @@ export function AuthProvider({ children }) {
     });
   }, []);
 
+  // NEW: Add unlocked animations from API responses
+  const addUnlockedAnimations = useCallback((newAnimations) => {
+    if (!newAnimations || newAnimations.length === 0) return;
+    
+    setUnlockedAnimations((prev) => {
+      // Merge new animations with existing ones, avoiding duplicates
+      const existingKeys = prev.map(ua => `${ua.noetechKey}-${ua.animationId}`);
+      const uniqueNew = newAnimations.filter(
+        newAnim => !existingKeys.includes(`${newAnim.noetechKey}-${newAnim.animationId}`)
+      );
+      
+      const updated = [...prev, ...uniqueNew];
+      
+      // Also update user object and localStorage
+      setUser((prevUser) => {
+        if (!prevUser) return prevUser;
+        const updatedUser = { ...prevUser, unlockedAnimations: updated };
+        try {
+          localStorage.setItem("user", JSON.stringify(updatedUser));
+        } catch {}
+        return updatedUser;
+      });
+      
+      return updated;
+    });
+  }, []);
+
   const value = {
     user,
     token,
@@ -142,7 +186,12 @@ export function AuthProvider({ children }) {
     login,
     signup,
     logout,
-    addUnlockedNoetechs,
+    addUnlockedNoetechs, // Legacy support
+    unlockedAnimations,
+    setUnlockedAnimations,
+    isAnimationUnlocked,
+    getUnlockedAnimationsForNoetech,
+    addUnlockedAnimations,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

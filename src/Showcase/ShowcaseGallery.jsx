@@ -58,8 +58,14 @@ export default function ShowcaseGallery() {
   const location = useLocation();
   // Ref to main scroll container (used for scroll calculations and event listeners)
   const containerRef = useRef(null);
-  // Gets current authenticated user and their unlocked Noetechs
-  const { user } = useAuth();
+  // Gets current authenticated user and their unlocked animations
+  const { user, isAnimationUnlocked } = useAuth();
+  
+  // Helper to check if a Noetech (character) is unlocked
+  const isNoetechUnlocked = (noetechKey) => {
+    if (!user) return false;
+    return user.unlockedNoetechs?.includes(noetechKey) || false;
+  };
   
   // Card refs for 3D tilt effect
   // Object storing refs to each card element (used for parallax transform calculations)
@@ -417,14 +423,20 @@ export default function ShowcaseGallery() {
           </p>
         </header>
 
-        {/* Parallax Scenes */}
-        {mockAnimations.map((animation, index) => {
+        {/* Parallax Scenes - Only show default animations in gallery */}
+        {mockAnimations
+          .filter(animation => animation.isDefaultAnimation)
+          .map((animation, index) => {
           const position = getCardPosition(index);
           const isVisible = visibleCards.has(animation.id);
-          const unlocked = Array.isArray(user?.unlockedNoetechs) 
-            ? user.unlockedNoetechs
-            : [];
-          const isUnlocked = unlocked.includes(animation.noetechKey);
+          
+          // Check unlock status based on animation type
+          // - Default animations: Check if the Noetech (character) is unlocked
+          // - Additional animations: Check if the specific animation is unlocked
+          const isUnlocked = animation.isDefaultAnimation 
+            ? isNoetechUnlocked(animation.noetechKey)
+            : isAnimationUnlocked(animation.noetechKey, animation.animationId);
+          
           const cutoutVariantIndex = index % CUTOUT_VARIANTS.length;
           const cutoutVariant = CUTOUT_VARIANTS[cutoutVariantIndex];
           
@@ -442,7 +454,7 @@ export default function ShowcaseGallery() {
                 className={`parallax-model-card parallax-model-card-${animation.id} ${isUnlocked ? '' : 'locked'}`}
                 onClick={() => {
                   if (!isUnlocked) {
-                    alert('Locked — Save a scene to unlock this Noetech.');
+                    alert('Locked — Save scenes to unlock animations.');
                     return;
                   }
 
@@ -459,7 +471,7 @@ export default function ShowcaseGallery() {
                 {!isUnlocked && (
                   <div className="lock-overlay">
                     <div className={`lock-badge ${sharedStyles.angledCornersSm}`}>Locked</div>
-                    <div className="lock-hint">Save a scene to unlock</div>
+                    <div className="lock-hint">Save scenes to unlock animations</div>
                   </div>
                 )}
                 {isVisible ? (
@@ -478,12 +490,7 @@ export default function ShowcaseGallery() {
                       fbxUrl={animation.fbxUrl}
                       scale={animation.galleryScale || animation.scale}
                       rotation={animation.rotation}
-                      positionY={
-                        // HOVER POSITION ADJUSTMENT: Use original position when hovered for better visibility
-                        hoveredCard === animation.id && animation.positionY 
-                          ? animation.positionY 
-                          : (animation.galleryPositionY || animation.positionY)
-                      }
+                      positionY={animation.galleryPositionY || animation.positionY}
                       offsetX={animation.offsetX}
                       offsetZ={animation.offsetZ}
                       cubeY={0.3}
