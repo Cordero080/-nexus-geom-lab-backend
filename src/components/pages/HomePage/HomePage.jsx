@@ -96,6 +96,74 @@ function ScrambleOnHover({ originalText, finalText, delay = 3000 }) {
 export default function HomePage() {
   const { isAuthenticated, logout } = useAuth();
   
+  // DEBUG: Log all clicks to see what's blocking
+  useEffect(() => {
+    const debugClickHandler = (e) => {
+      console.log('🔴 CLICK DETECTED ON:', e.target);
+      console.log('🔴 Target classList:', e.target.classList);
+      console.log('🔴 Target id:', e.target.id);
+      console.log('🔴 Target tagName:', e.target.tagName);
+      console.log('🔴 Computed pointer-events:', window.getComputedStyle(e.target).pointerEvents);
+      console.log('🔴 Computed z-index:', window.getComputedStyle(e.target).zIndex);
+      console.log('🔴 Current target:', e.currentTarget);
+      
+      // Check all elements at this point
+      const elementsAtPoint = document.elementsFromPoint(e.clientX, e.clientY);
+      console.log('🔴 All elements at click point:', elementsAtPoint);
+      elementsAtPoint.forEach((el, index) => {
+        const styles = window.getComputedStyle(el);
+        console.log(`  ${index}:`, {
+          tag: el.tagName,
+          class: el.className,
+          id: el.id,
+          pointerEvents: styles.pointerEvents,
+          zIndex: styles.zIndex,
+          position: styles.position
+        });
+      });
+    };
+    
+    let lastLogTime = 0;
+    const debugMouseMoveHandler = (e) => {
+      const now = Date.now();
+      // Only log every 500ms to avoid spam
+      if (now - lastLogTime < 500) return;
+      lastLogTime = now;
+      
+      const elementsAtPoint = document.elementsFromPoint(e.clientX, e.clientY);
+      const button = elementsAtPoint.find(el => 
+        el.tagName === 'BUTTON' || 
+        el.classList.contains('beamScanBtn') ||
+        (el.className && el.className.includes && el.className.includes('beamScan'))
+      );
+      
+      if (button) {
+        console.log('🟡 HOVERING OVER BUTTON:', button);
+        console.log('🟡 Button pointer-events:', window.getComputedStyle(button).pointerEvents);
+        console.log('🟡 Button z-index:', window.getComputedStyle(button).zIndex);
+        console.log('🟡 Elements ABOVE button (blocking it):');
+        const elementsAbove = elementsAtPoint.slice(0, elementsAtPoint.indexOf(button));
+        elementsAbove.forEach((el, i) => {
+          const styles = window.getComputedStyle(el);
+          console.log(`  ${i}:`, {
+            tag: el.tagName,
+            class: el.className,
+            id: el.id,
+            pointerEvents: styles.pointerEvents,
+            zIndex: styles.zIndex
+          });
+        });
+      }
+    };
+    
+    document.addEventListener('click', debugClickHandler, true);
+    document.addEventListener('mousemove', debugMouseMoveHandler);
+    return () => {
+      document.removeEventListener('click', debugClickHandler, true);
+      document.removeEventListener('mousemove', debugMouseMoveHandler);
+    };
+  }, []);
+  
   // Quantum Uncertainty UI State (same as Showcase)
   const portalWorlds = [
     { colors: ["#aa0088", "#00aa99", "#0d001f"], label: "Fractal" },
@@ -533,14 +601,13 @@ export default function HomePage() {
           ></div>
           <div className="scene-content" style={{
               position: 'relative',
-              zIndex: 99999,
-              transform: 'translateZ(1000px)',
-              isolation: 'isolate'
+              zIndex: 10,
+              pointerEvents: 'auto'
             }}>
             <div className="particles" style={{
               position: 'relative',
-              zIndex: 99999,
-              isolation: 'isolate'
+              zIndex: -1,
+              pointerEvents: 'none'
             }}>
               <div className="particle"></div>
               <div className="particle"></div>
@@ -560,33 +627,30 @@ MANIFOLD: A mathematical surface or multi-dimensional space that can be curved o
             </div>
             <div style={{
               position: 'relative',
-              zIndex: 99999,
-              transform: 'translateZ(1000px)',
-              isolation: 'isolate'
+              zIndex: 10,
+              pointerEvents: 'none'
             }}>
               <h1 className={`quantum-title ${styles.quantumTitle}`} style={{
                 position: 'relative',
-                zIndex: 99999,
-                isolation: 'isolate'
+                zIndex: 10,
+                pointerEvents: 'auto',
+                marginBottom: '-10px'
               }}>
                 <span className="title-word" data-word="N3XUS" style={{
                   position: 'relative',
-                  zIndex: 99999,
-                  isolation: 'isolate'
+                  zIndex: 10
                 }}>
                   <ScrambleOnHover originalText="N3XUS" finalText="アトリエ" delay={3000} />
                 </span><br></br>
                 <span className="title-word" data-word="GE0M" style={{
                   position: 'relative',
-                  zIndex: 99999,
-                  isolation: 'isolate'
+                  zIndex: 10
                 }}>
                   GE<span className="slashed-zero">0</span>M
                 </span><br></br>
                 <span className="title-word" data-word="LVB" style={{
                   position: 'relative',
-                  zIndex: 99999,
-                  isolation: 'isolate'
+                  zIndex: 10
                 }}>
                   L<span className="title-inverted-v">V</span>B
                 </span>
@@ -616,26 +680,56 @@ MANIFOLD: A mathematical surface or multi-dimensional space that can be curved o
             
             {/* Show Enter Geom Lab only when logged in, Login/Signup when logged out */}
             {isAuthenticated ? (
-              <div style={{ 
-                display: 'flex', 
-                justifyContent: 'center', 
-                marginTop: '48px',
-                marginBottom: '24px'
-              }}>
+              <div 
+                style={{ 
+                  display: 'flex', 
+                  justifyContent: 'center', 
+                  marginTop: '48px',
+                  marginBottom: '24px',
+                  position: 'relative',
+                  zIndex: 100,
+                  pointerEvents: 'auto'
+                }}
+                onClick={(e) => {
+                  console.log('🔵 DIV WRAPPER CLICKED (authenticated)', e.target);
+                }}
+              >
                 <BeamScanButton
-                  onClick={() => window.location.href = '/geom-lab'}
+                  onClick={(e) => {
+                    console.log('🟢 ENTER GEOM LAB BUTTON CLICKED!', e);
+                    window.location.href = '/geom-lab';
+                  }}
                   label={<>ENTER GE0M L<span className="nav-inverted-a">V</span>B</>}
                   className="home-enter-geom-lab-btn"
                 />
               </div>
             ) : (
-              <div style={{ display: 'flex', gap: '48px', justifyContent: 'center', marginTop: '32px' }}>
+              <div 
+                style={{ 
+                  display: 'flex', 
+                  gap: '48px', 
+                  justifyContent: 'center', 
+                  marginTop: '32px',
+                  position: 'relative',
+                  zIndex: 100,
+                  pointerEvents: 'auto'
+                }}
+                onClick={(e) => {
+                  console.log('🔵 DIV WRAPPER CLICKED (not authenticated)', e.target);
+                }}
+              >
                 <BeamScanButton
-                  onClick={() => window.location.href = '/login'}
+                  onClick={(e) => {
+                    console.log('🟢 LOGIN BUTTON CLICKED!', e);
+                    window.location.href = '/login';
+                  }}
                   label={<>LOGI<span style={{ display: 'inline-block', transform: 'scaleX(-1)' }}>N</span></>}
                 />
                 <BeamScanButton
-                  onClick={() => window.location.href = '/signup'}
+                  onClick={(e) => {
+                    console.log('🟢 SIGNUP BUTTON CLICKED!', e);
+                    window.location.href = '/signup';
+                  }}
                   label="SIGN UP"
                   delayedString={true}
                 />

@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useRef, useEffect } from 'react';
 import styles from './BeamScanButton.module.scss';
 import sharedStyles from '../../../../styles/shared.module.scss';
 
@@ -23,11 +23,49 @@ const RAW_CODE = `function quantumLeap() {
 export default function BeamScanButton({ onClick, label = 'Enter Playground', code = RAW_CODE, style, className = '', delayedString = false }) {
   const btnRef = useRef(null);
 
+  useEffect(() => {
+    if (btnRef.current) {
+      console.log('🔵 Button mounted:', btnRef.current);
+      console.log('🔵 Button computed styles:', {
+        pointerEvents: window.getComputedStyle(btnRef.current).pointerEvents,
+        zIndex: window.getComputedStyle(btnRef.current).zIndex,
+        position: window.getComputedStyle(btnRef.current).position,
+        cursor: window.getComputedStyle(btnRef.current).cursor
+      });
+      
+      // Check if button is receiving events
+      btnRef.current.addEventListener('mouseenter', () => {
+        console.log('🟢 NATIVE mouseenter fired on button!');
+      });
+      
+      btnRef.current.addEventListener('click', (e) => {
+        console.log('🟢 NATIVE click fired on button!', e);
+      });
+    }
+  }, []);
+
+  const handleClick = (e) => {
+    console.log('🟢 BeamScanButton INTERNAL click handler triggered!', e);
+    console.log('🟢 Event target:', e.target);
+    console.log('🟢 Event currentTarget:', e.currentTarget);
+    console.log('🟢 Button ref:', btnRef.current);
+    console.log('🟢 onClick prop:', onClick);
+    
+    if (onClick) {
+      console.log('🟢 Calling onClick prop...');
+      onClick(e);
+    } else {
+      console.log('🔴 No onClick prop provided!');
+    }
+  };
+
   return (
     <button
       ref={btnRef}
       className={`${styles.beamScanBtn} ${delayedString ? styles.delayedString : ''} ${sharedStyles.angledCorners} ${className}`}
-      onClick={onClick}
+      onClick={handleClick}
+      onMouseEnter={() => console.log('🟡 React mouseEnter on button')}
+      onMouseLeave={() => console.log('🟡 React mouseLeave on button')}
       tabIndex={0}
       style={style}
     >

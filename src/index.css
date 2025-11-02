@@ -62,12 +62,28 @@ body::before {
   width: 20px;
   height: 20px;
   border-radius: 50%;
-  pointer-events: none;
+  pointer-events: none !important;
   z-index: 99999;
   opacity: 1;
   background: radial-gradient(circle, #00ffff 0%, #ff00cc 100%);
   box-shadow: 0 0 30px #00ffff, 0 0 60px #ff00cc;
   transition: opacity 0.2s;
+}
+
+/* Ensure all cursor-related elements never block interactions */
+.quantum-cursor-container,
+.quantum-cursor-container *,
+#cursor,
+#gravity-field,
+#wormhole,
+#dimensional-rift,
+.cursor,
+.gravity-field,
+.wormhole,
+.dimensional-rift,
+.quantum-particle,
+.energy-wave {
+  pointer-events: none !important;
 }
 
 /* Navigation Bar - DEFAULT DARK (like HomePage) */
@@ -102,6 +118,31 @@ body::before {
 }
 
 /* ===== CLEANED UP - BeamScanButton now handles its own styling ===== */
+
+/* Ensure all interactive elements are always clickable */
+button,
+a,
+input,
+select,
+textarea,
+[role="button"],
+[tabindex]:not([tabindex="-1"]) {
+  pointer-events: auto !important;
+  cursor: pointer !important;
+  position: relative;
+  z-index: 100000;
+}
+
+/* Ensure BeamScanButton is always interactive */
+button[class*="beamScan"],
+button[class*="BeamScan"],
+.beam-scan-button,
+.beamScanBtn {
+  pointer-events: auto !important;
+  cursor: pointer !important;
+  position: relative;
+  z-index: 100001 !important;
+}
 
 .quantum-nav::before {
   content: '';
@@ -617,9 +658,9 @@ h1.quantum-title {
   font-family: 'JetBrains Mono', monospace;
   letter-spacing: 1px;
   opacity: 0.6;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
   display: inline-block;
-  transform: translateY(-30px);
+  transform: translateY(-10px);
 }
 
 /* Hero Stats */

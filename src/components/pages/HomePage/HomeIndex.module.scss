@@ -137,22 +137,37 @@
 /* Scene Content */
 .sceneContent {
   position: relative;
-  z-index: 99999;
-  padding: 80px 40px;
+  z-index: 10;
+  padding: 150px 40px 80px;
   text-align: center;
   overflow: visible;
-  transform: translateZ(1000px);
-  transform-style: preserve-3d;
-  perspective: 2000px;
-  isolation: isolate;
+  pointer-events: none !important;
   
   /* Ensure title and content are super front */
   h1, h2, p, .terminal-header, .hero-stats, .quantum-title {
     position: relative;
-    z-index: 99999;
-    transform: translateZ(1000px);
-    isolation: isolate;
+    z-index: 10;
+    pointer-events: auto;
   }
+  
+  /* Ensure all interactive elements work */
+  button, a, input, [role="button"] {
+    pointer-events: auto !important;
+    cursor: pointer !important;
+    position: relative;
+    z-index: 100;
+  }
+  
+  /* Allow pointer events on button containers */
+  > div {
+    pointer-events: auto !important;
+  }
+}
+
+/* Terminal header spacing */
+:global(.terminal-header) {
+  margin-top: 0;
+  margin-bottom: 20px;
 }
 
 /* Scene Titles */
@@ -245,7 +260,7 @@
 /* Quantum Scene */
 .quantumScene {
   opacity: 1;
-  pointer-events: auto;
+  pointer-events: none !important;
   transition: opacity 1.1s cubic-bezier(0.4,0,0.2,1);
   position: relative;
   width: 100vw;
@@ -256,13 +271,13 @@
 
   &:not(.active) {
     opacity: 0;
-    pointer-events: none;
+    pointer-events: none !important;
     z-index: 1;
   }
 
   &.active {
     opacity: 1;
-    pointer-events: auto;
+    pointer-events: none !important;
     position: relative;
     z-index: 2;
   }
@@ -297,7 +312,7 @@
   min-height: 400vh;
   perspective: 1500px;
   transform-style: preserve-3d;
-  pointer-events: auto;
+  pointer-events: none !important;
   z-index: 1;
 }
 
@@ -391,8 +406,9 @@ a,
 input, 
 .scrambleButton {
   position: relative;
-  z-index: 1000;
+  z-index: 100 !important;
   pointer-events: auto !important;
+  cursor: pointer !important;
 }
 
 /* Extra boost for quantum title */
@@ -497,7 +513,7 @@ input,
   /* Seamless scene fade effect */
   .quantum-scene {
     opacity: 1;
-    pointer-events: auto;
+    pointer-events: none !important;
     transition: opacity 1.1s cubic-bezier(0.4,0,0.2,1);
     position: relative;
     width: 100vw;
@@ -506,13 +522,13 @@ input,
 
     &:not(.active) {
       opacity: 0;
-      pointer-events: none;
+      pointer-events: none !important;
       z-index: 1;
     }
 
     &.active {
       opacity: 1;
-      pointer-events: auto;
+      pointer-events: none !important;
       position: relative;
       z-index: 2;
     }
@@ -544,7 +560,7 @@ input,
     min-height: 100vh;
     perspective: 1500px;
     transform-style: preserve-3d;
-    pointer-events: auto;
+    pointer-events: none !important;
     z-index: 1;
 
     &::before {
@@ -563,7 +579,7 @@ input,
         rgba(0, 0, 0, 0.25) 75%,
         rgba(0, 0, 0, 0.10) 85%,
         rgba(0, 0, 0, 0) 95%);
-      pointer-events: none;
+      pointer-events: none !important;
       z-index: 0;
     }
   }
@@ -833,16 +849,25 @@ input,
   .nav-links, .nav-link, .terminal-cursor, .quantum-title, .scene-content, 
   .beam-scan-button, button, a, input, .scramble-button {
     position: relative;
-    z-index: 100;
+    z-index: 100 !important;
     pointer-events: auto !important;
+    cursor: pointer !important;
   }
 
   .scene-content {
     position: relative;
-    z-index: 10;
-    padding: 80px 40px;
+    z-index: 10 !important;
+    padding: 150px 40px 80px;
     text-align: center;
     overflow: visible;
+    pointer-events: auto !important;
+    
+    /* All interactive children must be clickable */
+    button, a, input, [role="button"] {
+      pointer-events: auto !important;
+      cursor: pointer !important;
+      z-index: 100 !important;
+    }
   }
 
   .scene-title {
