@@ -257,7 +257,7 @@ export default function ProgressBar({ portalState, glyphState, onQuantumCollapse
   const color = atBottom ? '#00fff7af' : `rgba(0,255,247,${0.5 + 0.5 * progress})`;
   const filter = `blur(${blur}px) brightness(${1 + progress * 1.2}) saturate(${1.2 + progress * 1.3})`;
   const transform = atBottom
-    ? 'none'
+    ? 'translateY(60px)'
     : `translateY(${-40 * (1 - progress)}px) scale(${1 + progress * 0.7 + pulseNorm * 0.1}) skewY(${-6 * progress}deg)`;
 
   return (
@@ -291,18 +291,19 @@ export default function ProgressBar({ portalState, glyphState, onQuantumCollapse
             filter,
             transform,
             color,
+            fontSize: atBottom ? '2em' : '2.25em',
             transition: atBottom
               ? 'all 0.7s cubic-bezier(0.4,0,0.2,1)'
               : 'transform 1.2s cubic-bezier(0.4,0,0.2,1), opacity 1.2s, filter 1.2s, color 1.2s',
             willChange: 'transform, opacity, filter, color',
             mixBlendMode: atBottom ? 'normal' : 'screen',
-            fontFamily: "'Future Z', 'Orbitron', 'Rajdhani', monospace",
+            fontFamily: "'Orbitron', 'Rajdhani', monospace",
           }}
         >
           "Be the defiance"
         </div>
       </div>
-      <div className="progress-particles" style={{ position: 'relative', zIndex: 3 }}>&gt;&gt;&gt;The illusion is already awake."&gt;&gt;&gt;</div>
+      <div className="progress-particles" style={{ position: 'relative', zIndex: 3, marginTop: '30px' }}>&gt;&gt;&gt;The illusion is already awake."&gt;&gt;&gt;</div>
     </section>
   );
 }
