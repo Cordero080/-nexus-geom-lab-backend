@@ -1,7 +1,6 @@
 {/* Scene 4: Superposition */}
         
 import React from 'react';
-import './Home.css';
 
 export default function Scene({ id, isActive, backgroundClass, children }) {
   return (
