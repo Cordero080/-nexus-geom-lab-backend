@@ -894,9 +894,9 @@ input,
   }
 
   .quantum-console {
-    margin-top: 60px;
-    font-size: 1.2em;
-    font-family: 'JetBrains Mono', monospace;
+    margin-top: 120px;
+    font-size: 1.02em;
+    font-family: 'Orbitron', monospace;
     text-align: center;
     max-width: 800px;
     margin-left: auto;
@@ -909,11 +909,12 @@ input,
   }
 
   .console-line {
-    font-size: 1.3em;
+    font-size: 1.105em;
     color: #00ff33;
     text-shadow: 0 0 8px #00ff3366, 0 0 16px #00ff3322;
     margin: 12px 0;
     letter-spacing: 0.05em;
+    font-family: 'Orbitron', monospace;
   }
 
   .home-enter-geom-lab-btn {

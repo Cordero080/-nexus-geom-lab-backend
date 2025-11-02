@@ -817,7 +817,69 @@ MANIFOLD: A mathematical surface or multi-dimensional space that can be curved o
             <div className="console-line">&gt;&gt;&gt; Initializing quantum state...</div>
             <div className="console-line">&gt;&gt;&gt; PABLO PISTOLA = ψ(quantum_state)</div>
             <div className="console-line">&gt;&gt;&gt; Observation collapsed wave function</div>
-            <div className="console-line">&gt;&gt;&gt; Result: "ETHEREAL" ✨</div>
+            <div className="console-line" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
+              <svg width="40" height="40" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                  <linearGradient id="ethereal-grad-left" x1="0" y1="0" x2="1" y2="1">
+                    <stop offset="0%" stopColor={portalState.colors[0]} stopOpacity="0.9"/>
+                    <stop offset="50%" stopColor={portalState.colors[1]} stopOpacity="0.7"/>
+                    <stop offset="100%" stopColor={portalState.colors[2]} stopOpacity="0.9"/>
+                  </linearGradient>
+                  <filter id="ethereal-glow-left">
+                    <feGaussianBlur stdDeviation="1" result="coloredBlur"/>
+                    <feMerge>
+                      <feMergeNode in="coloredBlur"/>
+                      <feMergeNode in="SourceGraphic"/>
+                    </feMerge>
+                  </filter>
+                </defs>
+                <polygon 
+                  points="10,2 16,6 16,14 10,18 4,14 4,6" 
+                  stroke="url(#ethereal-grad-left)" 
+                  strokeWidth="1.5" 
+                  fill="none"
+                  filter="url(#ethereal-glow-left)"
+                />
+                <circle cx="10" cy="10" r="3" fill={portalState.colors[0]} opacity="0.8"/>
+                <circle cx="10" cy="2" r="1.5" fill={portalState.colors[1]} opacity="0.9"/>
+                <circle cx="16" cy="6" r="1.5" fill={portalState.colors[2]} opacity="0.9"/>
+                <circle cx="16" cy="14" r="1.5" fill={portalState.colors[0]} opacity="0.9"/>
+                <circle cx="10" cy="18" r="1.5" fill={portalState.colors[1]} opacity="0.9"/>
+                <circle cx="4" cy="14" r="1.5" fill={portalState.colors[2]} opacity="0.9"/>
+                <circle cx="4" cy="6" r="1.5" fill={portalState.colors[0]} opacity="0.9"/>
+              </svg>
+              &gt;&gt;&gt; Result: "ETHEREAL"
+              <svg width="40" height="40" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                  <linearGradient id="ethereal-grad" x1="0" y1="0" x2="1" y2="1">
+                    <stop offset="0%" stopColor={portalState.colors[0]} stopOpacity="0.9"/>
+                    <stop offset="50%" stopColor={portalState.colors[1]} stopOpacity="0.7"/>
+                    <stop offset="100%" stopColor={portalState.colors[2]} stopOpacity="0.9"/>
+                  </linearGradient>
+                  <filter id="ethereal-glow">
+                    <feGaussianBlur stdDeviation="1" result="coloredBlur"/>
+                    <feMerge>
+                      <feMergeNode in="coloredBlur"/>
+                      <feMergeNode in="SourceGraphic"/>
+                    </feMerge>
+                  </filter>
+                </defs>
+                <polygon 
+                  points="10,2 16,6 16,14 10,18 4,14 4,6" 
+                  stroke="url(#ethereal-grad)" 
+                  strokeWidth="1.5" 
+                  fill="none"
+                  filter="url(#ethereal-glow)"
+                />
+                <circle cx="10" cy="10" r="3" fill={portalState.colors[0]} opacity="0.8"/>
+                <circle cx="10" cy="2" r="1.5" fill={portalState.colors[1]} opacity="0.9"/>
+                <circle cx="16" cy="6" r="1.5" fill={portalState.colors[2]} opacity="0.9"/>
+                <circle cx="16" cy="14" r="1.5" fill={portalState.colors[0]} opacity="0.9"/>
+                <circle cx="10" cy="18" r="1.5" fill={portalState.colors[1]} opacity="0.9"/>
+                <circle cx="4" cy="14" r="1.5" fill={portalState.colors[2]} opacity="0.9"/>
+                <circle cx="4" cy="6" r="1.5" fill={portalState.colors[0]} opacity="0.9"/>
+              </svg>
+            </div>
           </div>
         </Scene>
       </div>
