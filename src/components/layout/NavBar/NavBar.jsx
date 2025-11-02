@@ -7,7 +7,7 @@ import { useAuth } from "../../../context/AuthContext";
 import ScrambleButton from "../../ui/ScrambleButton/ScrambleButton";
 import { GEOM_LAB_LINK_TEXT, SHOWCASE_LINK_TEXT } from "./navLabels";
 
-export default function NavBar({ portalColors = null, glyphs = null }) {
+export default function NavBar({ portalColors = null, glyphs = null, navScrolled = false }) {
   const { isAuthenticated, user, logout, login } = useAuth();
   const [showAuthModal, setShowAuthModal] = useState(false);
   const location = useLocation();
@@ -32,9 +32,13 @@ export default function NavBar({ portalColors = null, glyphs = null }) {
   
   // Apply quantum reactive colors if provided
   const quantumStyle = portalColors ? {
-    background: `linear-gradient(90deg, ${portalColors[0]}15, ${portalColors[1]}08)`,
-    borderBottom: `1px solid ${portalColors[0]}40`,
-    transition: 'background 1.2s cubic-bezier(0.4,0,0.2,1), border-bottom-color 1.2s cubic-bezier(0.4,0,0.2,1)'
+    background: navScrolled 
+      ? `linear-gradient(135deg, ${portalColors[0]}15, ${portalColors[1]}10, rgba(0,0,0,0.9))` 
+      : `linear-gradient(135deg, ${portalColors[0]}25, ${portalColors[1]}20, rgba(0,0,0,0.85))`,
+    backdropFilter: navScrolled ? 'blur(20px)' : 'blur(30px)',
+    borderBottom: `2px solid ${portalColors[1]}44`,
+    boxShadow: `0 2px 24px ${portalColors[1]}22`,
+    transition: 'all 1.2s ease'
   } : {};
   
   return (

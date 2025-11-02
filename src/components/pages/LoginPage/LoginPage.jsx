@@ -31,6 +31,7 @@ const LoginPage = () => {
   // Quantum state management (matching MyScenesPage/Showcase)
   const [portalState, setPortalState] = useState(() => quantumCollapse(portalWorlds));
   const [glyphState, setGlyphState] = useState(() => quantumCollapse(glyphSets));
+  const [navScrolled, setNavScrolled] = useState(false);
   
   // Parallax layer refs (matching MyScenesPage/Showcase)
   const bgRef = useRef(null);
@@ -104,6 +105,20 @@ const LoginPage = () => {
       window.removeEventListener('scroll', handleQuantumCollapse);
       window.removeEventListener('click', handleClickCollapse);
     };
+  }, []);
+
+  // Navbar scroll effect
+  useEffect(() => {
+    const handleNavScroll = () => {
+      if (window.scrollY > 50) {
+        setNavScrolled(true);
+      } else {
+        setNavScrolled(false);
+      }
+    };
+    window.addEventListener('scroll', handleNavScroll);
+    handleNavScroll();
+    return () => window.removeEventListener('scroll', handleNavScroll);
   }, []);
 
   // Enhanced cursor effects
@@ -280,7 +295,18 @@ const LoginPage = () => {
       <div className="cursor" id="cursor"></div>
 
       <div className="login-page">
-        <nav className="quantum-nav">
+        <nav 
+          className="quantum-nav"
+          style={{
+            background: navScrolled 
+              ? `linear-gradient(135deg, ${portalState.colors[0]}15, ${portalState.colors[1]}10, rgba(0,0,0,0.9))` 
+              : `linear-gradient(135deg, ${portalState.colors[0]}25, ${portalState.colors[1]}20, rgba(0,0,0,0.85))`,
+            backdropFilter: navScrolled ? 'blur(20px)' : 'blur(30px)',
+            borderBottom: `2px solid ${portalState.colors[1]}44`,
+            boxShadow: `0 2px 24px ${portalState.colors[1]}22`,
+            transition: 'all 1.2s ease'
+          }}
+        >
           <div className="nav-logo">
             <span
               className="logo-text"

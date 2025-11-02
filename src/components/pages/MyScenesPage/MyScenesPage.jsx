@@ -97,6 +97,7 @@ export default function MyScenesPage() {
    */
   const [portalState, setPortalState] = useState(() => quantumCollapse(portalWorlds));
   const [glyphState, setGlyphState] = useState(() => quantumCollapse(glyphSets));
+  const [navScrolled, setNavScrolled] = useState(false);
 
   // Parallax layer refs (like Showcase)
   const bgRef = useRef(null);
@@ -174,6 +175,20 @@ export default function MyScenesPage() {
       window.removeEventListener('scroll', handleQuantumCollapse);
       window.removeEventListener('click', handleClickCollapse);
     };
+  }, []);
+
+  // Navbar scroll effect
+  useEffect(() => {
+    const handleNavScroll = () => {
+      if (window.scrollY > 50) {
+        setNavScrolled(true);
+      } else {
+        setNavScrolled(false);
+      }
+    };
+    window.addEventListener('scroll', handleNavScroll);
+    handleNavScroll();
+    return () => window.removeEventListener('scroll', handleNavScroll);
   }, []);
 
   // Fetch user's scenes when component mounts or token changes
@@ -391,7 +406,11 @@ export default function MyScenesPage() {
       </div>
 
       <div className="my-scenes-page">
-        <NavBar />
+        <NavBar 
+          portalColors={portalState.colors} 
+          glyphs={glyphState}
+          navScrolled={navScrolled}
+        />
 
       {/* Header */}
       <div className="my-scenes-page__header">
