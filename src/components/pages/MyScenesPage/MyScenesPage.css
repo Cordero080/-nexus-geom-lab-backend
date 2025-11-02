@@ -1,6 +1,6 @@
-/* My Scenes Page Styles */
+/* My Scenes Page Styles - Using Showcase Background System */
 
-/* Parallax Background Layers */
+/* Background layers with fade mask (matching Showcase) */
 .parallax-bg-layer,
 .parallax-fg-layer {
   position: fixed;
@@ -10,6 +10,9 @@
   height: 40vh;
   z-index: -1;
   pointer-events: none;
+  /* Fade the bottom edge to avoid a hard horizontal line */
+  -webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 85%);
+  mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 85%);
 }
 
 .parallax-bg-layer {
@@ -18,22 +21,43 @@
 
 .parallax-fg-layer {
   z-index: -1; /* In front of background layer */
+  mix-blend-mode: screen; /* Let colors blend through */
+  opacity: 0.5; /* More transparent */
 }
 
-/* Gallery Scene Background with Clip-Path */
-.bg-gallery-reality {
-  background: linear-gradient(120deg, #0a0f1a 60%, #1a2a3a 100%),
-    repeating-linear-gradient(-30deg, #00f0ff22 0 2px, transparent 2px 40px);
-  clip-path: polygon(0 0, 100% 0, 100% 80%, 60% 100%, 0 80%);
-  min-height: 100vh;
-  width: 100vw;
+/* Layered geometric background with clip-path (matching HomePage) */
+.bg-gallery-layer {
   position: fixed;
   top: 0;
   left: 0;
-  z-index: -3; /* Behind parallax layers */
+  width: 100vw;
+  height: 100vh;
+  min-height: 100vh;
+  pointer-events: none;
+  z-index: -3; /* Behind parallax layers, below content */
+  background: linear-gradient(120deg, #0a0f1a 60%, #1a2a3a 100%),
+    repeating-linear-gradient(-30deg, #00f0ff22 0 2px, transparent 2px 40px);
+  opacity: 0.38;
+  will-change: transform, opacity, filter;
+  transition: transform 1.2s cubic-bezier(0.4, 0, 0.2, 1),
+    opacity 0.9s ease,
+    filter 0.9s ease;
+  transform-origin: center;
 }
 
-/* Removed - using global navbar styles */
+/* HomePage clip-path variants */
+.bg-gallery-layer.bg-gallery-reality {
+  clip-path: polygon(0 0, 100% 0, 100% 80%, 60% 100%, 0 80%);
+}
+.bg-gallery-layer.bg-gallery-probability {
+  clip-path: polygon(0 10%, 100% 0, 100% 90%, 0 100%);
+}
+.bg-gallery-layer.bg-gallery-entanglement {
+  clip-path: polygon(0 0, 100% 10%, 100% 100%, 40% 90%, 0 100%);
+}
+.bg-gallery-layer.bg-gallery-superposition {
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 20% 90%, 0 100%);
+}
 
 .my-scenes-page {
   min-height: 100vh;

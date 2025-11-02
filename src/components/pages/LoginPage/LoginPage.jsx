@@ -2,10 +2,26 @@ import React, { useState, useRef, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../../context/AuthContext";
 import BeamScanButton from "../../features/HUD/BeamScanButton/BeamScanButton";
-import HomeBackground from "../../shared/HomeBackground/HomeBackground";
+import { quantumCollapse } from "../../../utils/coreHelpers";
 import "./LoginPage.css";
 import sharedStyles from "../../../styles/shared.module.scss";
 import "../../layout/NavBar/nav.css";
+
+const portalWorlds = [
+  { colors: ['#ff00cc', '#00fff7', '#1a003a'], label: 'Fractal' },
+  { colors: ['#ffea00', '#7300ffff', '#003a2a'], label: 'Nebula' },
+  { colors: ['#ff3300', '#cc00ff', '#0a0f1a'], label: 'Being' },
+  { colors: ['#00ff33', '#00aaff', '#003a3a'], label: '' },
+  { colors: ['#cfccbeff', '#056864ff', '#210205ff'], label: 'Singularity' },
+];
+
+const glyphSets = [
+  ['ψ', 'Ω', 'Σ'],
+  ['λ', 'Φ', 'Ξ'],
+  ['π', 'Δ', 'Γ'],
+  ['μ', 'θ', 'ζ'],
+  ['τ', 'β', 'η'],
+];
 
 const LoginPage = () => {
   const { login } = useAuth();
@@ -25,12 +41,49 @@ const LoginPage = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   // Quantum portal state for dynamic navbar colors
-  const [portalState] = useState({
-    colors: ['#ff006e', '#8338ec', '#3a86ff']
-  });
+  const [portalState] = useState(() => quantumCollapse(portalWorlds));
 
   // Quantum glyphs for navbar
-  const [glyphState] = useState(['◬', '◭', '◮']);
+  const [glyphState] = useState(() => quantumCollapse(glyphSets));
+
+  // Parallax layer refs (like Showcase)
+  const bgRef = useRef(null);
+  const fgRef = useRef(null);
+
+  // Parallax effect (matching Showcase)
+  useEffect(() => {
+    const handleParallax = (e) => {
+      const scrollY = window.scrollY;
+      const maxScroll = (document.documentElement.scrollHeight - window.innerHeight) || 1;
+      const progress = Math.min(1, scrollY / maxScroll);
+      let mx = 0, my = 0;
+      if (e && e.type === 'mousemove') {
+        mx = (e.clientX / window.innerWidth) - 0.5;
+        my = (e.clientY / window.innerHeight) - 0.5;
+      }
+      
+      const motionDampen = 1 - progress * 0.3;
+      
+      if (bgRef.current) {
+        bgRef.current.style.transform = `translate3d(${mx * 15 * motionDampen}px, ${-scrollY * 0.04 + my * 8 * motionDampen}px, 0)`;
+        bgRef.current.style.opacity = String(1 - progress * 0.4);
+      }
+      
+      if (fgRef.current) {
+        fgRef.current.style.transform = `translate3d(${mx * 45 * motionDampen}px, ${-scrollY * 0.12 + my * 25 * motionDampen}px, 0)`;
+        fgRef.current.style.opacity = String(0.9 - progress * 0.6);
+      }
+    };
+    
+    window.addEventListener('scroll', handleParallax);
+    window.addEventListener('mousemove', handleParallax);
+    handleParallax();
+    
+    return () => {
+      window.removeEventListener('scroll', handleParallax);
+      window.removeEventListener('mousemove', handleParallax);
+    };
+  }, []);
 
   // Enhanced cursor effects
   useEffect(() => {
@@ -107,7 +160,36 @@ const LoginPage = () => {
   };
 
   return (
-    <HomeBackground portalState={portalState}>
+    <>
+      {/* Clip-path background layer (matching Showcase) */}
+      <div className="bg-gallery-layer" aria-hidden="true"></div>
+      
+      {/* Showcase-style background layers */}
+      <div ref={bgRef} className="parallax-bg-layer" aria-hidden="true">
+        <svg width="100%" height="100%" viewBox="0 0 1920 400" style={{position:'absolute',top:0,left:0,width:'100vw',height:'40vh',pointerEvents:'none', background: `linear-gradient(120deg, ${portalState.colors[0]} 0%, ${portalState.colors[1]} 60%, ${portalState.colors[2]} 100%)`, transition: 'background 3s cubic-bezier(0.4,0,0.2,1)'}}>
+          <defs>
+            <linearGradient id="login-bg-grad1" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stopColor={portalState.colors[0]} stopOpacity="0.18"/>
+              <stop offset="100%" stopColor={portalState.colors[1]} stopOpacity="0.08"/>
+            </linearGradient>
+          </defs>
+          <polygon points="0,0 1920,0 1600,400 0,300" fill="url(#login-bg-grad1)"/>
+          <ellipse cx="1600" cy="80" rx="220" ry="60" fill={portalState.colors[2] + '22'}/>
+        </svg>
+      </div>
+      <div ref={fgRef} className="parallax-fg-layer" aria-hidden="true">
+        <svg width="100%" height="100%" viewBox="0 0 1920 400" style={{position:'absolute',top:0,left:0,width:'100vw',height:'40vh',pointerEvents:'none'}}>
+          <defs>
+            <linearGradient id="login-fg-grad1" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stopColor="#fff" stopOpacity="0.12"/>
+              <stop offset="100%" stopColor="#00f0ff" stopOpacity="0.22"/>
+            </linearGradient>
+          </defs>
+          <polygon points="1920,0 1920,400 400,400 0,200" fill="url(#login-fg-grad1)"/>
+          <ellipse cx="320" cy="120" rx="180" ry="40" fill="#ffffff22"/>
+        </svg>
+      </div>
+
       {/* Enhanced Holographic Cursor System */}
       <div className="cursor" id="cursor"></div>
 
@@ -227,7 +309,7 @@ const LoginPage = () => {
           </form>
         </div>
       </div>
-    </HomeBackground>
+    </>
   );
 };
 

@@ -133,9 +133,40 @@
     height: 100%;
     z-index: 0;
     pointer-events: none;
+    background: linear-gradient(120deg, #0a0f1a 60%, #1a2a3a 100%),
+      repeating-linear-gradient(-30deg, #00f0ff22 0 2px, transparent 2px 40px);
+    opacity: 0.38;
     /* Fade mask at top to blend into quantum SVG gradients above */
     -webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,0.3) 15%, rgba(0,0,0,1) 35%);
     mask-image: linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,0.3) 15%, rgba(0,0,0,1) 35%);
+  }
+
+  /* HomePage clip-path variants for scene backgrounds */
+  .scene-background.bg-gallery-reality {
+    clip-path: polygon(0 0, 100% 0, 100% 80%, 60% 100%, 0 80%);
+  }
+  .scene-background.bg-gallery-probability {
+    clip-path: polygon(0 10%, 100% 0, 100% 90%, 0 100%);
+  }
+  .scene-background.bg-gallery-entanglement {
+    clip-path: polygon(0 0, 100% 10%, 100% 100%, 40% 90%, 0 100%);
+  }
+  .scene-background.bg-gallery-superposition {
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 20% 90%, 0 100%);
+  }
+
+  /* Variants for fixed bg-gallery-layer */
+  .bg-gallery-layer.bg-gallery-reality {
+    clip-path: polygon(0 0, 100% 0, 100% 80%, 60% 100%, 0 80%);
+  }
+  .bg-gallery-layer.bg-gallery-probability {
+    clip-path: polygon(0 10%, 100% 0, 100% 90%, 0 100%);
+  }
+  .bg-gallery-layer.bg-gallery-entanglement {
+    clip-path: polygon(0 0, 100% 10%, 100% 100%, 40% 90%, 0 100%);
+  }
+  .bg-gallery-layer.bg-gallery-superposition {
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 20% 90%, 0 100%);
   }
 
   /* Variants reusing Home’s clip-path shapes */

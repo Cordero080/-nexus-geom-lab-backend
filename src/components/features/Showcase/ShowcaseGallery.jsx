@@ -355,6 +355,9 @@ export default function ShowcaseGallery() {
 
   return (
     <>
+      {/* Clip-path background layer (matching HomePage) */}
+      <div className="bg-gallery-layer bg-gallery-reality" aria-hidden="true"></div>
+      
       {/* Scroll Progress Bar */}
       {/* Geometric Background Layers (consistency with Home/Scenes) */}
       <div ref={bgRef} className="parallax-bg-layer" aria-hidden="true">
