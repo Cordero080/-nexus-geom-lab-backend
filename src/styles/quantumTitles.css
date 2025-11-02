@@ -1,0 +1,115 @@
+/* Shared Quantum Page Title & Subtitle Styles */
+/* Used by: ShowcaseGallery, MyScenesPage */
+
+/* Main Title Styles */
+.quantum-page-title {
+  font-family: 'Future Z', 'Orbitron', 'Rajdhani', sans-serif !important;
+  font-size: 4.2rem;
+  font-weight: normal;
+  line-height: 1.2;
+  margin: 0 0 14px 0;
+  text-transform: uppercase;
+  letter-spacing: 10px;
+  /* Vibrant gradient */
+  background: linear-gradient(135deg, #48f0d4 0%, #ff7fb4 55%, #5fbab4 75%, #ffd27f 100%);
+  background-size: 200% 200%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: pageTitleShimmer 5s ease-in-out infinite;
+  filter: drop-shadow(0 6px 24px rgba(6, 21, 185, 0.32));
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 24px;
+  isolation: isolate;
+}
+
+.quantum-page-title::before,
+.quantum-page-title::after {
+  content: attr(data-text);
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  letter-spacing: inherit;
+  text-transform: inherit;
+  font-family: inherit;
+  font-size: inherit;
+  background: inherit;
+  background-size: inherit;
+  background-position: inherit;
+  background-clip: inherit;
+  -webkit-background-clip: inherit;
+  -webkit-text-fill-color: inherit;
+}
+
+.quantum-page-title::before {
+  z-index: -2;
+  filter: blur(18px);
+  opacity: 0.45;
+  transform: translateY(6px) translateX(3px) scale(1.05);
+}
+
+.quantum-page-title::after {
+  z-index: -2;
+  opacity: 0.4;
+  transform: translateY(4px) translateX(0px);
+  text-shadow: 0 0 24px rgba(22, 10, 27, 0.503), 0 0 60px rgba(0, 132, 255, 0.5);
+}
+
+@keyframes pageTitleShimmer {
+  0%, 100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+/* Subtitle Styles */
+.quantum-page-subtitle {
+  font-family: 'Orbitron', monospace !important;
+  color: #7ffdff92 !important;
+  font-size: 1.1em !important;
+  margin: 0 !important;
+  text-shadow: 0 0 20px rgba(0, 212, 255, 0.4) !important;
+  position: relative !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  min-height: 1.8em !important;
+  overflow: visible !important;
+  letter-spacing: 3px !important;
+  text-transform: uppercase !important;
+  padding: 4px 18px !important;
+  font-style: italic !important;
+}
+
+.quantum-page-subtitle::after {
+  content: '';
+  position: absolute;
+  bottom: -8px;
+  left: 50%;
+  width: 120px;
+  height: 1px;
+  border-radius: 999px;
+  transform: translateX(-50%);
+  background: linear-gradient(90deg, transparent, rgba(127, 230, 255, 0.9), transparent);
+  opacity: 0.5;
+  animation: heroUnderlinePulse 4.2s ease-in-out infinite;
+}
+
+@keyframes heroUnderlinePulse {
+  0%, 100% {
+    opacity: 0.5;
+    width: 120px;
+  }
+  50% {
+    opacity: 0.8;
+    width: 160px;
+  }
+}

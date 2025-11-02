@@ -1,12 +1,12 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../../context/AuthContext";
 import BeamScanButton from "../../features/HUD/BeamScanButton/BeamScanButton";
 import { quantumCollapse } from "../../../utils/coreHelpers";
 import "./LoginPage.css";
-import sharedStyles from "../../../styles/shared.module.scss";
 import "../../layout/NavBar/nav.css";
 
+// Portal worlds system (matching MyScenesPage/Showcase)
 const portalWorlds = [
   { colors: ['#ff00cc', '#00fff7', '#1a003a'], label: 'Fractal' },
   { colors: ['#ffea00', '#7300ffff', '#003a2a'], label: 'Nebula' },
@@ -27,6 +27,14 @@ const LoginPage = () => {
   const { login } = useAuth();
   const navigate = useNavigate();
   
+  // Quantum state management (matching MyScenesPage/Showcase)
+  const [portalState, setPortalState] = useState(() => quantumCollapse(portalWorlds));
+  const [glyphState, setGlyphState] = useState(() => quantumCollapse(glyphSets));
+  
+  // Parallax layer refs (matching MyScenesPage/Showcase)
+  const bgRef = useRef(null);
+  const fgRef = useRef(null);
+  
   const [formData, setFormData] = useState({
     email: '',
     password: ''
@@ -40,17 +48,7 @@ const LoginPage = () => {
 
   const [isLoading, setIsLoading] = useState(false);
 
-  // Quantum portal state for dynamic navbar colors
-  const [portalState] = useState(() => quantumCollapse(portalWorlds));
-
-  // Quantum glyphs for navbar
-  const [glyphState] = useState(() => quantumCollapse(glyphSets));
-
-  // Parallax layer refs (like Showcase)
-  const bgRef = useRef(null);
-  const fgRef = useRef(null);
-
-  // Parallax effect (matching Showcase)
+  // Parallax effect (matching MyScenesPage/Showcase)
   useEffect(() => {
     const handleParallax = (e) => {
       const scrollY = window.scrollY;
@@ -82,6 +80,28 @@ const LoginPage = () => {
     return () => {
       window.removeEventListener('scroll', handleParallax);
       window.removeEventListener('mousemove', handleParallax);
+    };
+  }, []);
+
+  // Quantum collapse on user interaction (matching MyScenesPage/Showcase)
+  useEffect(() => {
+    const handleQuantumCollapse = () => {
+      const newPortalState = quantumCollapse(portalWorlds);
+      const newGlyphState = quantumCollapse(glyphSets);
+      setPortalState(newPortalState);
+      setGlyphState(newGlyphState);
+    };
+    
+    const handleClickCollapse = () => {
+      handleQuantumCollapse();
+    };
+
+    window.addEventListener('scroll', handleQuantumCollapse);
+    window.addEventListener('click', handleClickCollapse);
+    
+    return () => {
+      window.removeEventListener('scroll', handleQuantumCollapse);
+      window.removeEventListener('click', handleClickCollapse);
     };
   }, []);
 
@@ -161,10 +181,10 @@ const LoginPage = () => {
 
   return (
     <>
-      {/* Clip-path background layer (matching Showcase) */}
-      <div className="bg-gallery-layer" aria-hidden="true"></div>
+      {/* Clip-path background layer (matching Showcase/MyScenesPage) */}
+      <div className="bg-gallery-layer bg-gallery-reality" aria-hidden="true"></div>
       
-      {/* Showcase-style background layers */}
+      {/* Showcase-style parallax background layers */}
       <div ref={bgRef} className="parallax-bg-layer" aria-hidden="true">
         <svg width="100%" height="100%" viewBox="0 0 1920 400" style={{position:'absolute',top:0,left:0,width:'100vw',height:'40vh',pointerEvents:'none', background: `linear-gradient(120deg, ${portalState.colors[0]} 0%, ${portalState.colors[1]} 60%, ${portalState.colors[2]} 100%)`, transition: 'background 3s cubic-bezier(0.4,0,0.2,1)'}}>
           <defs>
@@ -190,19 +210,10 @@ const LoginPage = () => {
         </svg>
       </div>
 
-      {/* Enhanced Holographic Cursor System */}
       <div className="cursor" id="cursor"></div>
 
       <div className="login-page">
-        {/* Navigation Bar */}
-        <nav
-          className="quantum-nav"
-          style={{
-            background: `linear-gradient(90deg, rgba(0,0,0,0.82) 80%, ${portalState.colors[1]}22 100%)`,
-            boxShadow: `0 2px 16px 0 ${portalState.colors[2]}11`,
-            transition: 'background 1.2s cubic-bezier(0.4,0,0.2,1), box-shadow 1.2s'
-          }}
-        >
+        <nav className="quantum-nav">
           <div className="nav-logo">
             <span
               className="logo-text"
@@ -229,7 +240,6 @@ const LoginPage = () => {
           </div>
           <div className="nav-links">
             <Link to="/" className="nav-link nav-link--home" data-dimension="0">// HOME</Link>
-            {/* Hide LOGIN link since we're on this page */}
             <Link to="/signup" className="nav-link" data-dimension="1">// SIGN UP</Link>
           </div>
           <div className="nav-quantum-field"></div>
