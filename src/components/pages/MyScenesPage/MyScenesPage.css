@@ -183,6 +183,7 @@
     0 4px 8px rgba(0, 0, 0, 0.8),
     inset 0 1px 3px rgba(255, 255, 255, 0.2),
     inset 0 -1px 3px rgba(0, 0, 0, 0.5);
+  font-family: 'Orbitron', monospace;
 }
 
 /* Holographic shimmer animation for empty state */
@@ -199,21 +200,34 @@
 }
 
 .my-scenes-page__empty-icon {
-  font-size: 5rem;
-  display: block;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   margin-bottom: 24px;
+  animation: emptyIconSpin 20s linear infinite;
+}
+
+@keyframes emptyIconSpin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .my-scenes-page__empty h2 {
-  font-size: 2rem;
+  font-size: 1.5rem;
   margin: 0 0 12px;
   color: #ffffff;
+  font-family: 'Orbitron', monospace;
 }
 
 .my-scenes-page__empty p {
-  font-size: 1.125rem;
+  font-size: 0.95rem;
   color: rgba(255, 255, 255, 0.6);
   margin: 0 0 32px;
+  font-family: 'Orbitron', monospace;
 }
 
 /* Removed .my-scenes-page__cta - now using shared BeamScanButton component */

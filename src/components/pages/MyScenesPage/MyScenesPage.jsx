@@ -451,7 +451,55 @@ export default function MyScenesPage() {
       {/* Empty State */}
       {!loading && sortedScenes.length === 0 && (
         <div className="my-scenes-page__empty">
-          <span className="my-scenes-page__empty-icon">�</span>
+          <div className="my-scenes-page__empty-icon">
+            <svg width="120" height="120" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <linearGradient id="empty-grad1" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0%" stopColor={portalState.colors[0]} stopOpacity="0.8"/>
+                  <stop offset="50%" stopColor={portalState.colors[1]} stopOpacity="0.6"/>
+                  <stop offset="100%" stopColor={portalState.colors[2]} stopOpacity="0.8"/>
+                </linearGradient>
+                <filter id="empty-glow">
+                  <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
+                  <feMerge>
+                    <feMergeNode in="coloredBlur"/>
+                    <feMergeNode in="SourceGraphic"/>
+                  </feMerge>
+                </filter>
+              </defs>
+              {/* Outer hexagon */}
+              <polygon 
+                points="60,10 95,32.5 95,77.5 60,100 25,77.5 25,32.5" 
+                stroke="url(#empty-grad1)" 
+                strokeWidth="2" 
+                fill="none"
+                filter="url(#empty-glow)"
+              />
+              {/* Inner hexagon */}
+              <polygon 
+                points="60,25 82.5,37.5 82.5,67.5 60,80 37.5,67.5 37.5,37.5" 
+                stroke={portalState.colors[1]} 
+                strokeWidth="1.5" 
+                fill="none"
+                opacity="0.6"
+              />
+              {/* Center cube wireframe */}
+              <path 
+                d="M 45,45 L 60,35 L 75,45 L 75,65 L 60,75 L 45,65 Z M 60,35 L 60,55 M 45,45 L 60,55 M 75,45 L 60,55 M 45,65 L 60,75 M 75,65 L 60,75" 
+                stroke={portalState.colors[0]} 
+                strokeWidth="1.5" 
+                fill="none"
+                opacity="0.8"
+              />
+              {/* Corner nodes */}
+              <circle cx="60" cy="10" r="3" fill={portalState.colors[0]} opacity="0.9"/>
+              <circle cx="95" cy="32.5" r="3" fill={portalState.colors[1]} opacity="0.9"/>
+              <circle cx="95" cy="77.5" r="3" fill={portalState.colors[2]} opacity="0.9"/>
+              <circle cx="60" cy="100" r="3" fill={portalState.colors[0]} opacity="0.9"/>
+              <circle cx="25" cy="77.5" r="3" fill={portalState.colors[1]} opacity="0.9"/>
+              <circle cx="25" cy="32.5" r="3" fill={portalState.colors[2]} opacity="0.9"/>
+            </svg>
+          </div>
           <h2>No scenes yet</h2>
           <p>Create your first geometric masterpiece in the Geometry Lab!</p>
           <BeamScanButton
@@ -475,6 +523,7 @@ export default function MyScenesPage() {
               onEdit={handleEdit}
               onDelete={handleDeleteClick}
               isHighlighted={(scene._id || scene.id) === highlightSceneId}
+              portalColors={portalState.colors}
             />
           ))}
         </div>

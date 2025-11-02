@@ -15,6 +15,7 @@ import { formatDate, getPlaceholderGradient } from "../../../utils/coreHelpers";
  * - onEdit: Callback when Edit clicked
  * - onDelete: Callback when Delete clicked
  * - creatorName: Username of creator (optional)
+ * - portalColors: Array of portal colors [color0, color1, color2]
  */
 export default function SceneCard({
   scene,
@@ -26,107 +27,62 @@ export default function SceneCard({
   onDelete,
   creatorName = null,
   isHighlighted = false,
+  portalColors = ['#00ffff', '#ff00ff', '#ffff00'],
 }) {
   const [imageError, setImageError] = useState(false);
 
-  // Determine scene object type for placeholder outline (fallback to generic)
-  const objectType = (scene?.config?.objectType || scene?.objectType || '').toLowerCase();
-
   const OutlineSVG = ({ id }) => {
-    const gradId = `scene-wire-${id}`;
-    const commonDefs = (
-      <defs>
-        <linearGradient id={gradId} x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stopColor="#00ffff" />
-          <stop offset="100%" stopColor="#ff00ff" />
-        </linearGradient>
-      </defs>
+    // Hexagonal portal SVG matching empty state
+    return (
+      <svg className={styles.sceneCardGeo} viewBox="0 0 120 120" aria-hidden="true">
+        <defs>
+          <linearGradient id={`card-grad-${id}`} x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stopColor={portalColors[0]} stopOpacity="0.8"/>
+            <stop offset="50%" stopColor={portalColors[1]} stopOpacity="0.6"/>
+            <stop offset="100%" stopColor={portalColors[2]} stopOpacity="0.8"/>
+          </linearGradient>
+          <filter id={`card-glow-${id}`}>
+            <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
+            <feMerge>
+              <feMergeNode in="coloredBlur"/>
+              <feMergeNode in="SourceGraphic"/>
+            </feMerge>
+          </filter>
+        </defs>
+        {/* Outer hexagon */}
+        <polygon 
+          points="60,10 95,32.5 95,77.5 60,100 25,77.5 25,32.5" 
+          stroke={`url(#card-grad-${id})`}
+          strokeWidth="2" 
+          fill="none"
+          filter={`url(#card-glow-${id})`}
+        />
+        {/* Inner hexagon */}
+        <polygon 
+          points="60,25 82.5,37.5 82.5,67.5 60,80 37.5,67.5 37.5,37.5" 
+          stroke={portalColors[1]} 
+          strokeWidth="1.5" 
+          fill="none"
+          opacity="0.6"
+        />
+        {/* Center cube wireframe */}
+        <path 
+          d="M 45,45 L 60,35 L 75,45 L 75,65 L 60,75 L 45,65 Z M 60,35 L 60,55 M 45,45 L 60,55 M 75,45 L 60,55 M 45,65 L 60,75 M 75,65 L 60,75" 
+          stroke={portalColors[0]} 
+          strokeWidth="1.5" 
+          fill="none"
+          opacity="0.8"
+        />
+        {/* Corner nodes */}
+        <circle cx="60" cy="10" r="3" fill={portalColors[0]} opacity="0.9"/>
+        <circle cx="95" cy="32.5" r="3" fill={portalColors[1]} opacity="0.9"/>
+        <circle cx="95" cy="77.5" r="3" fill={portalColors[2]} opacity="0.9"/>
+        <circle cx="60" cy="100" r="3" fill={portalColors[0]} opacity="0.9"/>
+        <circle cx="25" cy="77.5" r="3" fill={portalColors[1]} opacity="0.9"/>
+        <circle cx="25" cy="32.5" r="3" fill={portalColors[2]} opacity="0.9"/>
+      </svg>
     );
-
-    const stroke = `url(#${gradId})`;
-
-    // Simple, lightweight wireframe shapes per object type
-    switch (objectType) {
-      case 'box':
-      case 'cube':
-        // Isometric cube: front + back squares with connectors (scaled up)
-        return (
-          <svg className={styles.sceneCardGeo} viewBox="0 0 200 200" aria-hidden="true">
-            {commonDefs}
-            <g fill="none" stroke={stroke} strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
-              <rect x="20" y="40" width="120" height="120" className={styles.geoOutline} />
-              <rect x="60" y="10" width="120" height="120" className={`${styles.geoOutline} ${styles.geoOutlineInner}`} />
-              <line x1="20" y1="40" x2="60" y2="10" className={styles.geoConnector} />
-              <line x1="140" y1="40" x2="180" y2="10" className={styles.geoConnector} />
-              <line x1="20" y1="160" x2="60" y2="130" className={styles.geoConnector} />
-              <line x1="140" y1="160" x2="180" y2="130" className={styles.geoConnector} />
-            </g>
-          </svg>
-        );
-      case 'icosahedron':
-        // Stylized polyhedron using triangles and a hex-like core (scaled up)
-        return (
-          <svg className={styles.sceneCardGeo} viewBox="0 0 200 200" aria-hidden="true">
-            {commonDefs}
-            <g fill="none" stroke={stroke} strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
-              <polygon points="100,10 180,50 180,150 100,190 20,150 20,50" className={styles.geoOutline} />
-              <polygon points="100,40 150,70 150,130 100,160 50,130 50,70" className={`${styles.geoOutline} ${styles.geoOutlineInner}`} />
-              <line x1="100" y1="10" x2="100" y2="40" className={styles.geoConnector} />
-              <line x1="180" y1="50" x2="150" y2="70" className={styles.geoConnector} />
-              <line x1="180" y1="150" x2="150" y2="130" className={styles.geoConnector} />
-              <line x1="100" y1="190" x2="100" y2="160" className={styles.geoConnector} />
-              <line x1="20" y1="150" x2="50" y2="130" className={styles.geoConnector} />
-              <line x1="20" y1="50" x2="50" y2="70" className={styles.geoConnector} />
-            </g>
-          </svg>
-        );
-      case 'octahedron':
-        return (
-          <svg className={styles.sceneCardGeo} viewBox="0 0 200 200" aria-hidden="true">
-            {commonDefs}
-            <g fill="none" stroke={stroke} strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
-              <polygon points="100,10 180,100 100,190 20,100" className={styles.geoOutline} />
-              <polygon points="100,45 145,100 100,155 55,100" className={`${styles.geoOutline} ${styles.geoOutlineInner}`} />
-              <line x1="20" y1="100" x2="180" y2="100" className={styles.geoConnector} />
-              <line x1="100" y1="10" x2="100" y2="190" className={styles.geoConnector} />
-            </g>
-          </svg>
-        );
-      case 'sphere':
-        // Equator + two longitudes as arcs/ellipses
-        return (
-          <svg className={styles.sceneCardGeo} viewBox="-10 -10 220 220" aria-hidden="true">
-            {commonDefs}
-            <g fill="none" stroke={stroke} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <circle cx="100" cy="100" r="60" className={styles.geoOutline} />
-              <ellipse cx="100" cy="100" rx="60" ry="24" className={`${styles.geoOutline} ${styles.geoOutlineInner}`} />
-              <ellipse cx="100" cy="100" rx="24" ry="60" className={`${styles.geoOutline} ${styles.geoOutlineInner}`} />
-            </g>
-          </svg>
-        );
-      default:
-        // Generic hex/poly wireframe (existing fallback)
-        return (
-          <svg className={styles.sceneCardGeo} viewBox="-10 -10 220 220" aria-hidden="true">
-            {commonDefs}
-            <g fill="none" stroke={stroke} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <polygon points="100,10 173,55 173,145 100,190 27,145 27,55" className={styles.geoOutline} />
-              <polygon points="100,40 153,70 153,130 100,160 47,130 47,70" className={`${styles.geoOutline} ${styles.geoOutlineInner}`} />
-              <line x1="100" y1="10" x2="100" y2="40" className={styles.geoConnector} />
-              <line x1="173" y1="55" x2="153" y2="70" className={styles.geoConnector} />
-              <line x1="173" y1="145" x2="153" y2="130" className={styles.geoConnector} />
-              <line x1="100" y1="190" x2="100" y2="160" className={styles.geoConnector} />
-              <line x1="27" y1="145" x2="47" y2="130" className={styles.geoConnector} />
-              <line x1="27" y1="55" x2="47" y2="70" className={styles.geoConnector} />
-              <line x1="27" y1="55" x2="173" y2="145" className={styles.geoDiagonal} />
-              <line x1="173" y1="55" x2="27" y2="145" className={styles.geoDiagonal} />
-            </g>
-          </svg>
-        );
-    }
   };
-
-  // Helper functions now imported from utils/coreHelpers.js
 
   return (
     <div className={`${styles.sceneCard} ${isHighlighted ? styles.sceneCardHighlighted : ''}`}>
