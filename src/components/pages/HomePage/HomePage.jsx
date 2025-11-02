@@ -197,6 +197,7 @@ export default function HomePage() {
     setGlyphState(quantumCollapse(glyphSets));
   }
   const [activeScene, setActiveScene] = useState(0);
+  const [navScrolled, setNavScrolled] = useState(false);
   const parallaxRef = useRef(null);
   const fgRef = useRef(null);
   const bgRef = useRef(null);
@@ -429,12 +430,35 @@ export default function HomePage() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  // Navbar scroll effect
+  useEffect(() => {
+    const handleNavScroll = () => {
+      if (window.scrollY > 50) {
+        setNavScrolled(true);
+      } else {
+        setNavScrolled(false);
+      }
+    };
+    window.addEventListener('scroll', handleNavScroll);
+    handleNavScroll();
+    return () => window.removeEventListener('scroll', handleNavScroll);
+  }, []);
+
   return (
     <>
       {/* VINE-INSPIRED QUANTUM NAVIGATION */}
       <nav
         className="quantum-nav"
         id="quantum-nav"
+        style={{
+          background: navScrolled 
+            ? `linear-gradient(135deg, ${portalState.colors[0]}15, ${portalState.colors[1]}10, rgba(0,0,0,0.9))` 
+            : `linear-gradient(135deg, ${portalState.colors[0]}25, ${portalState.colors[1]}20, rgba(0,0,0,0.85))`,
+          backdropFilter: navScrolled ? 'blur(20px)' : 'blur(30px)',
+          borderBottom: `2px solid ${portalState.colors[1]}44`,
+          boxShadow: `0 2px 24px ${portalState.colors[1]}22`,
+          transition: 'all 1.2s ease'
+        }}
       >
         <div className="nav-logo">
           <span
