@@ -360,7 +360,7 @@
 .bg-reality {
   background: linear-gradient(140deg, #0a0f1a 60%, #1a2a3a 100%),
     repeating-linear-gradient(-30deg, #00f0ff22 0 2px, transparent 2px 40px);
-  clip-path: polygon(0 0, 100% 0, 100% 80%, 60% 100%, 0 80%);
+  clip-path: polygon(0 0, 100% 0, 100% 85%, 50% 100%, 0 85%);
   min-height: 100vh;
   width: 100vw;
   position: absolute;
@@ -371,7 +371,7 @@
 .bg-probability {
   background: linear-gradient(135deg, #0a0f1a 60%, #1a003a 100%),
     repeating-linear-gradient(45deg, #00ffb366 0 4px, transparent 4px 40px);
-  clip-path: polygon(0 10%, 100% 0, 100% 90%, 0 100%);
+  clip-path: polygon(0 0, 100% 0, 100% 90%, 0 85%);
   min-height: 100vh;
   width: 100vw;
   position: absolute;
@@ -382,7 +382,7 @@
 .bg-entanglement {
   background: linear-gradient(110deg, #0a0f1a 60%, #003a2a 100%),
     repeating-linear-gradient(-60deg, #00fff966 0 3px, transparent 3px 30px);
-  clip-path: polygon(0 0, 100% 10%, 100% 100%, 40% 90%, 0 100%);
+  clip-path: polygon(0 0, 100% 0, 100% 85%, 30% 100%, 0 90%);
   min-height: 100vh;
   width: 100vw;
   position: absolute;
@@ -393,7 +393,7 @@
 .bg-superposition {
   background: linear-gradient(160deg, #0a0f1a 60%, #003a3a 100%),
     repeating-linear-gradient(70deg, #00aaff44 0 2px, transparent 2px 50px);
-  clip-path: polygon(0 0, 100% 0, 100% 100%, 20% 90%, 0 100%);
+  clip-path: polygon(0 0, 100% 0, 100% 90%, 20% 100%, 0 85%);
   min-height: 100vh;
   width: 100vw;
   position: absolute;
