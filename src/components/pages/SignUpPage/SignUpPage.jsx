@@ -5,6 +5,7 @@ import { BeamScanButton } from "../../features/HUD";
 import { quantumCollapse } from "../../../utils/coreHelpers";
 import "./SignUpPage.css";
 import "../../layout/NavBar/nav.css";
+import homeStyles from "../HomePage/HomeIndex.module.scss";
 
 // Portal worlds system (matching MyScenesPage/Showcase)
 const portalWorlds = [
@@ -190,6 +191,72 @@ export default function SignUpPage() {
 
   return (
     <>
+      {/* Base Dark Layer */}
+      <div className={homeStyles.baseDark}></div>
+
+      {/* Quantum Portal Background Layer */}
+      <div 
+        className={homeStyles.quantumPortalLayer}
+        style={{
+          background: `
+            radial-gradient(circle at 30% 120%, 
+              ${portalState.colors[0]} 0%, 
+              ${portalState.colors[1]} 30%, 
+              ${portalState.colors[2]} 60%, 
+              transparent 80%
+            ),
+            radial-gradient(circle at 70% 130%, 
+              ${portalState.colors[1]} 0%, 
+              ${portalState.colors[2]} 40%, 
+              ${portalState.colors[0]} 70%,
+              transparent 90%
+            )
+          `
+        }}
+      />
+
+      {/* Inverted veil to cover quantum colors at top */}
+      <div className={homeStyles.quantumVeil}></div>
+
+      {/* Dark Top Veil */}
+      <div className={homeStyles.darkTopVeil}></div>
+
+      {/* Dynamic Portal Background */}
+      <div style={{
+        position: 'fixed', 
+        top: 0, 
+        left: 0, 
+        width: '100vw', 
+        height: '100vh', 
+        zIndex: -3, 
+        pointerEvents: 'none',
+      }} aria-hidden="true">
+        <svg width="100%" height="100%" viewBox="0 0 1920 1080" style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          width: '100vw',
+          height: '100vh',
+          pointerEvents: 'none',
+          background: `linear-gradient(120deg, 
+            ${portalState.colors[0]} 0%, 
+            ${portalState.colors[1]} 60%, 
+            ${portalState.colors[2]} 100%
+          )`,
+          transition: 'background 1.2s cubic-bezier(0.4,0,0.2,1)',
+          filter: 'brightness(1.3) saturate(1.8)',
+        }}>
+          <defs>
+            <linearGradient id="signup-portal-glow" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stopColor={portalState.colors[0]} stopOpacity="0.6"/>
+              <stop offset="50%" stopColor={portalState.colors[1]} stopOpacity="0.4"/>
+              <stop offset="100%" stopColor={portalState.colors[2]} stopOpacity="0.6"/>
+            </linearGradient>
+          </defs>
+          <rect x="0" y="0" width="1920" height="1080" fill="url(#signup-portal-glow)"/>
+        </svg>
+      </div>
+
       {/* Clip-path background layer (matching Showcase/MyScenesPage) */}
       <div className="bg-gallery-layer bg-gallery-reality" aria-hidden="true"></div>
       
