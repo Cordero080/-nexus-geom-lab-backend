@@ -1,0 +1,412 @@
+/* HomeIndex.module.scss */
+.portalContainer {
+  /* Local scope ensures no external CSS bleeds in */
+  all: initial;
+  * {
+    all: unset;
+    box-sizing: border-box;
+  }
+
+  /* Establish new stacking context */
+  isolation: isolate;
+  position: relative;
+}
+
+/* Base Dark Layer (z-index: -4) */
+.baseDark {
+  position: fixed;
+  inset: 0;
+  background: linear-gradient(180deg,
+    rgba(0,0,0,1) 0%,
+    rgba(0,0,0,1) 15%,
+    rgba(0,0,0,0.8) 30%,
+    rgba(0,0,0,0.6) 50%,
+    rgba(0,0,0,0.4) 70%,
+    rgba(0,0,0,0.2) 85%,
+    rgba(0,0,0,0) 100%
+  );
+  z-index: -4;
+}
+
+/* Quantum Portal Layer for color shifting */
+.quantumPortalLayer {
+  position: fixed;
+  inset: 0;
+  z-index: -5;
+  opacity: 0.6;
+  filter: brightness(1.2) saturate(1.5);
+  mix-blend-mode: normal;
+  transition: all 1.2s cubic-bezier(0.4,0,0.2,1);
+}
+
+/* Quantum Veil to reduce color strength at top */
+.quantumVeil {
+  position: fixed;
+  inset: 0;
+  z-index: -4;
+  background: linear-gradient(180deg, 
+    rgba(0,0,0,1) 0%, 
+    rgba(0, 0, 0, 0.573) 30%, 
+    rgba(0, 0, 0, 0.472) 50%, 
+    rgba(0,0,0,0) 70%
+  );
+  pointer-events: none;
+}
+
+/* Scene Backgrounds (behind content) - CLEAN clip paths that scroll */
+.sceneBackground {
+  position: absolute;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 0;
+  background: linear-gradient(120deg, #0a0f1a 60%, #1a2a3a 100%),
+    repeating-linear-gradient(-30deg, #00f0ff22 0 2px, transparent 2px 40px);
+  opacity: 1.5;
+  pointer-events: none;
+  will-change: transform;
+  transition: transform 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+  transform-origin: center;
+  /* Fade mask at top to blend into quantum SVG gradients above */
+  -webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,0.3) 15%, rgba(0,0,0,1) 35%);
+  mask-image: linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,0.3) 5%, rgba(0,0,0,1) 35%);
+}
+
+/* Scene-specific clip paths create "windows" to see portal colors */
+.bgReality {
+  @extend .sceneBackground;
+  clip-path: polygon(0 0, 100% 0, 100% 80%, 60% 100%, 0 80%);
+}
+
+.bgProbability {
+  @extend .sceneBackground;
+  clip-path: polygon(0 -30%, 100% 0, 100% 90%, 0 100%);
+}
+
+.bgEntanglement {
+  @extend .sceneBackground;
+  clip-path: polygon(0 0, 100% 10%, 100% 100%, 40% 90%, 0 100%);
+}
+
+.bgSuperposition {
+  @extend .sceneBackground;
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 20% 90%, 0 100%);
+}
+
+/* Dark top veil - ensures dark atmosphere at top */
+.darkTopVeil {
+  position: fixed;
+  inset: 0;
+  z-index: -2;  /* MOVED BACK BEHIND CONTENT */
+  height: 100vh;
+  background: linear-gradient(180deg,
+    rgba(0, 0, 0, 1) 0%,
+    rgba(0, 0, 0, 1) 40%,
+    rgba(0, 0, 0, 0.98) 60%,
+    rgba(0, 0, 0, 0.95) 80%,
+    rgba(0, 0, 0, 0) 100%
+  );
+  pointer-events: none;
+}
+
+/* Page Top Section */
+.pageTop {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  z-index: 1;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(180deg, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.6) 100%);
+    z-index: -1;
+    pointer-events: none;
+  }
+}
+
+/* Scene Content */
+.sceneContent {
+  position: relative;
+  z-index: 99999;
+  padding: 80px 40px;
+  text-align: center;
+  overflow: visible;
+  transform: translateZ(1000px);
+  transform-style: preserve-3d;
+  perspective: 2000px;
+  isolation: isolate;
+  
+  /* Ensure title and content are super front */
+  h1, h2, p, .terminal-header, .hero-stats, .quantum-title {
+    position: relative;
+    z-index: 99999;
+    transform: translateZ(1000px);
+    isolation: isolate;
+  }
+}
+
+/* Scene Titles */
+.sceneTitle {
+  font-size: .8em;
+  font-family: 'Orbitron', 'JetBrains Mono', monospace;
+  font-weight: 900;
+  letter-spacing: 0.15em;
+  color: #fbfafe9c;
+  margin: 40px 0 20px 0;
+}
+
+/* Scene Descriptions */
+.sceneDescription {
+  font-size: 0.85em;
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  color: #f4f6f871;
+  text-shadow: 0 0 1px #00b7ff66, 0 0 2px #07021f6a;
+  margin-bottom: 30px;
+  max-width: 700px;
+  margin-left: auto;
+  margin-right: auto;
+  line-height: 1.6;
+}
+
+/* Holographic parallax effect */
+.parallaxHolo {
+  will-change: transform, opacity, filter;
+  perspective: 800px;
+  transition: none;
+  display: inline-block;
+  font-size: 2.2em;
+  font-family: 'Orbitron', 'JetBrains Mono', monospace;
+  font-weight: 900;
+  letter-spacing: 0.04em;
+  color: #00fff7;
+  text-shadow: 0 0 24px #00fff7cc, 0 0 60px #00fff744, 0 0 2px #fff;
+  filter: blur(0.5px) brightness(1.1) saturate(1.2);
+  opacity: 0.7;
+  transform: translateZ(0px) scale(1);
+  transition: transform 1.2s cubic-bezier(0.4,0,0.2,1), opacity 1.2s, filter 1.2s;
+
+  &.animate {
+    opacity: 0;
+    filter: blur(8px) brightness(2.2) saturate(2.5);
+    transform: translateZ(180px) scale(2.2) skewY(-6deg) rotateX(18deg);
+    pointer-events: none;
+  }
+}
+
+/* Enhanced N3XUS Title */
+.quantumTitle {
+  position: relative !important;
+  z-index: 9999 !important;
+  isolation: isolate;
+  pointer-events: auto !important;
+
+  /* Create new stacking context */
+  transform-style: preserve-3d;
+  transform: translateZ(0);
+}
+
+.n3xusTitle,
+.scrambleTitle {
+  will-change: transform, text-shadow;
+  perspective: 1000px;
+  transform-style: preserve-3d;
+  position: relative !important;
+  z-index: 9999 !important;
+  transition: transform 0.1s ease-out, text-shadow 0.3s ease;
+
+  &::after {
+    content: attr(data-text);
+    position: absolute;
+    top: 100%;
+    left: 0;
+    transform: scaleY(-1) rotateX(180deg);
+    background: linear-gradient(to bottom, rgba(0, 255, 247, 0.3), transparent);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    opacity: 0.4;
+    filter: blur(1px);
+    pointer-events: none;
+  }
+}
+
+/* Quantum Scene */
+.quantumScene {
+  opacity: 1;
+  pointer-events: auto;
+  transition: opacity 1.1s cubic-bezier(0.4,0,0.2,1);
+  position: relative;
+  width: 100vw;
+  min-height: 100vh;
+  z-index: 1;
+  perspective: 2000px;
+  transform-style: preserve-3d;
+
+  &:not(.active) {
+    opacity: 0;
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  &.active {
+    opacity: 1;
+    pointer-events: auto;
+    position: relative;
+    z-index: 2;
+  }
+}
+
+/* Parallax Layers */
+.parallaxBgLayer,
+.parallaxFgLayer {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 40vh;
+  pointer-events: none;
+  will-change: transform;
+  transform-style: preserve-3d;
+}
+
+.parallaxBgLayer {
+  z-index: -2;
+}
+
+.parallaxFgLayer {
+  z-index: -1;
+  mix-blend-mode: screen;
+  opacity: 0.5;
+}
+
+/* Parallax Container */
+.parallaxContainer {
+  position: relative;
+  min-height: 400vh;
+  perspective: 1500px;
+  transform-style: preserve-3d;
+  pointer-events: auto;
+  z-index: 1;
+}
+
+/* Floating Code */
+.floatingCode {
+  position: relative;
+  z-index: 100;
+  transform-style: preserve-3d;
+  will-change: text-shadow, opacity;
+
+  &.quoteHighlight {
+    line-height: 2.1;
+    margin: 120px 0 32px 0;
+    padding: 24px 32px;
+    border: none;
+    border-radius: 18px;
+    font-size: 1.1em;
+    font-style: italic;
+    font-family: 'Orbitron', 'JetBrains Mono', monospace;
+    font-weight: 800;
+    background: linear-gradient(135deg, #00ffff72, #ff00668d, #ffff0094, #00ff33, #cc00ff, #ff3300);
+    background-size: 300% 300%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    color: #ffffff;
+    text-shadow: 0 0 20px rgba(45, 86, 86, 0.4);
+    animation: logoGlitch 6s ease-in-out infinite, gradientShift 4s ease-in-out infinite;
+    letter-spacing: 0.01em;
+    z-index: -1;
+    opacity: 0.7;
+  }
+}
+
+/* Quantum Console */
+.quantumConsole {
+  margin-top: 60px;
+  font-size: 1.2em;
+  font-family: 'JetBrains Mono', monospace;
+  text-align: center;
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 20px;
+  transform: translateX(0) !important;
+  position: relative;
+  left: 0;
+  right: 0;
+}
+
+.consoleLine {
+  font-size: 1.3em;
+  color: #00ff33;
+  text-shadow: 0 0 8px #00ff3366, 0 0 16px #00ff3322;
+  margin: 12px 0;
+  letter-spacing: 0.05em;
+}
+
+/* Enter Geom Lab button */
+.homeEnterGeomLabBtn {
+  font-size: 24px !important;
+  padding: 24px 180px !important;
+  letter-spacing: 0.05em !important;
+}
+
+/* Animations */
+@keyframes logoGlitch {
+  0%, 100% { filter: none; }
+  10% { filter: blur(1px) brightness(1.2); }
+  20% { filter: blur(0.5px) brightness(0.8); }
+  30% { filter: blur(2px) brightness(1.4); }
+  40% { filter: blur(0.5px) brightness(1.1); }
+  50% { filter: none; }
+}
+
+@keyframes gradientShift {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* Ensure interactive elements are properly layered */
+.navLinks, 
+.navLink, 
+.terminalCursor, 
+.quantumTitle, 
+.sceneContent,
+.beamScanButton, 
+button, 
+a, 
+input, 
+.scrambleButton {
+  position: relative;
+  z-index: 1000;
+  pointer-events: auto !important;
+}
+
+/* Extra boost for quantum title */
+.quantumTitle,
+.quantum-title {
+  position: relative;
+  z-index: 2000 !important;
+}
+
+/* Make sure non-interactive elements don't block interactions */
+.cursor, 
+.wormhole, 
+.gravityField, 
+.dimensionalRift {
+  pointer-events: none !important;
+  z-index: 99999;
+}

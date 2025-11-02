@@ -70,11 +70,11 @@ export default class QuantumCursorUniverse {
 
     // Show/hide cursor based on our context
     if (this.cursor) {
-      // Completely hide cursor in geom-lab or when over controls
-      if (this.isInGeomLab() || this.isOverControl) {
-        this.cursor.style.opacity = "0"; // Completely hide
+      // Only hide cursor in geom-lab page, always show on homepage
+      if (this.isInGeomLab()) {
+        this.cursor.style.opacity = "0"; // Hide only in geom-lab
       } else {
-        this.cursor.style.opacity = "1"; // Only show on homepage and not over controls
+        this.cursor.style.opacity = "1"; // Always show on homepage, regardless of what element we're over
       }
     }
 
@@ -84,8 +84,8 @@ export default class QuantumCursorUniverse {
       this.isMouseMoving = false;
     }, 100);
 
-    // Only create particles when not in geom-lab and not over controls
-    if (!this.isInGeomLab() && !this.isOverControl) {
+    // Only create particles when not in geom-lab
+    if (!this.isInGeomLab()) {
       this.createQuantumParticles();
     }
   }
@@ -200,8 +200,8 @@ export default class QuantumCursorUniverse {
       this.gravityField.style.left = this.mouseX - 90 + "px";
       this.gravityField.style.top = this.mouseY - 90 + "px";
 
-      // Hide gravity field entirely in geom-lab or when over controls
-      if (this.isInGeomLab() || this.isOverControl) {
+      // Only hide gravity field in geom-lab, always show on homepage
+      if (this.isInGeomLab()) {
         this.gravityField.style.opacity = "0";
       } else {
         this.gravityField.style.opacity = "0.7";

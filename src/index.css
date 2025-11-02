@@ -64,7 +64,7 @@ body::before {
   border-radius: 50%;
   pointer-events: none;
   z-index: 99999;
-  opacity: 0;
+  opacity: 1;
   background: radial-gradient(circle, #00ffff 0%, #ff00cc 100%);
   box-shadow: 0 0 30px #00ffff, 0 0 60px #ff00cc;
   transition: opacity 0.2s;

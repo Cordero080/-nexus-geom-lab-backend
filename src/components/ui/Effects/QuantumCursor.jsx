@@ -46,6 +46,7 @@ export default function QuantumCursor() {
     <div className="quantum-cursor-container">
       <div id="cursor" className={styles.cursor}></div>
       <div id="gravity-field" className={styles.gravityField}></div>
+      <div id="wormhole" className={styles.quantumParticle}></div>
       <div id="dimensional-rift" className={styles.dimensionalRift}></div>
     </div>
   );

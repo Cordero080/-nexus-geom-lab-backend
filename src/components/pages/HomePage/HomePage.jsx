@@ -8,10 +8,7 @@ function quantumCollapse(states) {
 import Quote from './Quote';
 import ProgressBar from './ProgressBar';
 import Scene from './Scene';
-import sharedStyles from '../../../styles/shared.module.scss';
-// import './bg.css';
-// import './index.css';
-import './Home.css';
+import styles from './HomeIndex.module.scss';
 import { BeamScanButton } from '../../features/HUD';
 import { Link } from 'react-router-dom';
 import { GEOM_LAB_LINK_TEXT, SHOWCASE_LINK_TEXT } from '../../layout/NavBar/navLabels';
@@ -249,14 +246,16 @@ export default function HomePage() {
         layer5Ref.current.style.filter = `blur(${progress * 0.3}px) brightness(${1 + progress * 0.4})`;
       }
 
-      // Legacy layers for backward compatibility
+      // Parallax layers matching spec (bgRef and fgRef)
       if (bgRef.current) {
-        bgRef.current.style.transform = `translate3d(${mx * 8 * motionDampen}px, ${-scrollY * 0.015 + my * 6 * motionDampen}px, 0)`;
+        // Background layer: 0.08x scroll speed, ±30px horizontal, ±20px vertical
+        bgRef.current.style.transform = `translate3d(${mx * 30 * motionDampen}px, ${-scrollY * 0.08 + my * 20 * motionDampen}px, 0)`;
         bgRef.current.style.opacity = String(1 - progress * 0.4);
       }
       
       if (fgRef.current) {
-        fgRef.current.style.transform = `translate3d(${mx * 20 * motionDampen}px, ${-scrollY * 0.04 + my * 12 * motionDampen}px, 0)`;
+        // Foreground layer: 0.18x scroll speed, ±80px horizontal, ±40px vertical
+        fgRef.current.style.transform = `translate3d(${mx * 80 * motionDampen}px, ${-scrollY * 0.18 + my * 40 * motionDampen}px, 0)`;
         fgRef.current.style.opacity = String(0.9 - progress * 0.6);
       }
       
@@ -276,8 +275,8 @@ export default function HomePage() {
         const sceneScale = 1 - normalizedDist * 0.08;
         const sceneTilt = -(distFromCenter / viewportCenter) * 1.5;  // Reduced from 5 to 1.5 and inverted
         
-        // Apply 3D transforms to scenes - Skip for superposition scene
-        if (index !== 3) {
+        // Apply 3D transforms to scenes - Skip for entanglement (scene 2) and superposition (scene 3)
+        if (index !== 2 && index !== 3) {
           scene.style.transform = `
             perspective(1500px) 
             translateZ(${sceneDepth}px) 
@@ -286,7 +285,7 @@ export default function HomePage() {
           `;
           scene.style.opacity = String(1 - normalizedDist * 0.3);
         } else {
-          // Keep superposition scene flat
+          // Keep entanglement and superposition scenes flat to show parallax layers
           scene.style.transform = 'none';
           scene.style.opacity = '1';
         }
@@ -364,12 +363,6 @@ export default function HomePage() {
 
   return (
     <>
-      {/* Enhanced Holographic Cursor System */}
-      <div className="cursor" id="cursor"></div>
-      <div className="gravity-field" id="gravity-field"></div>
-      <div className="wormhole" id="wormhole"></div>
-      <div className="dimensional-rift" id="dimensional-rift"></div>
-
       {/* VINE-INSPIRED QUANTUM NAVIGATION */}
       <nav
         className="quantum-nav"
@@ -389,12 +382,13 @@ export default function HomePage() {
           <span style={{
             marginLeft: 10,
             fontSize: 16,
-            color: portalState.colors[2] + '99',
+            color: portalState.colors[1],
             letterSpacing: '0.12em',
             verticalAlign: 'middle',
-            opacity: 0.55,
-            filter: `blur(0.2px) drop-shadow(0 0 2px ${portalState.colors[1]}44)`,
-            transition: 'color 1.2s, filter 1.2s, opacity 1.2s'
+            opacity: 0.8,
+            filter: `blur(0.3px) drop-shadow(0 0 4px ${portalState.colors[1]}88)`,
+            transition: 'color 1.2s, filter 1.2s, opacity 1.2s',
+            textShadow: `0 0 8px ${portalState.colors[1]}, 0 0 2px ${portalState.colors[0]}`
           }}>
             {glyphState.join(' ')}
           </span>
@@ -421,60 +415,133 @@ export default function HomePage() {
         <div className="nav-quantum-field"></div>
       </nav>
 
+      {/* Base Dark Layer */}
+      <div className={styles.baseDark}></div>
+
+      {/* Quantum Portal Background Layer */}
+      <div 
+        className={styles.quantumPortalLayer}
+        style={{
+          background: `
+            radial-gradient(circle at 30% 120%, 
+              ${portalState.colors[0]} 0%, 
+              ${portalState.colors[1]} 30%, 
+              ${portalState.colors[2]} 60%, 
+              transparent 80%
+            ),
+            radial-gradient(circle at 70% 130%, 
+              ${portalState.colors[1]} 0%, 
+              ${portalState.colors[2]} 40%, 
+              ${portalState.colors[0]} 70%,
+              transparent 90%
+            )
+          `
+        }}
+      />
+
+      {/* Inverted veil to cover quantum colors at top */}
+      <div className={styles.quantumVeil}></div>
+
+      {/* Dark Top Veil */}
+      <div className={styles.darkTopVeil}></div>
+
       {/* Dynamic Portal Background - With fade-out like Showcase */}
       <div style={{
         position: 'fixed', 
         top: 0, 
         left: 0, 
         width: '100vw', 
-        height: '40vh', 
-        zIndex: -100, 
+        height: '100vh', 
+        zIndex: -3, 
         pointerEvents: 'none',
-        WebkitMaskImage: 'linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 85%)',
-        maskImage: 'linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 85%)'
       }} aria-hidden="true">
-        <svg width="100%" height="100%" viewBox="0 0 1920 400" style={{position:'absolute',top:0,left:0,width:'100vw',height:'40vh',pointerEvents:'none', background: `linear-gradient(120deg, ${portalState.colors[0]} 0%, ${portalState.colors[1]} 60%, ${portalState.colors[2]} 100%)`, transition: 'background 3s cubic-bezier(0.4,0,0.2,1)', filter: 'brightness(1.3) saturate(1.8)'}}>
+        <svg width="100%" height="100%" viewBox="0 0 1920 1080" style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          width: '100vw',
+          height: '100vh',
+          pointerEvents: 'none',
+          background: `linear-gradient(120deg, 
+            ${portalState.colors[0]} 0%, 
+            ${portalState.colors[1]} 60%, 
+            ${portalState.colors[2]} 100%
+          )`,
+          transition: 'background 1.2s cubic-bezier(0.4,0,0.2,1)',
+          filter: 'brightness(1.3) saturate(1.8)',
+        }}>
           <defs>
-            <linearGradient id="homepage-bg-grad1" x1="0" y1="0" x2="1" y2="1">
-              <stop offset="0%" stopColor={portalState.colors[0]} stopOpacity="0.18"/>
-              <stop offset="100%" stopColor={portalState.colors[1]} stopOpacity="0.08"/>
+            <linearGradient id="portal-glow" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stopColor={portalState.colors[0]} stopOpacity="0.6"/>
+              <stop offset="50%" stopColor={portalState.colors[1]} stopOpacity="0.4"/>
+              <stop offset="100%" stopColor={portalState.colors[2]} stopOpacity="0.6"/>
             </linearGradient>
-            <linearGradient id="top-dark-veil" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="rgba(0,0,0,0.95)"/>
-              <stop offset="40%" stopColor="rgba(0,0,0,0.90)"/>
-              <stop offset="70%" stopColor="rgba(0,0,0,0.65)"/>
-              <stop offset="85%" stopColor="rgba(0,0,0,0.20)"/>
-              <stop offset="100%" stopColor="rgba(0,0,0,0)"/>
-            </linearGradient>
-            <linearGradient id="bright-quantum-bottom" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="transparent"/>
-              <stop offset="60%" stopColor={portalState.colors[0]} stopOpacity="0.25"/>
-              <stop offset="75%" stopColor={portalState.colors[1]} stopOpacity="0.55"/>
-              <stop offset="90%" stopColor={portalState.colors[0]} stopOpacity="0.75"/>
-              <stop offset="100%" stopColor={portalState.colors[1]} stopOpacity="0.95"/>
-            </linearGradient>
-            <filter id="spectral-glow">
-              <feGaussianBlur stdDeviation="8" result="coloredBlur"/>
-              <feMerge>
-                <feMergeNode in="coloredBlur"/>
-                <feMergeNode in="SourceGraphic"/>
-              </feMerge>
-            </filter>
           </defs>
-          <polygon points="0,0 1920,0 1920,400 0,300" fill="url(#homepage-bg-grad1)"/>
-          <rect x="0" y="0" width="1920" height="400" fill="url(#bright-quantum-bottom)" filter="url(#spectral-glow)"/>
-          <rect x="0" y="0" width="1920" height="400" fill="url(#top-dark-veil)"/>
-          <ellipse cx="1600" cy="80" rx="320" ry="60" fill={portalState.colors[2] + '2'}/>
+          <rect x="0" y="0" width="1920" height="1080" fill="url(#portal-glow)"/>
+        </svg>
+      </div>
+
+      {/* 3D Parallax Layers */}
+      <div ref={bgRef} className={styles.parallaxBgLayer} aria-hidden="true">
+        <svg width="100%" height="100%" viewBox="0 0 1920 400" style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          width: '100vw',
+          height: '40vh',
+          pointerEvents: 'none',
+          opacity: 0.05
+        }}>
+          <defs>
+            <linearGradient id="homepage-parallax-bg-grad" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stopColor="#000000" stopOpacity="1"/>
+              <stop offset="100%" stopColor="#0a0f1a" stopOpacity="1"/>
+            </linearGradient>
+          </defs>
+          <rect x="0" y="0" width="1920" height="400" fill="url(#homepage-parallax-bg-grad)"/>
+        </svg>
+      </div>
+      <div ref={fgRef} className={styles.parallaxFgLayer} aria-hidden="true">
+        <svg width="100%" height="100%" viewBox="0 0 1920 400" style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          width: '100vw',
+          height: '40vh',
+          pointerEvents: 'none',
+          opacity: 0.02
+        }}>
+          <defs>
+            <linearGradient id="homepage-parallax-fg-grad" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stopColor="#000000" stopOpacity="1"/>
+              <stop offset="100%" stopColor="#0a0f1a" stopOpacity="1"/>
+            </linearGradient>
+          </defs>
+          <rect x="0" y="0" width="1920" height="400" fill="url(#homepage-parallax-fg-grad)"/>
         </svg>
       </div>
 
       {/* Parallax Container */}
-      <div className="parallax-container" id="parallax-container" ref={parallaxRef}>
+      <div className={styles.parallaxContainer} id="parallax-container" ref={parallaxRef}>
         {/* Scene 1: Reality Layer */}
-        <section className={`quantum-scene${activeScene === 0 ? ' active' : ''}`} id="reality" data-scene="0">
-          <div className="scene-background bg-gallery-reality" aria-hidden="true"></div>
-          <div className="scene-content">
-            <div className="particles">
+        {/* Scene 1: Reality Layer */}
+        <section className={`quantum-scene${activeScene === 0 ? ' active' : ''}`} id="reality" data-scene="0" style={{ position: 'relative', zIndex: 1 }}>
+          <div 
+            className={styles.bgReality}
+            style={{ position: 'absolute', zIndex: -1 }}
+            aria-hidden="true"
+          ></div>
+          <div className="scene-content" style={{
+              position: 'relative',
+              zIndex: 99999,
+              transform: 'translateZ(1000px)',
+              isolation: 'isolate'
+            }}>
+            <div className="particles" style={{
+              position: 'relative',
+              zIndex: 99999,
+              isolation: 'isolate'
+            }}>
               <div className="particle"></div>
               <div className="particle"></div>
               <div className="particle"></div>
@@ -491,15 +558,40 @@ MANIFOLD: A mathematical surface or multi-dimensional space that can be curved o
 
               <span className="timestamp" id="timestamp"></span>
             </div>
-            <h1 className="quantum-title">
-              <span className="title-word" data-word="N3XUS">
-                <ScrambleOnHover originalText="N3XUS" finalText="アトリエ" delay={3000} />
-              </span><br></br>
-              <span className="title-word" data-word="GE0M">GE<span className="slashed-zero">0</span>M</span><br></br>
-              <span className="title-word" data-word="LVB">L<span className="title-inverted-v">V</span>B</span>
-              {/* Show quantum glyphs globally */}
-              
-            </h1>
+            <div style={{
+              position: 'relative',
+              zIndex: 99999,
+              transform: 'translateZ(1000px)',
+              isolation: 'isolate'
+            }}>
+              <h1 className={`quantum-title ${styles.quantumTitle}`} style={{
+                position: 'relative',
+                zIndex: 99999,
+                isolation: 'isolate'
+              }}>
+                <span className="title-word" data-word="N3XUS" style={{
+                  position: 'relative',
+                  zIndex: 99999,
+                  isolation: 'isolate'
+                }}>
+                  <ScrambleOnHover originalText="N3XUS" finalText="アトリエ" delay={3000} />
+                </span><br></br>
+                <span className="title-word" data-word="GE0M" style={{
+                  position: 'relative',
+                  zIndex: 99999,
+                  isolation: 'isolate'
+                }}>
+                  GE<span className="slashed-zero">0</span>M
+                </span><br></br>
+                <span className="title-word" data-word="LVB" style={{
+                  position: 'relative',
+                  zIndex: 99999,
+                  isolation: 'isolate'
+                }}>
+                  L<span className="title-inverted-v">V</span>B
+                </span>
+              </h1>
+            </div>
             <p className="quantum-subtitle">
               / / I N T E R A C T I V E _ C O N S O L E _ A W A I T S . . .
             </p>
@@ -556,7 +648,7 @@ MANIFOLD: A mathematical surface or multi-dimensional space that can be curved o
 
         {/* Scene 2: Probability Wave */}
         <section className={`quantum-scene${activeScene === 1 ? ' active' : ''}`} id="probability" data-scene="1">
-          <div className="scene-background bg-gallery-probability" aria-hidden="true"></div>
+          <div className="scene-background bg-probability" aria-hidden="true"></div>
           <div className="scene-content">
             <h2 className="scene-title">PROBABILITY CLOUD</h2>
             <p className="scene-description">
@@ -577,7 +669,7 @@ MANIFOLD: A mathematical surface or multi-dimensional space that can be curved o
 
         {/* Scene 3: Quantum Entanglement */}
         <section className={`quantum-scene${activeScene === 2 ? ' active' : ''}`} id="entanglement" data-scene="2">
-          <div className="scene-background bg-gallery-entanglement" aria-hidden="true"></div>
+          <div className="scene-background bg-entanglement" aria-hidden="true"></div>
           <div className="scene-content">
             <h2 className="scene-title">QUANTUM ENTANGLEMENT</h2>
             <p className="scene-description">
@@ -596,7 +688,7 @@ MANIFOLD: A mathematical surface or multi-dimensional space that can be curved o
         <Scene
           id="superposition"
           isActive={activeScene === 3}
-          backgroundClass="bg-gallery-superposition"
+          backgroundClass="bg-superposition"
         >
           <h2 className="scene-title">SUPERPOSITION STATE</h2>
           <p className="scene-description">
