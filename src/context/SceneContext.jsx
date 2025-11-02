@@ -112,7 +112,7 @@ export function SceneProvider({ children }) {
    */
   const loadScene = useCallback((scene, currentUserId = null) => {
     
-    setCurrentSceneId(scene.id || scene._id);
+    setCurrentSceneId(scene.id || scene._id); // scene.id if from saveScene, scene._id if from API
     setSceneOwner(scene.userId);
     setSceneName(scene.name);
     setSceneDescription(scene.description || "");
@@ -153,7 +153,8 @@ export function SceneProvider({ children }) {
   /**
    * Reset to fresh state (new scene)
    */
-  const resetScene = useCallback(() => {
+  const resetScene = useCallback(() => { // what is use callback? in simple terms it memoizes the function so it doesnt get recreated on every render, meaning if you pass it as a prop to a child component that uses React.memo it wont trigger a re render unless its dependencies change
+    //dependencies can be simply defined as variables or states used inside the function that if changed should recreate the function, an example of a dependency is currentSceneId in the deleteScene function above
     setCurrentSceneId(null);
     setSceneOwner(null);
     setSceneName("");

@@ -7,7 +7,7 @@ import { useAuth } from "../../../context/AuthContext";
 import ScrambleButton from "../../ui/ScrambleButton/ScrambleButton";
 import { GEOM_LAB_LINK_TEXT, SHOWCASE_LINK_TEXT } from "./navLabels";
 
-export default function NavBar() {
+export default function NavBar({ portalColors = null, glyphs = null }) {
   const { isAuthenticated, user, logout, login } = useAuth();
   const [showAuthModal, setShowAuthModal] = useState(false);
   const location = useLocation();
@@ -30,10 +30,29 @@ export default function NavBar() {
   // Check if we're on geom lab routes
   const isGeomLab = location.pathname === '/geom-lab' || location.pathname === '/geometry-lab';
   
+  // Apply quantum reactive colors if provided
+  const quantumStyle = portalColors ? {
+    background: `linear-gradient(90deg, ${portalColors[0]}15, ${portalColors[1]}08)`,
+    borderBottom: `1px solid ${portalColors[0]}40`,
+    transition: 'background 1.2s cubic-bezier(0.4,0,0.2,1), border-bottom-color 1.2s cubic-bezier(0.4,0,0.2,1)'
+  } : {};
+  
   return (
-    <nav className={`quantum-nav${isGeomLab ? ' geom-lab-navbar' : ''}`}>
+    <nav className={`quantum-nav${isGeomLab ? ' geom-lab-navbar' : ''}`} style={quantumStyle}>
       <div className="nav-logo">
         <span className="logo-text" data-text="N3XUS_GEOM">N3XUS_GEOM</span>
+        {glyphs && (
+          <span className="quantum-glyphs" style={{
+            marginLeft: '12px',
+            fontSize: '0.9em',
+            opacity: 0.6,
+            color: portalColors ? portalColors[1] : '#00fff7',
+            transition: 'color 1.2s cubic-bezier(0.4,0,0.2,1)',
+            letterSpacing: '0.3em'
+          }}>
+            {glyphs.join(' ')}
+          </span>
+        )}
       </div>
       <div className="nav-links">
          {/* ALWAYS show these - public links (hide if on current page) */}

@@ -605,13 +605,14 @@ h1.quantum-title {
   font-size: 20px;
   color: #00ffff;
   margin-bottom: 40px;
+ 
   font-family: 'JetBrains Mono', monospace;
   letter-spacing: 2px;
   opacity: 0.8;
 }
 
 .coordinates {
-  font-size: 14px;
+  font-size: 20px;
   color: #00ffff;
   font-family: 'JetBrains Mono', monospace;
   letter-spacing: 1px;
@@ -645,7 +646,7 @@ h1.quantum-title {
 }
 
 .stat-value {
-  font-size: 16px;
+  font-size: 20px;
   color: #5dbaba;
   opacity: 0.8;
   font-weight: 600;

@@ -433,16 +433,38 @@ export default function HomePage() {
         WebkitMaskImage: 'linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 85%)',
         maskImage: 'linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 85%)'
       }} aria-hidden="true">
-        <svg width="100%" height="100%" viewBox="0 0 1920 400" style={{position:'absolute',top:0,left:0,width:'100vw',height:'40vh',pointerEvents:'none', background: `linear-gradient(120deg, ${portalState.colors[0]} 0%, ${portalState.colors[1]} 60%, ${portalState.colors[2]} 100%)`, transition: 'background 3s cubic-bezier(0.4,0,0.2,1)'}}>
+        <svg width="100%" height="100%" viewBox="0 0 1920 400" style={{position:'absolute',top:0,left:0,width:'100vw',height:'40vh',pointerEvents:'none', background: `linear-gradient(120deg, ${portalState.colors[0]} 0%, ${portalState.colors[1]} 60%, ${portalState.colors[2]} 100%)`, transition: 'background 3s cubic-bezier(0.4,0,0.2,1)', filter: 'brightness(1.3) saturate(1.8)'}}>
           <defs>
             <linearGradient id="homepage-bg-grad1" x1="0" y1="0" x2="1" y2="1">
               <stop offset="0%" stopColor={portalState.colors[0]} stopOpacity="0.18"/>
               <stop offset="100%" stopColor={portalState.colors[1]} stopOpacity="0.08"/>
             </linearGradient>
+            <linearGradient id="top-dark-veil" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor="rgba(0,0,0,0.95)"/>
+              <stop offset="40%" stopColor="rgba(0,0,0,0.90)"/>
+              <stop offset="70%" stopColor="rgba(0,0,0,0.65)"/>
+              <stop offset="85%" stopColor="rgba(0,0,0,0.20)"/>
+              <stop offset="100%" stopColor="rgba(0,0,0,0)"/>
+            </linearGradient>
+            <linearGradient id="bright-quantum-bottom" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor="transparent"/>
+              <stop offset="60%" stopColor={portalState.colors[0]} stopOpacity="0.25"/>
+              <stop offset="75%" stopColor={portalState.colors[1]} stopOpacity="0.55"/>
+              <stop offset="90%" stopColor={portalState.colors[0]} stopOpacity="0.75"/>
+              <stop offset="100%" stopColor={portalState.colors[1]} stopOpacity="0.95"/>
+            </linearGradient>
+            <filter id="spectral-glow">
+              <feGaussianBlur stdDeviation="8" result="coloredBlur"/>
+              <feMerge>
+                <feMergeNode in="coloredBlur"/>
+                <feMergeNode in="SourceGraphic"/>
+              </feMerge>
+            </filter>
           </defs>
-          <rect x="0" y="0" width="1920" height="400" fill="rgba(0,0,0,0.1)"/>
           <polygon points="0,0 1920,0 1920,400 0,300" fill="url(#homepage-bg-grad1)"/>
-          <ellipse cx="1600" cy="80" rx="320" ry="60" fill={portalState.colors[2] + '22'}/>
+          <rect x="0" y="0" width="1920" height="400" fill="url(#bright-quantum-bottom)" filter="url(#spectral-glow)"/>
+          <rect x="0" y="0" width="1920" height="400" fill="url(#top-dark-veil)"/>
+          <ellipse cx="1600" cy="80" rx="320" ry="60" fill={portalState.colors[2] + '2'}/>
         </svg>
       </div>
 
@@ -568,7 +590,12 @@ export default function HomePage() {
               <div className="particle"></div>
             </div>
             <div className="terminal-header">
-              <span className="coordinates">37.7749° N, 122.4194° W</span>
+              <span className="coordinates">φ-SPACE_MANIFOLD: 1.618033988749</span> 
+
+              {/* φ (Phi): The golden ratio constant (1.618...)
+SPACE: Mathematical/geometric term for a set of points with structure
+MANIFOLD: A mathematical surface or multi-dimensional space that can be curved or complex (like tesseracts constructed in Geom Lab - they're 4D manifolds projected into 3D) In plain English: "A dimension where everything follows the golden ratio's harmonic proportions" */}
+
               <span className="timestamp" id="timestamp"></span>
             </div>
             <h1 className="quantum-title">

@@ -305,7 +305,7 @@ function GeomLab() {
         </div>
       )}
       
-      // App.jsx says to ThreeScene: Hey kid, here are 21 probs I want you to know about. But u know what ain't one. 
+      // App.jsx says to ThreeScene: Hey kid, here are 21 props I want you to know about. But u know what ain't one. 
       <ThreeScene
         scale={scale}
         metalness={metalness}
