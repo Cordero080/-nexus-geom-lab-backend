@@ -296,9 +296,10 @@ export default function ProgressBar({ portalState, glyphState, onQuantumCollapse
               : 'transform 1.2s cubic-bezier(0.4,0,0.2,1), opacity 1.2s, filter 1.2s, color 1.2s',
             willChange: 'transform, opacity, filter, color',
             mixBlendMode: atBottom ? 'normal' : 'screen',
+            fontFamily: "'Future Z', 'Orbitron', 'Rajdhani', monospace",
           }}
         >
-          "Be the defiance.
+          "Be the defiance"
         </div>
       </div>
       <div className="progress-particles" style={{ position: 'relative', zIndex: 3 }}>&gt;&gt;&gt;The illusion is already awake."&gt;&gt;&gt;</div>
