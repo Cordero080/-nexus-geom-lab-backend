@@ -472,7 +472,7 @@ export default function HomePage() {
       <div className="parallax-container" id="parallax-container" ref={parallaxRef}>
         {/* Scene 1: Reality Layer */}
         <section className={`quantum-scene${activeScene === 0 ? ' active' : ''}`} id="reality" data-scene="0">
-          <div className="scene-background bg-reality"></div>
+          <div className="scene-background bg-gallery-reality" aria-hidden="true"></div>
           <div className="scene-content">
             <div className="particles">
               <div className="particle"></div>
@@ -556,7 +556,7 @@ MANIFOLD: A mathematical surface or multi-dimensional space that can be curved o
 
         {/* Scene 2: Probability Wave */}
         <section className={`quantum-scene${activeScene === 1 ? ' active' : ''}`} id="probability" data-scene="1">
-          <div className="scene-background bg-probability"></div>
+          <div className="scene-background bg-gallery-probability" aria-hidden="true"></div>
           <div className="scene-content">
             <h2 className="scene-title">PROBABILITY CLOUD</h2>
             <p className="scene-description">
@@ -577,7 +577,7 @@ MANIFOLD: A mathematical surface or multi-dimensional space that can be curved o
 
         {/* Scene 3: Quantum Entanglement */}
         <section className={`quantum-scene${activeScene === 2 ? ' active' : ''}`} id="entanglement" data-scene="2">
-          <div className="scene-background bg-entanglement"></div>
+          <div className="scene-background bg-gallery-entanglement" aria-hidden="true"></div>
           <div className="scene-content">
             <h2 className="scene-title">QUANTUM ENTANGLEMENT</h2>
             <p className="scene-description">
@@ -596,7 +596,7 @@ MANIFOLD: A mathematical surface or multi-dimensional space that can be curved o
         <Scene
           id="superposition"
           isActive={activeScene === 3}
-          backgroundClass="bg-superposition"
+          backgroundClass="bg-gallery-superposition"
         >
           <h2 className="scene-title">SUPERPOSITION STATE</h2>
           <p className="scene-description">
