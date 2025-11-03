@@ -2,3 +2,9 @@ node_modules/
 .DS_Store
 dist/
 *.log
+
+# Private study materials
+docs/study-plan/
+docs/personal-notes/
+docs/STUDY_PLAN.md
+docs/WEEKLY_PROGRESS_REPORT.md
