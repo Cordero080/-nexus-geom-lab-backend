@@ -2804,7 +2804,7 @@ If you find this project helpful or interesting:
 
 <div align="center">
 
-### Built with ❤️ and ☕ by Pablo Cordero
+### Built with 🔥 and 🌊 by Pablo Cordero
 
 **Transforming mathematical concepts into interactive digital art experiences**
 
