@@ -31,10 +31,16 @@ export function useLightingUpdates(refs, lightingProps) {
   // AMBIENT LIGHT UPDATER
   useEffect(() => {
     if (ambientLightRef.current) {
-      // Convert hex color to Three.js color number
-      const convertedColor = parseInt(ambientLightColor.replace("#", ""), 16);
-      ambientLightRef.current.color.setHex(convertedColor);
-      ambientLightRef.current.intensity = ambientLightIntensity;
+      // Clamp ambient light intensity to prevent complete darkness
+      const safeIntensity = Math.max(0.1, ambientLightIntensity);
+      // Convert hex color to Three.js color number with validation
+      const colorString = ambientLightColor.replace("#", "");
+      const convertedColor = parseInt(colorString, 16);
+      // Validate color conversion
+      if (!isNaN(convertedColor)) {
+        ambientLightRef.current.color.setHex(convertedColor);
+      }
+      ambientLightRef.current.intensity = safeIntensity;
     }
   }, [ambientLightColor, ambientLightIntensity]);
 
@@ -48,12 +54,13 @@ export function useLightingUpdates(refs, lightingProps) {
       const safeX = clamp(directionalLightX, -50, 50);
       const safeY = clamp(directionalLightY, -50, 50);
       const safeZ = clamp(directionalLightZ, -50, 50);
-      // Convert hex color to Three.js color number
-      const convertedColor = parseInt(
-        directionalLightColor.replace("#", ""),
-        16
-      );
-      directionalLightRef.current.color.setHex(convertedColor);
+      // Convert hex color to Three.js color number with validation
+      const colorString = directionalLightColor.replace("#", "");
+      const convertedColor = parseInt(colorString, 16);
+      // Validate color conversion and apply
+      if (!isNaN(convertedColor)) {
+        directionalLightRef.current.color.setHex(convertedColor);
+      }
       directionalLightRef.current.intensity = safeIntensity;
       // Position the light using clamped coordinates
       directionalLightRef.current.position.set(safeX, safeY, safeZ);
