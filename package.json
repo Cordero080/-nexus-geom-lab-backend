@@ -1,7 +1,7 @@
 {
-  "name": "backend",
+  "name": "nexus-geom-lab-backend",
   "version": "1.0.0",
-  "description": "",
+  "description": "Backend API for Nexus Geom Lab - 3D geometry platform with scene management",
   "main": "index.js",
   "scripts": {
     "start": "node index.js",

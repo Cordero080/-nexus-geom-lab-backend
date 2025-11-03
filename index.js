@@ -47,7 +47,6 @@ app.use(express.urlencoded({ extended: true })); // Parse URL-encoded bodies
 
 // Log all incoming requests
 app.use((req, res, next) => {
-  console.log(`📨 ${req.method} ${req.path}`);
   next();
 });
 // Routes
@@ -95,8 +94,5 @@ app.use((err, req, res, next) => {
 // Start server
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
-  console.log(`🐉 Server running on port ${PORT}🐉`);
-  console.log(
-    `📡 Frontend URL: ${process.env.FRONTEND_URL || "http://localhost:5173"}`
-  );
+  // Server started successfully
 });

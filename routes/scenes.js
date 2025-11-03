@@ -2,9 +2,97 @@ const express = require("express");
 const router = express.Router();
 const { body, validationResult } = require("express-validator");
 const Scene = require("../models/Scene");
+const User = require("../models/User"); // Add User import
 const authMiddleware = require("../middleware/auth");
-const checkAndUnlockNoetech = require("../middleware/unlockChecker");
+const UNLOCK_PROGRESSION = [
+  // Scene 1: Unlock first Noetech (icarus-x) - character appears in showcase
+  { sceneCount: 1, noetechKey: "icarus-x", type: "noetech" },
+  // Scene 2: Unlock second Noetech (vectra) - second character appears
+  { sceneCount: 2, noetechKey: "vectra", type: "noetech" },
+  // Scene 3: Unlock third Noetech (nexus) - third character appears
+  { sceneCount: 3, noetechKey: "nexus", type: "noetech" },
+  // Scene 4: Unlock second animation for icarus-x - animation switcher appears
+  {
+    sceneCount: 4,
+    noetechKey: "icarus-x",
+    animationId: "phoenix-dive",
+    type: "animation",
+  },
+];
 
+const checkAndUnlockAnimations = async (user) => {
+  console.log(
+    `🔍 Debug: Checking unlocks for user with ${user.scenesSaved} scenes`
+  );
+  console.log(`🔍 Debug: Current unlocked Noetechs:`, user.unlockedNoetechs);
+  console.log(
+    `🔍 Debug: Current unlocked animations:`,
+    user.unlockedAnimations
+  );
+
+  const newlyUnlocked = [];
+
+  for (const unlock of UNLOCK_PROGRESSION) {
+    console.log(
+      `🔍 Debug: Checking unlock - Scene ${unlock.sceneCount}: ${unlock.noetechKey} (${unlock.type})`
+    );
+
+    // Only unlock on EXACT scene count match
+    if (user.scenesSaved === unlock.sceneCount) {
+      console.log(
+        `✅ Debug: Scene count matches! Checking type: ${unlock.type}`
+      );
+
+      if (unlock.type === "noetech") {
+        // Unlock Noetech (character appears in showcase)
+        const alreadyUnlocked = user.unlockedNoetechs.includes(
+          unlock.noetechKey
+        );
+
+        if (!alreadyUnlocked) {
+          console.log(`🎉 Debug: UNLOCKING NOETECH ${unlock.noetechKey}!`);
+          user.unlockedNoetechs.push(unlock.noetechKey);
+          newlyUnlocked.push(unlock);
+        } else {
+          console.log(
+            `⚠️ Debug: Noetech ${unlock.noetechKey} already unlocked`
+          );
+        }
+      } else if (unlock.type === "animation") {
+        // Unlock additional animation for existing Noetech
+        const alreadyUnlocked = user.unlockedAnimations.some(
+          (ua) =>
+            ua.noetechKey === unlock.noetechKey &&
+            ua.animationId === unlock.animationId
+        );
+
+        if (!alreadyUnlocked) {
+          console.log(
+            `🎉 Debug: UNLOCKING ANIMATION ${unlock.noetechKey}:${unlock.animationId}!`
+          );
+          user.unlockedAnimations.push({
+            noetechKey: unlock.noetechKey,
+            animationId: unlock.animationId,
+          });
+          newlyUnlocked.push(unlock);
+        } else {
+          console.log(
+            `⚠️ Debug: Animation ${unlock.noetechKey}:${unlock.animationId} already unlocked`
+          );
+        }
+      }
+    } else {
+      console.log(
+        `❌ Debug: Scene count doesn't match (${user.scenesSaved} !== ${unlock.sceneCount})`
+      );
+    }
+  }
+
+  console.log(
+    `🎯 Debug: Returning ${newlyUnlocked.length} newly unlocked items`
+  );
+  return newlyUnlocked;
+};
 /**
  * CREATE SCENE ROUTE
  * POST /api/scenes
@@ -46,19 +134,60 @@ router.post(
         config,
       });
 
-      await scene.save();
+      const savedScene = await scene.save();
 
-      // Check if this unlocks any Noetechs
-      await checkAndUnlockNoetech(req, res, async () => {
-        await scene.populate("userId", "username");
+      // Update user's scene count and check for animation unlocks
+      const user = await User.findById(req.user._id);
+      user.scenesSaved += 1;
 
-        res.status(201).json({
-          success: true,
-          message: "Scene created successfully",
-          scene,
-          unlockedNoetechs: req.unlockedNoetechs || [],
-        });
-      });
+      console.log(
+        `🎯 Debug: User ${user.email} now has ${user.scenesSaved} scenes saved`
+      );
+
+      // Check for new animation/noetech unlocks
+      const newUnlocks = await checkAndUnlockAnimations(user);
+
+      console.log(
+        `🎯 Debug: Found ${newUnlocks.length} new unlocks:`,
+        newUnlocks
+      );
+
+      await user.save();
+
+      // Populate the scene for response
+      await savedScene.populate("userId", "username");
+
+      // Separate unlocks by type
+      const noetechUnlocks = newUnlocks.filter((u) => u.type === "noetech");
+      const animationUnlocks = newUnlocks.filter((u) => u.type === "animation");
+
+      const response = {
+        success: true,
+        message: "Scene created successfully",
+        scene: savedScene,
+        totalScenes: user.scenesSaved,
+      };
+
+      // Add unlocks to response if any exist
+      if (noetechUnlocks.length > 0) {
+        response.unlockedNoetechs = noetechUnlocks.map((u) => u.noetechKey);
+      }
+
+      if (animationUnlocks.length > 0) {
+        response.unlockedAnimations = animationUnlocks.map((unlock) => ({
+          noetechKey: unlock.noetechKey,
+          animationId: unlock.animationId,
+          noetechName:
+            unlock.noetechKey.charAt(0).toUpperCase() +
+            unlock.noetechKey.slice(1),
+          animationName: unlock.animationId
+            ? unlock.animationId.charAt(0).toUpperCase() +
+              unlock.animationId.slice(1)
+            : "",
+        }));
+      }
+
+      res.status(201).json(response);
     } catch (error) {
       console.error("Create scene error:", error);
       res.status(500).json({
@@ -167,11 +296,14 @@ router.put(
 
       await scene.save();
 
-      res.json({
+      // Scene updates should NOT trigger unlocks - only scene creation should
+      const response = {
         success: true,
         message: "Scene updated successfully",
         scene,
-      });
+      };
+
+      res.json(response);
     } catch (error) {
       console.error("Update scene error:", error);
       res.status(500).json({

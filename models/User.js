@@ -31,6 +31,13 @@ const userSchema = new mongoose.Schema({
     type: Number,
     default: 0,
   },
+  unlockedAnimations: [
+    {
+      noetechKey: { type: String, required: true },
+      animationId: { type: String, required: true },
+      unlockedAt: { type: Date, default: Date.now },
+    },
+  ],
   unlockedNoetechs: {
     //FIELD 5
     type: [String],
@@ -59,38 +66,63 @@ userSchema.pre("save", async function (next) {
 userSchema.methods.comparePassword = async function (candidatePassword) {
   return await bcrypt.compare(candidatePassword, this.password);
 };
-// Method to check if Noetech is unlocked
-userSchema.methods.hasUnlockedNoetech = function (noetechName) {
-  return this.unlockedNoetechs.includes(noetechName);
-};
-// Method to unlock Noetech
-userSchema.methods.unlockNoetech = function (noetechName) {
-  if (!this.hasUnlockedNoetech(noetechName)) {
-    this.unlockedNoetechs.push(noetechName);
-  }
+// NEW ANIMATION-BASED UNLOCK METHODS
+
+// Method to check if specific animation is unlocked
+userSchema.methods.hasUnlockedAnimation = function (noetechKey, animationId) {
+  return this.unlockedAnimations.some(
+    (ua) => ua.noetechKey === noetechKey && ua.animationId === animationId
+  );
 };
 
-// Progressive unlock system based on scenes saved
-userSchema.methods.checkAndUnlockNoetechs = function () {
-  const noetechOrder = ['icarus-x', 'vectra', 'nexus'];
-  const newUnlocks = [];
-  
-  // Unlock based on scenes saved count
-  for (let i = 0; i < Math.min(this.scenesSaved, noetechOrder.length); i++) {
-    const noetech = noetechOrder[i];
-    if (!this.hasUnlockedNoetech(noetech)) {
-      this.unlockedNoetechs.push(noetech);
-      newUnlocks.push(noetech);
-    }
-  }
-  
-  return newUnlocks; // Return newly unlocked Noetechs
+// Method to get all unlocked animations for a Noetech
+userSchema.methods.getUnlockedAnimationsForNoetech = function (noetechKey) {
+  return this.unlockedAnimations.filter((ua) => ua.noetechKey === noetechKey);
 };
 
-// Method to increment scenes saved and check for unlocks
+// Method to check if any animation is unlocked for a Noetech (backwards compatibility)
+userSchema.methods.hasUnlockedNoetech = function (noetechKey) {
+  return this.unlockedAnimations.some((ua) => ua.noetechKey === noetechKey);
+};
+
+// PROGRESSIVE UNLOCK SYSTEM
+// Method to increment scenes saved and check for Noetech unlocks
 userSchema.methods.incrementScenesSaved = function () {
   this.scenesSaved += 1;
-  return this.checkAndUnlockNoetechs();
+  const newlyUnlocked = [];
+
+  // Scene 1 → Unlock icarus-x (first Noetech)
+  if (this.scenesSaved === 1 && !this.unlockedNoetechs.includes("icarus-x")) {
+    this.unlockedNoetechs.push("icarus-x");
+    newlyUnlocked.push("icarus-x");
+  }
+
+  // Scene 2 → Unlock vectra (second Noetech)
+  if (this.scenesSaved === 2 && !this.unlockedNoetechs.includes("vectra")) {
+    this.unlockedNoetechs.push("vectra");
+    newlyUnlocked.push("vectra");
+  }
+
+  // Scene 3 → Unlock nexus (third Noetech)
+  if (this.scenesSaved === 3 && !this.unlockedNoetechs.includes("nexus")) {
+    this.unlockedNoetechs.push("nexus");
+    newlyUnlocked.push("nexus");
+  }
+
+  // Scene 4 → Unlock icarus-x second animation (Phoenix Dive)
+  if (
+    this.scenesSaved === 4 &&
+    !this.hasUnlockedAnimation("icarus-x", "phoenix-dive")
+  ) {
+    this.unlockedAnimations.push({
+      noetechKey: "icarus-x",
+      animationId: "phoenix-dive",
+      unlockedAt: new Date(),
+    });
+    newlyUnlocked.push({ noetechKey: "icarus-x", animationId: "phoenix-dive" });
+  }
+
+  return newlyUnlocked;
 };
 
 module.exports = mongoose.model("User", userSchema);
