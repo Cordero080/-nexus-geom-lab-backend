@@ -2759,11 +2759,9 @@ This project is free to use, modify, and distribute. Attribution appreciated but
 
 ### Get in Touch
 
-- 📧 **Email**: pablocordero.dev@gmail.com
-- 💼 **LinkedIn**: [linkedin.com/in/pablocordero](https://linkedin.com/in/pablocordero)
+- 📧 **Email**: Cordero080@gmail.com
+
 - 🐙 **GitHub**: [github.com/pablocordero](https://github.com/pablocordero)
-- 🌐 **Portfolio**: [pablocordero.dev](https://pablocordero.dev)
-- 🐦 **Twitter**: [@pablodev](https://twitter.com/pablodev)
 
 ### Report Issues
 
