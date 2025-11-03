@@ -16,6 +16,7 @@ export const useTextScramble = (finalText, duration = 2000, trigger = true) => {
 
     // Katakana character pool for scrambling
     // Atorie (Atelier, it katakana Japanese)
+    // What is Chars? its an abbreviation of characters used in the scrambling effect
     const katakanaChars = [
       'ア', 'イ', 'ウ', 'エ', 'オ', 'カ', 'キ', 'ク', 'ケ', 'コ',
       'サ', 'シ', 'ス', 'セ', 'ソ', 'タ', 'チ', 'ツ', 'テ', 'ト',
@@ -24,7 +25,7 @@ export const useTextScramble = (finalText, duration = 2000, trigger = true) => {
       'ル', 'レ', 'ロ', 'ワ', 'ヲ', 'ン'
     ];
 
-    const chars = finalText.split('');
+    const chars = finalText.split(''); // split is used to handle multi-byte characters correctly, simply explained as splitting into an array of characters
     const settled = new Array(chars.length).fill(false);
     const startTime = Date.now();
     const settleInterval = duration / chars.length;
@@ -51,6 +52,7 @@ export const useTextScramble = (finalText, duration = 2000, trigger = true) => {
       setDisplayText(scrambled);
 
       // Complete animation
+      // interval ref is used to store the interval ID so it can be cleared later
       if (progress >= 1) {
         setDisplayText(finalText);
         clearInterval(intervalRef.current);
