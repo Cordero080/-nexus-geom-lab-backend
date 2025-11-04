@@ -24,7 +24,8 @@ export default function RotatingCube({
   onModelLoaded, 
   preloadedModel = null, 
   allowNaturalYMovement = false, 
-  animationId = null 
+  animationId = null,
+  speed = 1.0 
 }) {
   const cubeRef = useRef();
   const innerLightRef = useRef();
@@ -56,19 +57,19 @@ export default function RotatingCube({
 
   // 🎮 CUBE ROTATION & ANIMATIONS
   useFrame((state, delta) => {
-    // Main cube rotation
+    // Main cube rotation - apply speed multiplier
     if (cubeRef.current) {
-      cubeRef.current.rotation.y += delta * 0.5;
+      cubeRef.current.rotation.y += delta * 0.5 * speed;
     }
     
-    // Inner light pulsing
+    // Inner light pulsing - apply speed multiplier
     if (innerLightRef.current) {
-      innerLightRef.current.intensity = (size / 3) * 1.5 + Math.sin(state.clock.elapsedTime * 2) * 0.5;
+      innerLightRef.current.intensity = (size / 3) * 1.5 + Math.sin(state.clock.elapsedTime * 2 * speed) * 0.5;
     }
     
-    // Animate fourth tesseract lines (Nexus Prime only)
+    // Animate fourth tesseract lines (Nexus Prime only) - apply speed multiplier
     if (fourthTesseractInnerRef.current && fourthTesseractOuterRef.current) {
-      const time = state.clock.elapsedTime;
+      const time = state.clock.elapsedTime * speed;
       fourthTesseractInnerRef.current.opacity = 0.5 + Math.sin(time * 2) * 0.3;
       fourthTesseractOuterRef.current.opacity = 0.3 + Math.sin(time * 2 + Math.PI) * 0.2;
     }
@@ -175,6 +176,7 @@ export default function RotatingCube({
           preloadedModel={preloadedModel} 
           allowNaturalYMovement={allowNaturalYMovement}
           onAnimationTimeUpdate={handleAnimationTimeUpdate}
+          speed={speed}
         />
       ) : (
         <mesh position={[0, 0, 0]}>

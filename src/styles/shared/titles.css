@@ -1,0 +1,254 @@
+/* Title Effects - Shared across pages */
+
+h1.quantum-title {
+  font-family: 'Future Z', 'Orbitron', 'Rajdhani', sans-serif !important;
+  font-size: clamp(46px, 7.6vw, 114px);
+  font-weight: normal;
+  line-height: 0.75;
+  margin: 0 0 30px 0;
+  text-transform: uppercase;
+  letter-spacing: 10px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 30px 60px;
+  isolation: isolate;
+  perspective: 1000px;
+  z-index: 100000;
+  will-change: transform, filter;
+  overflow: visible;
+  animation: titleFloat 6s ease-in-out infinite;
+}
+
+.title-word {
+  display: inline-block;
+  margin: 0 5px;
+  padding: 0 20px;
+  font-family: 'Future Z', 'Orbitron', 'Rajdhani', sans-serif !important;
+  font-weight: normal;
+  letter-spacing: inherit;
+  background: linear-gradient(135deg, #00d4ff 0%, #ff0066 55%, #3dd4cc 75%, #f0a738 100%);
+  background-size: 200% 200%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: pageTitleShimmer 5s ease-in-out infinite;
+  position: relative;
+  z-index: 100001;
+  isolation: isolate;
+  overflow: visible;
+  opacity: 0;
+  filter: saturate(3.0) brightness(1.4) contrast(1.2);
+  -webkit-font-smoothing: antialiased;
+}
+
+.title-word[data-word="N3XUS"] {
+  animation: pageTitleShimmer 5s ease-in-out infinite, particleArrivalTopLeft 1.8s cubic-bezier(0.22, 1, 0.36, 1) forwards, titleFloatLayer1 7s ease-in-out infinite;
+  animation-delay: 0s, 0s, 1.8s;
+}
+
+.title-word[data-word="GE0M"] {
+  animation: pageTitleShimmer 5s ease-in-out infinite, particleArrivalRight 1.8s cubic-bezier(0.22, 1, 0.36, 1) forwards, titleFloatLayer2 5.5s ease-in-out infinite;
+  animation-delay: 0s, 0.3s, 2.1s;
+}
+
+.title-word[data-word="LVB"] {
+  animation: pageTitleShimmer 5s ease-in-out infinite, particleArrivalBottomLeft 2s cubic-bezier(0.22, 1, 0.36, 1) forwards, titleFloatLayer3 6.5s ease-in-out infinite;
+  animation-delay: 0s, 0.6s, 2.6s;
+}
+
+.title-word[data-word="MY"] {
+  animation: pageTitleShimmer 5s ease-in-out infinite, simpleFadeIn 1s ease-out forwards;
+  animation-delay: 0s, 0s;
+}
+
+.title-word[data-word="SCENES"] {
+  animation: pageTitleShimmer 5s ease-in-out infinite, simpleFadeIn 1s ease-out forwards;
+  animation-delay: 0s, 0.2s;
+}
+
+/* Apply 3D effect to all title words */
+.title-word[data-word="N3XUS"]::before,
+.title-word[data-word="N3XUS"]::after,
+.title-word[data-word="GE0M"]::before,
+.title-word[data-word="GE0M"]::after,
+.title-word[data-word="LVB"]::before,
+.title-word[data-word="LVB"]::after,
+.title-word[data-word="MY"]::before,
+.title-word[data-word="MY"]::after,
+.title-word[data-word="SCENES"]::before,
+.title-word[data-word="SCENES"]::after {
+  content: attr(data-word);
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  white-space: nowrap;
+  pointer-events: none;
+  letter-spacing: inherit;
+  text-transform: inherit;
+  font-family: inherit;
+  font-size: inherit;
+  background: inherit;
+  background-size: inherit;
+  background-position: inherit;
+  background-clip: inherit;
+  -webkit-background-clip: inherit;
+  -webkit-text-fill-color: inherit;
+}
+
+.title-word[data-word="N3XUS"]::before,
+.title-word[data-word="GE0M"]::before,
+.title-word[data-word="LVB"]::before,
+.title-word[data-word="MY"]::before,
+.title-word[data-word="SCENES"]::before {
+  z-index: -2;
+  filter: blur(18px);
+  opacity: 0.45;
+  transform: translate(-50%, -50%) translateY(6px) translateX(-2px) scale(1.05);
+}
+
+.title-word[data-word="N3XUS"]::after,
+.title-word[data-word="GE0M"]::after,
+.title-word[data-word="LVB"]::after,
+.title-word[data-word="MY"]::after,
+.title-word[data-word="SCENES"]::after {
+  z-index: -2;
+  opacity: 0.4;
+  transform: translate(-50%, -50%) translateY(10px) translateX(0px);
+  text-shadow: 0 0 20px rgba(22, 10, 27, 0.146), 0 0 60px rgba(5, 1, 49, 0.89);
+}
+
+.title-char {
+  display: inline-block;
+  font-family: inherit;
+  letter-spacing: inherit;
+}
+
+.slashed-zero {
+  position: relative;
+  display: inline-block;
+  background: linear-gradient(135deg, #07a2c1 0%, #fd0a6f 55%, #2eaca4 75%, #c8922e 100%);
+  background-size: 200% 200%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: pageTitleShimmer 5s ease-in-out infinite;
+}
+
+.slashed-zero::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 65%;
+  height: 8px;
+  background: linear-gradient(135deg, #c1077dc1 0%, #9c65f4 55%, #2eaca4 75%, #c82e76 90%);
+  transform: translate(-65%, -90%) rotate(-30deg);
+  z-index: 2;
+  pointer-events: none;
+  
+}
+
+.title-inverted-v {
+  display: inline-block;
+  position: relative;
+  transform: scaleY(-1.10) translateY(0.0em);
+  transform-origin: center;
+  font-family: 'Future Z', 'Orbitron', 'Rajdhani', sans-serif !important;
+  line-height: 1;
+  background: inherit;
+  color: inherit;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  letter-spacing: inherit;
+  margin: 0;
+  isolation: isolate;
+  overflow: visible;
+}
+
+/* Apply upside-down A transform to all Orbitron text elements */
+.nav-link,
+.quote-highlight,
+.zero-char {
+  --orbitron-a-transform: scaleY(-1) translateY(0.08em);
+}
+
+/* This uses CSS content replacement to flip A's - use class approach instead */
+.nav-inverted-a,
+.quote-inverted-a,
+.orbitron-inverted-a {
+  display: inline-block !important;
+  transform: scaleY(-1) translateY(0.0em) !important;
+  transform-origin: center !important;
+  line-height: 1 !important;
+  font-family: inherit !important;
+}
+
+/* BeamScanButton label variant */
+.beamScanLabel .nav-inverted-a {
+  color: inherit !important;
+}
+
+/* Nav link variant */
+.nav-link .nav-inverted-a {
+  background: inherit;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: inherit;
+  transform: scaleY(-1) translateY(0.05em) !important;
+}
+
+.zero-char {
+  font-family: 'Orbitron', sans-serif !important;
+  font-weight: 900 !important;
+  vertical-align: -8px;
+  font-size: 1.05em;
+  position: relative;
+  display: inline-block;
+  isolation: isolate;
+  overflow: visible;
+  background: inherit;
+  background-size: inherit;
+  background-position: inherit;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.zero-char::before,
+.zero-char::after {
+  content: '0';
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  white-space: nowrap;
+  pointer-events: none;
+  font-family: 'Orbitron', sans-serif !important;
+  font-weight: 900 !important;
+  background: inherit;
+  background-size: inherit;
+  background-position: inherit;
+  background-clip: inherit;
+  -webkit-background-clip: inherit;
+  -webkit-text-fill-color: inherit;
+}
+
+.zero-char::before {
+  z-index: -2;
+  filter: blur(18px);
+  opacity: 0.45;
+  transform: translate(-50%, -50%) translateY(6px) translateX(-2px) scale(1.05);
+}
+
+.zero-char::after {
+  z-index: -2;
+  opacity: 0.4;
+  transform: translate(-50%, -50%) translateY(10px) translateX(0px);
+  text-shadow: 0 0 20px rgba(22, 10, 27, 0.146), 0 0 60px rgba(5, 1, 49, 0.89);
+}

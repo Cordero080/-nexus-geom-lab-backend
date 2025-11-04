@@ -7,7 +7,7 @@ import * as THREE from 'three';
 // Configure allowNaturalYMovement in: src/Showcase/data/mockAnimations.js
 // Used by: src/Showcase/components/ShowcaseViewer/ShowcaseViewer.jsx
 
-export default function FBXModel({ url, scale = 0.01, rotation = [0, 0, 0], positionY = -1.8, offsetX = 0, offsetZ = 0, isPlaying = true, onModelLoaded, allowNaturalYMovement = false, onAnimationTimeUpdate = null }) {
+export default function FBXModel({ url, scale = 0.01, rotation = [0, 0, 0], positionY = -1.8, offsetX = 0, offsetZ = 0, isPlaying = true, onModelLoaded, allowNaturalYMovement = false, onAnimationTimeUpdate = null, speed = 1.0 }) {
   const groupRef = useRef();
   const mixerRef = useRef();
   const modelRef = useRef();
@@ -176,7 +176,8 @@ export default function FBXModel({ url, scale = 0.01, rotation = [0, 0, 0], posi
   // Update animation mixer
   useFrame((state, delta) => {
     if (mixerRef.current && isPlaying) {
-      mixerRef.current.update(delta);
+      // Apply speed multiplier to animation
+      mixerRef.current.update(delta * speed);
       
       // Call onAnimationTimeUpdate callback with current animation time
       if (onAnimationTimeUpdate && actionRef.current) {

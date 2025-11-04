@@ -3,6 +3,7 @@ import { Canvas } from '@react-three/fiber';
 import { OrbitControls } from '@react-three/drei';
 import RotatingCube from '../RotatingCube/RotatingCube';
 import ScrambleButton from '../../ui/ScrambleButton/ScrambleButton';
+import SpeedControl from './SpeedControl';
 import { useAuth } from '../../../context/AuthContext';
 import { mockAnimations } from '../Showcase/data/mockAnimations';
 import './ShowcaseViewer.css';
@@ -11,6 +12,9 @@ import sharedStyles from '../../../styles/shared.module.scss';
 export default function ShowcaseViewer({ animation, onClose }) {
   // Store the mounted state to handle animations properly
   const [mounted, setMounted] = React.useState(false);
+  
+  // Animation speed state
+  const [speed, setSpeed] = useState(1.0);
   
   // Animation switcher state
   const { getUnlockedAnimationsForNoetech, user } = useAuth();
@@ -171,7 +175,19 @@ export default function ShowcaseViewer({ animation, onClose }) {
           )}
           
           {/* Big cube - pass size as prop */}
-          <RotatingCube size={4.5} fbxUrl={currentAnimation?.fbxUrl} scale={currentAnimation?.scale} rotation={currentAnimation?.rotation} positionY={currentAnimation?.positionY} offsetX={currentAnimation?.offsetX} offsetZ={currentAnimation?.offsetZ} cubeY={-0.1} allowNaturalYMovement={currentAnimation?.allowNaturalYMovement} animationId={currentAnimation?.id} />
+          <RotatingCube 
+            size={4.5} 
+            fbxUrl={currentAnimation?.fbxUrl} 
+            scale={currentAnimation?.scale} 
+            rotation={currentAnimation?.rotation} 
+            positionY={currentAnimation?.positionY} 
+            offsetX={currentAnimation?.offsetX} 
+            offsetZ={currentAnimation?.offsetZ} 
+            cubeY={-0.1} 
+            allowNaturalYMovement={currentAnimation?.allowNaturalYMovement} 
+            animationId={currentAnimation?.id}
+            speed={speed}
+          />
           
           {/* OrbitControls lets user rotate with mouse */}
           <OrbitControls 
@@ -180,10 +196,13 @@ export default function ShowcaseViewer({ animation, onClose }) {
             minDistance={5}
             maxDistance={15}
             autoRotate={true}
-            autoRotateSpeed={0.5}
+            autoRotateSpeed={0.5 * speed}
           />
         </Canvas>
       </div>
+      
+      {/* Speed Control */}
+      <SpeedControl speed={speed} onSpeedChange={setSpeed} />
       
       <div className="viewer-info">
         <h2 className="viewer-title">{currentAnimation?.name || 'Cosmic Entity #001'}</h2>
