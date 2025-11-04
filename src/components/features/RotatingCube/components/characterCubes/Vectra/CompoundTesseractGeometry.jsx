@@ -29,7 +29,7 @@ export default function CompoundTesseractGeometry({ size }) {
       {/* Fourth layer cube - Cyan */}
       <lineSegments position={[0, 0, 0]} scale={[1.0, 1.0, 1.0]}>
         <edgesGeometry args={[new THREE.BoxGeometry(size, size, size)]} />
-        <lineBasicMaterial color="#e6ebeaff" linewidth={2} opacity={0.6} transparent />
+        <lineBasicMaterial color="#e6ebea" linewidth={2} opacity={0.6} transparent />
       </lineSegments>
       
       {/* Outermost cube - Purple */}

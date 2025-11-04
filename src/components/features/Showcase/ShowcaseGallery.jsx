@@ -7,7 +7,7 @@ import { useAuth } from '../../../context/AuthContext';
 import RotatingCube from '../RotatingCube/RotatingCube';
 import ShowcaseViewer from '../ShowcaseViewer/ShowcaseViewer';
 import { mockAnimations } from './data/mockAnimations';
-import { portalWorlds, glyphSets } from './data/portalWorlds';
+import { portalWorlds, glyphSets } from '../../../data/portalWorlds';
 import { quantumCollapse, getCardPosition } from './utils/showcaseHelpers';
 import './ShowcaseGallery.css';
 import sharedStyles from '../../../styles/shared.module.scss';

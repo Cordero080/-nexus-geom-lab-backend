@@ -83,11 +83,11 @@ export const mockAnimations = [
     description:
       "The Quantum ᐱrchitect of the Digital Nexus...Master of hyperdimensional Combat",
     fbxUrl: "/models/green-plexus-upper.fbx",
-    scale: 0.024,
-    galleryScale: 0.018,
+    scale: 0.02744,
+    galleryScale: 0.02058,
     rotation: [0, 0, 0],
-    positionY: -2.6,
-    galleryPositionY: -1.9,
+    positionY: -2.97,
+    galleryPositionY: -2.27,
     offsetX: 0.2,
     offsetZ: -0.1,
     // Y-AXIS MOVEMENT CONTROL:
