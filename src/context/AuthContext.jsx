@@ -7,19 +7,10 @@ import React, { createContext, useContext, useState, useCallback } from "react";
 const AuthContext = createContext(null);
 
 export function AuthProvider({ children }) {
-  // Default to signed in state for development
-  const defaultUser = {
-    id: "dev_user_123",
-    username: "dev_builder",
-    email: "dev@nexusgeom.com",
-    unlockedNoetechs: ["icarus-x", "vectra", "nexus"] // Unlocked for dev
-  };
-  const defaultToken = "dev_jwt_token_12345";
-
-  // User state - default to authenticated for development
+  // User state - starts as null (not authenticated)
   const [user, setUser] = useState(null);
   const [token, setToken] = useState(null);
-  const [isLoading, setIsLoading] = useState(true); // Add loading state
+  const [isLoading, setIsLoading] = useState(true);
   const [unlockedAnimations, setUnlockedAnimations] = useState([]);
 
   // Check if user is authenticated

@@ -500,8 +500,8 @@ export default function MyScenesPage() {
               <circle cx="25" cy="32.5" r="3" fill={portalState.colors[2]} opacity="0.9"/>
             </svg>
           </div>
-          <h2>No scenes yet</h2>
-          <p>Create your first geometric masterpiece in the Geometry Lab!</p>
+          <h2>NO SCENES DETECTED</h2>
+          <p>GENERATE YOUR FIRST CUSTOM OBJECT IN THE LAB</p>
           <BeamScanButton
             onClick={() => navigate("/geometry-lab")}
             label="CREATE"

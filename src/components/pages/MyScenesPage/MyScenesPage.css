@@ -217,17 +217,32 @@
 }
 
 .my-scenes-page__empty h2 {
-  font-size: 1.5rem;
+  font-size: 1.1rem;
   margin: 0 0 12px;
-  color: #ffffff;
+  background: linear-gradient(135deg, #00d4ff, #7f00ff, #00ffff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
   font-family: 'Orbitron', monospace;
+  opacity: 0.9;
+  transition: opacity 0.3s ease;
 }
 
 .my-scenes-page__empty p {
-  font-size: 0.95rem;
-  color: rgba(255, 255, 255, 0.6);
+  font-size: 0.85rem;
+  color: #ffffff;
   margin: 0 0 32px;
   font-family: 'Orbitron', monospace;
+  opacity: 0.5;
+  transition: opacity 0.3s ease;
+}
+
+.my-scenes-page__empty:hover h2 {
+  opacity: 0.9;
+}
+
+.my-scenes-page__empty:hover p {
+  opacity: 0.75;
 }
 
 /* Removed .my-scenes-page__cta - now using shared BeamScanButton component */
