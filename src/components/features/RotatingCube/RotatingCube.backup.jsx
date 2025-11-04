@@ -1,7 +1,7 @@
 import React, { useRef } from 'react';
 import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
-import FBXModel from '../../models/FBXModel';
+import FBXModel from '../Showcase/models/FBXModel';
 
 export default function RotatingCube({ size = 3, fbxUrl = null, scale = 0.001275, rotation = [0, 0, 0], positionY = -1.8, offsetX = 0, offsetZ = 0, cubeY = -0.5, isPlaying = true, onModelLoaded, preloadedModel = null, allowNaturalYMovement = false, animationId = null }) {
   const cubeRef = useRef();
@@ -33,16 +33,52 @@ export default function RotatingCube({ size = 3, fbxUrl = null, scale = 0.001275
   const frontPanelGeometryRef = useRef();
   const backPanelGeometryRef = useRef();
 
-  // Rotation animation
+  // 🎮 CUBE ROTATION CONTROLS - OPTIONS FOR VARIETY:
+  
+  // OPTION 1: Simple Y-axis spin (current) - Clean turntable rotation
   useFrame((state, delta) => {
     if (cubeRef.current) {
-      cubeRef.current.rotation.y += delta * 0.5; // Rotate clockwise around Y axis only
+      // cubeRef.current.rotation.x += delta * 0.2; // X-axis speed
+      cubeRef.current.rotation.y += delta * 0.5; // Y-axis speed
+      // cubeRef.current.rotation.z += delta * 0.5; // Z-axis speed
     }
+  
+  // OPTION 2: Oscillating rotation - Rocks back and forth instead of spinning
+  // const time = state.clock.elapsedTime;
+  // if (cubeRef.current) {
+  //   cubeRef.current.rotation.x = Math.sin(time * 0.5) * 0.3; // Rock on X
+  //   cubeRef.current.rotation.y += delta * 0.5; // Spin on Y
+  //   cubeRef.current.rotation.z = Math.cos(time * 0.3) * 0.2; // Wave on Z
+  // }
+  
+  // OPTION 3: Diagonal axis - Rotates around a tilted axis
+  // if (cubeRef.current) {
+  //   const angle = state.clock.elapsedTime * 0.5;
+  //   cubeRef.current.rotation.set(
+  //     Math.sin(angle) * 0.5,
+  //     angle,
+  //     Math.cos(angle) * 0.5
+  //   );
+  // }
+  
+  // OPTION 4: Speed up over time - Accelerates rotation
+  // const speed = 0.1 + (state.clock.elapsedTime * 0.01) % 1;
+  // if (cubeRef.current) {
+  //   cubeRef.current.rotation.y += delta * speed;
+  // }
+  
+  // OPTION 5: Random wobble - Chaotic movement
+  // if (cubeRef.current) {
+  //   cubeRef.current.rotation.x += delta * (0.1 + Math.sin(state.clock.elapsedTime * 3) * 0.05);
+  //   cubeRef.current.rotation.y += delta * (0.5 + Math.cos(state.clock.elapsedTime * 2) * 0.1);
+  //   cubeRef.current.rotation.z += delta * (0.1 + Math.sin(state.clock.elapsedTime * 4) * 0.05);
+  // }
     
-    // Floating orb 1 animation - elevated 3D orbit with depth
+    // 🌟 ORB 1 MOVEMENT CONTROLS
+    // Floating orb animation - elevated 3D orbit with depth
     if (orbRef.current) {
-      const time = state.clock.elapsedTime * 0.7;
-      const baseRadius = size * 0.2;
+      const time = state.clock.elapsedTime * 1; // Overall animation speed (higher = faster orbit)
+      const baseRadius = size * 1; // Orbit radius (distance from center)
       
       // Circular orbit in XZ plane (horizontal)
       const angle = time;
@@ -52,17 +88,17 @@ export default function RotatingCube({ size = 3, fbxUrl = null, scale = 0.001275
       orbRef.current.position.z = Math.sin(angle) * radiusXZ;
       
       // Elevated Y position with gentle wave
-      orbRef.current.position.y = size * 0.3 + Math.sin(time * 1.5) * size * 0.08;
+      orbRef.current.position.y = size * 0.3 + Math.sin(time * 2.5) * size * 0.02; // Vertical float height & wave speed
       
       // Pulse the orb scale
-      const pulse = 1 + Math.sin(time * 3) * 0.15;
+      const pulse = 1 + Math.sin(time * 3) * 0.15; // Pulse speed & intensity (0.15 = 15% size change)
       orbRef.current.scale.set(pulse, pulse, pulse);
     }
     
     // Floating orb 2 animation - different orbit pattern
     if (orb2Ref.current) {
-      const time = state.clock.elapsedTime * 0.9;
-      const baseRadius = size * 0.25;
+      const time = state.clock.elapsedTime * 1;
+      const baseRadius = size * 1;
       
       const angle = time + Math.PI * 0.66; // Offset starting position
       
@@ -92,11 +128,11 @@ export default function RotatingCube({ size = 3, fbxUrl = null, scale = 0.001275
     // Animate orb 1 spectral colors - cycle through rainbow
     if (orbMaterialRef.current && orbGlowRef.current && orbLightRef.current) {
       const time = state.clock.elapsedTime;
-      const hue = (time * 0.5) % 1; // Cycle through hue
+      const hue = (time * .5) % 1; // Cycle through hue
       
       // Create rainbow spectrum colors
       const r = Math.abs(Math.sin(hue * Math.PI * 2));
-      const g = Math.abs(Math.sin((hue + 0.33) * Math.PI * 2));
+      const g = Math.abs(Math.sin((hue + 2.33) * Math.PI * 4));
       const b = Math.abs(Math.sin((hue + 0.66) * Math.PI * 2));
       
       // Apply to orb materials
@@ -141,32 +177,35 @@ export default function RotatingCube({ size = 3, fbxUrl = null, scale = 0.001275
       orb3LightRef.current.intensity = 0.9 + Math.sin(time * 3.2) * 0.4;
     }
     
-    // Pulse the inner light
+    // 💡 INNER LIGHT CONTROLS
+    // Pulse the inner light intensity
     if (innerLightRef.current) {
-      innerLightRef.current.intensity = (size / 3) * 1.5 + Math.sin(state.clock.elapsedTime * 2) * 0.5;
+      innerLightRef.current.intensity = (size / 3) * 1.5 + Math.sin(state.clock.elapsedTime * 2) * 0.5; // Base intensity + pulse variation
     }
     
-    // Animate edge color - cycle through cyan, magenta, yellow
+    // 🌈 EDGE COLOR CONTROLS
+    // Animate edge wireframe color - cycle through cyan, magenta, yellow
     if (edgeMaterialRef.current) {
       const time = state.clock.elapsedTime;
-      const r = Math.sin(time * 0.5) * 0.5 + 0.5;
-      const g = Math.sin(time * 0.5 + 2) * 0.5 + 0.5;
-      const b = Math.sin(time * 0.5 + 4) * 0.5 + 0.5;
+      const r = Math.sin(time * 0.5) * 0.5 + 0.5; // Red channel oscillation
+      const g = Math.sin(time * 0.5 + 2) * 0.5 + 0.5; // Green channel (phase shifted)
+      const b = Math.sin(time * 0.5 + 4) * 0.5 + 0.5; // Blue channel (phase shifted)
       edgeMaterialRef.current.color.setRGB(r, g, b);
     }
     
-    // Holographic shimmer effect - rainbow iridescence
+    // ✨ HOLOGRAPHIC SHIMMER CONTROLS
+    // Cube material shimmer effect - rainbow iridescence
     if (cubeMaterialRef.current) {
-      const time = state.clock.elapsedTime * 0.8;
+      const time = state.clock.elapsedTime * 0.8; // Shimmer speed
       // Create rainbow effect that shifts continuously
-      const hue = (time * 0.1) % 1;
+      const hue = (time * 0.1) % 1; // Hue rotation speed
       const r = Math.abs(Math.sin((time + hue * 6.28) * 0.5)) * 0.5 + 0.3;
       const g = Math.abs(Math.sin((time + hue * 6.28 + 2) * 0.5)) * 0.5 + 0.3;
       const b = Math.abs(Math.sin((time + hue * 6.28 + 4) * 0.5)) * 0.5 + 0.5;
       cubeMaterialRef.current.color.setRGB(r, g, b);
       
       // Animate emissive intensity for shimmer
-      cubeMaterialRef.current.emissiveIntensity = 0.3 + Math.sin(time * 2) * 0.15;
+      cubeMaterialRef.current.emissiveIntensity = 0.3 + Math.sin(time * 2) * 0.15; // Base glow + pulse
     }
     
         
@@ -252,7 +291,18 @@ export default function RotatingCube({ size = 3, fbxUrl = null, scale = 0.001275
   const sphereRadius = size * 0.27;
 
   return (
-    <group ref={cubeRef} position={[0, cubeY, 0]}>
+    // 📦 GROUP COMPONENT - Container that groups all 3D objects (cube, orbs, model, tesseract)
+    // Everything inside rotates/scales together. Uses cubeRef for animation control.
+    <group 
+      ref={cubeRef} 
+      position={[0, cubeY, 0]}                       //adjsust vertical position/scale
+      scale={
+        (animationId === 1 || animationId === 4) ? 0.85 : // 85% for Icarus
+        animationId === 2 ? 0.87 :                          // 87% for Vectra (compound tesseract)
+        animationId === 3 ? 0.80 :                          // 80% for Nexus Prime (triple tesseract)
+        1.0                                                 // 100% for others
+      }
+    >
       {/* Multi-layered holographic cubes for depth shimmer */}
       {/* Outer holographic layer */}
       <mesh>
@@ -318,6 +368,213 @@ export default function RotatingCube({ size = 3, fbxUrl = null, scale = 0.001275
         <edgesGeometry args={[new THREE.BoxGeometry(size, size, size)]} />
         <lineBasicMaterial ref={edgeMaterialRef} color="#00ffff" linewidth={2} />
       </lineSegments>
+      
+      {/* 🔥 TESSERACT (4D Hypercube) - For Icarus and Nexus Prime */}
+      {(animationId === 1 || animationId === 4 || animationId === 3) && (
+        <>
+          {/* Inner cube of tesseract */}
+          <lineSegments position={[0, 0, 0]} scale={[0.6, 0.6, 0.6]}>
+            <edgesGeometry args={[new THREE.BoxGeometry(size, size, size)]} />
+            <lineBasicMaterial color="#ff8800" linewidth={2} opacity={0.8} transparent />
+          </lineSegments>
+          
+          {/* Outer cube of tesseract */}
+          <lineSegments position={[0, 0, 0]} scale={[1.2, 1.2, 1.2]}>
+            <edgesGeometry args={[new THREE.BoxGeometry(size, size, size)]} />
+            <lineBasicMaterial color="#ffaa00" linewidth={2} opacity={0.6} transparent />
+          </lineSegments>
+          
+          {/* Connecting lines between inner and outer cubes (8 corners) */}
+          <line>
+            <bufferGeometry>
+              <bufferAttribute
+                attach="attributes-position"
+                count={16}
+                array={new Float32Array([
+                  // Connect 8 corners from inner to outer cube
+                  -size*0.3, -size*0.3, -size*0.3,  -size*0.6, -size*0.6, -size*0.6, // corner 1
+                  size*0.3, -size*0.3, -size*0.3,   size*0.6, -size*0.6, -size*0.6,  // corner 2
+                  -size*0.3, size*0.3, -size*0.3,   -size*0.6, size*0.6, -size*0.6,  // corner 3
+                  size*0.3, size*0.3, -size*0.3,    size*0.6, size*0.6, -size*0.6,   // corner 4
+                  -size*0.3, -size*0.3, size*0.3,   -size*0.6, -size*0.6, size*0.6,  // corner 5
+                  size*0.3, -size*0.3, size*0.3,    size*0.6, -size*0.6, size*0.6,   // corner 6
+                  -size*0.3, size*0.3, size*0.3,    -size*0.6, size*0.6, size*0.6,   // corner 7
+                  size*0.3, size*0.3, size*0.3,     size*0.6, size*0.6, size*0.6     // corner 8
+                ])}
+                itemSize={3}
+              />
+            </bufferGeometry>
+            <lineBasicMaterial color="#ffcc33" opacity={0.5} transparent linewidth={1} />
+          </line>
+        </>
+      )}
+      
+      {/* 🔲 TRIPLE TESSERACT - Only for Nexus Prime (ID: 3) - Multi-axis Rotation */}
+      {animationId === 3 && (
+        <>
+          {/* Second tesseract layer - same size, rotated 90° on X-axis (vertical) */}
+          {/* Inner cube - rotated */}
+          <lineSegments position={[0, 0, 0]} scale={[0.6, 0.6, 0.6]} rotation={[Math.PI / 2, 0, 0]}>
+            <edgesGeometry args={[new THREE.BoxGeometry(size, size, size)]} />
+            <lineBasicMaterial color="#00ff00" linewidth={2} opacity={0.8} transparent />
+          </lineSegments>
+          
+          {/* Outer cube - rotated */}
+          <lineSegments position={[0, 0, 0]} scale={[1.2, 1.2, 1.2]} rotation={[Math.PI / 2, 0, 0]}>
+            <edgesGeometry args={[new THREE.BoxGeometry(size, size, size)]} />
+            <lineBasicMaterial color="#00dd00" linewidth={2} opacity={0.6} transparent />
+          </lineSegments>
+          
+          {/* Third tesseract layer - phase sweep at 30 degrees */}
+          {/* Inner cube - angled stretch */}
+          <lineSegments position={[0, 0, 0]} scale={[0.6, 0.7, 0.6]} rotation={[0, Math.PI / 6, 0]}>
+            <edgesGeometry args={[new THREE.BoxGeometry(size, size, size)]} />
+            <lineBasicMaterial color="#44ff00" linewidth={2} opacity={0.8} transparent />
+          </lineSegments>
+          
+          {/* Outer cube - angled stretch */}
+          <lineSegments position={[0, 0, 0]} scale={[1.2, 1.3, 1.2]} rotation={[0, Math.PI / 6, 0]}>
+            <edgesGeometry args={[new THREE.BoxGeometry(size, size, size)]} />
+            <lineBasicMaterial color="#66ff22" linewidth={2} opacity={0.6} transparent />
+          </lineSegments>
+          
+          {/* Fourth tesseract layer - phase sweep symmetrically opposite at -30 degrees */}
+          {/* Inner cube - opposite angled stretch */}
+          <lineSegments position={[0, 0, 0]} scale={[0.6, 0.7, 0.6]} rotation={[0, -Math.PI / 6, 0]}>
+            <edgesGeometry args={[new THREE.BoxGeometry(size, size, size)]} />
+            <lineBasicMaterial color="#88ff44" linewidth={2} opacity={0.7} transparent />
+          </lineSegments>
+          
+          {/* Outer cube - opposite angled stretch */}
+          <lineSegments position={[0, 0, 0]} scale={[1.2, 1.3, 1.2]} rotation={[0, -Math.PI / 6, 0]}>
+            <edgesGeometry args={[new THREE.BoxGeometry(size, size, size)]} />
+            <lineBasicMaterial color="#1bd0d7ff" linewidth={2} opacity={0.5} transparent />
+          </lineSegments>
+        </>
+      )}
+      
+      {/* 🌀 COMPOUND TESSERACT with PHASE SWEEP - Only for Vectra (ID: 2) */}
+      {animationId === 2 && (
+        <>
+          {/* Innermost cube - Purple core */}
+          <lineSegments position={[0, 0, 0]} scale={[0.4, 0.4, 1.4]}>
+            <edgesGeometry args={[new THREE.BoxGeometry(size, size, size)]} />
+            <lineBasicMaterial color="#d643f3" linewidth={2} opacity={0.9} transparent />
+          </lineSegments>
+          
+          {/* Second layer cube - Cyan */}
+          <lineSegments position={[0, 0, 0]} scale={[0.6, 1.4, 0.6]}>
+            <edgesGeometry args={[new THREE.BoxGeometry(size, size, size)]} />
+            <lineBasicMaterial color="#75fad9" linewidth={2} opacity={0.8} transparent />
+          </lineSegments>
+          
+          {/* Third layer cube - Purple */}
+          <lineSegments position={[0, 0, 0]} scale={[1.4, 0.8, 0.8]}>
+            <edgesGeometry args={[new THREE.BoxGeometry(size, size, size)]} />
+            <lineBasicMaterial color="#d643f3" linewidth={2} opacity={0.7} transparent />
+          </lineSegments>
+          
+          {/* Fourth layer cube - Cyan */}
+          <lineSegments position={[0, 0, 0]} scale={[1.0, 1.0, 1.0]}>
+            <edgesGeometry args={[new THREE.BoxGeometry(size, size, size)]} />
+            <lineBasicMaterial color="#e6ebeaff" linewidth={2} opacity={0.6} transparent />
+          </lineSegments>
+          
+          {/* Outermost cube - Purple */}
+          <lineSegments position={[0, 0, 0]} scale={[1.2, 1.2, 1.2]}>
+            <edgesGeometry args={[new THREE.BoxGeometry(size, size, size)]} />
+            <lineBasicMaterial color="#d643f3" linewidth={2} opacity={1.5} transparent />
+          </lineSegments>
+          
+          {/* Connecting lines from innermost to second layer (8 corners) */}
+          <line>
+            <bufferGeometry>
+              <bufferAttribute
+                attach="attributes-position"
+                count={16}
+                array={new Float32Array([
+                  -size*0.2, -size*0.2, -size*0.2,  -size*0.3, -size*0.3, -size*0.3,
+                  size*0.2, -size*0.2, -size*0.2,   size*0.3, -size*0.3, -size*0.3,
+                  -size*0.2, size*0.2, -size*0.2,   -size*0.3, size*0.3, -size*0.3,
+                  size*0.2, size*0.2, -size*0.2,    size*0.3, size*0.3, -size*0.3,
+                  -size*0.2, -size*0.2, size*0.2,   -size*0.3, -size*0.3, size*0.3,
+                  size*0.2, -size*0.2, size*0.2,    size*0.3, -size*0.3, size*0.3,
+                  -size*0.2, size*0.2, size*0.2,    -size*0.3, size*0.3, size*0.3,
+                  size*0.2, size*0.2, size*0.2,     size*0.3, size*0.3, size*0.3
+                ])}
+                itemSize={3}
+              />
+            </bufferGeometry>
+            <lineBasicMaterial color="#b854e6" opacity={0.4} transparent linewidth={1} />
+          </line>
+          
+          {/* Connecting lines from second to third layer */}
+          <line>
+            <bufferGeometry>
+              <bufferAttribute
+                attach="attributes-position"
+                count={16}
+                array={new Float32Array([
+                  -size*0.3, -size*0.3, -size*0.3,  -size*0.4, -size*0.4, -size*0.4,
+                  size*0.3, -size*0.3, -size*0.3,   size*0.4, -size*0.4, -size*0.4,
+                  -size*0.3, size*0.3, -size*0.3,   -size*0.4, size*0.4, -size*0.4,
+                  size*0.3, size*0.3, -size*0.3,    size*0.4, size*0.4, -size*0.4,
+                  -size*0.3, -size*0.3, size*0.3,   -size*0.4, -size*0.4, size*0.4,
+                  size*0.3, -size*0.3, size*0.3,    size*0.4, -size*0.4, size*0.4,
+                  -size*0.3, size*0.3, size*0.3,    -size*0.4, size*0.4, size*0.4,
+                  size*0.3, size*0.3, size*0.3,     size*0.4, size*0.4, size*0.4
+                ])}
+                itemSize={3}
+              />
+            </bufferGeometry>
+            <lineBasicMaterial color="#5fc9b8" opacity={0.4} transparent linewidth={1} />
+          </line>
+          
+          {/* Connecting lines from third to fourth layer */}
+          <line>
+            <bufferGeometry>
+              <bufferAttribute
+                attach="attributes-position"
+                count={16}
+                array={new Float32Array([
+                  -size*0.4, -size*0.4, -size*0.4,  -size*0.5, -size*0.5, -size*0.5,
+                  size*0.4, -size*0.4, -size*0.4,   size*0.5, -size*0.5, -size*0.5,
+                  -size*0.4, size*0.4, -size*0.4,   -size*0.5, size*0.5, -size*0.5,
+                  size*0.4, size*0.4, -size*0.4,    size*0.5, size*0.5, -size*0.5,
+                  -size*0.4, -size*0.4, size*0.4,   -size*0.5, -size*0.5, size*0.5,
+                  size*0.4, -size*0.4, size*0.4,    size*0.5, -size*0.5, size*0.5,
+                  -size*0.4, size*0.4, size*0.4,    -size*0.5, size*0.5, size*0.5,
+                  size*0.4, size*0.4, size*0.4,     size*0.5, size*0.5, size*0.5
+                ])}
+                itemSize={3}
+              />
+            </bufferGeometry>
+            <lineBasicMaterial color="#b854e6" opacity={0.4} transparent linewidth={1} />
+          </line>
+          
+          {/* Connecting lines from fourth to outermost layer */}
+          <line>
+            <bufferGeometry>
+              <bufferAttribute
+                attach="attributes-position"
+                count={16}
+                array={new Float32Array([
+                  -size*0.5, -size*0.5, -size*0.5,  -size*0.6, -size*0.6, -size*0.6,
+                  size*0.5, -size*0.5, -size*0.5,   size*0.6, -size*0.6, -size*0.6,
+                  -size*0.5, size*0.5, -size*0.5,   -size*0.6, size*0.6, -size*0.6,
+                  size*0.5, size*0.5, -size*0.5,    size*0.6, size*0.6, -size*0.6,
+                  -size*0.5, -size*0.5, size*0.5,   -size*0.6, -size*0.6, size*0.6,
+                  size*0.5, -size*0.5, size*0.5,    size*0.6, -size*0.6, size*0.6,
+                  -size*0.5, size*0.5, size*0.5,    -size*0.6, size*0.6, size*0.6,
+                  size*0.5, size*0.5, size*0.5,     size*0.6, size*0.6, size*0.6
+                ])}
+                itemSize={3}
+              />
+            </bufferGeometry>
+            <lineBasicMaterial color="#5fc9b8" opacity={0.3} transparent linewidth={1} />
+          </line>
+        </>
+      )}
       
       {/* Holographic front panel with ripple waves */}
       <mesh position={[0, 0, size / 2 + 0.01]}>

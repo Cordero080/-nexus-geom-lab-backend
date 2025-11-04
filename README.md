@@ -18,6 +18,21 @@
 
 <div align="center">
 
+### Homepage
+
+![Homepage](./screenshots/homepage.png)
+_Landing page with quantum background and navigation_
+
+### Sign Up Page
+
+![Sign Up](./screenshots/signup.png)
+_User registration with holographic design_
+
+### Login Page
+
+![Login](./screenshots/login.png)
+_Authentication interface with quantum styling_
+
 ### Main Geometry Lab Interface
 
 ![Main Interface](./screenshots/main-interface.png)
