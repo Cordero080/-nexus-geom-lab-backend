@@ -21,12 +21,25 @@ router.post(
   ],
   async (req, res) => {
     try {
+      // Log request body for debugging
+      console.log("📝 Signup attempt:", {
+        username: req.body.username,
+        email: req.body.email,
+        hasPassword: !!req.body.password,
+        passwordLength: req.body.password?.length,
+      });
+
       // Check if validation passed
       const errors = validationResult(req);
       if (!errors.isEmpty()) {
+        console.log(
+          "❌ Validation errors:",
+          JSON.stringify(errors.array(), null, 2)
+        );
         return res.status(400).json({
           success: false,
           errors: errors.array(),
+          message: "Validation failed",
         });
       }
 
@@ -43,6 +56,12 @@ router.post(
 
       if (existingUser) {
         // Send specific error message
+        console.log("❌ User already exists:", {
+          existingEmail: existingUser.email,
+          existingUsername: existingUser.username,
+          attemptedEmail: email,
+          attemptedUsername: username,
+        });
         return res.status(400).json({
           success: false,
           message:

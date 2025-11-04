@@ -23,8 +23,9 @@ const seedDevUser = async () => {
       user.scenesSaved = 0;
       user.unlockedAnimations = [];
       user.unlockedNoetechs = []; // Keep for backward compatibility
+      user.password = password; // Update password (will be hashed by pre-save hook)
       await user.save();
-      console.log("🔄 Reset user to follow new animation unlock progression");
+      console.log("🔄 Reset user stats and updated password");
     } else {
       // Create new dev user
       user = new User({
