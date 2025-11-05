@@ -189,7 +189,11 @@ export default function HomePage() {
       setGlyphState(quantumCollapse(glyphSets));
     };
     window.addEventListener('scroll', handle);
-    return () => window.removeEventListener('scroll', handle);
+    window.addEventListener('click', handle);
+    return () => {
+      window.removeEventListener('scroll', handle);
+      window.removeEventListener('click', handle);
+    };
   }, []);
   // Also collapse on click/tap
   function handleQuantumCollapse() {

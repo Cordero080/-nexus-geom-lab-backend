@@ -296,16 +296,7 @@ const LoginPage = () => {
 
       <div className="login-page">
         <nav 
-          className="quantum-nav"
-          style={{
-            background: navScrolled 
-              ? `linear-gradient(135deg, ${portalState.colors[0]}15, ${portalState.colors[1]}10, rgba(0,0,0,0.9))` 
-              : `linear-gradient(135deg, ${portalState.colors[0]}25, ${portalState.colors[1]}20, rgba(0,0,0,0.85))`,
-            backdropFilter: navScrolled ? 'blur(20px)' : 'blur(30px)',
-            borderBottom: `2px solid ${portalState.colors[1]}44`,
-            boxShadow: `0 2px 24px ${portalState.colors[1]}22`,
-            transition: 'all 1.2s ease'
-          }}
+          className={`quantum-nav ${navScrolled ? 'scrolled' : ''}`}
         >
           <div className="nav-logo">
             <span
@@ -317,15 +308,17 @@ const LoginPage = () => {
                 transition: 'filter 1.2s'
               }}
             >N3XUS_GEOM</span>
+            {/* Subtle quantum glyphs in navbar */}
             <span style={{
               marginLeft: 10,
               fontSize: 16,
-              color: portalState.colors[2] + '99',
+              color: portalState.colors[1],
               letterSpacing: '0.12em',
               verticalAlign: 'middle',
-              opacity: 0.55,
-              filter: `blur(0.2px) drop-shadow(0 0 2px ${portalState.colors[1]}44)`,
-              transition: 'color 1.2s, filter 1.2s, opacity 1.2s'
+              opacity: 0.8,
+              filter: `blur(0.3px) drop-shadow(0 0 4px ${portalState.colors[1]}88)`,
+              transition: 'color 1.2s, filter 1.2s, opacity 1.2s',
+              textShadow: `0 0 8px ${portalState.colors[1]}, 0 0 2px ${portalState.colors[0]}`
             }}>
               {glyphState.join(' ')}
             </span>

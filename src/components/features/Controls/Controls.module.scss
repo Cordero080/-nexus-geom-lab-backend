@@ -277,7 +277,7 @@
 
 .sectionHeader {
     padding: 12px 16px;
-    margin: 16px 0 8px 0;
+    margin: 32px 0 8px 0; /* Increased top margin from 16px to 32px to create space above section headers */
     font-size: 13px;
     font-weight: 700;
     letter-spacing: 1px;
@@ -291,6 +291,7 @@
     align-items: center;
     position: relative;
     overflow: hidden;
+    z-index: 1; /* Lower z-index so dropdowns from previous section appear on top */
 }
 
 /* Add subtle shine effect on hover */
@@ -416,7 +417,7 @@
 .sectionContentOpen {
     opacity: 1;
     padding-top: 8px;
-    padding-bottom: 30px;
+    padding-bottom: 8px;
 }
 
 .sectionContentClosed {
@@ -425,12 +426,19 @@
     padding-bottom: 0;
 }
 
+/* Section-specific max-heights */
+/* CRITICAL: These values must be large enough to prevent content clipping
+   Issue: overflow: hidden on sections clips content, but is needed for collapse animation
+   Solution: Set max-height high enough for all nested controls to be visible
+   Material Properties: Contains many subsections (Color, Wireframe, Vertices, etc.)
+   Camera/Scene: Contains Animation Style dropdown + Orb Speed + Object Speed sliders
+   Both set to 1200px to ensure all controls visible when expanded - panel itself scrolls via overflow-y: auto */
 .sectionContentMaterialOpen {
-    max-height: 800px;
+    max-height: 1200px;
 }
 
 .sectionContentSceneOpen {
-    max-height: 600px;
+    max-height: 1200px;
 }
 
 .sectionContentLightingOpen {

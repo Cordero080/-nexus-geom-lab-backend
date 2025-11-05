@@ -18,10 +18,15 @@
 
 <div align="center">
 
-### Homepage
+### Landing Page (Homepage)
 
 ![Homepage](./screenshots/homepage.png)
 _Landing page with quantum background and navigation_
+
+### Homepage (Logged In)
+
+![Homepage Logged In](./screenshots/homepage-logged-in.png)
+_Landing page showing authenticated user state with username and My Scenes link_
 
 ### Sign Up Page
 
@@ -35,13 +40,21 @@ _Authentication interface with quantum styling_
 
 ### Main Geometry Lab Interface
 
-![Main Interface](./screenshots/main-interface.png)
-_Interactive 3D geometry manipulation with 24 geometric types_
+![Main Interface - Quantum Manifold](./screenshots/main-interface-quantum-manifold.png)
+_Quantum manifold with custom hyperframe colors in matrix environment_
+
+![Main Interface - Mega Tesseract III](./screenshots/main-interface-mega-tesseract.png)
+_Compound mega-tesseract III showing 4D hyperdimensional structure_
 
 ### Character Showcase Gallery
 
 ![Character Showcase](./screenshots/character-showcase.png)
 _Progressive unlock system with animated 3D characters_
+
+### Character Viewer - Animated Detail
+
+![Character Close-up](./screenshots/character-closeup.png)
+_Vectra character with holographic spellcast animation and controls_
 
 ### Scene Management Dashboard
 

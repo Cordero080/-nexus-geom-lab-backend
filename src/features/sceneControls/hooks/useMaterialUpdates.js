@@ -91,18 +91,24 @@ export function useMaterialUpdates(objectsRef, materialProps) {
     // Convert hex color string to Three.js color number
     const convertedColor = parseInt(baseColor.replace("#", ""), 16);
 
-    const processedSolid = new Set();
-    const processedWireframe = new Set();
-    objectsRef.current.forEach(({ material, wireframeMaterial }) => {
-      if (material && !processedSolid.has(material)) {
-        processedSolid.add(material);
-        material.color.setHex(convertedColor);
-        material.needsUpdate = true;
+    objectsRef.current.forEach(({ solidMesh, wireframeMesh }) => {
+      // Update solid mesh materials
+      if (solidMesh) {
+        solidMesh.traverse((child) => {
+          if (child.isMesh && child.material) {
+            child.material.color.setHex(convertedColor);
+            child.material.needsUpdate = true;
+          }
+        });
       }
-      if (wireframeMaterial && !processedWireframe.has(wireframeMaterial)) {
-        processedWireframe.add(wireframeMaterial);
-        wireframeMaterial.color.setHex(convertedColor);
-        wireframeMaterial.needsUpdate = true;
+      // Update wireframe mesh materials
+      if (wireframeMesh) {
+        wireframeMesh.traverse((child) => {
+          if (child.isMesh && child.material) {
+            child.material.color.setHex(convertedColor);
+            child.material.needsUpdate = true;
+          }
+        });
       }
     });
   }, [baseColor]);
@@ -185,12 +191,15 @@ export function useMaterialUpdates(objectsRef, materialProps) {
   useEffect(() => {
     const convertedColor = new THREE.Color(hyperframeColor);
 
-    const processedCenter = new Set();
-    objectsRef.current.forEach(({ centerLinesMaterial }) => {
-      if (centerLinesMaterial && !processedCenter.has(centerLinesMaterial)) {
-        processedCenter.add(centerLinesMaterial);
-        centerLinesMaterial.color.copy(convertedColor);
-        centerLinesMaterial.needsUpdate = true;
+    objectsRef.current.forEach(({ centerLines }) => {
+      if (centerLines) {
+        // Traverse all child meshes and update their materials
+        centerLines.traverse((child) => {
+          if (child.isMesh && child.material) {
+            child.material.color.copy(convertedColor);
+            child.material.needsUpdate = true;
+          }
+        });
       }
     });
   }, [hyperframeColor]);
@@ -199,12 +208,15 @@ export function useMaterialUpdates(objectsRef, materialProps) {
   useEffect(() => {
     const convertedColor = new THREE.Color(hyperframeLineColor);
 
-    const processedCurved = new Set();
-    objectsRef.current.forEach(({ curvedLinesMaterial }) => {
-      if (curvedLinesMaterial && !processedCurved.has(curvedLinesMaterial)) {
-        processedCurved.add(curvedLinesMaterial);
-        curvedLinesMaterial.color.copy(convertedColor);
-        curvedLinesMaterial.needsUpdate = true;
+    objectsRef.current.forEach(({ curvedLines }) => {
+      if (curvedLines) {
+        // Traverse all child meshes and update their materials
+        curvedLines.traverse((child) => {
+          if (child.isMesh && child.material) {
+            child.material.color.copy(convertedColor);
+            child.material.needsUpdate = true;
+          }
+        });
       }
     });
   }, [hyperframeLineColor]);
