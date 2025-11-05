@@ -24,8 +24,8 @@ export function useObjectInteraction(refs) {
   }, []);
 
   const decayUserRotations = useCallback(() => {
-    const damping = 0.92;
-    const epsilon = 0.0001;
+    const damping = 0.92; // ADJUST: Controls how quickly rotation slows down after mouse leaves (0.0 = instant stop, 1.0 = never stops)
+    const epsilon = 0.0001; // ADJUST: Minimum rotation value before stopping completely (smaller = more gradual stop)
     objectRotations.current.forEach((rotation, objectId) => {
       const decayed = {
         x: rotation.x * damping,
@@ -93,6 +93,41 @@ export function useObjectInteraction(refs) {
         event.clientY >= rect.top &&
         event.clientY <= rect.bottom;
 
+      // If outside canvas but we have a hovered object, continue tracking mouse movement
+      if (!insideCanvas && hoveredObject.current) {
+        const rotationSensitivity = 0.001; // ADJUST: How responsive object rotation is to mouse movement (higher = more sensitive)
+        const clampDelta = (value, limit = 0.05) => {
+          // ADJUST: Maximum rotation speed per frame (higher = faster spins)
+          return Math.max(-limit, Math.min(limit, value));
+        };
+
+        const deltaY =
+          lastClientX === null
+            ? 0
+            : clampDelta((event.clientX - lastClientX) * rotationSensitivity);
+        const deltaX =
+          lastClientY === null
+            ? 0
+            : clampDelta((event.clientY - lastClientY) * rotationSensitivity);
+
+        lastClientX = event.clientX;
+        lastClientY = event.clientY;
+
+        const objectId =
+          hoveredObject.current.userData.objectId || hoveredObject.current.uuid;
+        const currentRotation = getUserRotation(objectId);
+
+        const newRotation = {
+          x: currentRotation.x + deltaX,
+          y: currentRotation.y + deltaY,
+          z: currentRotation.z,
+        };
+
+        setUserRotation(objectId, newRotation);
+        return;
+      }
+
+      // If outside canvas and no hovered object, reset and return
       if (!insideCanvas) {
         hoveredObject.current = null;
         currentRenderer.domElement.style.cursor = "default";
@@ -124,10 +159,11 @@ export function useObjectInteraction(refs) {
       hoveredObject.current = intersectedObject;
       currentRenderer.domElement.style.cursor = "pointer";
 
-      const rotationSensitivity = 0.001;
+      const rotationSensitivity = 0.001; // ADJUST: How responsive object rotation is to mouse movement (higher = more sensitive)
 
       // Clamp rotation injection so spins stay smooth
       const clampDelta = (value, limit = 0.05) => {
+        // ADJUST: Maximum rotation speed per frame (higher = faster spins)
         return Math.max(-limit, Math.min(limit, value));
       };
 

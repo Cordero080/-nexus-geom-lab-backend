@@ -5,9 +5,8 @@ import react from "@vitejs/plugin-react";
 export default defineConfig({
   plugins: [react()],
   server: {
-    // You can uncomment to pin a port if desired
-    // port: 5173,
-    // strictPort: false,
+    port: 5173,
+    strictPort: true,
     proxy: {
       // Forward API calls to the backend to avoid CORS in development
       "/api": {

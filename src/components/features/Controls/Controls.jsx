@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import styles from './Controls.module.scss';
 import LightingControls from './LightingControls';
+import CustomSelect from '../../ui/CustomSelect/CustomSelect';
 import {
   createMetalnessHandler,
   createScaleHandler,
@@ -17,6 +18,21 @@ import {
   createAnimationStyleHandler,
   createObjectTypeHandler,
 } from './controlsHandlers';
+
+/*
+ * DATA FLOW EXAMPLE (using metalness):
+ * 1. App.jsx has: setMetalness (the actual function)
+ *                     ↓
+ * 2. App.jsx passes it as: onMetalnessChange={setMetalness}
+ *                     ↓
+ * 3. Controls.jsx receives: onMetalnessChange (as a prop)
+ *                     ↓
+ * 4. Controls wraps it: handleMetalnessChange = createMetalnessHandler(onMetalnessChange)
+ *                     ↓
+ * 5. Slider uses it: onChange={handleMetalnessChange}
+ *                     ↓
+ * 6. User moves slider → handleMetalnessChange fires → onMetalnessChange(newValue) → setMetalness updates App.jsx state
+ */
 
 // PROPS RECEIVED FROM App.jsx - These are the data connections
 function Controls({ 
@@ -50,10 +66,12 @@ function Controls({
   
   // LOCAL STATE - These are managed by Controls component itself (NOT from App.jsx)
   // These control whether each section is expanded or collapsed in the UI
-  const [materialOpen, setMaterialOpen] = useState(true)    // Material Properties section open by default to see speed controls
+  const [materialOpen, setMaterialOpen] = useState(false)    // Material Properties section collapsed by default
+  const [surfaceOpen, setSurfaceOpen] = useState(true)      // Surface subsection open by default
+  const [geometryOpen, setGeometryOpen] = useState(true)    // Geometry subsection open by default
   const [sceneOpen, setSceneOpen] = useState(false)         // Scene Controls section closed by default
   const [lightingOpen, setLightingOpen] = useState(false)   // Lighting Controls section closed by default
-  const [isHidden, setIsHidden] = useState(false)           // Controls panel visibility state
+  const [isHidden, setIsHidden] = useState(true)            // Controls panel hidden by default on page load
 
   /*
   // EVENT HANDLER FUNCTIONS
@@ -109,7 +127,8 @@ function Controls({
           onClick={() => setIsHidden(false)}
           title="Show Controls"
         >
-          ◀
+          <span>◀</span>
+          <span className={styles.controlsToggleText}>Controls</span>
         </button>
       )}
 
@@ -144,135 +163,161 @@ function Controls({
       </div>
       
       <div className={`${styles.sectionContent} ${materialOpen ? `${styles.sectionContentMaterialOpen} ${styles.sectionContentOpen}` : styles.sectionContentClosed}`}>
-        {/* 
-         * MATERIAL PROPERTY CONTROLS
-         * Each input element has an onChange attribute that connects to a handler function
-         */}
         
-        {/* BASE COLOR PICKER: User clicks/changes → handleBaseColorChange → App.jsx setState */}
-        <label>
-          Base Color: {/* Label shows current value from App.jsx: {baseColor} */}
-        </label>
-        {/* This color input DISPLAYS current value FROM App.jsx and TRIGGERS handler WHEN user changes color */}
-        <input 
-          type="color" 
-          value={baseColor}                      
-          onChange={handleBaseColorChange}       
-        />
+        {/* NESTED SUBSECTION: SURFACE PROPERTIES */}
+        <div 
+          className={`${styles.subSectionHeader} ${surfaceOpen ? styles.subSectionHeaderOpen : styles.subSectionHeaderClosed}`}
+          onClick={(e) => { e.stopPropagation(); setSurfaceOpen(!surfaceOpen); }}
+        >
+          <span>✨ Surface</span>
+          <span>{surfaceOpen ? '▼' : '▶'}</span>
+        </div>
         
-        {/* EMISSIVE INTENSITY SLIDER: User drags → handleEmissiveIntensityChange → App.jsx setState */}
-        <label>
-          Emissive Intensity: <span className={styles.valueDisplay}>{emissiveIntensity.toFixed(1)}</span> {/* Shows current value FROM App.jsx */}
-        </label>
-        {/* This range slider DISPLAYS current value FROM App.jsx and TRIGGERS handler WHEN user drags slider */}
-        <input 
-          type="range" 
-          min="0" 
-          max="2" 
-          step="0.1"
-          value={emissiveIntensity}                   
-          onChange={handleEmissiveIntensityChange}    
-        />
-        
-        {/* METALNESS SLIDER: User drags → handleMetalnessChange → App.jsx setState */}
-        <label>
-          Metalness: <span className={styles.valueDisplay}>{metalness.toFixed(2)}</span> {/* Shows current value FROM App.jsx */}
-        </label>
-        {/* This range slider DISPLAYS current value FROM App.jsx and TRIGGERS handler WHEN user drags slider */}
-        <input 
-          type="range" 
-          min="0" 
-          max="1" 
-          step="0.01"
-          value={metalness}
-          onChange={handleMetalnessChange}
-        />
-
-        {/* Wireframe visibility toggle */}
-        <label className={styles.futuristicCheckboxLabel}>
-          <input
-            type="checkbox"
-            checked={wireframeIntensity > 0}
-            onChange={handleWireframeToggle}
-            className={styles.futuristicCheckbox}
+        <div className={`${styles.subSectionContent} ${surfaceOpen ? styles.subSectionContentOpen : styles.subSectionContentClosed}`}>
+          {/* BASE COLOR PICKER */}
+          <label>
+            Base Color:
+          </label>
+          <input 
+            type="color" 
+            value={baseColor}                      
+            onChange={handleBaseColorChange}
+            onMouseDown={(e) => e.stopPropagation()}
+            onMouseMove={(e) => e.stopPropagation()}
           />
-          <span className={styles.futuristicCustomCheckbox}></span>
-          <span className={styles.futuristicCheckboxText}>Wireframe</span>
-        </label>
-        {/* Wireframe intensity slider */}
-        <label>
-          Wireframe Intensity: <span className={styles.valueDisplay}>{wireframeIntensity}%</span>
-        </label>
-        <input 
-          type="range" 
-          min="0" 
-          max="100" 
-          value={wireframeIntensity}
-          onChange={handleWireframeIntensityChange}
+          
+          {/* EMISSIVE INTENSITY SLIDER */}
+          <label>
+            Emissive Intensity: <span className={styles.valueDisplay}>{emissiveIntensity.toFixed(1)}</span>
+          </label>
+          <input 
+            type="range" 
+            min="0" 
+            max="2" 
+            step="0.1"
+            value={emissiveIntensity}                   
+            onChange={handleEmissiveIntensityChange}    
+          />
+          
+          {/* METALNESS SLIDER */}
+          <label>
+            Metalness: <span className={styles.valueDisplay}>{metalness.toFixed(2)}</span>
+          </label>
+          <input 
+            type="range" 
+            min="0" 
+            max="1" 
+            step="0.01"
+            value={metalness}
+            onChange={handleMetalnessChange}
+          />
+        </div>
+
+        {/* NESTED SUBSECTION: GEOMETRY & EFFECTS */}
+        <div 
+          className={`${styles.subSectionHeader} ${geometryOpen ? styles.subSectionHeaderOpen : styles.subSectionHeaderClosed}`}
+          onClick={(e) => { e.stopPropagation(); setGeometryOpen(!geometryOpen); }}
+        >
+          <span>🔷 Geometry & Effects</span>
+          <span>{geometryOpen ? '▼' : '▶'}</span>
+        </div>
+        
+        <div className={`${styles.subSectionContent} ${geometryOpen ? styles.subSectionContentOpen : styles.subSectionContentClosed}`}>
+          {/* Wireframe visibility toggle */}
+          <label className={styles.futuristicCheckboxLabel}>
+            <input
+              type="checkbox"
+              checked={wireframeIntensity > 0}
+              onChange={handleWireframeToggle}
+              className={styles.futuristicCheckbox}
+            />
+            <span className={styles.futuristicCustomCheckbox}></span>
+            <span className={styles.futuristicCheckboxText}>Wireframe</span>
+          </label>
+          {/* Wireframe intensity slider */}
+          <label>
+            Wireframe Intensity: <span className={styles.valueDisplay}>{wireframeIntensity}%</span>
+          </label>
+          <input 
+            type="range" 
+            min="0" 
+            max="100" 
+            value={wireframeIntensity}
+            onChange={handleWireframeIntensityChange}
+          />
+
+          {/* Hyperframe color picker */}
+          <label>
+            Hyperframe Color:
+          </label>
+          <input 
+            type="color" 
+            value={hyperframeColor}
+            onChange={handleHyperframeColorChange}
+            onMouseDown={(e) => e.stopPropagation()}
+            onMouseMove={(e) => e.stopPropagation()}
+          />
+
+          {/* Hyperframe lines color picker */}
+          <label>
+            Hyperframe Lines Color:
+          </label>
+          <input 
+            type="color" 
+            value={hyperframeLineColor}
+            onChange={handleHyperframeLineColorChange}
+            onMouseDown={(e) => e.stopPropagation()}
+            onMouseMove={(e) => e.stopPropagation()}
+          />
+
+          {/* Object Type Control */}
+          <label>
+            Object Type:
+          </label>
+          <CustomSelect
+            value={objectType}
+            onChange={onObjectTypeChange}
+            options={[
+              { value: 'quantummanifold', label: '∞ Quantum Manifold (Klein+)' },
+              { value: 'compoundquantummanifold', label: '◈ Cpd-Quantum Manifold' },
+              { value: 'icosahedron', label: '⬢ Cpd-Icosahedron' },
+              { value: 'sphere', label: '● Cpd-Sphere' },
+              { value: 'compoundsphere', label: '◉ Super-Cpd-Sphere' },
+              { value: 'compoundfloatingcity', label: '∿ Compound Curves' },
+              { value: 'hessianpolychoron', label: '✦ Hessian Polychoron' },
+              { value: 'mobiussphere', label: '⟲ Möbius Sphere' },
+              { value: 'cube', label: '■ Cube' },
+              { value: 'box', label: '▦ Cpd-Tesseract' },
+              { value: 'cpdtesseract', label: '◆ Mega-Tesseract' },
+              { value: 'cpd-megatesseract', label: '◇ Cpd-Mega-Tesseract' },
+              { value: 'cpd-megatesseract-2', label: '◈ Cpd-Mega-Tesseract II' },
+              { value: 'cpd-megatesseract-3', label: '⬙ Cpd-Mega-Tesseract III' },
+              { value: 'cpd-megatesseract-4', label: '⬥ Cpd-Mega-Tesseract IV' },
+              { value: 'octahedron', label: '◇ Cpd-Octahedron' },
+              { value: 'tetrahedron', label: '▲ Cpd-Tetrahedron' },
+              { value: '120cell', label: '⬡ 120-Cell' },
+              { value: 'compound120cell', label: '⬢ Cpd-120-Cell' },
+              { value: '600cell', label: '⬣ 600-Cell' },
+              { value: 'compound600cell', label: '⬤ Cpd-600-Cell' },
+              { value: '24cell', label: '⬟ 24-Cell' },
+              { value: 'compound24cell', label: '⬠ Cpd-24-Cell' },
+              { value: '16cell', label: '◆ 16-Cell' },
+            ]}
+          />
+
+          {/* Animation Style Control */}
+          <label>
+            Animation Style:
+          </label>
+          <CustomSelect
+            value={animationStyle}
+            onChange={onAnimationStyleChange}
+            options={[
+            { value: 'rotate', label: 'Simple Rotation' },
+            { value: 'float', label: 'Floating Dance' },
+            { value: 'omniIntel', label: 'Omni-Intel' },
+          ]}
         />
-
-        {/* Hyperframe color picker */}
-        <label>
-          Hyperframe Color:
-        </label>
-        <input 
-          type="color" 
-          value={hyperframeColor}
-          onChange={handleHyperframeColorChange}
-        />
-
-        {/* Hyperframe lines color picker */}
-        <label>
-          Hyperframe Lines Color:
-        </label>
-        <input 
-          type="color" 
-          value={hyperframeLineColor}
-          onChange={handleHyperframeLineColorChange}
-        />
-
-        {/* Object Type Control */}
-        <label>
-          Object Type:
-        </label>
-        <select value={objectType} onChange={handleObjectTypeChange}>
-          <option value="quantummanifold">♾️ Quantum Manifold (Klein+)</option>
-          <option value="compoundquantummanifold">
-            🌀 Cpd-Quantum Manifold
-          </option>
-          <option value="icosahedron">🔯 Cpd-Icosahedron</option>
-          <option value="sphere">Cpd-Sphere (Cross)</option>
-          <option value="compoundsphere"> Super-Cpd-Sphere</option>
-          <option value="compoundfloatingcity"> Compound Curves</option>
-          <option value="hessianpolychoron">✦ Hessian Polychoron</option>
-          <option value="mobiussphere"> Möbius Sphere</option>
-          <option value="cube"> Cube</option>
-          <option value="box"> Cpd-Tesseract</option>
-          <option value="cpdtesseract">💎 Mega-Tesseract</option>
-          <option value="cpd-megatesseract"> Cpd-Mega-Tesseract</option>
-          <option value="cpd-megatesseract-2">Cpd-Mega-Tesseract II</option>
-          <option value="cpd-megatesseract-3"> Cpd-Mega-Tesseract III</option>
-          <option value="cpd-megatesseract-4"> Cpd-Mega-Tesseract IV</option>
-          <option value="octahedron">🔸 Cpd-Octahedron</option>
-          <option value="tetrahedron">🔻 Cpd-Tetrahedron</option>
-          <option value="120cell">🌐 120-Cell</option>
-          <option value="compound120cell">🌌 Cpd-120-Cell</option>
-          <option value="600cell">🔮 600-Cell</option>
-          <option value="compound600cell">✨ Cpd-600-Cell</option>
-          <option value="24cell">⬡ 24-Cell</option>
-          <option value="compound24cell">🔶 Cpd-24-Cell</option>
-          <option value="16cell">◆ 16-Cell</option>
-        </select>
-
-        {/* Animation Style Control */}
-        <label>
-          Animation Style:
-        </label>
-        <select value={animationStyle} onChange={handleAnimationStyleChange}>
-          <option value="rotate">Simple Rotation</option>
-          <option value="float">Floating Dance</option>
-          <option value="omniIntel">Omni-Intel</option>
-        </select>
 
         {/* Object Speed Control */}
         <label>
@@ -281,7 +326,7 @@ function Controls({
         <input
           type="range"
           min="0.1"
-          max="5"
+          max="10"
           step="0.1"
           value={objectSpeed || 1.0}
           onChange={handleObjectSpeedChange}
@@ -294,11 +339,12 @@ function Controls({
         <input
           type="range"
           min="0.1"
-          max="5"
+          max="10"
           step="0.1"
           value={orbSpeed || 1.0}
           onChange={handleOrbSpeedChange}
         />
+        </div>
       </div>
 
       {/* NEW: SCENE CONTROLS SECTION */}
@@ -328,22 +374,30 @@ function Controls({
         <label>
           Camera View:
         </label>
-        <select value={cameraView} onChange={handleCameraViewChange}>
-          <option value="free">Free Camera</option>
-          <option value="orbit">Orbit View</option>
-          <option value="top">Top Down</option>
-        </select>
+        <CustomSelect
+          value={cameraView}
+          onChange={onCameraViewChange}
+          options={[
+            { value: 'free', label: 'Free Camera' },
+            { value: 'orbit', label: 'Orbit View' },
+            { value: 'top', label: 'Top Down' },
+          ]}
+        />
 
         {/* Environment Control */}
         <label>
           Environment:
         </label>
-        <select value={environment} onChange={handleEnvironmentChange}>
-          <option value="nebula">Nebula</option>
-          <option value="space">Space Scene</option>
-          <option value="sunset">Sunset Sky</option>
-          <option value="matrix">Matrix Code</option>
-        </select>
+        <CustomSelect
+          value={environment}
+          onChange={onEnvironmentChange}
+          options={[
+            { value: 'nebula', label: 'Nebula' },
+            { value: 'space', label: 'Space Scene' },
+            { value: 'sunset', label: 'Sunset Sky' },
+            { value: 'matrix', label: 'Matrix Code' },
+          ]}
+        />
 
         {/* Environment Hue Shift Control */}
         <label>

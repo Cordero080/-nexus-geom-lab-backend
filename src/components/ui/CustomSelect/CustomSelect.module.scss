@@ -34,18 +34,19 @@ $border-color-active: rgba(0, 255, 255, 0.6);
     border-radius: 8px;
     /* Holographic cosmic black style */
     background:
-      linear-gradient(145deg, rgba(10, 10, 10, 0.7), rgba(0, 0, 0, 0.55)),
-      radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.1), transparent 50%),
-      radial-gradient(circle at 70% 70%, rgba(0, 0, 0, 0.5), transparent 50%),
-      linear-gradient(45deg, rgba(138, 43, 226, 0.05), rgba(0, 212, 255, 0.05), rgba(138, 43, 226, 0.05));
+      linear-gradient(145deg, rgba(10, 10, 10, 0.366), rgba(0, 0, 0, 0.203)),
+      radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.12), transparent 50%),
+      radial-gradient(circle at 70% 70%, rgba(0, 0, 0, 0.336), transparent 50%),
+      linear-gradient(45deg, rgba(138, 43, 226, 0.06), rgba(0, 212, 255, 0.06), rgba(138, 43, 226, 0.06));
     background-size: 100% 100%, 150% 150%, 150% 150%, 200% 200%;
     background-blend-mode: overlay, multiply, overlay;
     background-position: 0% 50%, 75% 75%, 75% 75%, 50% 50%;
-    border: 1px solid rgba(0, 212, 255, 0.25);
+    border: 1px solid rgba(0, 212, 255, 0.3);
     color: #ffffff;
-    font-family: 'Orbitron', 'JetBrains Mono', monospace;
+    font-family: 'JetBrains Mono', monospace;
     font-size: 0.875rem;
     font-weight: 500;
+    letter-spacing: 0.09em;
     cursor: pointer;
     transition: all 0.2s ease;
     user-select: none;
@@ -56,6 +57,11 @@ $border-color-active: rgba(0, 255, 255, 0.6);
       inset 0 -1px 3px rgba(0, 0, 0, 0.5);
 
     &:hover {
+      background:
+        linear-gradient(145deg, rgba(10, 10, 10, 0.37), rgba(0, 0, 0, 0.37)),
+        radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.15), transparent 50%),
+        radial-gradient(circle at 70% 70%, rgba(0, 0, 0, 0.65), transparent 50%),
+        linear-gradient(45deg, rgba(138, 43, 226, 0.07), rgba(0, 212, 255, 0.07), rgba(138, 43, 226, 0.07));
       border-color: rgba(0, 212, 255, 0.5);
       box-shadow: 
         0 4px 16px rgba(0, 255, 255, 0.3),
@@ -64,6 +70,11 @@ $border-color-active: rgba(0, 255, 255, 0.6);
     }
 
     &.open {
+      background:
+        linear-gradient(145deg, rgba(10, 10, 10, 0.184), rgba(0, 0, 0, 0.172)),
+        radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.15), transparent 50%),
+        radial-gradient(circle at 70% 70%, rgba(0, 0, 0, 0.121), transparent 50%),
+        linear-gradient(45deg, rgba(138, 43, 226, 0.07), rgba(0, 212, 255, 0.07), rgba(138, 43, 226, 0.07));
       border-color: rgba(0, 212, 255, 0.8);
       box-shadow: 
         0 0 0 3px rgba(0, 212, 255, 0.2),
@@ -97,18 +108,45 @@ $border-color-active: rgba(0, 255, 255, 0.6);
     backdrop-filter: blur(20px);
     border: 1px solid $border-color-hover;
     border-radius: 8px;
-    overflow: hidden;
-    z-index: 1000;
+    max-height: 250px;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    z-index: 10000;
     box-shadow: 
       0 8px 32px rgba($primary-color, 0.2),
       inset 0 1px 0 rgba(255, 255, 255, 0.1);
     animation: dropdownFadeIn 0.2s ease;
+    
+    /* Custom scrollbar for dropdown - matching slider style */
+    scrollbar-width: thin;
+    scrollbar-color: #5f74eddd rgba(0, 0, 0, 0.2);
+
+    &::-webkit-scrollbar {
+      width: 4px;
+    }
+
+    &::-webkit-scrollbar-track {
+      background: rgba(0, 0, 0, 0.2);
+      border-radius: 2px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background: linear-gradient(135deg, #00ffff, #ff00ff);
+      border-radius: 2px;
+      transition: all 0.3s ease;
+      
+      &:hover {
+        box-shadow: 
+          0 0 8px rgba(0, 255, 255, 0.6),
+          0 0 15px rgba(255, 0, 255, 0.4);
+      }
+    }
   }
 
   &__option {
-    padding: 10px 16px;
+    padding: 8px 16px;
     font-family: 'Orbitron', 'JetBrains Mono', monospace;
-    font-size: 0.875rem;
+    font-size: 0.75rem;
     font-weight: 500;
     color: rgba(255, 255, 255, 0.8);
     cursor: pointer;

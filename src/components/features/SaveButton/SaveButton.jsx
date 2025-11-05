@@ -34,7 +34,7 @@ function SaveButton ({ sceneConfig, textColor }) {
         variant="primary"
         className={`${styles.saveButton} ${isSaving ? styles.saving : ''}`}
       >
-        {isSaving ? 'Saving...' : 'Save Scene'}
+        {isSaving ? 'Saving...' : 'Save'}
       </ScrambleButton>
     </div>
   );

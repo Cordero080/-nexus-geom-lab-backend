@@ -17,16 +17,15 @@ import { QuantumCursor } from "./components/ui/Effects";
 import './cursor-override.module.scss';
 import sharedStyles from './styles/shared.module.scss';
 
-// Updated default colors for psychedelic theme
-const defaultBaseColor = '#ff00ff'; // Vibrant magenta
-const defaultWireframeColor = '#ffff00'; // Bright yellow
+// Updated default colors for psychedelic theme and used in geom-lab state = these are the initial colors when user starts a new scene
+const defaultBaseColor = '#ff00ff'; // Vibrant magenta 
 const defaultHyperframeColor = '#ff4500'; // Vivid orange-red
 const defaultHyperframeLineColor = '#00ff00'; // Bright green
 
 function GeomLab() {
-  const { loadedConfig, resetScene } = useScene(); // Get loaded config from context
-  const { token, isAuthenticated } = useAuth(); // Get auth for save functionality
-  const navigate = useNavigate(); // For navigation
+  const { loadedConfig, resetScene } = useScene(); // CUSTOM HOOK: Get loaded config from context
+  const { token } = useAuth(); // CUSTOM HOOK: Get auth for save functionality
+  const navigate = useNavigate(); // For navigation is usNavigate 
   const location = useLocation(); // Current location
   
   // Save prompt modal state
@@ -158,34 +157,7 @@ function GeomLab() {
     return () => window.removeEventListener('beforeunload', handleBeforeUnload);
   }, [hasUnsavedChanges, allowNavigation]);
 
-  // Remove old blocker effect
-  // useEffect(() => {
-  //   if (blocker.state === "blocked") {
-  //     setShowSavePrompt(true);
-  //     setPendingNavigation(blocker.location.pathname);
-  //   }
-  // }, [blocker]);
-
-  // Prevent user from leaving page without saving (browser tab/window close, refresh, etc.)
-  // useEffect(() => {
-  //   const handleBeforeUnload = (e) => {
-  //     if (!allowNavigation) {
-  //       // Show browser's default confirmation dialog
-  //       e.preventDefault();
-  //       e.returnValue = ''; // Chrome requires returnValue to be set
-  //       return ''; // Some browsers use return value
-  //     }
-  //   };
-
-  //   // Add event listener when component mounts
-  //   window.addEventListener('beforeunload', handleBeforeUnload);
-
-  //   // Cleanup: remove event listener when component unmounts
-  //   return () => {
-  //     window.removeEventListener('beforeunload', handleBeforeUnload);
-  //   };
-  // }, [allowNavigation]);
-
+  
   // Handle save from modal
   const handleSaveFromModal = async () => {
     const name = prompt('Name your masterpiece:');

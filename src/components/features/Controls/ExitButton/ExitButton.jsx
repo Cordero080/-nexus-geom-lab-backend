@@ -10,7 +10,7 @@ function ExitButton({ onClick, textColor }) {
         variant="danger"
         className={styles.exitButton}
       >
-        ← Exit Lab
+        Exit
       </ScrambleButton>
     </div>
   );
