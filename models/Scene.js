@@ -45,6 +45,8 @@ const sceneSchema = new mongoose.Schema({
       // No validation - all visual effects are always available
     },
     objectType: { type: String, default: "icosahedron" },
+    objectSpeed: { type: Number, default: 1.0, min: 0.1, max: 5 },
+    orbSpeed: { type: Number, default: 1.0, min: 0.1, max: 5 },
 
     // Lighting
     ambientLightColor: { type: String, default: "#ffffff" },
