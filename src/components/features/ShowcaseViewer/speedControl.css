@@ -169,12 +169,73 @@
   transform: translateY(0);
 }
 
-/* Responsive */
-@media (max-width: 768px) {
+/* ============================================
+   RESPONSIVE BREAKPOINTS
+   ============================================ */
+
+/* Tablet (768px - 1024px) */
+@media (max-width: 1024px) and (min-width: 769px) {
   .speed-control-container {
-    bottom: 20px;
+    min-width: 240px;
     right: 20px;
-    left: 20px;
+  }
+  
+  .speed-control-label,
+  .speed-control-value {
+    font-size: 11px;
+  }
+  
+  .speed-control-slider {
+    height: 4px;
+  }
+}
+
+/* Mobile Landscape & Small Tablets (481px - 768px) */
+@media (max-width: 768px) and (min-width: 481px) {
+  .speed-control-container {
+    min-width: 220px;
+    right: 15px;
+    padding: 6px 4px;
+  }
+  
+  .speed-control-label,
+  .speed-control-value {
+    font-size: 10px;
+  }
+  
+  .speed-control-slider {
+    height: 3px;
+  }
+}
+
+/* Mobile Portrait (<= 480px) */
+@media (max-width: 480px) {
+  .speed-control-container {
+    position: fixed;
+    bottom: 20px;
+    right: 10px;
+    left: 10px;
+    top: auto;
+    transform: none;
     min-width: unset;
+    padding: 6px 4px;
+  }
+  
+  .speed-control-label,
+  .speed-control-value {
+    font-size: 9px;
+  }
+  
+  .speed-control-slider {
+    height: 3px;
+  }
+  
+  .speed-control-presets {
+    gap: 6px;
+  }
+  
+  .speed-control-presets button {
+    padding: 4px 8px;
+    font-size: 9px;
   }
 }

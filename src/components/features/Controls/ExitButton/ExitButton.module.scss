@@ -29,3 +29,48 @@
 }
 
 /* No additional styles needed - ScrambleButton handles all styling */
+
+/* ============================================
+   RESPONSIVE BREAKPOINTS
+   ============================================ */
+
+/* Tablet (768px - 1024px) */
+@media (max-width: 1024px) and (min-width: 769px) {
+  .exitButtonContainer {
+    bottom: 40px;
+    left: 25px;
+    
+    button {
+      min-width: 120px;
+      font-size: 13px;
+    }
+  }
+}
+
+/* Mobile Landscape & Small Tablets (481px - 768px) */
+@media (max-width: 768px) and (min-width: 481px) {
+  .exitButtonContainer {
+    bottom: 30px;
+    left: 20px;
+    
+    button {
+      min-width: 110px;
+      font-size: 12px;
+      padding: 10px 16px;
+    }
+  }
+}
+
+/* Mobile Portrait (<= 480px) */
+@media (max-width: 480px) {
+  .exitButtonContainer {
+    bottom: 20px;
+    left: 15px;
+    
+    button {
+      min-width: 90px;
+      font-size: 11px;
+      padding: 8px 12px;
+    }
+  }
+}

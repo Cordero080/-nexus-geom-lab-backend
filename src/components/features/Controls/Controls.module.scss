@@ -677,3 +677,103 @@
 .materialSwatchHyperframeEdge {
   background-color: #ff4500; /* Warm orange-red */
 }
+
+/* ============================================
+   RESPONSIVE BREAKPOINTS
+   ============================================ */
+
+/* Tablet (768px - 1024px) */
+@media (max-width: 1024px) and (min-width: 769px) {
+  .controls {
+    width: 260px;
+    max-height: 70vh;
+    padding: 20px 16px;
+    left: 15px;
+  }
+  
+  .controls * {
+    font-size: 13px;
+  }
+  
+  .sectionHeader {
+    font-size: 14px;
+  }
+}
+
+/* Mobile Landscape & Small Tablets (481px - 768px) */
+@media (max-width: 768px) and (min-width: 481px) {
+  .controls {
+    width: 240px;
+    max-height: 65vh;
+    padding: 16px 12px;
+    left: 10px;
+    top: 120px;
+  }
+  
+  .controls * {
+    font-size: 12px;
+  }
+  
+  .sectionHeader {
+    font-size: 13px;
+    padding: 10px;
+  }
+  
+  .sectionContentMaterialOpen,
+  .sectionContentSceneOpen {
+    max-height: 1000px;
+  }
+  
+  .subSectionContentOpen {
+    max-height: 500px;
+  }
+}
+
+/* Mobile Portrait (<= 480px) */
+@media (max-width: 480px) {
+  .controls {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    top: auto;
+    width: 100%;
+    max-height: 60vh;
+    padding: 12px 10px;
+    border-radius: 20px 20px 0 0;
+    clip-path: none;
+    border: none;
+    border-top: 2px solid rgba(0, 255, 255, 0.4);
+    z-index: 2000;
+    overflow-y: auto;
+    background: rgba(0, 0, 0, 0.95);
+  }
+  
+  .controlsHidden {
+    transform: translateY(100%);
+  }
+  
+  .controls * {
+    font-size: 11px;
+  }
+  
+  .sectionHeader {
+    font-size: 12px;
+    padding: 8px;
+  }
+  
+  .sectionContentMaterialOpen,
+  .sectionContentSceneOpen {
+    max-height: 800px;
+  }
+  
+  .subSectionContentOpen {
+    max-height: 400px;
+  }
+  
+  /* Make control rows stack vertically on very small screens */
+  .controlRow {
+    flex-direction: column;
+    gap: 8px;
+  }
+}

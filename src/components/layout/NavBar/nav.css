@@ -32,6 +32,7 @@
   display: flex;
   align-items: center;
   position: relative;
+  overflow: visible; /* Ensure logo text isn't clipped */
 }
 
 .logo-text {
@@ -47,6 +48,8 @@
   color: #ffffff;
   text-shadow: 0 0 20px rgba(45, 86, 86, 0.4);
   animation: logoGlitch 6s ease-in-out infinite, gradientShift 4s ease-in-out infinite;
+  padding: 0 5px; /* Add padding to prevent text clipping */
+  display: inline-block; /* Ensure padding applies properly */
 }
 
 .logo-text .nav-inverted-a {
@@ -162,4 +165,102 @@
   0%, 100% { background-position: 0% 50%; }
   50% { background-position: 100% 50%; }
   100% { background-position: 0% 50%; }
+}
+
+/* ====================================
+   RESPONSIVE BREAKPOINTS
+   ==================================== */
+
+/* Tablet: 768px - 1024px */
+@media (max-width: 1024px) {
+  .quantum-nav {
+    padding: 0 30px;
+    height: 100px;
+  }
+
+  .logo-text {
+    font-size: 24px;
+  }
+
+  .nav-links {
+    gap: 20px;
+    flex-wrap: nowrap; /* Prevent wrapping */
+  }
+
+  .nav-link {
+    font-size: 15px;
+    white-space: nowrap; /* Prevent text wrapping within links */
+  }
+
+  .nav-terminal {
+    font-size: 15px;
+    margin-left: 15px;
+  }
+
+  .nav-terminal .terminal-cursor {
+    font-size: 15px;
+  }
+}
+
+/* Mobile Landscape: 481px - 767px */
+@media (max-width: 767px) {
+  .quantum-nav {
+    padding: 0 20px;
+    height: 90px;
+  }
+
+  .logo-text {
+    font-size: 20px;
+  }
+
+  .nav-links {
+    gap: 12px;
+    flex-wrap: nowrap;
+  }
+
+  .nav-link {
+    font-size: 13px;
+    white-space: nowrap;
+  }
+
+  .nav-terminal {
+    font-size: 13px;
+    margin-left: 10px;
+  }
+
+  .nav-terminal .terminal-cursor {
+    font-size: 13px;
+  }
+}
+
+/* Mobile Portrait: < 480px */
+@media (max-width: 480px) {
+  .quantum-nav {
+    padding: 0 15px;
+    height: 80px;
+  }
+
+  .logo-text {
+    font-size: 18px;
+  }
+
+  .nav-links {
+    gap: 8px;
+    flex-wrap: nowrap;
+  }
+
+  .nav-link {
+    font-size: 11px;
+    white-space: nowrap;
+    letter-spacing: 0.5px;
+  }
+
+  .nav-terminal {
+    font-size: 11px;
+    margin-left: 8px;
+  }
+
+  .nav-terminal .terminal-cursor {
+    font-size: 11px;
+  }
 }

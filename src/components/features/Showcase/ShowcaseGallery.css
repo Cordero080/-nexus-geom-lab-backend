@@ -70,11 +70,11 @@
   position: relative;
   z-index: 2;
   text-align: center;
-  padding: 90px 20px 0;
+  padding: 90px 30px 0; /* Increased horizontal padding */
   /* Make hero a snap point so scroll doesn't skip it */
   scroll-snap-align: start;
   scroll-snap-stop: always;
-  overflow: hidden; /* contain soft overlays */
+  overflow: visible; /* Changed from hidden to visible to prevent title clipping */
 }
 
 .showcase-title-stack {
@@ -228,8 +228,9 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 12px 24px;
+  padding: 12px 30px; /* Increased horizontal padding to prevent clipping */
   isolation: isolate;
+  overflow: visible; /* Ensure text isn't clipped */
 }
 
 .showcase-main-title::before,
@@ -401,6 +402,12 @@
   overflow: hidden;
   /* Enable 3D perspective for child cards */
   perspective: 1200px;
+}
+
+/* Push first scene (Icarus) content up so info is hidden until scrolling */
+.parallax-scene:first-of-type {
+  align-items: flex-start; /* Align content to top */
+  padding-top: 65px; /* Reduced more to push down a bit more */
 }
 
 /* Remove horizontal transition bands; the global cutout handles transitions */
@@ -668,7 +675,7 @@
   line-height: 1.2;
   margin: 0 0 6px 0;
   text-transform: uppercase;
-  letter-spacing: 10px;
+  letter-spacing: 6px; /* Reduced from 10px to prevent cutoff */
   /* Vibrant gradient like showcase main title */
   background: linear-gradient(135deg, #48f0d4 0%, #ff7fb4 55%, #5fbab4 75%, #ffd27f 100%);
   background-size: 200% 200%;
@@ -679,9 +686,10 @@
   filter: drop-shadow(0 6px 24px rgba(6, 21, 185, 0.32));
   transform: perspective(400px) rotateX(15deg);
   transform-origin: center bottom;
-  display: inline;
-  padding: 12px 24px;
+  display: inline-block; /* Changed from inline to inline-block */
+  padding: 12px 30px; /* Increased horizontal padding from 24px to 30px */
   isolation: isolate;
+  overflow: visible; /* Ensure text isn't clipped */
 }
 
 .parallax-animation {

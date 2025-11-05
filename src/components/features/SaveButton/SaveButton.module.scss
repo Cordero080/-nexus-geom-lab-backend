@@ -44,3 +44,48 @@
 }
 
 /* Modal styles moved to global shared.css - keeping only module-specific overrides here */
+
+/* ============================================
+   RESPONSIVE BREAKPOINTS
+   ============================================ */
+
+/* Tablet (768px - 1024px) */
+@media (max-width: 1024px) and (min-width: 769px) {
+  .saveButtonContainer {
+    bottom: 40px;
+    right: 25px;
+    
+    button {
+      min-width: 120px;
+      font-size: 13px;
+    }
+  }
+}
+
+/* Mobile Landscape & Small Tablets (481px - 768px) */
+@media (max-width: 768px) and (min-width: 481px) {
+  .saveButtonContainer {
+    bottom: 30px;
+    right: 20px;
+    
+    button {
+      min-width: 110px;
+      font-size: 12px;
+      padding: 10px 16px;
+    }
+  }
+}
+
+/* Mobile Portrait (<= 480px) */
+@media (max-width: 480px) {
+  .saveButtonContainer {
+    bottom: 20px;
+    right: 15px;
+    
+    button {
+      min-width: 90px;
+      font-size: 11px;
+      padding: 8px 12px;
+    }
+  }
+}
