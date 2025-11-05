@@ -374,8 +374,9 @@ function HomePageWithNav() {
 function AppContent() {
   // Get authentication status from AuthContext 
   const { isAuthenticated, isLoading } = useAuth();
+  const location = useLocation();
 
-  const currentPath = window.location.pathname;
+  const currentPath = location.pathname;
   const isHomePage = currentPath === '/' || currentPath === '';
   const isGeomLabPage = currentPath === '/geom-lab' || currentPath === '/geometry-lab';
   
