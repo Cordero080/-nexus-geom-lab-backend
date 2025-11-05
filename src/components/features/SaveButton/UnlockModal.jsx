@@ -10,6 +10,15 @@ export default function UnlockModal({
 }) {
   const navigate = useNavigate();
 
+  // Play unlock sound effect when modal opens
+  React.useEffect(() => {
+    if (isOpen) {
+      const audio = new Audio('/soundEffects/unlock.wav');
+      audio.volume = 0.5; // Set volume to 50%
+      audio.play().catch(err => console.log('Audio play failed:', err));
+    }
+  }, [isOpen]);
+
   if (!isOpen) return null;
 
   const handleClose = () => {

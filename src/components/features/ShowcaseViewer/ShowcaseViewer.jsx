@@ -21,14 +21,14 @@ export default function ShowcaseViewer({ animation, onClose }) {
   const [currentAnimation, setCurrentAnimation] = useState(animation);
   
   // Get all unlocked animations for this Noetech
-  const unlockedAnimationsForNoetech = getUnlockedAnimationsForNoetech(animation.noetechKey);
+  const unlockedAnimationsForNoetech = getUnlockedAnimationsForNoetech(currentAnimation.noetechKey);
   
   // Check if the Noetech itself is unlocked (for default animation)
-  const isNoetechUnlocked = user?.unlockedNoetechs?.includes(animation.noetechKey);
+  const isNoetechUnlocked = user?.unlockedNoetechs?.includes(currentAnimation.noetechKey);
   
   // Get all animations for this Noetech that are unlocked
   const availableAnimations = mockAnimations.filter(anim => {
-    if (anim.noetechKey !== animation.noetechKey) return false;
+    if (anim.noetechKey !== currentAnimation.noetechKey) return false;
     
     // Default animation is available if Noetech is unlocked
     if (anim.isDefaultAnimation && isNoetechUnlocked) return true;
@@ -39,6 +39,50 @@ export default function ShowcaseViewer({ animation, onClose }) {
   
   // Show switcher only if multiple animations are available
   const showAnimationSwitcher = availableAnimations.length > 1;
+  
+  // CHARACTER NAVIGATION: Get all unlocked characters (Noetechs)
+  const allUnlockedCharacters = mockAnimations.filter(anim => {
+    if (!anim.isDefaultAnimation) return false;
+    return user?.unlockedNoetechs?.includes(anim.noetechKey);
+  });
+  
+  // DEBUG: Log character navigation state
+  console.log('🎮 Character Navigation Debug:', {
+    allUnlockedCharacters: allUnlockedCharacters.map(a => ({ name: a.name, key: a.noetechKey })),
+    currentCharacter: currentAnimation.name,
+    unlockedNoetechs: user?.unlockedNoetechs
+  });
+  
+  // Find current character index
+  const currentCharacterIndex = allUnlockedCharacters.findIndex(
+    anim => anim.noetechKey === currentAnimation.noetechKey
+  );
+  
+  // Navigation functions
+  const goToPreviousCharacter = () => {
+    if (currentCharacterIndex > 0) {
+      setCurrentAnimation(allUnlockedCharacters[currentCharacterIndex - 1]);
+    }
+  };
+  
+  const goToNextCharacter = () => {
+    if (currentCharacterIndex < allUnlockedCharacters.length - 1) {
+      setCurrentAnimation(allUnlockedCharacters[currentCharacterIndex + 1]);
+    }
+  };
+  
+  const hasMultipleCharacters = allUnlockedCharacters.length > 1;
+  
+  console.log('🎮 Navigation State:', {
+    hasMultipleCharacters,
+    currentIndex: currentCharacterIndex,
+    totalCharacters: allUnlockedCharacters.length
+  });
+  
+  // TEMP: Force show navigation for testing (set to true to always show)
+  const showNavForTesting = true;
+  
+  console.log('🔍 Should show nav buttons?', (hasMultipleCharacters || showNavForTesting));
   
   // Run once component mounts
   React.useEffect(() => {
@@ -74,6 +118,31 @@ export default function ShowcaseViewer({ animation, onClose }) {
             ← Back
           </ScrambleButton>
         </div>
+        
+        {/* Character Navigation - Previous/Next buttons */}
+        {(hasMultipleCharacters || showNavForTesting) && (
+          <>
+            <button
+              className="viewer-nav-button viewer-nav-prev"
+              onClick={goToPreviousCharacter}
+              disabled={currentCharacterIndex === 0}
+              title="Previous Character"
+            >
+              <span className="nav-arrow">‹</span>
+              <span className="nav-label">Previous Character</span>
+            </button>
+            
+            <button
+              className="viewer-nav-button viewer-nav-next"
+              onClick={goToNextCharacter}
+              disabled={currentCharacterIndex === allUnlockedCharacters.length - 1}
+              title="Next Character"
+            >
+              <span className="nav-label">Next Character</span>
+              <span className="nav-arrow">›</span>
+            </button>
+          </>
+        )}
         
         {/* Animation Switcher - only show if multiple animations available */}
         {showAnimationSwitcher && (

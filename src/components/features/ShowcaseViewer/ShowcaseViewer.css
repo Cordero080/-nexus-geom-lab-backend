@@ -610,6 +610,98 @@
   animation: slideInRight 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
+/* ================== CHARACTER NAVIGATION ================== */
+
+.viewer-nav-button {
+  position: fixed;
+  top: 120px;
+  z-index: 999999;
+  padding: 12px 20px;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(0, 255, 255, 0.3);
+  color: #00ffff;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  font-family: 'Orbitron', monospace;
+  font-size: 10px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
+  clip-path: polygon(
+    8px 0, 
+    calc(100% - 8px) 0, 
+    100% 8px, 
+    100% calc(100% - 8px), 
+    calc(100% - 8px) 100%, 
+    8px 100%, 
+    0 calc(100% - 8px), 
+    0 8px
+  );
+}
+
+.viewer-nav-prev {
+  left: 20px;
+  animation: slideInFromTop 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.viewer-nav-next {
+  right: 20px;
+  animation: slideInFromTop 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.viewer-nav-button:hover:not(:disabled) {
+  background: rgba(0, 0, 0, 0.85);
+  border-color: rgba(0, 255, 255, 0.5);
+  box-shadow: 0 0 15px rgba(0, 255, 255, 0.3);
+  transform: translateY(-2px);
+}
+
+.viewer-nav-button:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+  border-color: rgba(100, 100, 100, 0.3);
+  color: #666;
+}
+
+.nav-arrow {
+  font-size: 24px;
+  line-height: 1;
+  font-weight: 300;
+}
+
+.nav-label {
+  font-size: 9px;
+  letter-spacing: 1.5px;
+  white-space: nowrap;
+}
+
+@keyframes slideInFromTop {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
 .switcher-title {
   display: none; /* Hide title for minimal look */
 }
@@ -699,5 +791,27 @@
   .animation-button {
     padding: 8px 14px;
     font-size: 10px;
+  }
+  
+  /* Character navigation on mobile */
+  .viewer-nav-button {
+    padding: 10px 15px;
+    top: 10px;
+  }
+  
+  .viewer-nav-prev {
+    left: 10px;
+  }
+  
+  .viewer-nav-next {
+    right: 10px;
+  }
+  
+  .nav-arrow {
+    font-size: 20px;
+  }
+  
+  .nav-label {
+    font-size: 8px;
   }
 }
