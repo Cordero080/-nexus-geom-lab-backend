@@ -70,9 +70,24 @@ _Gamified character and animation unlocks with sound effects_
 
 ---
 
-## ✨ What Makes This Special
+## Overview
 
-A full-stack MERN application that transforms abstract mathematical concepts into an interactive 3D art platform with:
+A full-stack MERN application that transforms abstract 4D geometry into an interactive 3D platform born from a love of visualizing hyperdimensional structures and exploring how they can nest, interpenetrate, and transform.
+
+**Background**: Coming from an art, digital art and a layman motion graphics background, I wanted to see how compound polytopes—these abstract 4D shapes—could work visually in 3D space. I designed the spatial relationships and aesthetic direction, then collaborated with AI tools to handle the mathematical implementation. My focus was on the geometry, user experience, and visual design.
+
+**What It Does Differently**:
+
+- **Geometry Meets Gamification**: Instead of just a viewer or educational tool, saving scenes unlocks animated characters progressively (Scene 1 → Icarus-X, Scene 2 → Vectra Apex, Scene 3 → Nexus-Prime, more scenes → additional animations).  The idea was using geometric creation as a progression mechanic.
+Creation begets creation, so to speak. 
+
+- **24 Custom Geometries**: From basic shapes to compound tesseracts and 4D polytopes (120-cell, 600-cell), with custom wireframe systems and hyperframe structures showing how these shapes collapse from higher dimensions.
+
+- **Cohesive Aesthetic**: Quantum-themed throughout—glassmorphic UI, portal backgrounds, character names (Nexus, Vectra), and visual hierarchy (centerlines, connectors, interpenetrating structures).
+
+- **Beyond CRUD**: While it has standard save/load functionality, the unlock system and character showcase add a narrative layer that transforms geometry manipulation from technical exercise into exploration with rewards.
+
+Built with React, Three.js, and MongoDB. Full-stack MERN application featuring:
 
 - **24 Geometric Types**: 4D polytopes (120-Cell, 600-Cell), quantum manifolds, compound tesseracts, hyperdimensional structures
 - **Advanced 3D Engine**: Custom wireframe system with synchronized multi-component animations
@@ -96,7 +111,7 @@ A full-stack MERN application that transforms abstract mathematical concepts int
 - **3 Animated Characters**: Icarus-X (Seraph), Vectra (Spellcaster), Nexus-Prime (Warrior)
 - **Progressive Unlocks**: Characters unlock as users save scenes (gamification)
 - **Multi-Animation System**: Animation switcher appears when multiple animations unlocked
-- **FBX Pipeline**: Meshy.ai → Mixamo → Blender → React Three Fiber
+- **FBX Pipeline**: Meshy → Mixamo → Blender → React Three Fiber
 
 ### 💾 Scene Management
 
