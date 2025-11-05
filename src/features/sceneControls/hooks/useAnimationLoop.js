@@ -10,6 +10,8 @@ import { startAnimationLoop } from "../animationLoop";
  * @param {Object} refs.cameraRef - Camera reference
  * @param {Object} refs.animationIdRef - Animation ID reference
  * @param {Object} refs.objectsRef - Objects reference
+ * @param {Object} refs.objectSpeedRef - Object speed reference (allows speed changes without restarting animation)
+ * @param {Object} refs.orbSpeedRef - Orb speed reference (allows speed changes without restarting animation)
  * @param {Object} settings - Animation settings
  * @param {string} settings.animationStyle - Current animation style
  * @param {string} settings.cameraView - Current camera view
@@ -18,7 +20,15 @@ import { startAnimationLoop } from "../animationLoop";
  * @param {Function} interactionFns.decayUserRotations - Decays stored rotation offsets each frame
  */
 export function useAnimationLoop(refs, settings, interactionFns = {}) {
-  const { rendererRef, sceneRef, cameraRef, animationIdRef, objectsRef } = refs;
+  const {
+    rendererRef,
+    sceneRef,
+    cameraRef,
+    animationIdRef,
+    objectsRef,
+    objectSpeedRef,
+    orbSpeedRef,
+  } = refs;
   const { animationStyle, cameraView } = settings;
 
   useEffect(() => {
@@ -33,7 +43,9 @@ export function useAnimationLoop(refs, settings, interactionFns = {}) {
       objectsRef,
       animationStyle,
       cameraView,
-      interactionFns
+      interactionFns,
+      objectSpeedRef,
+      orbSpeedRef
     );
 
     // Cleanup - Cancel animation when effect re-runs or component unmounts

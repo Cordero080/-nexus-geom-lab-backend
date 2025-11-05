@@ -62,6 +62,8 @@ function GeomLab() {
   const [directionalLightY, setDirectionalLightY] = useState(10)
   const [directionalLightZ, setDirectionalLightZ] = useState(5)
   const [scale, setScale] = useState(1)
+  const [objectSpeed, setObjectSpeed] = useState(1.0)
+  const [orbSpeed, setOrbSpeed] = useState(1.0)
 
   // Track changes to mark as unsaved
   useEffect(() => {
@@ -70,7 +72,7 @@ function GeomLab() {
       hyperframeLineColor, cameraView, environment, environmentHue, objectCount,
   animationStyle, objectType, ambientLightColor, ambientLightIntensity,
   directionalLightColor, directionalLightIntensity, directionalLightX,
-  directionalLightY, directionalLightZ, scale]);
+  directionalLightY, directionalLightZ, scale, objectSpeed, orbSpeed]);
 
   // Intercept link clicks for navigation blocking
   useEffect(() => {
@@ -247,7 +249,9 @@ function GeomLab() {
     directionalLightX,
     directionalLightY,
     directionalLightZ,
-    scale
+    scale,
+    objectSpeed,
+    orbSpeed
   };
 
   // Handle exit with save prompt
@@ -308,6 +312,8 @@ function GeomLab() {
       // App.jsx says to ThreeScene: Hey kid, here are 21 props I want you to know about. But u know what ain't one. 
       <ThreeScene
         scale={scale}
+        objectSpeed={objectSpeed}
+        orbSpeed={orbSpeed}
         metalness={metalness}
         emissiveIntensity={emissiveIntensity}
         baseColor={baseColor}
@@ -369,6 +375,10 @@ function GeomLab() {
         onDirectionalLightYChange={setDirectionalLightY}
         directionalLightZ={directionalLightZ}
         onDirectionalLightZChange={setDirectionalLightZ}
+        objectSpeed={objectSpeed}
+        onObjectSpeedChange={setObjectSpeed}
+        orbSpeed={orbSpeed}
+        onOrbSpeedChange={setOrbSpeed}
       />
     </>
   );

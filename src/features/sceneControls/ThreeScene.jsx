@@ -1,6 +1,6 @@
 import { updateEnvironment } from './environmentSetup';
 import { __UP, __Q, __TMP, __A, __B, __M, __Inv, nearestVertexIndex, updateThickWireframeCylinders } from '../../utils/geometryHelpers';
-import React, { useRef } from 'react';
+import React, { useRef, useEffect } from 'react';
 import './ThreeScene.css';
 import { useSceneInitialization } from './hooks/useSceneInitialization';
 import { useObjectManager } from './hooks/useObjectManager';
@@ -16,7 +16,7 @@ import { useObjectInteraction } from './hooks/useObjectInteraction';
 // ThreeScene: 3D renderer that receives props from App.jsx
 function ThreeScene({ 
 	// Material props
-	scale, metalness, emissiveIntensity, baseColor, wireframeIntensity,
+	scale, objectSpeed, orbSpeed, metalness, emissiveIntensity, baseColor, wireframeIntensity,
 	// Hyperframe props
 	hyperframeColor, hyperframeLineColor,
 	// Scene behavior props
@@ -35,6 +35,17 @@ function ThreeScene({
 	const animationIdRef = useRef(null);
 	const ambientLightRef = useRef(null);
 	const directionalLightRef = useRef(null);
+	const objectSpeedRef = useRef(objectSpeed);
+	const orbSpeedRef = useRef(orbSpeed);
+
+	// Update speed refs when speed props change (without restarting animation)
+	useEffect(() => {
+		objectSpeedRef.current = objectSpeed;
+	}, [objectSpeed]);
+
+	useEffect(() => {
+		orbSpeedRef.current = orbSpeed;
+	}, [orbSpeed]);
 	
 	// Initialize scene, camera, renderer, and lights
 	useSceneInitialization(
@@ -71,7 +82,7 @@ function ThreeScene({
 	);
 
 	useAnimationLoop(
-		{ rendererRef, sceneRef, cameraRef, animationIdRef, objectsRef },
+		{ rendererRef, sceneRef, cameraRef, animationIdRef, objectsRef, objectSpeedRef, orbSpeedRef },
 		{ animationStyle, cameraView },
 		{ getUserRotation, decayUserRotations }
 	);

@@ -415,7 +415,7 @@
 .sectionContentOpen {
     opacity: 1;
     padding-top: 8px;
-    padding-bottom: 12px;
+    padding-bottom: 30px;
 }
 
 .sectionContentClosed {
@@ -627,6 +627,16 @@
 
 .materialSwatchHyperframeSpiral {
   background-color: #00ffcc; /* Cool aqua */
+}
+
+/* Spacing for last control in material section */
+.lastMaterialControl {
+  margin-bottom: 90px;
+}
+
+/* Spacing for scene section header */
+.sceneHeaderSpacing {
+  margin-top: 30px;
 }
 
 .materialSwatchHyperframeEdge {

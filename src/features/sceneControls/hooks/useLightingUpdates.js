@@ -31,8 +31,8 @@ export function useLightingUpdates(refs, lightingProps) {
   // AMBIENT LIGHT UPDATER
   useEffect(() => {
     if (ambientLightRef.current) {
-      // Clamp ambient light intensity to prevent complete darkness
-      const safeIntensity = Math.max(0.1, ambientLightIntensity);
+      // Allow full range of ambient light intensity (0 to 2)
+      const safeIntensity = Math.max(0, ambientLightIntensity);
       // Convert hex color to Three.js color number with validation
       const colorString = ambientLightColor.replace("#", "");
       const convertedColor = parseInt(colorString, 16);

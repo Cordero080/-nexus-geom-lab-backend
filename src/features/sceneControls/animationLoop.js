@@ -22,7 +22,7 @@ function applyUserRotation(meshes, objectId, interactionFns) {
  * Animation functions for different styles
  */
 const animationStyles = {
-  rotate: (objData, t, index, interactionFns = null) => {
+  rotate: (objData, t, index, interactionFns = null, speed = 1.0) => {
     const {
       solidMesh,
       wireframeMesh,
@@ -49,8 +49,8 @@ const animationStyles = {
       Boolean
     );
     meshes.forEach((mesh) => {
-      mesh.rotation.x += 0.005;
-      mesh.rotation.y += 0.01;
+      mesh.rotation.x += 0.005 * speed;
+      mesh.rotation.y += 0.01 * speed;
       if (originalPosition) {
         mesh.position.set(
           originalPosition.x,
@@ -63,7 +63,7 @@ const animationStyles = {
     applyUserRotation(meshes, objectId, interactionFns);
   },
 
-  float: (objData, t, index, interactionFns = null) => {
+  float: (objData, t, index, interactionFns = null, speed = 1.0) => {
     const {
       solidMesh,
       wireframeMesh,
@@ -102,15 +102,15 @@ const animationStyles = {
       }
 
       // Gentle rotation while floating
-      mesh.rotation.y += 0.005;
-      mesh.rotation.x += 0.002 * Math.sin(t * 0.1 + (phase || 0));
+      mesh.rotation.y += 0.005 * speed;
+      mesh.rotation.x += 0.002 * Math.sin(t * 0.1 + (phase || 0)) * speed;
     });
 
     const objectId = objData.objectId || (solidMesh && solidMesh.uuid);
     applyUserRotation(meshes, objectId, interactionFns);
   },
 
-  omniIntel: (objData, t, index, interactionFns = null) => {
+  omniIntel: (objData, t, index, interactionFns = null, speed = 1.0) => {
     const {
       solidMesh,
       wireframeMesh,
@@ -230,10 +230,10 @@ const animationStyles = {
         ) * speedMultiplier;
 
       solidMesh.rotation.x +=
-        currentSpinSpeed * 0.375 * Math.sin(t * 0.2 + phase);
-      solidMesh.rotation.y += currentSpinSpeed * 0.5;
+        currentSpinSpeed * 0.375 * Math.sin(t * 0.2 + phase) * speed;
+      solidMesh.rotation.y += currentSpinSpeed * 0.5 * speed;
       solidMesh.rotation.z +=
-        currentSpinSpeed * 0.25 * Math.cos(t * 0.35 + phase);
+        currentSpinSpeed * 0.25 * Math.cos(t * 0.35 + phase) * speed;
 
       solidMesh.position.x +=
         Math.sin(t * 5 + phase) * (1 - buildUpFactor) * 0.02;
@@ -286,7 +286,7 @@ const animationStyles = {
 
       solidMesh.rotation.z = Math.sin(t_angle * 0.5) * 0.8;
       solidMesh.rotation.x = Math.cos(t_angle * 0.7) * 0.5;
-      solidMesh.rotation.y += (t * 0.25 + phase) * 0.1;
+      solidMesh.rotation.y += (t * 0.25 + phase) * 0.1 * speed;
     }
 
     // PHASE 5: Swift Return & Re-entry (85% - 100%)
@@ -383,7 +383,9 @@ export function startAnimationLoop(
   objectsRef,
   animationStyle,
   cameraView,
-  interactionFns = null
+  interactionFns = null,
+  objectSpeedRef = { current: 1.0 },
+  orbSpeedRef = { current: 1.0 }
 ) {
   let lastTime = performance.now();
 
@@ -394,15 +396,23 @@ export function startAnimationLoop(
     const currentTime = performance.now();
     const delta = (currentTime - lastTime) / 1000;
     lastTime = currentTime;
-    const t = currentTime * 0.001;
+    const objectSpeed = objectSpeedRef.current || 1.0;
+    const orbSpeed = orbSpeedRef.current || 1.0;
+    const t = currentTime * 0.001 * objectSpeed;
 
-    // Animate spectral orbs
-    animateSpectralOrbs(delta);
+    // Animate spectral orbs with orb speed
+    animateSpectralOrbs(delta * orbSpeed);
 
-    // Animate objects based on animation style
+    // Animate objects based on animation style with object speed
     if (objectsRef.current && animationStyles[animationStyle]) {
       objectsRef.current.forEach((objData, index) => {
-        animationStyles[animationStyle](objData, t, index, interactionFns);
+        animationStyles[animationStyle](
+          objData,
+          t,
+          index,
+          interactionFns,
+          objectSpeed
+        );
       });
     }
 

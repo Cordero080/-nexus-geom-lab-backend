@@ -22,6 +22,8 @@ import {
 function Controls({ 
   // MATERIAL PROPERTIES (current values FROM App.jsx + setter functions FROM App.jsx)
   scale, onScaleChange,                            // Current scale value + function to update it
+  objectSpeed, onObjectSpeedChange,                // Current object animation speed + function to update it
+  orbSpeed, onOrbSpeedChange,                      // Current orb animation speed + function to update it
   metalness, onMetalnessChange,                    // Current metalness value + function to update it
   emissiveIntensity, onEmissiveIntensityChange,    // Current emissive intensity + function to update it
   baseColor, onBaseColorChange,                    // Current base color + function to update it
@@ -48,7 +50,7 @@ function Controls({
   
   // LOCAL STATE - These are managed by Controls component itself (NOT from App.jsx)
   // These control whether each section is expanded or collapsed in the UI
-  const [materialOpen, setMaterialOpen] = useState(false)   // Material Properties section closed by default
+  const [materialOpen, setMaterialOpen] = useState(true)    // Material Properties section open by default to see speed controls
   const [sceneOpen, setSceneOpen] = useState(false)         // Scene Controls section closed by default
   const [lightingOpen, setLightingOpen] = useState(false)   // Lighting Controls section closed by default
   const [isHidden, setIsHidden] = useState(false)           // Controls panel visibility state
@@ -75,6 +77,8 @@ function Controls({
   // Create handler functions using factories from controlsHandlers.js
   const handleMetalnessChange = createMetalnessHandler(onMetalnessChange);
   const handleScaleChange = createScaleHandler(onScaleChange);
+  const handleObjectSpeedChange = (e) => onObjectSpeedChange(parseFloat(e.target.value));
+  const handleOrbSpeedChange = (e) => onOrbSpeedChange(parseFloat(e.target.value));
   const handleEmissiveIntensityChange = createEmissiveIntensityHandler(onEmissiveIntensityChange);
   const handleBaseColorChange = createBaseColorHandler(onBaseColorChange);
   const handleWireframeIntensityChange = createWireframeIntensityHandler(onWireframeIntensityChange);
@@ -269,6 +273,32 @@ function Controls({
           <option value="float">Floating Dance</option>
           <option value="omniIntel">Omni-Intel</option>
         </select>
+
+        {/* Object Speed Control */}
+        <label>
+          Object Speed: <span className={styles.valueDisplay}>{(objectSpeed || 1.0).toFixed(1)}x</span>
+        </label>
+        <input
+          type="range"
+          min="0.1"
+          max="5"
+          step="0.1"
+          value={objectSpeed || 1.0}
+          onChange={handleObjectSpeedChange}
+        />
+
+        {/* Orb Speed Control */}
+        <label>
+          Orb Speed: <span className={styles.valueDisplay}>{(orbSpeed || 1.0).toFixed(1)}x</span>
+        </label>
+        <input
+          type="range"
+          min="0.1"
+          max="5"
+          step="0.1"
+          value={orbSpeed || 1.0}
+          onChange={handleOrbSpeedChange}
+        />
       </div>
 
       {/* NEW: SCENE CONTROLS SECTION */}
