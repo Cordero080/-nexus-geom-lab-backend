@@ -48,7 +48,9 @@ export const createEmissiveIntensityHandler = (onEmissiveIntensityChange) => {
 export const createBaseColorHandler = (onBaseColorChange) => {
   return (event) => {
     const newColor = event.target.value;
-    onBaseColorChange(newColor);
+    // Ensure alpha channel is preserved (add 'ff' if not present)
+    const colorWithAlpha = newColor.length === 7 ? newColor + "ff" : newColor;
+    onBaseColorChange(colorWithAlpha);
   };
 };
 
@@ -155,9 +157,8 @@ export const createObjectCountHandler = (onObjectCountChange) => {
  * @returns {Function} Event handler
  */
 export const createAnimationStyleHandler = (onAnimationStyleChange) => {
-  return (event) => {
-    const newStyle = event.target.value;
-    onAnimationStyleChange(newStyle);
+  return (value) => {
+    onAnimationStyleChange(value);
   };
 };
 
@@ -167,8 +168,7 @@ export const createAnimationStyleHandler = (onAnimationStyleChange) => {
  * @returns {Function} Event handler
  */
 export const createObjectTypeHandler = (onObjectTypeChange) => {
-  return (event) => {
-    const newType = event.target.value;
-    onObjectTypeChange(newType);
+  return (value) => {
+    onObjectTypeChange(value);
   };
 };

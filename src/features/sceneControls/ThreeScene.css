@@ -133,7 +133,7 @@
   
       
     /* Deep Galactic Background */
-    linear-gradient(5deg, #4d002d 0%, #760d4e 25%, #b3008e 50%, #af006e 5%, #2803184f 55%);
+    linear-gradient(5deg, #380523 0%, #760d4e 25%, #b3008e 50%, #af006e 5%, #2803184f 55%);
   
   animation: nebulaSwirl 2s cubic-bezier(0.8, 0.1, 1.2, 0.9) infinite;
   
@@ -150,75 +150,6 @@
 }
 
 /* Aurora Waves - Gentle flowing curtains of light */
-.bg-gradient-nebula::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: 
-    linear-gradient(
-      120deg,
-      transparent 0%,
-      rgba(137, 43, 226, 0.546) 20%,
-      rgba(255, 20, 147, 0.25) 40%,
-      transparent 45%,
-      transparent 55%,
-      rgba(0, 255, 255, 0.3) 70%,
-      rgba(186, 85, 211, 0.25) 85%,
-      transparent 100%
-    );
-  background-size: 200% 100%;
-  animation: auroraFlow 15s ease-in-out infinite;
-  pointer-events: none;
-  z-index: 1;
-  opacity: 0.7;
-}
-
-/* Second aurora layer for depth */
-.bg-gradient-nebula::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: 
-    linear-gradient(
-      60deg,
-      transparent 0%,
-      rgba(0, 255, 255, 0.2) 25%,
-      transparent 35%,
-      transparent 60%,
-      rgba(255, 100, 255, 0.25) 75%,
-      rgba(255, 150, 0, 0.2) 90%,
-      transparent 100%
-    );
-  background-size: 180% 100%;
-  animation: auroraFlow 20s ease-in-out infinite reverse;
-  pointer-events: none;
-  z-index: 2;
-  opacity: 0.6;
-}
-
-/* Animation: Aurora waves slowly flow across the screen */
-@keyframes auroraFlow {
-  0% {
-    background-position: 0% 50%;
-  }
-  50% {
-    background-position: 100% 50%;
-  }
-  100% {
-    background-position: 0% 50%;
-  }
-}
-
-
-/* Hover - Starfield Effect Reduction */
-
-/* Organic Magnetic/Cosmic Web - Subtler, highly blurred filaments */
 
 .bg-gradient-space {
   background: linear-gradient(180deg, #0a0a2a 0%, #1a1a4a 100%);

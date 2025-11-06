@@ -67,7 +67,9 @@ export function useMaterialUpdates(objectsRef, materialProps) {
 
   // EMISSIVE INTENSITY UPDATER (creates glow effect using baseColor)
   useEffect(() => {
-    const emissiveColor = new THREE.Color(baseColor).multiplyScalar(
+    // Use RGB part only for Three.js Color
+    const rgbColor = baseColor.slice(0, 7); // Remove alpha if present
+    const emissiveColor = new THREE.Color(rgbColor).multiplyScalar(
       emissiveIntensity
     );
     const processedSolid = new Set();
@@ -88,8 +90,9 @@ export function useMaterialUpdates(objectsRef, materialProps) {
 
   // BASE COLOR UPDATER
   useEffect(() => {
-    // Convert hex color string to Three.js color number
-    const convertedColor = parseInt(baseColor.replace("#", ""), 16);
+    // Convert hex color string to Three.js color number (strip alpha channel)
+    const hexColor = baseColor.slice(1, 7); // Remove # and alpha (ff)
+    const convertedColor = parseInt(hexColor, 16);
 
     objectsRef.current.forEach(({ solidMesh, wireframeMesh }) => {
       // Update solid mesh materials

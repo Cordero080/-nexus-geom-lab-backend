@@ -119,41 +119,33 @@ function Controls({
   // GROUP 1: Surface Properties (colors, metalness, emissive)
   const surfaceProps = {
     baseColor,
-    onBaseColorChange,
     handleBaseColorChange,
     emissiveIntensity,
-    onEmissiveIntensityChange,
     handleEmissiveIntensityChange,
     metalness,
-    onMetalnessChange,
     handleMetalnessChange,
   };
 
   // GROUP 2: Geometry & Effects (wireframe, hyperframe, object types)
   const geometryProps = {
     wireframeIntensity,
-    onWireframeIntensityChange,
     handleWireframeIntensityChange,
     handleWireframeToggle,
     hyperframeColor,
-    onHyperframeColorChange,
     handleHyperframeColorChange,
     hyperframeLineColor,
-    onHyperframeLineColorChange,
     handleHyperframeLineColorChange,
     objectType,
-    onObjectTypeChange,
+    handleObjectTypeChange,
     animationStyle,
-    onAnimationStyleChange,
+    handleAnimationStyleChange,
   };
 
   // GROUP 3: Animation Speeds
   const speedProps = {
     objectSpeed,
-    onObjectSpeedChange,
     handleObjectSpeedChange,
     orbSpeed,
-    onOrbSpeedChange,
     handleOrbSpeedChange,
   };
 

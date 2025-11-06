@@ -18,7 +18,7 @@ import './cursor-override.module.scss';
 import sharedStyles from './styles/shared.module.scss';
 
 // Updated default colors for psychedelic theme and used in geom-lab state = these are the initial colors when user starts a new scene
-const defaultBaseColor = '#ff00ff'; // Vibrant magenta 
+const defaultBaseColor = '#59049aff'; // Vibrant magenta 
 const defaultHyperframeColor = '#ff4500'; // Vivid orange-red
 const defaultHyperframeLineColor = '#00ff00'; // Bright green
 
@@ -37,7 +37,9 @@ function GeomLab() {
   // MATERIAL PROPERTIES STATE
   const [metalness, setMetalness] = useState(0.5) // 0 = plastic, 1 = full metal
   const [emissiveIntensity, setEmissiveIntensity] = useState(0) // 0 = no glow, 2 = bright glow
+  
   const [baseColor, setBaseColor] = useState(defaultBaseColor)
+
   const [wireframeIntensity, setWireframeIntensity] = useState(50)
   
   // HYPERFRAME STATE

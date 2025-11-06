@@ -12,29 +12,19 @@ import CustomSelect from '../../../ui/CustomSelect/CustomSelect';
  * Props received from Controls.jsx which come from App.jsx
  */
 function MaterialPropertiesSection({
-  // Surface properties
+  // Surface properties (values only)
   baseColor,
-  onBaseColorChange,
   emissiveIntensity,
-  onEmissiveIntensityChange,
   metalness,
-  onMetalnessChange,
   
-  // Geometry & effects
+  // Geometry & effects (values only)
   wireframeIntensity,
-  onWireframeIntensityChange,
   hyperframeColor,
-  onHyperframeColorChange,
   hyperframeLineColor,
-  onHyperframeLineColorChange,
   objectType,
-  onObjectTypeChange,
   animationStyle,
-  onAnimationStyleChange,
   objectSpeed,
-  onObjectSpeedChange,
   orbSpeed,
-  onOrbSpeedChange,
   
   // Handler functions (already created in Controls.jsx)
   handleBaseColorChange,
@@ -44,6 +34,8 @@ function MaterialPropertiesSection({
   handleWireframeToggle,
   handleHyperframeColorChange,
   handleHyperframeLineColorChange,
+  handleObjectTypeChange,
+  handleAnimationStyleChange,
   handleObjectSpeedChange,
   handleOrbSpeedChange,
 }) {
@@ -81,7 +73,7 @@ function MaterialPropertiesSection({
           </label>
           <input 
             type="color" 
-            value={baseColor}                      
+            value={baseColor ? baseColor.slice(0, 7) : '#000000'}                      
             onChange={handleBaseColorChange}
             onMouseDown={(e) => e.stopPropagation()}
             onMouseMove={(e) => e.stopPropagation()}
@@ -178,7 +170,7 @@ function MaterialPropertiesSection({
           </label>
           <CustomSelect
             value={objectType}
-            onChange={onObjectTypeChange}
+            onChange={handleObjectTypeChange}
             options={[
               { value: 'quantummanifold', label: '∞ Quantum Manifold (Klein+)' },
               { value: 'compoundquantummanifold', label: '◈ Cpd-Quantum Manifold' },
@@ -213,7 +205,7 @@ function MaterialPropertiesSection({
           </label>
           <CustomSelect
             value={animationStyle}
-            onChange={onAnimationStyleChange}
+            onChange={handleAnimationStyleChange}
             options={[
               { value: 'rotate', label: 'Simple Rotation' },
               { value: 'float', label: 'Floating Dance' },
