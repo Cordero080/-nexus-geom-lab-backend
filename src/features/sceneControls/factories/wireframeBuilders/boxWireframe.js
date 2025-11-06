@@ -13,7 +13,7 @@ export function createBoxWireframe(geometry, wireframeMaterial) {
   const cubeEdgePairs = [];
 
   // Halo material and settings
-  const MAIN_RADIUS = 0.015; // Keep consistent with existing thickness
+  const MAIN_RADIUS = 0.05; // Keep consistent with existing thickness
   const HALO_RADIUS_FACTOR = 1.35; // slightly slimmer halo
   const haloMaterial = new THREE.MeshBasicMaterial({
     color: wireframeMaterial.color?.clone?.() || new THREE.Color("#ffffff"),

@@ -15,8 +15,10 @@ export function createSolidMaterial({
   emissiveIntensity,
   wireframeIntensity,
 }) {
-  const currentBaseColor = new THREE.Color(baseColor);
-  const emissiveColor = new THREE.Color(baseColor).multiplyScalar(
+  // Use RGB part only for Three.js Color (strip alpha if present)
+  const rgbColor = baseColor.slice(0, 7);
+  const currentBaseColor = new THREE.Color(rgbColor);
+  const emissiveColor = new THREE.Color(rgbColor).multiplyScalar(
     emissiveIntensity
   );
 
@@ -51,8 +53,10 @@ export function createWireframeMaterial({
   wireframeIntensity,
   isStandardWireframe = false,
 }) {
-  const currentBaseColor = new THREE.Color(baseColor);
-  const emissiveColor = new THREE.Color(baseColor).multiplyScalar(
+  // Use RGB part only for Three.js Color (strip alpha if present)
+  const rgbColor = baseColor.slice(0, 7);
+  const currentBaseColor = new THREE.Color(rgbColor);
+  const emissiveColor = new THREE.Color(rgbColor).multiplyScalar(
     emissiveIntensity
   );
 

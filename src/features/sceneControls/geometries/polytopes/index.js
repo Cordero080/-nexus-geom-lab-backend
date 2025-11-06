@@ -11,6 +11,11 @@ export {
   createIcosahedron,
   metadata as icosahedronMetadata,
 } from "./icosahedron.js";
+export { createHypercube, metadata as hypercubeMetadata } from "./hypercube.js";
+export {
+  createCompoundHypercube,
+  metadata as compoundHypercubeMetadata,
+} from "./compoundHypercube.js";
 export {
   createOctahedron,
   metadata as octahedronMetadata,

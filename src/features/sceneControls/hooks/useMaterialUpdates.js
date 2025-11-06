@@ -192,7 +192,9 @@ export function useMaterialUpdates(objectsRef, materialProps) {
 
   // HYPERFRAME SPIRAL COLOR UPDATER
   useEffect(() => {
-    const convertedColor = new THREE.Color(hyperframeColor);
+    // Strip alpha channel if present (8-char hex to 6-char hex)
+    const rgbColor = hyperframeColor.slice(0, 7);
+    const convertedColor = new THREE.Color(rgbColor);
 
     objectsRef.current.forEach(({ centerLines }) => {
       if (centerLines) {
@@ -209,7 +211,9 @@ export function useMaterialUpdates(objectsRef, materialProps) {
 
   // HYPERFRAME EDGE COLOR UPDATER
   useEffect(() => {
-    const convertedColor = new THREE.Color(hyperframeLineColor);
+    // Strip alpha channel if present (8-char hex to 6-char hex)
+    const rgbColor = hyperframeLineColor.slice(0, 7);
+    const convertedColor = new THREE.Color(rgbColor);
 
     objectsRef.current.forEach(({ curvedLines }) => {
       if (curvedLines) {

@@ -364,6 +364,9 @@ export function createMobiusSphere(options = {}) {
   // Center geometry at origin with precision
   merged.center();
 
+  // Scale down entire geometry uniformly
+  merged.scale(0.3, 0.3, 0.3);
+
   // Compute bounding sphere and box for optimal culling
   merged.computeBoundingSphere();
   merged.computeBoundingBox();

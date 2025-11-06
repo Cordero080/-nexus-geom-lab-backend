@@ -3,7 +3,7 @@ import { createCpdTesseractWireframe } from "../wireframeBuilders/cpdTesseractWi
 
 const INNER_SIZE = 1.5;
 const CENTERLINE_SCALE = 0.6;
-const CONNECTOR_RADIUS = 0.0055;
+const CONNECTOR_RADIUS = 0.003;
 const CONNECTOR_SEGMENTS = 10;
 const WIREFRAME_BASE_RADIUS = 0.008;
 

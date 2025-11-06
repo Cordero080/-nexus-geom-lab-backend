@@ -28,6 +28,8 @@ import { createCompoundMegaTesseract } from "./geometries/polytopes/compoundMega
 import { createCompoundMegaTesseractNested } from "./geometries/polytopes/compoundMegaTesseract2.js";
 import { createCompoundMegaTesseractExperimental } from "./geometries/polytopes/compoundMegaTesseract3.js";
 import { createCompoundMegaTesseractAxisShift } from "./geometries/polytopes/compoundMegaTesseract4.js";
+import { createHypercube } from "./geometries/polytopes/hypercube.js";
+import { createCompoundHypercube } from "./geometries/polytopes/compoundHypercube.js";
 
 /**
  * Create a tesseract with connecting frustum faces between outer and inner cubes
@@ -159,9 +161,8 @@ export function createGeometry(type = "icosahedron", options = {}) {
       return createCompoundFloatingCity(options);
 
     case "cube":
-      // Simple cube (BoxGeometry) for classic cube shape
-      // Kept separate from "box" which represents the compound tesseract variant
-      return new THREE.BoxGeometry(1.5, 1.5, 1.5);
+      // Use modular geometry - see geometries/polytopes/compoundHypercube.js
+      return createCompoundHypercube(options);
 
     case "box":
       // Use modular geometry - see geometries/polytopes/compoundTesseract.js

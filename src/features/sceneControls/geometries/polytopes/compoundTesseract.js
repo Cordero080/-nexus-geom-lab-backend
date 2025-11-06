@@ -117,11 +117,21 @@ function createTesseractWithFaces(outerSize, innerSize, rotation = null) {
  * @returns {THREE.BufferGeometry}
  */
 export function createCompoundTesseract(options = {}) {
+  // 🎯 ADJUST SIZE HERE: Change these values to scale the compound tesseract
+  // Current: 1.8 (outer), 0.9 (inner) = 120% of original 1.5/0.75
+  // To scale by X%, multiply by (1 + X/100): e.g., 1.5 * 1.20 = 1.8
+  const outerSize = 1.8; // Outer cube size
+  const innerSize = 0.9; // Inner cube size (should be 50% of outer)
+
   // First tesseract with connecting faces
-  const tesseract1 = createTesseractWithFaces(1.5, 0.75, null);
+  const tesseract1 = createTesseractWithFaces(outerSize, innerSize, null);
 
   // Second tesseract rotated 45° on Y axis (simulates 4D rotation)
-  const tesseract2 = createTesseractWithFaces(1.5, 0.75, Math.PI / 4);
+  const tesseract2 = createTesseractWithFaces(
+    outerSize,
+    innerSize,
+    Math.PI / 4
+  );
   tesseract2.translate(0, 0.02, 0); // Slight offset to prevent z-fighting
 
   // Merge both complete tesseracts

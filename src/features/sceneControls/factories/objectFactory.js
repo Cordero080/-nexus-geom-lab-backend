@@ -6,6 +6,7 @@ import {
 } from "./materialFactory";
 import { createSphereWireframe } from "./wireframeBuilders/sphereWireframe";
 import { createBoxWireframe } from "./wireframeBuilders/boxWireframe";
+import { createHypercubeWireframe } from "./wireframeBuilders/hypercubeWireframe";
 import { createCpdTesseractWireframe } from "./wireframeBuilders/cpdTesseractWireframe";
 import { createOctahedronWireframe } from "./wireframeBuilders/octahedronWireframe";
 import {
@@ -18,6 +19,8 @@ import { createTetrahedronHyperframe } from "./hyperframeBuilders/tetrahedronHyp
 import { createBoxHyperframe } from "./hyperframeBuilders/boxHyperframe";
 import { createOctahedronHyperframe } from "./hyperframeBuilders/octahedronHyperframe";
 import { createIcosahedronHyperframe } from "./hyperframeBuilders/icosahedronHyperframe";
+import { createHypercubeHyperframe } from "./hyperframeBuilders/hypercubeHyperframe";
+import { createCompoundHypercubeHyperframe } from "./hyperframeBuilders/compoundHypercubeHyperframe";
 import { create120CellHyperframe } from "./hyperframeBuilders/cell120Hyperframe";
 import { createCompound120CellHyperframe } from "./hyperframeBuilders/compoundCell120Hyperframe";
 import { create24CellHyperframe } from "./hyperframeBuilders/cell24Hyperframe";
@@ -38,7 +41,9 @@ function ensureSolidMaterialConfig(material, config) {
   if (!material) return null;
   const { baseColor, metalness, emissiveIntensity, wireframeIntensity } =
     config;
-  const color = new THREE.Color(baseColor);
+  // Use RGB part only for Three.js Color (strip alpha if present)
+  const rgbColor = baseColor.slice(0, 7);
+  const color = new THREE.Color(rgbColor);
   material.color.copy(color);
   material.metalness = metalness;
   material.roughness = 0.2;
@@ -54,7 +59,9 @@ function ensureWireframeMaterialConfig(material, config) {
   if (!material) return null;
   const { baseColor, metalness, emissiveIntensity, wireframeIntensity } =
     config;
-  const color = new THREE.Color(baseColor);
+  // Use RGB part only for Three.js Color (strip alpha if present)
+  const rgbColor = baseColor.slice(0, 7);
+  const color = new THREE.Color(rgbColor);
   material.color.copy(color);
   material.metalness = metalness;
   material.roughness = 0.2;
@@ -228,15 +235,23 @@ export function createSceneObject(config) {
     const options = {};
     geometry = createGeometry(objectType, options);
   } else {
-    // Multiple objects: cycle through different types for variety
+    // Multiple objects: cycle through different types for variety using createGeometry
     const geometryTypes = [
-      () => new THREE.IcosahedronGeometry(),
-      () => new THREE.SphereGeometry(1, 16, 16),
-      () => new THREE.BoxGeometry(1.5, 1.5, 1.5),
-      () => new THREE.OctahedronGeometry(),
-      () => new THREE.TetrahedronGeometry(1.2),
+      "icosahedron", // Uses createGeometry - gets proper material setup
+      "sphere", // Uses createGeometry - gets proper material setup
+      "box", // Maps to basic THREE.BoxGeometry but through createGeometry
+      "octahedron", // Uses createGeometry - gets proper material setup
+      "tetrahedron", // Uses createGeometry - gets proper material setup
     ];
-    geometry = geometryTypes[objectIndex % geometryTypes.length]();
+    const selectedType = geometryTypes[objectIndex % geometryTypes.length];
+
+    // Use createGeometry for all types to ensure consistent material handling
+    if (selectedType === "box") {
+      // For box, create standard BoxGeometry since we don't have custom box in createGeometry
+      geometry = new THREE.BoxGeometry(1.5, 1.5, 1.5);
+    } else {
+      geometry = createGeometry(selectedType, {});
+    }
   }
 
   // Store original vertex positions for advanced animations
@@ -298,10 +313,27 @@ export function createSceneObject(config) {
     wireframeMesh = createSphereWireframe(geometry, wireframeMaterial);
   } else if (
     geometry.type === "BoxGeometry" ||
-    (geometry.userData && geometry.userData.baseType === "BoxGeometry")
+    (geometry.userData && geometry.userData.baseType === "BoxGeometry") ||
+    (geometry.userData && geometry.userData.baseType === "HypercubeGeometry")
   ) {
+    // Check if it's the compound hypercube (2 hypercubes interpenetrating)
+    if (geometry.userData && geometry.userData.isCpdHypercube) {
+      wireframeMaterial = getWireframeMaterial(null, materialConfig);
+      wireframeMesh = createHypercubeWireframe(geometry, wireframeMaterial);
+      console.log("🔷 USING COMPOUND HYPERCUBE WIREFRAME");
+    }
+    // Check if it's the new hypercube (tesseract with hyperframe)
+    else if (
+      geometry.userData &&
+      geometry.userData.isHypercube &&
+      !geometry.userData.isCpdTesseract
+    ) {
+      wireframeMaterial = getWireframeMaterial(null, materialConfig);
+      wireframeMesh = createHypercubeWireframe(geometry, wireframeMaterial);
+      console.log("🔷 USING HYPERCUBE WIREFRAME");
+    }
     // Check if it's a mega tesseract (4 tesseracts)
-    if (geometry.userData && geometry.userData.isMegaTesseract) {
+    else if (geometry.userData && geometry.userData.isMegaTesseract) {
       wireframeMaterial = getWireframeMaterial(materialKey, materialConfig);
       wireframeMesh = createCpdTesseractWireframe(geometry, wireframeMaterial);
     }
@@ -414,10 +446,36 @@ export function createSceneObject(config) {
     }
   } else if (
     geometry.type === "BoxGeometry" ||
-    (geometry.userData && geometry.userData.baseType === "BoxGeometry")
+    (geometry.userData && geometry.userData.baseType === "BoxGeometry") ||
+    (geometry.userData && geometry.userData.baseType === "HypercubeGeometry")
   ) {
+    // Check if it's the compound hypercube (2 hypercubes interpenetrating)
+    if (geometry.userData && geometry.userData.isCpdHypercube) {
+      const result = createCompoundHypercubeHyperframe(
+        geometry,
+        hyperframeColor,
+        hyperframeLineColor
+      );
+      ({ centerLines, centerLinesMaterial, curvedLines, curvedLinesMaterial } =
+        result);
+      console.log("🔷 USING COMPOUND HYPERCUBE HYPERFRAME");
+    }
+    // Check if it's the new hypercube (tesseract with hyperframe)
+    else if (
+      geometry.userData &&
+      geometry.userData.isHypercube &&
+      !geometry.userData.isCpdTesseract
+    ) {
+      const result = createHypercubeHyperframe(
+        geometry,
+        hyperframeColor,
+        hyperframeLineColor
+      );
+      ({ centerLines, centerLinesMaterial, curvedLines, curvedLinesMaterial } =
+        result);
+    }
     // Check if it's a compound tesseract (two interpenetrating 4D hypercubes) or regular tesseract (single 4D hypercube)
-    if (geometry.userData && geometry.userData.isCpdTesseract) {
+    else if (geometry.userData && geometry.userData.isCpdTesseract) {
       const isMega = geometry.userData.isMegaTesseract;
       const isCompoundMega = geometry.userData.isCompoundMegaTesseract;
       const hyperframeKey = getHyperframeKey(
