@@ -7,9 +7,11 @@ import { useObjectManager } from './hooks/useObjectManager';
 import { useCameraController } from './hooks/useCameraController';
 import { useMaterialUpdates } from './hooks/useMaterialUpdates';
 import { useLightingUpdates } from './hooks/useLightingUpdates';
+import { useMetalnessLighting } from './hooks/useMetalnessLighting';
 import { useMouseTracking, useEnvironmentUpdate } from './hooks/useSceneEffects';
 import { useAnimationLoop } from './hooks/useAnimationLoop';
 import { useObjectInteraction } from './hooks/useObjectInteraction';
+import { useNebulaParticles } from './hooks/useNebulaParticles';
 
 
 
@@ -56,6 +58,7 @@ function ThreeScene({
 
 	useMouseTracking(rendererRef, cameraRef);
 	useEnvironmentUpdate(sceneRef, environment, environmentHue);
+	useNebulaParticles(sceneRef, environment, environmentHue, orbSpeedRef);
 	
 	useObjectManager(
 		{ sceneRef, objectsRef, materialRef },
@@ -75,6 +78,9 @@ function ThreeScene({
 		{ ambientLightColor, ambientLightIntensity, directionalLightColor, directionalLightIntensity,
 		  directionalLightX, directionalLightY, directionalLightZ }
 	);
+
+	// Add extra lights from multiple angles ONLY when metalness is high
+	useMetalnessLighting(sceneRef, metalness);
 
 	// Handle mouse-over object rotation
 	const { getUserRotation, decayUserRotations } = useObjectInteraction(

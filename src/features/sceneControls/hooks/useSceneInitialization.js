@@ -52,6 +52,9 @@ export function useSceneInitialization(refs, lightingProps) {
     rendererRef.current = renderer;
     mountRef.current.appendChild(renderer.domElement);
 
+    // Store camera reference in scene.userData for particle systems
+    scene.userData.camera = camera;
+
     // 2. CREATE LIGHTS - Using current prop values
     const { ambientLight, directionalLight } = initializeLighting({
       ambientLightColor,

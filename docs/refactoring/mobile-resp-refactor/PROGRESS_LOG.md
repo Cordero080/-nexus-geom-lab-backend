@@ -21,6 +21,7 @@
 **File**: `src/components/layout/NavBar/nav.css`
 
 **Changes Made**:
+
 - Added responsive breakpoints for all screen sizes
 - Fixed navigation link wrapping with `flex-wrap: nowrap` and `white-space: nowrap`
 - Progressive font scaling: 18px → 15px (tablet) → 13px (landscape) → 11px (portrait)
@@ -28,6 +29,7 @@
 - Added padding/overflow fixes to `.logo-text` to prevent gradient text clipping
 
 **Impact**:
+
 - ✅ Desktop: Completely untouched (>1024px)
 - ✅ Tablet: Navigation stays on one line, readable fonts
 - ✅ Mobile: Compact but visible, no wrapping or text cutoff
@@ -39,12 +41,14 @@
 **File**: `src/components/features/Showcase/ShowcaseGallery.css`
 
 **Changes Made**:
+
 - `.parallax-title` (character names): Reduced letter-spacing from 10px → 6px, increased padding to 30px, added overflow: visible
 - `.showcase-hero`: Increased padding from 20px → 30px, changed overflow from hidden → visible
 - `.showcase-main-title`: Increased padding from 24px → 30px, added overflow: visible
 - First scene positioning: Added `.parallax-scene:first-of-type` with `align-items: flex-start` and `padding-top: 110px` to push Icarus card down slightly
 
 **Impact**:
+
 - ✅ Character titles no longer cut off at edges
 - ✅ Main showcase title has better spacing
 - ✅ Icarus card positioned so info text hidden until scroll
@@ -283,9 +287,10 @@ _None yet - testing pending_
 - [ ] Should Save/Exit stay bottom-right on mobile or move to top?
 - [ ] Should character nav buttons hide on mobile or stack vertically?
 - [ ] Should we add swipe gestures to controls drawer?
+- [ ] Main showcase page title (MACHINE NEXUS) still has gradient text cutoff - needs different approach
 
 ---
 
-**Last Updated**: November 5, 2025 - 1:30 PM  
-**Current Phase**: Phase 1 - Tablet Breakpoints  
-**Next Milestone**: Complete tablet testing before moving to mobile
+**Last Updated**: November 5, 2025 - 3:45 PM  
+**Current Phase**: Phase 1 - Tablet Breakpoints (Navigation & Layout Complete)  
+**Next Milestone**: Continue with SaveButton/ExitButton responsive styles, then test all tablet breakpoints

@@ -64,6 +64,8 @@ function GeomLab() {
   const [objectSpeed, setObjectSpeed] = useState(1.0)
   const [orbSpeed, setOrbSpeed] = useState(1.0)
 
+
+
   // Track changes to mark as unsaved
   useEffect(() => {
     setHasUnsavedChanges(true);

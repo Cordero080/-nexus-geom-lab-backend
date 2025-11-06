@@ -403,6 +403,11 @@ export function startAnimationLoop(
     // Animate spectral orbs with orb speed
     animateSpectralOrbs(delta * orbSpeed);
 
+    // Animate nebula particles if present
+    if (scene.userData.animateNebula) {
+      scene.userData.animateNebula();
+    }
+
     // Animate objects based on animation style with object speed
     if (objectsRef.current && animationStyles[animationStyle]) {
       objectsRef.current.forEach((objData, index) => {
