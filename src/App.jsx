@@ -31,6 +31,8 @@ function GeomLab() {
   
   // Save prompt modal state
   const [showSavePrompt, setShowSavePrompt] = useState(false);
+  const [showNameInput, setShowNameInput] = useState(false);
+  const [sceneName, setSceneName] = useState('');
   const [nextPath, setNextPath] = useState(null);
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
   const [allowNavigation, setAllowNavigation] = useState(false);
@@ -164,31 +166,42 @@ function GeomLab() {
 
   
   // Handle save from modal
-  const handleSaveFromModal = async () => {
-    const name = prompt('Name your masterpiece:');
-    
-    if (name && name.trim() !== '') {
+  const handleSaveFromModal = () => {
+    setShowSavePrompt(false);
+    setShowNameInput(true);
+  };
+
+  // Handle save scene with name
+  const handleSaveScene = async () => {
+    if (sceneName && sceneName.trim() !== '') {
       try {
         const { saveScene } = await import('./services/sceneApi');
         
         const sceneData = {
-          name: name.trim(),
+          name: sceneName.trim(),
           description: '',
           config: sceneConfig
         };
         
         await saveScene(sceneData, token);
-        alert(`"${name}" saved successfully!`);
+        alert(`"${sceneName}" saved successfully!`);
         setHasUnsavedChanges(false); // Mark as saved
+        setShowNameInput(false);
+        setSceneName('');
+        setAllowNavigation(true);
       } catch (error) {
         alert(`Failed to save scene: ${error.message}`);
       }
     }
-    
-    // Close modal and allow navigation
-    setShowSavePrompt(false);
-    setAllowNavigation(true);
   };
+
+  // Handle cancel name input
+  const handleCancelNameInput = () => {
+    setShowNameInput(false);
+    setSceneName('');
+    setShowSavePrompt(true); // Go back to save prompt
+  };
+
 
   // Handle exit without saving from modal
   const handleExitWithoutSaving = () => {
@@ -280,6 +293,52 @@ function GeomLab() {
                 className="save-modal__btn"
               >
                 Cancel
+              </ScrambleButton>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Name Input Modal */}
+      {showNameInput && (
+        <div className="save-modal-overlay" onClick={handleCancelNameInput}>
+          <div className="save-modal" onClick={(e) => e.stopPropagation()}>
+            <button className="save-modal__close" onClick={handleCancelNameInput}>
+              ✕
+            </button>
+            
+            <h2 className="save-modal__title">Name Your Masterpiece</h2>
+            
+            <input
+              type="text"
+              className={`save-modal__input holographic-input ${sharedStyles.angledCorners}`}
+              placeholder="Enter scene name..."
+              value={sceneName}
+              onChange={(e) => setSceneName(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  handleSaveScene();
+                }
+              }}
+              autoFocus
+            />
+            
+            <div className="save-modal__actions">
+              <ScrambleButton
+                onClick={handleSaveScene}
+                variant="primary"
+                className="save-modal__btn"
+                disabled={!sceneName.trim()}
+              >
+                Save
+              </ScrambleButton>
+              
+              <ScrambleButton
+                onClick={handleCancelNameInput}
+                variant="secondary"
+                className="save-modal__btn"
+              >
+                Back
               </ScrambleButton>
             </div>
           </div>

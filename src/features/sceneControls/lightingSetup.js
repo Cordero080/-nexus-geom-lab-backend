@@ -1,4 +1,5 @@
 import * as THREE from "three";
+import { RectAreaLightUniformsLib } from "three/addons/lights/RectAreaLightUniformsLib.js";
 
 export function initializeLighting({
   ambientLightColor = "#ffffff",
@@ -7,6 +8,9 @@ export function initializeLighting({
   directionalLightIntensity = 1,
   directionalLightPosition = { x: 0, y: 10, z: 10 },
 }) {
+  // Initialize RectAreaLight uniforms (required for RectAreaLight to work)
+  RectAreaLightUniformsLib.init();
+
   // Convert hex color strings to Three.js color numbers
   const ambientLightColorHex = parseInt(ambientLightColor.replace("#", ""), 16);
   const directionalLightColorHex = parseInt(
@@ -51,11 +55,17 @@ export function initializeLighting({
   directionalLight2.position.set(-10, -10, 5); // Bottom left position
   directionalLight2.target.position.set(0, 0, 0); // Point at origin
 
+  // Add RectAreaLight for soft area lighting
+  const rectLight = new THREE.RectAreaLight(0x4488ff, 2, 4, 4);
+  rectLight.position.set(0, 0, 5);
+  rectLight.lookAt(0, 0, 0);
+
   return {
     ambientLight,
     directionalLight,
     directionalLight2,
     hemisphereLight,
     pointLight1,
+    rectLight,
   };
 }

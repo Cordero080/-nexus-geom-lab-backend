@@ -12,6 +12,7 @@ import NavBar from "../../layout/NavBar/NavBar";
 import HomeBackground from "../../shared/HomeBackground/HomeBackground";
 import { quantumCollapse } from "../../../utils/coreHelpers";
 import "./MyScenesPage.css";
+import styles from "./MyScenesPage.module.scss";
 import sharedStyles from "../../../styles/shared.module.scss";
 import "../../layout/NavBar/nav.css";
 import { GEOM_LAB_LINK_TEXT, SHOWCASE_LINK_TEXT } from "../../layout/NavBar/navLabels";
@@ -512,6 +513,39 @@ export default function MyScenesPage() {
       {/* Scene Grid */}
       {!loading && sortedScenes.length > 0 && (
         <div className="my-scenes-page__grid">
+          {/* Create New Scene Card */}
+          <div 
+            className="create-scene-card"
+            onClick={() => navigate("/geometry-lab")}
+            style={{
+              border: `2px dashed ${portalState.colors[0]}`,
+              background: `linear-gradient(135deg, ${portalState.colors[0]}15, ${portalState.colors[1]}10)`,
+            }}
+          >
+            <div 
+              className="create-scene-card__icon"
+              style={{
+                color: portalState.colors[0],
+                textShadow: `0 0 20px ${portalState.colors[0]}`,
+              }}
+            >
+              +
+            </div>
+            <h3 
+              className="create-scene-card__title"
+              style={{ 
+                color: portalState.colors[0],
+                opacity: 0.8
+              }}
+            >
+              Create New Scene
+            </h3>
+            <p className="create-scene-card__subtitle">
+              Start a new geometric creation
+            </p>
+          </div>
+
+          {/* Existing Scene Cards */}
           {sortedScenes.map((scene) => (
             <SceneCard
               key={scene._id || scene.id}
@@ -526,6 +560,16 @@ export default function MyScenesPage() {
               portalColors={portalState.colors}
             />
           ))}
+        </div>
+      )}
+
+      {/* Back to Lab Button - Below Scene Cards */}
+      {!loading && sortedScenes.length > 0 && (
+        <div className={styles.backToLabButtonWrapper}>
+          <BeamScanButton
+            onClick={() => navigate('/geom-lab')}
+            label="BACK TO LAB"
+          />
         </div>
       )}
 

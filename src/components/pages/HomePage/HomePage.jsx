@@ -86,7 +86,7 @@ function ScrambleOnHover({ originalText, finalText, delay = 3000 }) {
     <span 
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
-      style={{ cursor: 'pointer', fontFamily: "'Future Z', 'Orbitron', 'Rajdhani', sans-serif" }}
+      style={{ cursor: 'none', fontFamily: "'Future Z', 'Orbitron', 'Rajdhani', sans-serif" }}
     >
       {displayText}
     </span>
@@ -820,7 +820,7 @@ MANIFOLD: A mathematical surface or multi-dimensional space that can be curved o
             <div className="superposition-field"></div>
             <div className="quantum-console">
               <div className="console-line">&gt;&gt;&gt; Initializing quantum state...</div>
-              <div className="console-line">&gt;&gt;&gt; PABLO PISTOLA = ψ(quantum_state)</div>
+              <div className="console-line">&gt;&gt;&gt; PVBLO C0RDER0 = ψ(quantum_state)</div>
               <div className="console-line">&gt;&gt;&gt; Observation collapsed wave function</div>
               <div className="console-line">&gt;&gt;&gt; Result: "ETHEREAL"</div>
             </div>

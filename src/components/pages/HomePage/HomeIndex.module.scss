@@ -847,12 +847,17 @@ input,
     z-index: 99999;
   }
 
-  .nav-links, .nav-link, .terminal-cursor, .quantum-title, .scene-content, 
+  .nav-links, .nav-link, .terminal-cursor, .scene-content, 
   .beam-scan-button, button, a, input, .scramble-button {
     position: relative;
     z-index: 100 !important;
     pointer-events: auto !important;
     cursor: pointer !important;
+  }
+
+  /* Title should use quantum cursor */
+  .quantum-title {
+    cursor: none !important;
   }
 
   .scene-content {
@@ -911,8 +916,8 @@ input,
 
   .console-line {
     font-size: 1.105em;
-    color: #00ff33;
-    text-shadow: 0 0 8px #00ff3366, 0 0 16px #00ff3322;
+    color: #00ff33a7;
+    text-shadow: 0 0 8px #00eeffa5, 0 0 16px #00ff3322;
     margin: 12px 0;
     letter-spacing: 0.05em;
     font-family: 'Orbitron', monospace;
@@ -1050,3 +1055,4 @@ input,
     100% { background-position: 0% 50%; }
   }
 }
+

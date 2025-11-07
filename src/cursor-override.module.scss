@@ -31,9 +31,9 @@
   cursor: auto !important;
 }
 
-/* Ensure all elements inside the body inherit cursor style */
-:global(body *) {
-  cursor: inherit;
+/* Default: All non-geom-lab elements inherit none cursor from body */
+:global(body:not(.geom-lab-page) *) {
+  cursor: none !important;
 }
 
 /* Force cursor visibility on canvas and all geom-lab elements */

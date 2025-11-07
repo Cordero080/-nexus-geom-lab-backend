@@ -47,13 +47,13 @@ $font-code: 'Roboto Mono', 'JetBrains Mono', monospace;
     0 2px 16px $glow-color,
     0 0 30px rgba(0, 255, 255, 0.5),
     0 0 60px rgba(255, 0, 204, 0.3);
-  cursor: pointer !important;
+  cursor: none !important; // Use quantum cursor by default
   pointer-events: auto !important;
   letter-spacing: 0.08em;
   overflow: visible !important;
   z-index: 100;
   isolation: isolate;
-  transition: background 0.2s, box-shadow 0.2s, color 0.2s;
+  transition: background 0.2s, box-shadow 0.2s, color 0.2s, cursor 0s;
   
   // Quantum probability wave animation - fast and dramatic
   animation: quantumGlow 3s ease-in-out infinite;
@@ -75,6 +75,7 @@ $font-code: 'Roboto Mono', 'JetBrains Mono', monospace;
   // Hover/focus states
   &:hover,
   &:focus {
+    cursor: pointer !important; // Show pointer only when actually hovering
     animation: quiver 0.03s ease-in-out infinite, quantumGlow 2s ease-in-out infinite;
     box-shadow: 
       0 2px 20px rgba(0, 255, 255, 0.8),

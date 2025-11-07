@@ -37,6 +37,7 @@
   align-items: center;
   justify-content: center;
   flex-wrap: wrap;
+  transform: translateY(-20px) translateX(-24px);
 }
 
 .my-scenes-page__control-group {
@@ -250,11 +251,125 @@
 /* Scene Grid */
 .my-scenes-page__grid {
   max-width: 1400px;
-  margin: 0 auto;
+  margin: 50px auto 0;
   display: grid;
   grid-template-columns: repeat(3, 1fr); /* Changed from 4 to 3 columns for larger cards */
   gap: 32px; /* Increased gap */
   animation: fadeIn 0.5s ease-in;
+}
+
+/* Create New Scene Card */
+.create-scene-card {
+  padding: 48px 24px;
+  border-radius: 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  backdrop-filter: blur(10px);
+  position: relative;
+  overflow: hidden;
+  min-height: 280px;
+  background: transparent !important;
+}
+
+/* Animated border gradient */
+.create-scene-card::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border-radius: 16px;
+  padding: 2px;
+  background: linear-gradient(45deg, 
+    var(--portal-color-0, #ff00cc), 
+    var(--portal-color-1, #00fff7), 
+    var(--portal-color-2, #1a003a),
+    var(--portal-color-0, #ff00cc)
+  );
+  background-size: 300% 300%;
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask-composite: exclude;
+  animation: borderRotate 4s linear infinite;
+  pointer-events: none;
+}
+
+@keyframes borderRotate {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.create-scene-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(circle at center, rgba(255, 255, 255, 0.05), transparent 70%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: 1;
+}
+
+.create-scene-card:hover::before {
+  opacity: 1;
+}
+
+.create-scene-card:hover {
+  transform: translateY(-8px) scale(1.02);
+}
+
+.create-scene-card:hover::after {
+  padding: 3px;
+  animation: borderRotate 2s linear infinite;
+}
+
+.create-scene-card__icon {
+  font-size: 72px;
+  font-weight: 200;
+  margin-bottom: 16px;
+  transition: all 0.3s ease;
+  line-height: 1;
+  position: relative;
+  z-index: 2;
+}
+
+.create-scene-card:hover .create-scene-card__icon {
+  transform: rotate(90deg) scale(1.1);
+}
+
+.create-scene-card__title {
+  font-size: 1.25rem;
+  font-family: 'Orbitron', monospace;
+  font-weight: 600;
+  margin: 0 0 8px;
+  transition: all 0.3s ease;
+  position: relative;
+  z-index: 2;
+}
+
+.create-scene-card__subtitle {
+  font-size: 0.875rem;
+  color: rgba(255, 255, 255, 0.6);
+  margin: 0;
+  font-family: 'Orbitron', monospace;
+  text-align: center;
+  position: relative;
+  z-index: 2;
 }
 
 /* Fade in animation */

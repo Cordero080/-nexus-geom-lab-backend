@@ -62,6 +62,7 @@ export function useSceneInitialization(refs, lightingProps) {
       directionalLight2,
       hemisphereLight,
       pointLight1,
+      rectLight,
     } = initializeLighting({
       ambientLightColor,
       ambientLightIntensity,
@@ -84,6 +85,7 @@ export function useSceneInitialization(refs, lightingProps) {
     scene.add(directionalLight2);
     scene.add(hemisphereLight);
     scene.add(pointLight1);
+    scene.add(rectLight);
 
     // 3. HANDLE WINDOW RESIZE - Keep canvas matching screen size
 

@@ -62,20 +62,53 @@ export function useMaterialUpdates(objectsRef, materialProps) {
   useEffect(() => {
     const processedSolid = new Set();
     const processedWireframe = new Set();
-    objectsRef.current.forEach(({ material, wireframeMaterial }) => {
-      if (material && !processedSolid.has(material)) {
-        processedSolid.add(material);
-        material.metalness = metalness;
-        material.roughness = 0.2;
-        material.needsUpdate = true;
+    objectsRef.current.forEach(
+      ({ solidMesh, wireframeMesh, material, wireframeMaterial }) => {
+        // Update shared material references
+        if (material && !processedSolid.has(material)) {
+          processedSolid.add(material);
+          material.metalness = metalness;
+          material.roughness = 0.2;
+          material.needsUpdate = true;
+        }
+        if (wireframeMaterial && !processedWireframe.has(wireframeMaterial)) {
+          processedWireframe.add(wireframeMaterial);
+          wireframeMaterial.metalness = metalness;
+          wireframeMaterial.roughness = 0.2;
+          wireframeMaterial.needsUpdate = true;
+        }
+
+        // Also traverse mesh children for complex geometries
+        if (solidMesh) {
+          solidMesh.traverse((child) => {
+            if (
+              child.isMesh &&
+              child.material &&
+              !processedSolid.has(child.material)
+            ) {
+              processedSolid.add(child.material);
+              child.material.metalness = metalness;
+              child.material.roughness = 0.2;
+              child.material.needsUpdate = true;
+            }
+          });
+        }
+        if (wireframeMesh) {
+          wireframeMesh.traverse((child) => {
+            if (
+              child.isMesh &&
+              child.material &&
+              !processedWireframe.has(child.material)
+            ) {
+              processedWireframe.add(child.material);
+              child.material.metalness = metalness;
+              child.material.roughness = 0.2;
+              child.material.needsUpdate = true;
+            }
+          });
+        }
       }
-      if (wireframeMaterial && !processedWireframe.has(wireframeMaterial)) {
-        processedWireframe.add(wireframeMaterial);
-        wireframeMaterial.metalness = metalness;
-        wireframeMaterial.roughness = 0.2;
-        wireframeMaterial.needsUpdate = true;
-      }
-    });
+    );
   }, [metalness]);
 
   // NOTE: Specular color is not used in MeshStandardMaterial (PBR uses metalness/roughness instead)
@@ -90,18 +123,49 @@ export function useMaterialUpdates(objectsRef, materialProps) {
     );
     const processedSolid = new Set();
     const processedWireframe = new Set();
-    objectsRef.current.forEach(({ material, wireframeMaterial }) => {
-      if (material && !processedSolid.has(material)) {
-        processedSolid.add(material);
-        material.emissive.copy(emissiveColor);
-        material.needsUpdate = true;
+    objectsRef.current.forEach(
+      ({ solidMesh, wireframeMesh, material, wireframeMaterial }) => {
+        // Update shared material references
+        if (material && !processedSolid.has(material)) {
+          processedSolid.add(material);
+          material.emissive.copy(emissiveColor);
+          material.needsUpdate = true;
+        }
+        if (wireframeMaterial && !processedWireframe.has(wireframeMaterial)) {
+          processedWireframe.add(wireframeMaterial);
+          wireframeMaterial.emissive.copy(emissiveColor);
+          wireframeMaterial.needsUpdate = true;
+        }
+
+        // Also traverse mesh children for complex geometries
+        if (solidMesh) {
+          solidMesh.traverse((child) => {
+            if (
+              child.isMesh &&
+              child.material &&
+              !processedSolid.has(child.material)
+            ) {
+              processedSolid.add(child.material);
+              child.material.emissive.copy(emissiveColor);
+              child.material.needsUpdate = true;
+            }
+          });
+        }
+        if (wireframeMesh) {
+          wireframeMesh.traverse((child) => {
+            if (
+              child.isMesh &&
+              child.material &&
+              !processedWireframe.has(child.material)
+            ) {
+              processedWireframe.add(child.material);
+              child.material.emissive.copy(emissiveColor);
+              child.material.needsUpdate = true;
+            }
+          });
+        }
       }
-      if (wireframeMaterial && !processedWireframe.has(wireframeMaterial)) {
-        processedWireframe.add(wireframeMaterial);
-        wireframeMaterial.emissive.copy(emissiveColor);
-        wireframeMaterial.needsUpdate = true;
-      }
-    });
+    );
   }, [emissiveIntensity, baseColor]);
 
   // BASE COLOR UPDATER
@@ -109,29 +173,40 @@ export function useMaterialUpdates(objectsRef, materialProps) {
     // Convert hex color string to Three.js color number (strip alpha channel)
     const hexColor = baseColor.slice(1, 7); // Remove # and alpha (ff)
     // ↑ .slice(1, 7) removes '#' at start AND 'ff' alpha at end
-  // ↑ hexColor = '0000ff' (6-char hex, no # symbol)
+    // ↑ hexColor = '0000ff' (6-char hex, no # symbol)
     const convertedColor = parseInt(hexColor, 16);
 
-    objectsRef.current.forEach(({ solidMesh, wireframeMesh }) => {
-      // Update solid mesh materials
-      if (solidMesh) {
-        solidMesh.traverse((child) => {
-          if (child.isMesh && child.material) {
-            child.material.color.setHex(convertedColor);
-            child.material.needsUpdate = true;
-          }
-        });
+    objectsRef.current.forEach(
+      ({ solidMesh, wireframeMesh, material, wireframeMaterial }) => {
+        // Update solid mesh materials
+        if (solidMesh) {
+          solidMesh.traverse((child) => {
+            if (child.isMesh && child.material) {
+              child.material.color.setHex(convertedColor);
+              child.material.needsUpdate = true;
+            }
+          });
+        }
+        // Update wireframe mesh materials
+        if (wireframeMesh) {
+          wireframeMesh.traverse((child) => {
+            if (child.isMesh && child.material) {
+              child.material.color.setHex(convertedColor);
+              child.material.needsUpdate = true;
+            }
+          });
+        }
+        // Also update the shared material references directly
+        if (material) {
+          material.color.setHex(convertedColor);
+          material.needsUpdate = true;
+        }
+        if (wireframeMaterial) {
+          wireframeMaterial.color.setHex(convertedColor);
+          wireframeMaterial.needsUpdate = true;
+        }
       }
-      // Update wireframe mesh materials
-      if (wireframeMesh) {
-        wireframeMesh.traverse((child) => {
-          if (child.isMesh && child.material) {
-            child.material.color.setHex(convertedColor);
-            child.material.needsUpdate = true;
-          }
-        });
-      }
-    });
+    );
   }, [baseColor]);
 
   // WIREFRAME INTENSITY UPDATER

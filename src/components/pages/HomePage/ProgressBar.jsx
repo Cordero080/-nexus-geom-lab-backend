@@ -43,12 +43,12 @@ export default function ProgressBar({ portalState, glyphState, onQuantumCollapse
   const [anim, setAnim] = useState(0);
 
   // --- Cellular Automata State ---
-  const [caGrid, setCaGrid] = useState(() => createGrid(48, 18));
-  // Evolve CA every 120ms
+  const [caGrid, setCaGrid] = useState(() => createGrid(60, 24)); // Increased density
+  // Evolve CA every 100ms (slightly faster)
   useEffect(() => {
     const interval = setInterval(() => {
       setCaGrid(g => nextGrid(g));
-    }, 120);
+    }, 100);
     return () => clearInterval(interval);
   }, []);
   // Animate for other effects
@@ -99,24 +99,67 @@ export default function ProgressBar({ portalState, glyphState, onQuantumCollapse
       content: (
         <svg
           width="100%" height="100%"
-          style={{ position: 'absolute', left: 0, top: 0, zIndex: 0, cursor: 'pointer' }}
+          style={{ position: 'absolute', left: 0, top: 0, zIndex: 0, cursor: 'none' }}
           onClick={handleCaClick}
         >
-          {/* Self-organizing cellular automata pattern */}
+          <defs>
+            {/* Portal-themed gradients for cells */}
+            <linearGradient id="cell-grad-1" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stopColor={portalState.colors[0]} stopOpacity="0.9"/>
+              <stop offset="100%" stopColor={portalState.colors[1]} stopOpacity="0.6"/>
+            </linearGradient>
+            <linearGradient id="cell-grad-2" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stopColor={portalState.colors[1]} stopOpacity="0.8"/>
+              <stop offset="100%" stopColor={portalState.colors[2]} stopOpacity="0.5"/>
+            </linearGradient>
+            <linearGradient id="cell-grad-3" x1="100%" y1="0%" x2="0%" y2="100%">
+              <stop offset="0%" stopColor={portalState.colors[2]} stopOpacity="0.7"/>
+              <stop offset="100%" stopColor={portalState.colors[0]} stopOpacity="0.4"/>
+            </linearGradient>
+            {/* Glow filter for cells */}
+            <filter id="cell-glow">
+              <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
+              <feMerge>
+                <feMergeNode in="coloredBlur"/>
+                <feMergeNode in="SourceGraphic"/>
+              </feMerge>
+            </filter>
+          </defs>
+          {/* Self-organizing cellular automata pattern with portal colors */}
           {caGrid.map((row, y) =>
-            row.map((cell, x) =>
-              cell ? (
+            row.map((cell, x) => {
+              if (!cell) return null;
+              // Use different gradients based on position for variety
+              const gradNum = (x + y) % 3;
+              const gradId = `cell-grad-${gradNum + 1}`;
+              const baseOpacity = 2.15 + 0.25 * Math.sin(anim + x * 0.2 + y * 0.3);
+              
+              const cellX = (x / caGrid[0].length) * 100;
+              const cellY = (y / caGrid.length) * 100;
+              const cellWidth = (5 / caGrid[0].length) * 100;
+              const cellHeight = (0.1 / caGrid.length) * 100;
+              
+              return (
                 <rect
                   key={x + '-' + y}
-                  x={(x / caGrid[0].length) * 100 + '%'}
-                  y={(y / caGrid.length) * 100 + '%'}
-                  width={(1 / caGrid[0].length) * 100 + '%'}
-                  height={(1 / caGrid.length) * 100 + '%'}
-                  fill="#00fff7"
-                  opacity={0.13 + 0.18 * Math.sin(anim + x * 0.2 + y * 0.3)}
-                />
-              ) : null
-            )
+                  x={cellX + '%'}
+                  y={cellY + '%'}
+                  width={cellWidth + '%'}
+                  height={cellHeight + '%'}
+                  fill={`url(#${gradId})`}
+                  opacity={baseOpacity}
+                  filter="url(#cell-glow)"
+                  rx="0.3"
+                >
+                  <animate
+                    attributeName="opacity"
+                    values={`${baseOpacity};${baseOpacity * 1.5};${baseOpacity}`}
+                    dur="2s"
+                    repeatCount="indefinite"
+                  />
+                </rect>
+              );
+            })
           )}
         </svg>
       ),
@@ -136,7 +179,7 @@ export default function ProgressBar({ portalState, glyphState, onQuantumCollapse
         background: 'none',
       }),
       content: (
-        <svg width="100%" height="100%" style={{ position: 'absolute', left: 0, top: 0 }} onClick={onQuantumCollapse}>
+        <svg width="100%" height="100%" style={{ position: 'absolute', left: 0, top: 0, cursor: 'none' }} onClick={onQuantumCollapse}>
           {/* Quantum glyphs/runes - collapse to new set on click */}
           <g opacity="0.18">
             <text x="50%" y="40%" textAnchor="middle" fontSize="60" fill="#00fff7" fontFamily="monospace" letterSpacing="0.2em" style={{filter:'blur(0.5px)'}}>{glyphState[0]}</text>
@@ -161,7 +204,7 @@ export default function ProgressBar({ portalState, glyphState, onQuantumCollapse
         background: 'none',
       }),
       content: (
-        <svg width="100%" height="100%" style={{ position: 'absolute', left: 0, top: 0 }} onClick={onQuantumCollapse}>
+        <svg width="100%" height="100%" style={{ position: 'absolute', left: 0, top: 0, cursor: 'none' }} onClick={onQuantumCollapse}>
           <defs>
             {/* Portal edge glow */}
             <radialGradient id="portal-glow" cx="50%" cy="60%" r="30%">
