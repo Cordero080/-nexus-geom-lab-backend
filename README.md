@@ -322,6 +322,7 @@ Scene 4+ → Unlock additional animations
 **Frontend:**
 
 - React 19.1 with custom hooks architecture
+- React Three Fiber for declarative Three.js components
 - Three.js 0.180 for 3D rendering and WebGL
 - Vite 7.1 for development and build optimization
 - Context API for global state management
