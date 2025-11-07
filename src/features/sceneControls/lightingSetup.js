@@ -43,9 +43,18 @@ export function initializeLighting({
   const pointLight1 = new THREE.PointLight(0x00d4ff, 1.2, 25); // Cyan glow
   pointLight1.position.set(5, 5, 5);
 
+  // Second directional light from bottom left
+  const directionalLight2 = new THREE.DirectionalLight(
+    directionalLightColorHex,
+    directionalLightIntensity
+  );
+  directionalLight2.position.set(-10, -10, 5); // Bottom left position
+  directionalLight2.target.position.set(0, 0, 0); // Point at origin
+
   return {
     ambientLight,
     directionalLight,
+    directionalLight2,
     hemisphereLight,
     pointLight1,
   };

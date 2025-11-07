@@ -59,6 +59,7 @@ export function useSceneInitialization(refs, lightingProps) {
     const {
       ambientLight,
       directionalLight,
+      directionalLight2,
       hemisphereLight,
       pointLight1,
     } = initializeLighting({
@@ -80,6 +81,7 @@ export function useSceneInitialization(refs, lightingProps) {
     // Add lights to the scene
     scene.add(ambientLight);
     scene.add(directionalLight);
+    scene.add(directionalLight2);
     scene.add(hemisphereLight);
     scene.add(pointLight1);
 

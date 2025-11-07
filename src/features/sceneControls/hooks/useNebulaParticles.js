@@ -7,6 +7,8 @@ import * as THREE from "three";
  * - Procedural color mutations
  * - Turbulent flow fields
  * - Depth-reactive opacity
+ *
+ * For sunset environment: Creates floating geometric dust particles
  */
 export function useNebulaParticles(
   sceneRef,
@@ -20,17 +22,172 @@ export function useNebulaParticles(
   useEffect(() => {
     if (!sceneRef.current) return;
 
+    // Clean up existing system if switching environments
+    if (nebulaSystemRef.current) {
+      sceneRef.current.remove(nebulaSystemRef.current.system);
+      if (nebulaSystemRef.current.geometry)
+        nebulaSystemRef.current.geometry.dispose();
+      if (nebulaSystemRef.current.material)
+        nebulaSystemRef.current.material.dispose();
+      if (nebulaSystemRef.current.texture)
+        nebulaSystemRef.current.texture.dispose();
+      nebulaSystemRef.current = null;
+      sceneRef.current.userData.animateNebula = null;
+    }
+
+    // Handle sunset environment - floating geometric dust
+    if (environment === "sunset") {
+      createSunsetDust();
+      return;
+    }
+
     // Only create nebula for 'space' environment
     if (environment !== "space") {
-      // Clean up if environment changed away from space
-      if (nebulaSystemRef.current) {
-        sceneRef.current.remove(nebulaSystemRef.current.system);
-        nebulaSystemRef.current.geometry.dispose();
-        nebulaSystemRef.current.material.dispose();
-        nebulaSystemRef.current = null;
-        sceneRef.current.userData.animateNebula = null;
-      }
       return;
+    }
+
+    function createSunsetDust() {
+      const dustCount = 2000; // Increased for better coverage
+      const group = new THREE.Group();
+      const dustParticles = [];
+
+      // Sunset color palette----------------------
+      const sunsetColors = [
+        new THREE.Color(0xff6b35), // Orange
+        new THREE.Color(0xffd700), // Gold
+        new THREE.Color(0xff1493), // Deep pink
+        new THREE.Color(0xff8c00), // Dark orange
+        new THREE.Color(0xffa500), // Orange
+      ];
+
+      for (let i = 0; i < dustCount; i++) {
+        // Alternate between small icosahedrons and tetrahedrons
+        const geometry =
+          i % 2 === 0
+            ? new THREE.IcosahedronGeometry(0.2, 0)
+            : new THREE.TetrahedronGeometry(0.4, 0);
+
+        const color = sunsetColors[i % sunsetColors.length];
+
+        // Particles in front should be more transparent to not obscure view
+        const isFront = Math.random() > 0.5;
+        const baseOpacity = isFront ? 0.1 : 0.4;
+
+        const material = new THREE.MeshBasicMaterial({
+          color: color,
+          transparent: true,
+          opacity: baseOpacity,
+          wireframe: Math.random() > 0.1, // Mix of solid and wireframe
+          depthWrite: !isFront, // Particles in front don't write to depth buffer
+        });
+
+        const mesh = new THREE.Mesh(geometry, material);
+
+        // Position particles in 3D space around origin
+        // Mix of close (in front) and far (behind) particles
+        const radius = isFront
+          ? 10 + Math.random() * 10 // Close particles (5-15 units from center)
+          : 20 + Math.random() * 20; // Far particles (20-80 units from center)
+
+        const theta = Math.random() * Math.PI * 2;
+        const phi = Math.random() * Math.PI;
+
+        mesh.position.x = radius * Math.sin(phi) * Math.cos(theta);
+        mesh.position.y = radius * Math.sin(phi) * Math.sin(theta);
+        mesh.position.z = radius * Math.cos(phi);
+
+        // Random rotation
+        mesh.rotation.x = Math.random() * Math.PI * 2;
+        mesh.rotation.y = Math.random() * Math.PI * 2;
+        mesh.rotation.z = Math.random() * Math.PI * 2;
+
+        group.add(mesh);
+
+        // Store animation data
+        dustParticles.push({
+          mesh,
+          isFront,
+          baseOpacity,
+          rotationSpeed: {
+            x: (Math.random() - 1.5) * 0.01,
+            y: (Math.random() - 0.5) * 0.01,
+            z: (Math.random() - 3.5) * 0.01,
+          },
+          driftSpeed: {
+            x: (Math.random() - 0.5) * 0.02,
+            y: (Math.random() - 1.5) * 0.015,
+            z: (Math.random() - 0.5) * 0.02,
+          },
+          initialPos: mesh.position.clone(),
+          phase: Math.random() * Math.PI * 2,
+        });
+      }
+
+      sceneRef.current.add(group);
+      nebulaSystemRef.current = {
+        system: group,
+        dustParticles,
+      };
+
+      // Animation function for sunset dust
+      function animateSunsetDust() {
+        if (!nebulaSystemRef.current) return;
+
+        const speed = orbSpeedRef?.current || 1.0;
+        timeRef.current += 0.001 * speed;
+
+        const { dustParticles } = nebulaSystemRef.current;
+
+        dustParticles.forEach((particle) => {
+          const {
+            mesh,
+            isFront,
+            rotationSpeed,
+            driftSpeed,
+            initialPos,
+            phase,
+            baseOpacity,
+          } = particle;
+
+          // Gentle rotation
+          mesh.rotation.x += rotationSpeed.x * speed;
+          mesh.rotation.y += rotationSpeed.y * speed;
+          mesh.rotation.z += rotationSpeed.z * speed;
+
+          // Different orbital patterns for front vs back particles
+          if (isFront) {
+            // Front particles: clockwise orbit around object (XY plane)
+            const orbitRadius = 4;
+            const orbitSpeed = 0.2;
+            const angle = timeRef.current * orbitSpeed + phase;
+
+            mesh.position.x = Math.cos(angle) * orbitRadius;
+            mesh.position.y =
+              Math.sin(angle) * orbitRadius +
+              Math.sin(timeRef.current * 0.3 + phase) * 2;
+            mesh.position.z =
+              initialPos.z + Math.sin(timeRef.current * 0.4 + phase) * 3;
+          } else {
+            // Back particles: counter-clockwise orbit in larger radius (XZ plane)
+            const orbitRadius = 50;
+            const orbitSpeed = 0.15;
+            const angle = -(timeRef.current * orbitSpeed + phase); // Negative for counter-clockwise
+
+            mesh.position.x =
+              Math.cos(angle) * orbitRadius +
+              Math.sin(timeRef.current * 2.2 + phase) * 22.2;
+            mesh.position.y =
+              initialPos.y + Math.sin(timeRef.current * 1.25 + phase) * 8;
+            mesh.position.z = Math.sin(angle) * orbitRadius;
+          }
+
+          // Subtle opacity pulse (use baseOpacity for front/back differentiation)
+          mesh.material.opacity =
+            baseOpacity + Math.sin(timeRef.current + phase) * 0.1;
+        });
+      }
+
+      sceneRef.current.userData.animateNebula = animateSunsetDust;
     }
 
     // Configuration - reduced for better performance
@@ -424,9 +581,23 @@ export function useNebulaParticles(
         sceneRef.current.userData.animateNebula = null;
         if (nebulaSystemRef.current) {
           sceneRef.current.remove(nebulaSystemRef.current.system);
-          nebulaSystemRef.current.geometry.dispose();
-          nebulaSystemRef.current.material.dispose();
-          nebulaSystemRef.current.texture.dispose();
+
+          // Clean up geometries and materials for sunset dust
+          if (nebulaSystemRef.current.dustParticles) {
+            nebulaSystemRef.current.dustParticles.forEach(({ mesh }) => {
+              if (mesh.geometry) mesh.geometry.dispose();
+              if (mesh.material) mesh.material.dispose();
+            });
+          }
+
+          // Clean up space nebula
+          if (nebulaSystemRef.current.geometry)
+            nebulaSystemRef.current.geometry.dispose();
+          if (nebulaSystemRef.current.material)
+            nebulaSystemRef.current.material.dispose();
+          if (nebulaSystemRef.current.texture)
+            nebulaSystemRef.current.texture.dispose();
+
           nebulaSystemRef.current = null;
         }
       }
