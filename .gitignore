@@ -3,8 +3,17 @@ node_modules/
 dist/
 *.log
 
-# Private study materials
+# Private study materials and verbose planning docs
 docs/study-plan/
+docs/study-plan-update/
 docs/personal-notes/
+docs/archive/
 docs/STUDY_PLAN.md
 docs/WEEKLY_PROGRESS_REPORT.md
+docs/STRETCH_GOALS.md
+
+# Hide obvious collaboration/debug sessions
+docs/refactoring/controls-modularization/MODULARIZATION_DEBUG_SESSION.md
+**/DEBUG_SESSION*.md
+**/*PROMPT*.md
+**/*SESSION*.md
