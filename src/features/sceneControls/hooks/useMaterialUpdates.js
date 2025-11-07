@@ -30,14 +30,30 @@ export function useMaterialUpdates(objectsRef, materialProps) {
   useEffect(() => {
     objectsRef.current.forEach(
       ({ solidMesh, wireframeMesh, centerLines, curvedLines, mesh }) => {
+        // Store user's base scale in userData for animation access
         // Handle dual-mesh objects
-        if (solidMesh) solidMesh.scale.setScalar(scale);
-        if (wireframeMesh) wireframeMesh.scale.setScalar(scale);
+        if (solidMesh) {
+          solidMesh.userData.baseScale = scale;
+          solidMesh.scale.setScalar(scale);
+        }
+        if (wireframeMesh) {
+          wireframeMesh.userData.baseScale = scale;
+          wireframeMesh.scale.setScalar(scale);
+        }
         // Handle hyperframe elements
-        if (centerLines) centerLines.scale.setScalar(scale);
-        if (curvedLines) curvedLines.scale.setScalar(scale);
+        if (centerLines) {
+          centerLines.userData.baseScale = scale;
+          centerLines.scale.setScalar(scale);
+        }
+        if (curvedLines) {
+          curvedLines.userData.baseScale = scale;
+          curvedLines.scale.setScalar(scale);
+        }
         // Handle legacy single mesh objects
-        if (mesh) mesh.scale.setScalar(scale);
+        if (mesh) {
+          mesh.userData.baseScale = scale;
+          mesh.scale.setScalar(scale);
+        }
       }
     );
   }, [scale]);
@@ -198,9 +214,19 @@ export function useMaterialUpdates(objectsRef, materialProps) {
 
     objectsRef.current.forEach(({ centerLines }) => {
       if (centerLines) {
-        // Traverse all child meshes and update their materials
+        // Handle LineSegments/Line objects (for generic hyperframes like Möbius sphere)
+        if (centerLines.isLine || centerLines.isLineSegments) {
+          if (centerLines.material) {
+            centerLines.material.color.copy(convertedColor);
+            centerLines.material.needsUpdate = true;
+          }
+        }
+        // Traverse all child meshes/lines and update their materials
         centerLines.traverse((child) => {
-          if (child.isMesh && child.material) {
+          if (
+            (child.isMesh || child.isLine || child.isLineSegments) &&
+            child.material
+          ) {
             child.material.color.copy(convertedColor);
             child.material.needsUpdate = true;
           }
@@ -217,9 +243,19 @@ export function useMaterialUpdates(objectsRef, materialProps) {
 
     objectsRef.current.forEach(({ curvedLines }) => {
       if (curvedLines) {
-        // Traverse all child meshes and update their materials
+        // Handle LineSegments/Line objects (for generic hyperframes like Möbius sphere)
+        if (curvedLines.isLine || curvedLines.isLineSegments) {
+          if (curvedLines.material) {
+            curvedLines.material.color.copy(convertedColor);
+            curvedLines.material.needsUpdate = true;
+          }
+        }
+        // Traverse all child meshes/lines and update their materials
         curvedLines.traverse((child) => {
-          if (child.isMesh && child.material) {
+          if (
+            (child.isMesh || child.isLine || child.isLineSegments) &&
+            child.material
+          ) {
             child.material.color.copy(convertedColor);
             child.material.needsUpdate = true;
           }

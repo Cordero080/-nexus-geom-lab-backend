@@ -11,10 +11,10 @@
     left: 20px;
     width: 280px; /* Increased from 220px for less congestion */
     max-height: 75vh;
-    background: rgba(0, 0, 0, 0.15);
+    background: rgba(0, 0, 0, 0.25); /* Slightly darker to compensate for less blur */
     color: rgba(255, 255, 255, 0.9);
     padding: 24px 20px; /* Increased vertical padding */
-    backdrop-filter: blur(12px);
+    backdrop-filter: blur(6px); /* Reduced from 12px for better scroll performance */
     border: 2px solid rgba(0, 255, 255, 0.3);
     /* Gentler geometric shape - more subtle corner cuts */
     clip-path: polygon(
@@ -37,6 +37,9 @@
         inset 0 1px 0 rgba(255, 255, 255, 0.1);
     /* Smooth transition for hide/show */
     transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease, all 0.3s ease;
+    /* Performance optimization for scrolling */
+    will-change: scroll-position;
+    transform: translateZ(0); /* Force GPU acceleration */
 }
 
 .controls:hover {

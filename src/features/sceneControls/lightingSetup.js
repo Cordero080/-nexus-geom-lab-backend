@@ -2,7 +2,7 @@ import * as THREE from "three";
 
 export function initializeLighting({
   ambientLightColor = "#ffffff",
-  ambientLightIntensity = 0.5,
+  ambientLightIntensity = 1.2,
   directionalLightColor = "#ffffff",
   directionalLightIntensity = 1,
   directionalLightPosition = { x: 0, y: 10, z: 10 },
@@ -14,13 +14,13 @@ export function initializeLighting({
     16
   );
 
-  // Create ambient light
+  // Create ambient light - uniform illumination from all directions
   const ambientLight = new THREE.AmbientLight(
     ambientLightColorHex,
     ambientLightIntensity
   );
 
-  // Create directional light
+  // Create directional light - sun-like parallel rays with shadows
   const directionalLight = new THREE.DirectionalLight(
     directionalLightColorHex,
     directionalLightIntensity
@@ -32,5 +32,21 @@ export function initializeLighting({
   );
   directionalLight.castShadow = true;
 
-  return { ambientLight, directionalLight };
+  // Add hemisphere light for natural sky/ground gradient (subtle fill light)
+  const hemisphereLight = new THREE.HemisphereLight(
+    0xffffff, // Sky color (white/blue)
+    0x444444, // Ground color (dark gray)
+    0.3 // Intensity
+  );
+
+  // Single PointLight for subtle sci-fi accent
+  const pointLight1 = new THREE.PointLight(0x00d4ff, 1.2, 25); // Cyan glow
+  pointLight1.position.set(5, 5, 5);
+
+  return {
+    ambientLight,
+    directionalLight,
+    hemisphereLight,
+    pointLight1,
+  };
 }

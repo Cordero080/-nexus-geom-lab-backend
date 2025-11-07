@@ -56,7 +56,12 @@ export function useSceneInitialization(refs, lightingProps) {
     scene.userData.camera = camera;
 
     // 2. CREATE LIGHTS - Using current prop values
-    const { ambientLight, directionalLight } = initializeLighting({
+    const {
+      ambientLight,
+      directionalLight,
+      hemisphereLight,
+      pointLight1,
+    } = initializeLighting({
       ambientLightColor,
       ambientLightIntensity,
       directionalLightColor,
@@ -75,6 +80,10 @@ export function useSceneInitialization(refs, lightingProps) {
     // Add lights to the scene
     scene.add(ambientLight);
     scene.add(directionalLight);
+    scene.add(hemisphereLight);
+    scene.add(pointLight1);
+
+    // 3. HANDLE WINDOW RESIZE - Keep canvas matching screen size
 
     // 3. HANDLE WINDOW RESIZE - Keep canvas matching screen size
     const handleResize = () => {

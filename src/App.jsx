@@ -56,7 +56,7 @@ function GeomLab() {
 
   // LIGHTING STATE
   const [ambientLightColor, setAmbientLightColor] = useState('#ffffff')
-  const [ambientLightIntensity, setAmbientLightIntensity] = useState(0.5)
+  const [ambientLightIntensity, setAmbientLightIntensity] = useState(1.2)
   const [directionalLightColor, setDirectionalLightColor] = useState('#ffffff')
   const [directionalLightIntensity, setDirectionalLightIntensity] = useState(1.0)
   const [directionalLightX, setDirectionalLightX] = useState(10)

@@ -210,8 +210,11 @@ const animationStyles = {
       solidMesh.rotation.x = Math.sin(t * 0.7 + phase) * 0.4 * awakening;
       solidMesh.rotation.z = Math.cos(t * 0.4 + phase) * 0.25;
 
-      // Breathing with excitement
-      solidMesh.scale.setScalar(1 + Math.sin(t * 2 + phase) * 0.04 * awakening);
+      // Breathing with excitement (respect user's base scale)
+      const baseScale = solidMesh.userData.baseScale || 1;
+      solidMesh.scale.setScalar(
+        baseScale * (1 + Math.sin(t * 2 + phase) * 0.04 * awakening)
+      );
     }
 
     // PHASE 2: Playful Discovery Dance (18% - 38%) - Beethoven's scherzo energy
@@ -236,9 +239,10 @@ const animationStyles = {
       solidMesh.rotation.y += spinSpeed * 0.8;
       solidMesh.rotation.z += spinSpeed * Math.sin(t * 0.6 + phase) * 0.4;
 
-      // Excited "bouncing" scale
+      // Excited "bouncing" scale (respect user's base scale)
+      const baseScale = solidMesh.userData.baseScale || 1;
       solidMesh.scale.setScalar(
-        1 + Math.abs(Math.sin(t * 5 + phase)) * 0.06 * playfulness
+        baseScale * (1 + Math.abs(Math.sin(t * 5 + phase)) * 0.06 * playfulness)
       );
     }
 
@@ -267,8 +271,11 @@ const animationStyles = {
       solidMesh.rotation.y += t * 0.08 + Math.cos(swoopAngle * 0.7) * 0.3;
       solidMesh.rotation.z = Math.cos(swoopAngle * 1.5) * 0.5;
 
-      // Excited pulsing
-      solidMesh.scale.setScalar(1 + Math.sin(t * 3 + phase) * 0.05);
+      // Excited pulsing (respect user's base scale)
+      const baseScale = solidMesh.userData.baseScale || 1;
+      solidMesh.scale.setScalar(
+        baseScale * (1 + Math.sin(t * 3 + phase) * 0.05)
+      );
     }
 
     // PHASE 4: Triumphant Spiral Ascent (58% - 82%) - Ode to Joy building
@@ -292,8 +299,9 @@ const animationStyles = {
       solidMesh.rotation.y += 0.08 * (1 + triumph);
       solidMesh.rotation.z += 0.02 * Math.sin(spiralAngle);
 
-      // Growing with confidence
-      solidMesh.scale.setScalar(1 + triumph * 0.15);
+      // Growing with confidence (respect user's base scale)
+      const baseScale = solidMesh.userData.baseScale || 1;
+      solidMesh.scale.setScalar(baseScale * (1 + triumph * 0.15));
     }
 
     // PHASE 5: Graceful Return & Contentment (82% - 100%) - Beethoven's resolution
@@ -334,13 +342,15 @@ const animationStyles = {
         settling * 0.7
       );
 
-      // Settling back to calm breathing
+      // Settling back to calm breathing (respect user's base scale)
+      const baseScale = solidMesh.userData.baseScale || 1;
       solidMesh.scale.setScalar(
-        THREE.MathUtils.lerp(
-          solidMesh.scale.x,
-          1 + Math.sin(t * 1.5 + phase) * 0.03,
-          settling
-        )
+        baseScale *
+          THREE.MathUtils.lerp(
+            solidMesh.scale.x / baseScale, // Normalize to animation scale
+            1 + Math.sin(t * 1.5 + phase) * 0.03,
+            settling
+          )
       );
     }
 

@@ -70,8 +70,7 @@ _Gamified character and animation unlocks with sound effects_
 
 ---
 
-## 🎨 Design & Planning
-
+## 🎨 Design & Plannin
 ### Database Schema (ERD)
 
 ![ERD Diagram](./screenshots/erd-diagram.png)
@@ -263,10 +262,11 @@ nexus-geom-3D/
 │   ├── 📁 middleware/
 │   │   └── auth.js                  # JWT verification
 │   └── resetDevUser.js              # Development utility
-├── 📁 docs/                         # Comprehensive documentation
-│   ├── TECHNICAL_SPECIFICATION.md   # Full technical docs
+├── 📁 docs/                         # Technical documentation
+│   ├── TECHNICAL_SPECIFICATION.md   # Full technical specs
 │   ├── ARCHITECTURE_DIAGRAM.md      # System architecture
-│   └── 📁 study-plan/              # Learning materials
+│   ├── INTERACTIVE_SYSTEMS.md       # UI/UX documentation
+│   └── 📁 hooks-customHooks/        # Custom hooks documentation
 └── package.json                     # React 19.1 + Three.js 0.180
 ```
 
@@ -361,18 +361,16 @@ Scene 4+ → Unlock additional animations
 
 ### Complete Guides
 
-- **[Full Documentation](./docs/FULL_DOCUMENTATION.md)** - Everything you need to know (15,000+ words)
 - **[Architecture Diagram](./docs/ARCHITECTURE_DIAGRAM.md)** - Visual system architecture
-- **[API Reference](./docs/FULL_DOCUMENTATION.md#api-reference)** - Complete endpoint documentation
-- **[Study Plan](./docs/study-plan/STUDY_PLAN.md)** - Learn the codebase step-by-step
+- **[Technical Specification](./docs/TECHNICAL_SPECIFICATION.md)** - Detailed technical documentation
 - **[Custom Hooks Guide](./docs/hooks-customHooks/CUSTOM_HOOKS_GUIDE.md)** - React hooks documentation
+- **[Interactive Systems](./docs/INTERACTIVE_SYSTEMS.md)** - UI/UX interaction documentation
 
 ### Quick Links
 
 - **Installation**: See [Quick Start](#-quick-start) above
-- **Usage Guide**: See [Full Documentation](./docs/FULL_DOCUMENTATION.md#usage-guide)
-- **Troubleshooting**: See [Full Documentation](./docs/FULL_DOCUMENTATION.md#troubleshooting)
-- **Contributing**: See [Full Documentation](./docs/FULL_DOCUMENTATION.md#contributing)
+- **API Endpoints**: See [Technical Specification](./docs/TECHNICAL_SPECIFICATION.md)
+- **Project Structure**: See above section
 
 ---
 
@@ -446,12 +444,12 @@ NODE_ENV=production
 
 ## 🤝 Contributing
 
-We welcome contributions! See [Contributing Guide](./docs/FULL_DOCUMENTATION.md#contributing) for:
+Contributions welcome! Please follow standard practices:
 
-- Development workflow
-- Code style guidelines
-- Commit message conventions
-- Pull request process
+- Development workflow with feature branches
+- ESLint and Prettier for code quality
+- Clear commit messages
+- Pull request with description
 
 ---
 
