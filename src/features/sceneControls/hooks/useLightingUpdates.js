@@ -15,6 +15,7 @@ import { useEffect } from "react";
  * @param {number} lightingProps.directionalLightX - Directional light X position
  * @param {number} lightingProps.directionalLightY - Directional light Y position
  * @param {number} lightingProps.directionalLightZ - Directional light Z position
+ * @param {number} lightingProps.metalness - Metalness value (0-1) for intensity boosting
  */
 export function useLightingUpdates(refs, lightingProps) {
   const { ambientLightRef, directionalLightRef } = refs;
@@ -26,13 +27,18 @@ export function useLightingUpdates(refs, lightingProps) {
     directionalLightX,
     directionalLightY,
     directionalLightZ,
+    metalness = 0,
   } = lightingProps;
 
   // AMBIENT LIGHT UPDATER
   useEffect(() => {
     if (ambientLightRef.current) {
-      // Allow full range of ambient light intensity (0 to 2)
-      const safeIntensity = Math.max(0, ambientLightIntensity);
+      // Boost intensity for metallic materials (metalness > 0.4)
+      // Metallic surfaces need more light to show their reflective properties
+      const metalnessBoost = metalness > 0.4 ? 1 + (metalness - 0.4) * 6 : 1; // 1x to 4.6x boost
+      const boostedIntensity = ambientLightIntensity * metalnessBoost;
+      const safeIntensity = Math.max(0, boostedIntensity);
+      
       // Convert hex color to Three.js color number with validation
       const colorString = ambientLightColor.replace("#", "");
       const convertedColor = parseInt(colorString, 16);
@@ -42,13 +48,17 @@ export function useLightingUpdates(refs, lightingProps) {
       }
       ambientLightRef.current.intensity = safeIntensity;
     }
-  }, [ambientLightColor, ambientLightIntensity]);
+  }, [ambientLightColor, ambientLightIntensity, metalness]);
 
   // DIRECTIONAL LIGHT UPDATER
   useEffect(() => {
     if (directionalLightRef.current) {
-      // Clamp intensity to a minimum value
-      const safeIntensity = Math.max(0.05, directionalLightIntensity);
+      // Boost intensity for metallic materials (metalness > 0.4)
+      // Metallic surfaces need stronger directional light to show highlights and reflections
+      const metalnessBoost = metalness > 0.4 ? 1 + (metalness - 0.4) * 5 : 1; // 1x to 4x boost
+      const boostedIntensity = directionalLightIntensity * metalnessBoost;
+      const safeIntensity = Math.max(0.05, boostedIntensity);
+      
       // Clamp position to a reasonable range
       const clamp = (val, min, max) => Math.max(min, Math.min(max, val));
       const safeX = clamp(directionalLightX, -50, 50);
@@ -71,5 +81,6 @@ export function useLightingUpdates(refs, lightingProps) {
     directionalLightX,
     directionalLightY,
     directionalLightZ,
+    metalness,
   ]);
 }

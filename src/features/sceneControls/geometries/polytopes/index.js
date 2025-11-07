@@ -13,6 +13,10 @@ export {
 } from "./icosahedron.js";
 export { createHypercube, metadata as hypercubeMetadata } from "./hypercube.js";
 export {
+  createSimpleCompoundHypercube,
+  metadata as simpleCompoundHypercubeMetadata,
+} from "./simpleCompoundHypercube.js";
+export {
   createCompoundHypercube,
   metadata as compoundHypercubeMetadata,
 } from "./compoundHypercube.js";

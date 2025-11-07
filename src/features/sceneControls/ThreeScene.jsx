@@ -76,7 +76,7 @@ function ThreeScene({
 	useLightingUpdates(
 		{ ambientLightRef, directionalLightRef },
 		{ ambientLightColor, ambientLightIntensity, directionalLightColor, directionalLightIntensity,
-		  directionalLightX, directionalLightY, directionalLightZ }
+		  directionalLightX, directionalLightY, directionalLightZ, metalness }
 	);
 
 	// Add extra lights from multiple angles ONLY when metalness is high

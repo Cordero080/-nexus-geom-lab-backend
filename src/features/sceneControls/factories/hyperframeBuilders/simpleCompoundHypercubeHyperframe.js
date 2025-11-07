@@ -1,7 +1,7 @@
 import * as THREE from "three";
 
 /**
- * Create hyperframe for compound hypercube - 9 complete hypercube hyperframes
+ * Create hyperframe for simple compound hypercube - two complete hypercube hyperframes
  * Each hypercube gets:
  * - Inner cube wireframe (12 edges)
  * - Outer-to-inner vertex connections (8 lines)
@@ -11,17 +11,20 @@ import * as THREE from "three";
  * @param {string} hyperframeLineColor - Color for connections
  * @returns {Object} { centerLines, centerLinesMaterial, curvedLines, curvedLinesMaterial }
  */
-export function createCompoundHypercubeHyperframe(
+export function createSimpleCompoundHypercubeHyperframe(
   geometry,
   hyperframeColor,
   hyperframeLineColor
 ) {
-  console.log("Creating 9-compound hypercube hyperframe");
+  console.log("Creating simple compound hypercube hyperframe (2 hypercubes)");
 
   const outerScale = geometry.userData.outerScale || 1.0;
   const innerScale = geometry.userData.innerScale || 0.5;
-  const compoundCount = geometry.userData.compoundCount || 9;
-  const rotations = geometry.userData.rotations || [];
+  const compoundCount = geometry.userData.compoundCount || 2;
+  const rotations = geometry.userData.rotations || [
+    new THREE.Euler(0, 0, 0),
+    new THREE.Euler(0, Math.PI / 4, 0),
+  ];
 
   // Define 8 vertices of a cube
   const cubeVertices = [
@@ -179,12 +182,12 @@ export function createCompoundHypercubeHyperframe(
   }
 
   console.log(
-    `Created 9-compound hypercube inner wireframes: ${
+    `Created simple compound hypercube inner wireframes: ${
       cubeEdges.length * compoundCount
     } cylinder edges (12 per hypercube)`
   );
   console.log(
-    `Created 9-compound hypercube connections: ${
+    `Created simple compound hypercube connections: ${
       8 * compoundCount
     } vertex-to-vertex connections (8 per hypercube)`
   );

@@ -20,6 +20,7 @@ import { createBoxHyperframe } from "./hyperframeBuilders/boxHyperframe";
 import { createOctahedronHyperframe } from "./hyperframeBuilders/octahedronHyperframe";
 import { createIcosahedronHyperframe } from "./hyperframeBuilders/icosahedronHyperframe";
 import { createHypercubeHyperframe } from "./hyperframeBuilders/hypercubeHyperframe";
+import { createSimpleCompoundHypercubeHyperframe } from "./hyperframeBuilders/simpleCompoundHypercubeHyperframe";
 import { createCompoundHypercubeHyperframe } from "./hyperframeBuilders/compoundHypercubeHyperframe";
 import { create120CellHyperframe } from "./hyperframeBuilders/cell120Hyperframe";
 import { createCompound120CellHyperframe } from "./hyperframeBuilders/compoundCell120Hyperframe";
@@ -449,8 +450,12 @@ export function createSceneObject(config) {
     (geometry.userData && geometry.userData.baseType === "BoxGeometry") ||
     (geometry.userData && geometry.userData.baseType === "HypercubeGeometry")
   ) {
-    // Check if it's the compound hypercube (2 hypercubes interpenetrating)
-    if (geometry.userData && geometry.userData.isCpdHypercube) {
+    // Check if it's the compound hypercube (9 hypercubes interpenetrating)
+    if (
+      geometry.userData &&
+      geometry.userData.isCpdHypercube &&
+      geometry.userData.compoundCount === 9
+    ) {
       const result = createCompoundHypercubeHyperframe(
         geometry,
         hyperframeColor,
@@ -458,7 +463,22 @@ export function createSceneObject(config) {
       );
       ({ centerLines, centerLinesMaterial, curvedLines, curvedLinesMaterial } =
         result);
-      console.log("🔷 USING COMPOUND HYPERCUBE HYPERFRAME");
+      console.log("🔷 USING 9-COMPOUND HYPERCUBE HYPERFRAME");
+    }
+    // Check if it's the simple compound hypercube (2 hypercubes interpenetrating)
+    else if (
+      geometry.userData &&
+      geometry.userData.isCpdHypercube &&
+      geometry.userData.compoundCount === 2
+    ) {
+      const result = createSimpleCompoundHypercubeHyperframe(
+        geometry,
+        hyperframeColor,
+        hyperframeLineColor
+      );
+      ({ centerLines, centerLinesMaterial, curvedLines, curvedLinesMaterial } =
+        result);
+      console.log("🔷 USING SIMPLE COMPOUND HYPERCUBE HYPERFRAME");
     }
     // Check if it's the new hypercube (tesseract with hyperframe)
     else if (

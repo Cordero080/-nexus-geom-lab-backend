@@ -170,7 +170,7 @@ function createHypercubeWithFaces(outerScale, innerScale, rotation = null) {
 }
 
 /**
- * Creates a compound hypercube (tesseract) - two interpenetrating hypercubes
+ * Creates a simple compound hypercube (tesseract) - two interpenetrating hypercubes
  *
  * Each hypercube consists of:
  * - Outer cube
@@ -183,48 +183,27 @@ function createHypercubeWithFaces(outerScale, innerScale, rotation = null) {
  * @param {Object} options - Configuration options
  * @returns {THREE.BufferGeometry}
  */
-export function createCompoundHypercube(options = {}) {
+export function createSimpleCompoundHypercube(options = {}) {
   const outerScale = 1.0;
   const innerScale = 0.5;
 
-  // Create 9-compound hypercube (cube 9-compound configuration)
-  // These are the 9 distinct rotations that create a proper compound
-  const hypercubes = [];
+  // First hypercube (no rotation)
+  const hypercube1 = createHypercubeWithFaces(outerScale, innerScale, null);
 
-  // The 9 orientations for a cube 9-compound
-  // Based on rotations around different axes to ensure visual distinction
-  const rotations = [
-    new THREE.Euler(0, 0, 0), // Identity
-    new THREE.Euler(Math.PI / 4, 0, 0), // 45° X
-    new THREE.Euler(0, Math.PI / 4, 0), // 45° Y
-    new THREE.Euler(0, 0, Math.PI / 4), // 45° Z
-    new THREE.Euler(Math.PI / 4, Math.PI / 4, 0), // 45° X+Y
-    new THREE.Euler(Math.PI / 4, 0, Math.PI / 4), // 45° X+Z
-    new THREE.Euler(0, Math.PI / 4, Math.PI / 4), // 45° Y+Z
-    new THREE.Euler(Math.PI / 4, Math.PI / 4, Math.PI / 4), // 45° X+Y+Z
-    new THREE.Euler(Math.PI / 3, Math.PI / 3, Math.PI / 3), // 60° all axes
-  ];
+  // Second hypercube rotated 45° on Y axis
+  const rotation = new THREE.Euler(0, Math.PI / 4, 0);
+  const hypercube2 = createHypercubeWithFaces(outerScale, innerScale, rotation);
 
-  // Create all 9 hypercubes
-  rotations.forEach((rotation) => {
-    const hypercube = createHypercubeWithFaces(
-      outerScale,
-      innerScale,
-      rotation
-    );
-    hypercubes.push(hypercube);
-  });
-
-  // Merge all 9 hypercubes
-  console.log("Attempting to merge 9-compound hypercube parts");
-  const mergedCpdHypercube = mergeGeometries(hypercubes);
+  // Merge both hypercubes
+  console.log("Attempting to merge simple compound hypercube parts");
+  const mergedCpdHypercube = mergeGeometries([hypercube1, hypercube2]);
 
   if (!mergedCpdHypercube) {
-    console.error("Failed to merge 9-compound hypercube geometries!");
-    return hypercubes[0];
+    console.error("Failed to merge simple compound hypercube geometries!");
+    return hypercube1;
   }
 
-  console.log("Successfully merged 9-compound hypercube");
+  console.log("Successfully merged simple compound hypercube");
 
   // Recompute normals for proper lighting
   mergedCpdHypercube.computeVertexNormals();
@@ -235,18 +214,21 @@ export function createCompoundHypercube(options = {}) {
   mergedCpdHypercube.userData.isCpdHypercube = true;
   mergedCpdHypercube.userData.outerScale = outerScale;
   mergedCpdHypercube.userData.innerScale = innerScale;
-  mergedCpdHypercube.userData.compoundCount = 9; // 9-compound
-  mergedCpdHypercube.userData.rotations = rotations; // Store all rotations for hyperframe
+  mergedCpdHypercube.userData.compoundCount = 2; // 2-compound
+  mergedCpdHypercube.userData.rotations = [
+    new THREE.Euler(0, 0, 0),
+    new THREE.Euler(0, Math.PI / 4, 0),
+  ]; // Store rotations for hyperframe
 
   return mergedCpdHypercube;
 }
 
 /**
- * Metadata for the compound hypercube geometry
+ * Metadata for the simple compound hypercube geometry
  */
 export const metadata = {
-  name: "compoundHypercube",
-  displayName: "◻◻ Hypercube",
+  name: "simpleCompoundHypercube",
+  displayName: "◻◻ Cpd-Hypercube",
   category: "polytopes",
   description: "Two 4D hypercubes interpenetrating - simulates 4D rotation",
   isCompound: true,

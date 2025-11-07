@@ -34,8 +34,8 @@ function LightingControls({
       <input 
         type="range" 
         min="0" 
-        max="2" 
-        step="0.05"
+        max="5" 
+        step="0.1"
         value={ambientLightIntensity}
         onChange={(event) => onAmbientLightIntensityChange(parseFloat(event.target.value))}
       />
@@ -56,8 +56,8 @@ function LightingControls({
       <input 
         type="range" 
         min="0" 
-        max="20" 
-        step="0.5"
+        max="40" 
+        step="1"
         value={directionalLightIntensity}
         onChange={(event) => onDirectionalLightIntensityChange(parseFloat(event.target.value))}
       />

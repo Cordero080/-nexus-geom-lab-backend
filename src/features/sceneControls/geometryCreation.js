@@ -29,6 +29,7 @@ import { createCompoundMegaTesseractNested } from "./geometries/polytopes/compou
 import { createCompoundMegaTesseractExperimental } from "./geometries/polytopes/compoundMegaTesseract3.js";
 import { createCompoundMegaTesseractAxisShift } from "./geometries/polytopes/compoundMegaTesseract4.js";
 import { createHypercube } from "./geometries/polytopes/hypercube.js";
+import { createSimpleCompoundHypercube } from "./geometries/polytopes/simpleCompoundHypercube.js";
 import { createCompoundHypercube } from "./geometries/polytopes/compoundHypercube.js";
 
 /**
@@ -159,6 +160,10 @@ export function createGeometry(type = "icosahedron", options = {}) {
     case "compoundfloatingcity":
       // Use modular geometry - see geometries/curved/compoundFloatingCity.js
       return createCompoundFloatingCity(options);
+
+    case "simplecpdhypercube":
+      // Use modular geometry - see geometries/polytopes/simpleCompoundHypercube.js
+      return createSimpleCompoundHypercube(options);
 
     case "cube":
       // Use modular geometry - see geometries/polytopes/compoundHypercube.js

@@ -170,20 +170,20 @@ function createHypercubeWithFaces(outerScale, innerScale, rotation = null) {
 }
 
 /**
- * Creates a compound hypercube (tesseract) - two interpenetrating hypercubes
+ * Creates a 9-compound hypercube - nine interpenetrating hypercubes
  *
  * Each hypercube consists of:
  * - Outer cube
  * - Inner cube (representing 4D projection)
  * - 6 connecting frustum faces (creating concave indentations)
  *
- * The second hypercube is rotated 45° to create a compound 4D structure,
- * simulating rotation in the 4th dimension.
+ * The 9 hypercubes are arranged in a cube 9-compound configuration
+ * with distinct rotations to create a beautiful symmetric structure.
  *
  * @param {Object} options - Configuration options
  * @returns {THREE.BufferGeometry}
  */
-export function createCompoundHypercube(options = {}) {
+export function createNineCompoundHypercube(options = {}) {
   const outerScale = 1.0;
   const innerScale = 0.5;
 
@@ -229,10 +229,10 @@ export function createCompoundHypercube(options = {}) {
   // Recompute normals for proper lighting
   mergedCpdHypercube.computeVertexNormals();
 
-  // Mark it as compound hypercube for wireframe builders
+  // Mark it as 9-compound hypercube for wireframe builders
   mergedCpdHypercube.userData.isCompound = true;
   mergedCpdHypercube.userData.baseType = "HypercubeGeometry";
-  mergedCpdHypercube.userData.isCpdHypercube = true;
+  mergedCpdHypercube.userData.is9CpdHypercube = true;
   mergedCpdHypercube.userData.outerScale = outerScale;
   mergedCpdHypercube.userData.innerScale = innerScale;
   mergedCpdHypercube.userData.compoundCount = 9; // 9-compound
@@ -242,13 +242,13 @@ export function createCompoundHypercube(options = {}) {
 }
 
 /**
- * Metadata for the compound hypercube geometry
+ * Metadata for the 9-compound hypercube geometry
  */
 export const metadata = {
-  name: "compoundHypercube",
-  displayName: "◻◻ Hypercube",
+  name: "nineCompoundHypercube",
+  displayName: "◻◻◻ 9Cpd-Hypercube",
   category: "polytopes",
-  description: "Two 4D hypercubes interpenetrating - simulates 4D rotation",
+  description: "Nine 4D hypercubes in a cube 9-compound configuration",
   isCompound: true,
   defaultOptions: {},
 };

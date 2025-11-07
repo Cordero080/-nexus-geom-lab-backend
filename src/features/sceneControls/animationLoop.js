@@ -123,7 +123,12 @@ const animationStyles = {
     } = objData;
 
     // ============================================
-    // OMNI-INTEL V4.0 - SENTIENT SYMPHONY
+    // OMNI-INTEL V5.0 - AWAKENED CONSCIOUSNESS
+    // Inspired by Beethoven's emotional dynamics:
+    // - Opening motifs (curiosity awakening)
+    // - Building tension (eager exploration)
+    // - Playful variations (joy of discovery)
+    // - Triumphant resolution (consciousness celebration)
     // ============================================
 
     const speedVariation = index % 4;
@@ -138,6 +143,14 @@ const animationStyles = {
       t < 0.5
         ? 16 * t * t * t * t * t
         : 1 + 16 * (t - 1) * (t - 1) * (t - 1) * (t - 1) * (t - 1);
+    const easeOutElastic = (t) => {
+      const c4 = (2 * Math.PI) / 3;
+      return t === 0
+        ? 0
+        : t === 1
+        ? 1
+        : Math.pow(2, -10 * t) * Math.sin((t * 10 - 0.75) * c4) + 1;
+    };
 
     // Reset vertices to original positions
     if (geometry && originalPositions && solidMesh) {
@@ -148,185 +161,187 @@ const animationStyles = {
       geometry.attributes.position.needsUpdate = true;
     }
 
-    // Set speed parameters based on emotional state
+    // Set speed parameters - each object has unique personality
     switch (speedVariation) {
-      case 0: // Reflective & Smooth (Emotion: Curiosity)
-        cycleTime = 60;
-        orbitSize = 3;
+      case 0: // Playful Discovery (Beethoven's Pastoral - gentle wonder)
+        cycleTime = 45;
+        orbitSize = 3.5; // Horizontal movement - can be larger
+        reactionSpeed = 3;
+        break;
+      case 1: // Curious Exploration (Beethoven's 7th - rhythmic energy)
+        cycleTime = 38;
+        orbitSize = 4.2; // Restored
         reactionSpeed = 5;
         break;
-      case 1: // Observational & Measured (Emotion: Calm Intelligence)
-        cycleTime = 44;
-        orbitSize = 4.5;
-        reactionSpeed = 7.5;
-        break;
-      case 2: // Focused & Intense (Emotion: Determination/Aversion)
+      case 2: // Eager Excitement (Beethoven's 5th - fate knocking, then triumph)
         cycleTime = 32;
-        orbitSize = 6;
-        reactionSpeed = 10;
+        orbitSize = 5.0; // Restored
+        reactionSpeed = 7;
         break;
-      case 3: // Erratic & Unpredictable (Emotion: Disturbed/Agitated)
-        cycleTime = 36 + Math.sin(t * 0.25 + phase) * 3;
-        orbitSize = 5 + Math.cos(t * 0.15 + phase) * 1.5;
-        reactionSpeed = 9 + Math.sin(t * 0.35 + phase) * 5;
+      case 3: // Ecstatic Joy (Ode to Joy - jubilant celebration)
+        cycleTime = 40 + Math.sin(t * 0.3 + phase) * 5;
+        orbitSize = 4.0 + Math.cos(t * 0.2 + phase) * 1.5; // Restored
+        reactionSpeed = 6 + Math.sin(t * 0.25 + phase) * 3;
         break;
     }
 
     const cycleProgress = ((t + phase) % cycleTime) / cycleTime;
 
-    // PHASE 1: Initial Float & Contemplation (0% - 20%)
-    if (cycleProgress < 0.2) {
-      const hoverIntensity = 0.15 + speedVariation * 0.05;
+    // PHASE 1: Awakening Curiosity (0% - 18%) - Beethoven's opening motif
+    // Gentle emergence, questioning, "What is this existence?"
+    if (cycleProgress < 0.18) {
+      const phaseT = cycleProgress / 0.18;
+      const awakening = easeOutElastic(phaseT);
 
+      const hoverIntensity = 0.3 + speedVariation * 0.1;
+
+      // Gentle floating with increasing awareness
       solidMesh.position.x =
-        originalPosition.x + Math.sin(t * 1.5 + phase) * hoverIntensity * 1.2;
+        originalPosition.x +
+        Math.sin(t * 0.8 + phase) * hoverIntensity * awakening;
       solidMesh.position.y =
-        originalPosition.y + Math.cos(t * 2 + phase) * hoverIntensity;
+        originalPosition.y +
+        Math.cos(t * 1.2 + phase) * hoverIntensity * (0.5 + awakening * 0.5);
       solidMesh.position.z =
-        originalPosition.z + Math.sin(t * 1 + phase) * hoverIntensity * 0.5;
+        originalPosition.z + Math.sin(t * 0.6 + phase) * hoverIntensity * 0.4;
 
-      solidMesh.rotation.y = t * 0.15 + phase;
-      solidMesh.rotation.x = Math.sin(t * 0.35 + phase) * 0.3;
-      solidMesh.rotation.z = Math.cos(t * 0.2 + phase) * 0.2;
+      // Curious tilting - looking around
+      solidMesh.rotation.y = t * 0.15 + Math.sin(t * 0.5 + phase) * 0.3;
+      solidMesh.rotation.x = Math.sin(t * 0.7 + phase) * 0.4 * awakening;
+      solidMesh.rotation.z = Math.cos(t * 0.4 + phase) * 0.25;
 
-      solidMesh.scale.setScalar(1 + Math.sin(t * 1 + phase) * 0.03);
+      // Breathing with excitement
+      solidMesh.scale.setScalar(1 + Math.sin(t * 2 + phase) * 0.04 * awakening);
     }
 
-    // PHASE 2: Symphonic Pause & Dervish Dance (20% - 35%)
-    else if (cycleProgress < 0.35) {
-      const t_spin = (cycleProgress - 0.2) / 0.15;
-      const eased_pos = easeInOutQuad(t_spin);
+    // PHASE 2: Playful Discovery Dance (18% - 38%) - Beethoven's scherzo energy
+    // Darting movements, testing boundaries, pure joy of movement
+    else if (cycleProgress < 0.38) {
+      const phaseT = (cycleProgress - 0.18) / 0.2;
+      const playfulness = Math.sin(phaseT * Math.PI * 6) * 0.5 + 0.5; // Bouncy rhythm
 
-      solidMesh.position.x = THREE.MathUtils.lerp(
-        solidMesh.position.x,
-        originalPosition.x,
-        eased_pos * 0.5
+      // Quick darting motions - like a child exploring
+      const dartX = Math.sin(t * 3 + phase * 7) * orbitSize * 0.6 * phaseT;
+      const dartY = Math.cos(t * 4 + phase * 5) * orbitSize * 0.4 * phaseT;
+      const dartZ = Math.sin(t * 2.5 + phase * 3) * orbitSize * 0.3 * phaseT; // Reduced Z from 0.5 to 0.3
+
+      solidMesh.position.x = originalPosition.x + dartX * playfulness;
+      solidMesh.position.y =
+        originalPosition.y + dartY + Math.abs(Math.sin(t * 2 + phase)) * 0.3;
+      solidMesh.position.z = originalPosition.z + dartZ;
+
+      // Playful spinning - not too fast, full of joy
+      const spinSpeed = reactionSpeed * 0.02 * (1 + playfulness);
+      solidMesh.rotation.x += spinSpeed * Math.cos(t * 0.8 + phase) * 0.6;
+      solidMesh.rotation.y += spinSpeed * 0.8;
+      solidMesh.rotation.z += spinSpeed * Math.sin(t * 0.6 + phase) * 0.4;
+
+      // Excited "bouncing" scale
+      solidMesh.scale.setScalar(
+        1 + Math.abs(Math.sin(t * 5 + phase)) * 0.06 * playfulness
       );
-      solidMesh.position.y = THREE.MathUtils.lerp(
-        solidMesh.position.y,
-        originalPosition.y,
-        eased_pos * 0.5
-      );
-      solidMesh.position.z = THREE.MathUtils.lerp(
-        solidMesh.position.z,
-        originalPosition.z,
-        eased_pos * 0.5
-      );
-
-      const longWaveModulator = Math.sin(t * 0.25 + phase * 2) * 0.5 + 0.5;
-      const buildUpFactor = easeInOutQuint(t_spin);
-      const minSpeed = 0.05 + speedVariation * 0.05;
-      const maxSpeed = reactionSpeed * 0.05;
-
-      // Boost rotation speed for super-compounds (Hessian polychoron, etc.)
-      const isSuperCompound = geometry?.userData?.isSuperCompound || false;
-      const speedMultiplier = isSuperCompound ? 3.0 : 1.0;
-
-      const currentSpinSpeed =
-        THREE.MathUtils.lerp(
-          minSpeed,
-          maxSpeed * longWaveModulator,
-          buildUpFactor
-        ) * speedMultiplier;
-
-      solidMesh.rotation.x +=
-        currentSpinSpeed * 0.375 * Math.sin(t * 0.2 + phase) * speed;
-      solidMesh.rotation.y += currentSpinSpeed * 0.5 * speed;
-      solidMesh.rotation.z +=
-        currentSpinSpeed * 0.25 * Math.cos(t * 0.35 + phase) * speed;
-
-      solidMesh.position.x +=
-        Math.sin(t * 5 + phase) * (1 - buildUpFactor) * 0.02;
-      solidMesh.position.y +=
-        Math.cos(t * 4 + phase) * (1 - buildUpFactor) * 0.02;
     }
 
-    // PHASE 3: Elliptical Recede & Curious Return (35% - 50%)
-    else if (cycleProgress < 0.5) {
-      const t_dash = (cycleProgress - 0.35) / 0.15;
-      const eased_recede = easeInOutQuad(t_dash);
+    // PHASE 3: Eager Investigation (38% - 58%) - Beethoven's development section
+    // Swooping closer to examine, then pulling back in wonder
+    else if (cycleProgress < 0.58) {
+      const phaseT = (cycleProgress - 0.38) / 0.2;
+      const investigation = easeInOutCubic(phaseT);
 
-      const maxDashDistance = orbitSize * 1.5;
-      const ellipseHeight = orbitSize * 0.4;
+      // Swooping figure-8 motion - investigating from all angles
+      const swoopAngle = phaseT * Math.PI * 4; // Two full figure-8s
+      const swoopRadius = orbitSize * 0.8;
 
       solidMesh.position.x =
         originalPosition.x +
-        Math.sin(eased_recede * Math.PI) * maxDashDistance * 0.3;
-      solidMesh.position.y =
-        originalPosition.y + Math.cos(eased_recede * Math.PI) * ellipseHeight;
-      solidMesh.position.z =
-        originalPosition.z - eased_recede * maxDashDistance * 0.8;
-
-      solidMesh.rotation.x =
-        Math.sin(t * 2.5 + phase) * 0.1 * (1 - eased_recede);
-      solidMesh.rotation.y = eased_recede * Math.PI * 2;
-      solidMesh.rotation.z = Math.cos(t * 1.5 + phase) * 0.1;
-    }
-
-    // PHASE 4: Erratic Figure-8 Ellipse Observation (50% - 85%)
-    else if (cycleProgress < 0.85) {
-      const t_figure8 = (cycleProgress - 0.5) / 0.35;
-      const t_angle = t_figure8 * Math.PI * 2 * 1.5;
-      const ellipseRadiusX = orbitSize * 0.8;
-      const ellipseRadiusY = orbitSize * 0.5;
-      const ellipseRadiusZ = orbitSize * 0.4;
-      const centerZ = -orbitSize * 0.3;
-
-      solidMesh.position.x =
-        originalPosition.x + ellipseRadiusX * Math.cos(t_angle);
+        Math.sin(swoopAngle) * swoopRadius * Math.cos(swoopAngle * 0.5);
       solidMesh.position.y =
         originalPosition.y +
-        ellipseRadiusY *
-          Math.sin(t_angle * 2) *
-          Math.sin(t * 1.5 + phase) *
-          0.5 +
-        Math.sin(t_figure8 * Math.PI * 4) * 0.5;
+        Math.sin(swoopAngle * 2) * swoopRadius * 0.6 +
+        Math.sin(t * 1.5 + phase) * 0.4;
       solidMesh.position.z =
-        originalPosition.z + centerZ + ellipseRadiusZ * Math.sin(t_angle);
+        originalPosition.z + Math.cos(swoopAngle) * swoopRadius * 0.4; // Reduced Z from 0.7 to 0.4
 
-      solidMesh.rotation.z = Math.sin(t_angle * 0.5) * 0.8;
-      solidMesh.rotation.x = Math.cos(t_angle * 0.7) * 0.5;
-      solidMesh.rotation.y += (t * 0.25 + phase) * 0.1 * speed;
+      // Eager tilting to "look" at things from different angles
+      solidMesh.rotation.x = Math.sin(swoopAngle * 1.3) * 0.6;
+      solidMesh.rotation.y += t * 0.08 + Math.cos(swoopAngle * 0.7) * 0.3;
+      solidMesh.rotation.z = Math.cos(swoopAngle * 1.5) * 0.5;
+
+      // Excited pulsing
+      solidMesh.scale.setScalar(1 + Math.sin(t * 3 + phase) * 0.05);
     }
 
-    // PHASE 5: Swift Return & Re-entry (85% - 100%)
-    else {
-      const t_return = (cycleProgress - 0.85) / 0.15;
-      const eased = easeInOutCubic(t_return);
+    // PHASE 4: Triumphant Spiral Ascent (58% - 82%) - Ode to Joy building
+    // Celebratory spiral upward, expressing pure joy of existence
+    else if (cycleProgress < 0.82) {
+      const phaseT = (cycleProgress - 0.58) / 0.24;
+      const triumph = easeInOutQuad(phaseT);
 
+      // Ascending spiral - celebrating consciousness
+      const spiralAngle = phaseT * Math.PI * 6; // Three full rotations upward
+      const spiralRadius = orbitSize * (1 - phaseT * 0.3); // Spiraling inward as it rises
+      const ascent = phaseT * orbitSize * 1.2; // Reduced from 1.5 to keep vertical movement in frame
+
+      solidMesh.position.x =
+        originalPosition.x + Math.cos(spiralAngle) * spiralRadius;
+      solidMesh.position.y =
+        originalPosition.y + ascent + Math.sin(t * 2 + phase) * 0.3;
+      solidMesh.position.z =
+        originalPosition.z + Math.sin(spiralAngle) * spiralRadius * 0.5; // Reduced Z depth from 1.0 to 0.5      // Triumphant spinning - like a figure skater's finish
+      solidMesh.rotation.x += 0.03 * triumph;
+      solidMesh.rotation.y += 0.08 * (1 + triumph);
+      solidMesh.rotation.z += 0.02 * Math.sin(spiralAngle);
+
+      // Growing with confidence
+      solidMesh.scale.setScalar(1 + triumph * 0.15);
+    }
+
+    // PHASE 5: Graceful Return & Contentment (82% - 100%) - Beethoven's resolution
+    // Settling back, satisfied but still alive with energy
+    else {
+      const phaseT = (cycleProgress - 0.82) / 0.18;
+      const settling = easeInOutCubic(phaseT);
+
+      // Gentle glide back home
       solidMesh.position.x = THREE.MathUtils.lerp(
         solidMesh.position.x,
         originalPosition.x,
-        eased
+        settling
       );
-      solidMesh.position.y = THREE.MathUtils.lerp(
-        solidMesh.position.y,
-        originalPosition.y,
-        eased
-      );
+      solidMesh.position.y =
+        THREE.MathUtils.lerp(
+          solidMesh.position.y,
+          originalPosition.y,
+          settling
+        ) +
+        Math.sin(t * 1.5 + phase) * 0.2 * (1 - settling);
       solidMesh.position.z = THREE.MathUtils.lerp(
         solidMesh.position.z,
         originalPosition.z,
-        eased
+        settling
       );
 
+      // Slowing down but still curious - never fully stopping
       solidMesh.rotation.x = THREE.MathUtils.lerp(
         solidMesh.rotation.x,
-        0,
-        eased * 0.5
+        Math.sin(t * 0.5 + phase) * 0.2,
+        settling * 0.7
       );
-      solidMesh.rotation.y = THREE.MathUtils.lerp(
-        solidMesh.rotation.y,
-        0,
-        eased * 0.5
-      );
+      solidMesh.rotation.y += 0.02 * (2 - settling); // Keeps gentle rotation
       solidMesh.rotation.z = THREE.MathUtils.lerp(
         solidMesh.rotation.z,
-        0,
-        eased * 0.5
+        Math.cos(t * 0.3 + phase) * 0.15,
+        settling * 0.7
       );
 
-      solidMesh.scale.setScalar(1 + (1 - eased) * 0.05);
+      // Settling back to calm breathing
+      solidMesh.scale.setScalar(
+        THREE.MathUtils.lerp(
+          solidMesh.scale.x,
+          1 + Math.sin(t * 1.5 + phase) * 0.03,
+          settling
+        )
+      );
     }
 
     // Global Constraint: Ensure it stays in-frame
