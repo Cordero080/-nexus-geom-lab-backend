@@ -15,7 +15,7 @@ Metalness is a PBR (Physically Based Rendering) material property that determine
 
 ### Key Characteristics
 
-1. **Requires lighting to be visible**: Metallic surfaces reflect their environment
+1. **Requires lighting to be visiI'm unable to access my Heroku accountble**: Metallic surfaces reflect their environment
 2. **Works with roughness**: Controls how sharp/blurry the reflections are
 3. **Needs reflections**: Without lights or environment maps, appears black/dark
 4. **Color behavior**: Metallic surfaces tint reflections with their base color

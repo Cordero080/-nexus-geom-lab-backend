@@ -38,7 +38,7 @@ export function useLightingUpdates(refs, lightingProps) {
       const metalnessBoost = metalness > 0.4 ? 1 + (metalness - 0.4) * 6 : 1; // 1x to 4.6x boost
       const boostedIntensity = ambientLightIntensity * metalnessBoost;
       const safeIntensity = Math.max(0, boostedIntensity);
-      
+
       // Convert hex color to Three.js color number with validation
       const colorString = ambientLightColor.replace("#", "");
       const convertedColor = parseInt(colorString, 16);
@@ -58,7 +58,7 @@ export function useLightingUpdates(refs, lightingProps) {
       const metalnessBoost = metalness > 0.4 ? 1 + (metalness - 0.4) * 5 : 1; // 1x to 4x boost
       const boostedIntensity = directionalLightIntensity * metalnessBoost;
       const safeIntensity = Math.max(0.05, boostedIntensity);
-      
+
       // Clamp position to a reasonable range
       const clamp = (val, min, max) => Math.max(min, Math.min(max, val));
       const safeX = clamp(directionalLightX, -50, 50);

@@ -70,29 +70,41 @@ _Gamified character and animation unlocks with sound effects_
 
 ---
 
+## 🎨 Design & Planning
+
+### Database Schema (ERD)
+
+![ERD Diagram](./screenshots/erd-diagram.png)
+_MongoDB schema showing User, Scene, and unlock relationships_
+
+### Application Wireframes
+
+![Wireframe](./screenshots/wireframe.png)
+_UI/UX design and user flow planning_
+
+**Design Process:**
+
+- Planned data relationships before coding (ERD)
+- Designed user flows and interactions (wireframes)
+- Focused on quantum aesthetic with glassmorphic UI
+- Progressive unlock system mapped to scene count thresholds
+
+---
+
 ## Overview
 
-A full-stack MERN application that transforms abstract 4D geometry into an interactive 3D platform born from a love of visualizing hyperdimensional structures and exploring how they can nest, interpenetrate, and transform.
+A full-stack MERN application that transforms abstract 4D geometry into an interactive 3D platform with progressive character unlocks and gamified scene creation.
 
-**Background**: Coming from an art, digital art and a layman motion graphics background, I wanted to see how compound polytopes—these abstract 4D shapes—could work visually in 3D space. I designed the spatial relationships and aesthetic direction, then collaborated with AI tools to handle the mathematical implementation. My focus was on the geometry, user experience, and visual design.
+**The Vision**: Coming from art and motion graphics, I wanted to visualize how compound polytopes (4D shapes) work in 3D space. I designed the spatial relationships and aesthetic direction, then collaborated with AI tools to handle the mathematical implementation.
 
-**What It Does Differently**:
+**What Makes It Different**:
 
-- **Geometry Meets Gamification**: Instead of just a viewer or educational tool, saving scenes unlocks animated characters progressively (Scene 1 → Icarus-X, Scene 2 → Vectra Apex, Scene 3 → Nexus-Prime, more scenes → additional animations).  The idea was using geometric creation as a progression mechanic.
-Creation begets creation, so to speak. 
+- **Gamification Through Creation**: Saving scenes unlocks animated characters progressively—turning geometric exploration into a reward-based progression system
+- **24 Hyperdimensional Shapes**: From basic geometry to compound tesseracts and 4D polytopes (120-cell, 600-cell), with custom wireframe and hyperframe structures
+- **Cohesive Quantum Aesthetic**: Glassmorphic UI, interactive backgrounds, and theatrical character presentation
+- **Full-Stack Platform**: JWT authentication, MongoDB persistence, RESTful API, and progressive unlock system
 
-- **24 Custom Geometries**: From basic shapes to compound tesseracts and 4D polytopes (120-cell, 600-cell), with custom wireframe systems and hyperframe structures showing how these shapes collapse from higher dimensions.
-
-- **Cohesive Aesthetic**: Quantum-themed throughout—glassmorphic UI, portal backgrounds, character names (Nexus, Vectra), and visual hierarchy (centerlines, connectors, interpenetrating structures).
-
-- **Beyond CRUD**: While it has standard save/load functionality, the unlock system and character showcase add a narrative layer that transforms geometry manipulation from technical exercise into exploration with rewards.
-
-Built with React, Three.js, and MongoDB. Full-stack MERN application featuring:
-
-- **24 Geometric Types**: 4D polytopes (120-Cell, 600-Cell), quantum manifolds, compound tesseracts, hyperdimensional structures
-- **Advanced 3D Engine**: Custom wireframe system with synchronized multi-component animations
-- **Gamified Progression**: Progressive unlock system for animated characters through scene creation
-- **Full-Stack Platform**: JWT authentication, MongoDB scene persistence, RESTful API
+**Tech Stack**: React 19 • Three.js 0.180 • Express.js • MongoDB • Node.js 20+
 
 ---
 
