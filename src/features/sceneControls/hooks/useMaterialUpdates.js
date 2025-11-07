@@ -108,6 +108,8 @@ export function useMaterialUpdates(objectsRef, materialProps) {
   useEffect(() => {
     // Convert hex color string to Three.js color number (strip alpha channel)
     const hexColor = baseColor.slice(1, 7); // Remove # and alpha (ff)
+    // ↑ .slice(1, 7) removes '#' at start AND 'ff' alpha at end
+  // ↑ hexColor = '0000ff' (6-char hex, no # symbol)
     const convertedColor = parseInt(hexColor, 16);
 
     objectsRef.current.forEach(({ solidMesh, wireframeMesh }) => {

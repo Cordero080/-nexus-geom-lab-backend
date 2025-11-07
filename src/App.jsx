@@ -14,6 +14,7 @@ import LoginPage from './components/pages/LoginPage/LoginPage';
 import { SceneProvider, useScene } from './context/SceneContext';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { QuantumCursor } from "./components/ui/Effects";
+import Footer from './components/layout/Footer/Footer';
 import './cursor-override.module.scss';
 import sharedStyles from './styles/shared.module.scss';
 
@@ -416,6 +417,10 @@ function AppContent() {
     <SceneProvider>
       {/* Render QuantumCursor on all pages EXCEPT geom-lab */}
       {!isGeomLabPage && <QuantumCursor />}
+      
+      {/* Footer only on homepage, showcase, and scenes pages */}
+      {(currentPath === '/' || currentPath === '/showcase' || currentPath === '/scenes') && <Footer />}
+      
       <Routes>
         {/* PUBLIC ROUTE - anyone can access */}
         <Route path="/" element={<HomePageWithNav />} />

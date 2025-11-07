@@ -76,7 +76,7 @@ function MaterialPropertiesSection({
             value={baseColor ? baseColor.slice(0, 7) : '#000000'}                      
             onChange={handleBaseColorChange}
             onMouseDown={(e) => e.stopPropagation()}
-            onMouseMove={(e) => e.stopPropagation()}
+            onMouseMove={(e) => e.stopPropagation()} // stop propagation to prevent unwanted side effects like color picker closing
           />
           
           {/* EMISSIVE INTENSITY SLIDER */}
