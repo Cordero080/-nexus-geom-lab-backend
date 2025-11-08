@@ -512,20 +512,26 @@ $font-code: 'Roboto Mono', 'JetBrains Mono', monospace;
   z-index: 7;
   pointer-events: none;
   animation: 
-    beamScan 2s linear infinite, 
+    beamScan 5s linear infinite, 
     beamFlicker 0.05s steps(1, end) infinite,
     beamColorShift 3s linear infinite,
     beamPulse 1.5s ease-in-out infinite;
   transition: opacity 0.3s;
 }
 
-// Beam scan animation - smooth continuous loop
+// Beam scan animation - smooth continuous loop with 3-second pause
 @keyframes beamScan {
   0% { 
     left: -60%; 
+    opacity: 0.6;
   }
-  100% { 
+  30% { 
     left: 100%; 
+    opacity: 0.6;
+  }
+  30.1%, 100% {
+    left: -60%;
+    opacity: 0;
   }
 }
 
