@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../../context/AuthContext";
 import { useScene } from "../../../context/SceneContext";
@@ -14,7 +14,7 @@ import styles from "./SaveButton.module.scss";
  * SaveControls Component - Handles saving scenes
  * Modes: 1) Save - Update existing, 2) Save As New - Create copy
  */
-function SaveControls({ sceneConfig, textColor }) {
+function SaveControls({ sceneConfig }) {
   const { token, isAuthenticated, addUnlockedNoetechs, addUnlockedAnimations, user, isLoading } = useAuth();
   const navigate = useNavigate();
   const { currentSceneId, sceneName, isOwnScene } = useScene();
@@ -104,23 +104,23 @@ function SaveControls({ sceneConfig, textColor }) {
       };
 
       // Call API to update existing scene
-      const result = await updateScene(currentSceneId, sceneData, token);
+      const response = await updateScene(currentSceneId, sceneData, token);
       
       // Handle unlocked animations if any
-      if (result.unlockedAnimations && result.unlockedAnimations.length > 0) {
+      if (response.unlockedAnimations && response.unlockedAnimations.length > 0) {
         try {
-          addUnlockedAnimations(result.unlockedAnimations);
-          setUnlockedAnimations(result.unlockedAnimations);
+          addUnlockedAnimations(response.unlockedAnimations);
+          setUnlockedAnimations(response.unlockedAnimations);
         } catch (e) {
           // Silently handle animation unlock errors
         }
       }
 
       // Handle unlocked noetechs if any (legacy support)
-      if (result.unlockedNoetechs && result.unlockedNoetechs.length > 0) {
+      if (response.unlockedNoetechs && response.unlockedNoetechs.length > 0) {
         try {
-          addUnlockedNoetechs(result.unlockedNoetechs);
-          setUnlockedNoetechs(result.unlockedNoetechs);
+          addUnlockedNoetechs(response.unlockedNoetechs);
+          setUnlockedNoetechs(response.unlockedNoetechs);
         } catch (e) {
           // Silently handle noetech unlock errors
         }
@@ -130,13 +130,13 @@ function SaveControls({ sceneConfig, textColor }) {
       handleCloseModal();
       
       // Show animation unlock modal if animations were unlocked
-      if (result.unlockedAnimations && result.unlockedAnimations.length > 0) {
-        setUnlockedAnimations(result.unlockedAnimations);
+      if (response.unlockedAnimations && response.unlockedAnimations.length > 0) {
+        setUnlockedAnimations(response.unlockedAnimations);
         setSavedSceneId(currentSceneId);
         playUnlockSound();
         setShowAnimationUnlockModal(true);
-      } else if (result.unlockedNoetechs && result.unlockedNoetechs.length > 0) {
-        setUnlockedNoetechs(result.unlockedNoetechs);
+      } else if (response.unlockedNoetechs && response.unlockedNoetechs.length > 0) {
+        setUnlockedNoetechs(response.unlockedNoetechs);
         setSavedSceneId(currentSceneId);
         playUnlockSound();
         setShowUnlockModal(true);
@@ -190,23 +190,23 @@ function SaveControls({ sceneConfig, textColor }) {
       };
 
       // Call API to save as new scene
-      const result = await saveScene(sceneData, token);
+      const response = await saveScene(sceneData, token);
 
       // Handle unlocked animations if any
-      if (result.unlockedAnimations && result.unlockedAnimations.length > 0) {
+      if (response.unlockedAnimations && response.unlockedAnimations.length > 0) {
         try {
-          addUnlockedAnimations(result.unlockedAnimations);
-          setUnlockedAnimations(result.unlockedAnimations);
+          addUnlockedAnimations(response.unlockedAnimations);
+          setUnlockedAnimations(response.unlockedAnimations);
         } catch (e) {
           // Silently handle animation unlock errors
         }
       }
 
       // Handle unlocked noetechs if any (legacy support)
-      if (result.unlockedNoetechs && result.unlockedNoetechs.length > 0) {
+      if (response.unlockedNoetechs && response.unlockedNoetechs.length > 0) {
         try {
-          addUnlockedNoetechs(result.unlockedNoetechs);
-          setUnlockedNoetechs(result.unlockedNoetechs);
+          addUnlockedNoetechs(response.unlockedNoetechs);
+          setUnlockedNoetechs(response.unlockedNoetechs);
         } catch (e) {
           // Silently handle noetech unlock errors
         }
@@ -216,22 +216,22 @@ function SaveControls({ sceneConfig, textColor }) {
       handleCloseModal();
       
       // Show animation unlock modal if animations were unlocked
-      if (result.unlockedAnimations && result.unlockedAnimations.length > 0) {
-        setUnlockedAnimations(result.unlockedAnimations);
-        const newSceneId = result.scene._id || result.scene.id;
+      if (response.unlockedAnimations && response.unlockedAnimations.length > 0) {
+        setUnlockedAnimations(response.unlockedAnimations);
+        const newSceneId = response.scene._id || response.scene.id;
         setSavedSceneId(newSceneId);
         playUnlockSound();
         setShowAnimationUnlockModal(true);
-      } else if (result.unlockedNoetechs && result.unlockedNoetechs.length > 0) {
-        setUnlockedNoetechs(result.unlockedNoetechs);
-        const newSceneId = result.scene._id || result.scene.id;
+      } else if (response.unlockedNoetechs && response.unlockedNoetechs.length > 0) {
+        setUnlockedNoetechs(response.unlockedNoetechs);
+        const newSceneId = response.scene._id || response.scene.id;
         setSavedSceneId(newSceneId);
         playUnlockSound();
         setShowUnlockModal(true);
       } else {
         // Show success save modal if no unlocks
         setSavedSceneName(name);
-        const newSceneId = result.scene._id || result.scene.id;
+        const newSceneId = response.scene._id || response.scene.id;
         setSavedSceneId(newSceneId);
         setShowSuccessSaveModal(true);
       }

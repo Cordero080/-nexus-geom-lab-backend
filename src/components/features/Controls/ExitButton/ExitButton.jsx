@@ -1,8 +1,7 @@
-import React from 'react';
 import ScrambleButton from '../../../ui/ScrambleButton/ScrambleButton';
 import styles from './ExitButton.module.scss';
 
-function ExitButton({ onClick, textColor }) {
+function ExitButton({ onClick }) {
   return (
     <div className={styles.exitButtonContainer}>
       <ScrambleButton

@@ -44,20 +44,8 @@ h1.quantum-title {
   -webkit-font-smoothing: antialiased;
 }
 
-.title-word[data-word="N3XUS"] {
-  animation: pageTitleShimmer 5s ease-in-out infinite, particleArrivalTopLeft 1.8s cubic-bezier(0.22, 1, 0.36, 1) forwards, titleFloatLayer1 7s ease-in-out infinite;
-  animation-delay: 0s, 0s, 1.8s;
-}
-
-.title-word[data-word="GE0M"] {
-  animation: pageTitleShimmer 5s ease-in-out infinite, particleArrivalRight 1.8s cubic-bezier(0.22, 1, 0.36, 1) forwards, titleFloatLayer2 5.5s ease-in-out infinite;
-  animation-delay: 0s, 0.3s, 2.1s;
-}
-
-.title-word[data-word="LVB"] {
-  animation: pageTitleShimmer 5s ease-in-out infinite, particleArrivalBottomLeft 2s cubic-bezier(0.22, 1, 0.36, 1) forwards, titleFloatLayer3 6.5s ease-in-out infinite;
-  animation-delay: 0s, 0.6s, 2.6s;
-}
+/* HomePage-specific animations moved to HomeIndex.module.scss */
+/* .title-word[data-word="N3XUS"], GE0M, LVB now in HomePage folder */
 
 .title-word[data-word="MY"] {
   animation: pageTitleShimmer 5s ease-in-out infinite, simpleFadeIn 1s ease-out forwards;

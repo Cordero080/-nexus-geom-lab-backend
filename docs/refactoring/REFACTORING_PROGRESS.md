@@ -288,3 +288,115 @@ User goal: Learn entire codebase in 3 weeks for portfolio/interviews
 ---
 
 **Status:** ✅ **REFACTORING COMPLETE!** All goals achieved. 🎉
+
+---
+
+## 🏠 HomePage Modularization (November 2025)
+
+**Date:** November 8, 2025  
+**Objective:** Refactor dense HomePage.jsx (755 lines) into modular, maintainable components
+
+### **Progress:**
+
+- **Original:** 755 lines
+- **After extraction:** 283 lines
+- **Removed:** 472 lines
+- **Reduction:** **62%** ✅
+
+### **File Structure Created:**
+
+```
+src/components/pages/HomePage/
+├── HomePage.jsx (283 lines - main orchestrator)
+├── Quote.jsx
+├── ProgressBar.jsx
+├── Scene.jsx
+├── HomeIndex.module.scss
+├── components/
+│   ├── ScrambleOnHover.jsx      (~90 lines) - Katakana text scramble animation
+│   ├── QuantumNav.jsx           (~69 lines) - Dynamic navigation bar
+│   └── BackgroundLayers.jsx     (~88 lines) - Portal backgrounds & parallax layers
+├── hooks/
+│   ├── useParallax.js           (~155 lines) - Multi-layer parallax scroll effect
+│   ├── useQuantumState.js       (~35 lines) - Portal color/glyph state management
+│   └── useWormholeEffect.js     (~25 lines) - Click ripple effect
+└── utils/
+    ├── quantumCollapse.js       (~10 lines) - Random state selector
+    └── portalWorlds.js          (~28 lines) - Portal color configs
+```
+
+### **Components Extracted:**
+
+1. **ScrambleOnHover** - Text animation that scrambles characters from one text to another using katakana
+2. **QuantumNav** - Navigation bar with dynamic quantum portal colors and glyphs
+3. **BackgroundLayers** - All background layers (baseDark, portal layers, veils, SVG backgrounds)
+
+### **Custom Hooks Created:**
+
+1. **useParallax** - Manages 5-layer parallax depth system with mouse tracking, scene transformations
+2. **useQuantumState** - Manages portal color states and glyph changes on scroll/click
+3. **useWormholeEffect** - Positions and animates wormhole ripple on click
+
+### **Utilities Extracted:**
+
+1. **quantumCollapse** - Random state selection for quantum mechanics
+2. **portalWorlds** - Configuration constants for portal colors and glyph sets
+
+### **Additional Improvements:**
+
+- ✅ Removed 70+ lines of debug code
+- ✅ Clean separation of concerns (UI, logic, data)
+- ✅ Reusable hooks can be used elsewhere
+- ✅ Single Responsibility Principle applied
+- ✅ Zero compilation errors
+- ✅ Build passing
+
+### **Refactoring Pattern:**
+
+```javascript
+// Before: Inline everything in HomePage.jsx
+function HomePage() {
+  const [portalState, setPortalState] = useState(/*...*/);
+  useEffect(() => {
+    /* parallax logic */
+  }, []);
+  useEffect(() => {
+    /* wormhole effect */
+  }, []);
+
+  return (
+    <>
+      <nav>{/* 50 lines of nav JSX */}</nav>
+      {/* 80 lines of background layers */}
+      {/* scenes */}
+    </>
+  );
+}
+
+// After: Modular components and hooks
+function HomePage() {
+  const { portalState, glyphState } = useQuantumState();
+  useWormholeEffect();
+  const { parallaxRef, bgRef, fgRef } = useParallax();
+
+  return (
+    <>
+      <QuantumNav portalState={portalState} glyphState={glyphState} />
+      <BackgroundLayers portalState={portalState} bgRef={bgRef} fgRef={fgRef} />
+      {/* scenes */}
+    </>
+  );
+}
+```
+
+### **Documentation:**
+
+See `docs/refactoring/HOMEPAGE_MODULARIZATION.md` for detailed breakdown.
+
+---
+
+**Overall Refactoring Status:** ✅ **BOTH MAJOR REFACTORINGS COMPLETE!** 🎉
+
+```
+
+```

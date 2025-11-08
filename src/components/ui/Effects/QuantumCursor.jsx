@@ -32,6 +32,13 @@ export default function QuantumCursor() {
           }
         });
         
+        // Clean up trail particles
+        universeRef.current.trailParticles.forEach(particle => {
+          if (particle.element && particle.element.parentNode) {
+            particle.element.parentNode.removeChild(particle.element);
+          }
+        });
+        
         // Clean up energy waves
         universeRef.current.energyWaves.forEach(wave => {
           if (wave.element && wave.element.parentNode) {

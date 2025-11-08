@@ -17,12 +17,12 @@
   position: fixed;
   inset: 0;
   background: linear-gradient(180deg,
-    rgba(0,0,0,1) 0%,
-    rgba(0,0,0,1) 15%,
-    rgba(0,0,0,0.8) 30%,
-    rgba(0,0,0,0.6) 50%,
-    rgba(0,0,0,0.4) 70%,
-    rgba(0,0,0,0.2) 85%,
+    rgba(0, 0, 0, 0.398) 0%,
+    rgba(0, 0, 0, 0.254) 15%,
+    rgba(0, 0, 0, 0.135) 30%,
+    rgba(0, 0, 0, 0.106) 50%,
+    rgba(0, 0, 0, 0.063) 70%,
+    rgba(0, 0, 0, 0.025) 85%,
     rgba(0,0,0,0) 100%
   );
   z-index: -4;
@@ -36,7 +36,22 @@
   opacity: 0.6;
   filter: brightness(1.2) saturate(1.5);
   mix-blend-mode: normal;
-  transition: all 1.2s cubic-bezier(0.4,0,0.2,1);
+  transition: all 4.2s cubic-bezier(0.4,0,0.2,1);
+  
+  /* Dynamic background gradients using CSS custom properties */
+  background: 
+    radial-gradient(circle at 30% 120%, 
+      var(--portal-color-0) 0%, 
+      var(--portal-color-1) 30%, 
+      var(--portal-color-2) 60%, 
+      transparent 80%
+    ),
+    radial-gradient(circle at 70% 130%, 
+      var(--portal-color-1) 0%, 
+      var(--portal-color-2) 40%, 
+      var(--portal-color-0) 70%,
+      transparent 90%
+    );
 }
 
 /* Quantum Veil to reduce color strength at top */
@@ -60,7 +75,7 @@
   width: 100vw;
   height: 100vh;
   z-index: 0;
-  background: linear-gradient(120deg, #0a0f1a 60%, #1a2a3a 100%),
+  background: linear-gradient(120deg, #0a0f1aed 60%, #1a2a3a 100%),
     repeating-linear-gradient(-30deg, #00f0ff22 0 2px, transparent 2px 40px);
   opacity: 1.5;
   pointer-events: none;
@@ -294,16 +309,33 @@
   pointer-events: none;
   will-change: transform;
   transform-style: preserve-3d;
+
+  svg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 40vh;
+    pointer-events: none;
+  }
 }
 
 .parallaxBgLayer {
   z-index: -2;
+
+  svg {
+    opacity: 0.05;
+  }
 }
 
 .parallaxFgLayer {
   z-index: -1;
   mix-blend-mode: screen;
   opacity: 0.5;
+
+  svg {
+    opacity: 0.02;
+  }
 }
 
 /* Parallax Container */
@@ -351,7 +383,7 @@
 .quantumConsole {
   margin-top: 60px;
   font-size: 1.2em;
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'Orbitron', monospace;
   text-align: center;
   max-width: 800px;
   margin-left: auto;
@@ -376,6 +408,112 @@
   font-size: 24px !important;
   padding: 24px 180px !important;
   letter-spacing: 0.05em !important;
+}
+
+/* HomePage Title Entrance Animations */
+@keyframes particleArrivalTopLeft {
+  0% {
+    opacity: 0;
+    transform: translate3d(-800px, -600px, -2000px) scale(0.2) rotate(-15deg);
+    filter: blur(25px);
+  }
+  60% {
+    opacity: 0.8;
+    filter: blur(4px);
+  }
+  100% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1) rotate(0deg);
+    filter: blur(0);
+  }
+}
+
+@keyframes particleArrivalRight {
+  0% {
+    opacity: 0;
+    transform: translate3d(1000px, 0px, -2500px) scale(0.15) rotate(70deg);
+    filter: blur(2px);
+  }
+  60% {
+    opacity: 0.8;
+    filter: blur(1px);
+  }
+  100% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1) rotate(0deg);
+    filter: blur(0);
+  }
+}
+
+@keyframes particleArrivalBottomLeft {
+  0% {
+    opacity: 0;
+    transform: translate3d(-800px, 600px, -9000px) scale(0.25) rotate(313deg);
+    filter: blur(11px);
+  }
+  60% {
+    opacity: 0.7;
+    filter: blur(0px);
+  }
+  100% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1) rotate(0deg);
+    filter: blur(0);
+  }
+}
+
+@keyframes titleFloatLayer1 {
+  0%, 100% {
+    transform: translateY(0px) translateX(0px);
+  }
+  33% {
+    transform: translateY(-5px) translateX(1px);
+  }
+  66% {
+    transform: translateY(-3px) translateX(-1px);
+  }
+}
+
+@keyframes titleFloatLayer2 {
+  0%, 100% {
+    transform: translateY(0px) translateX(0px);
+  }
+  40% {
+    transform: translateY(-7px) translateX(-1.5px);
+  }
+  70% {
+    transform: translateY(-4px) translateX(1px);
+  }
+}
+
+@keyframes titleFloatLayer3 {
+  0%, 100% {
+    transform: translateY(0px) translateX(0px);
+  }
+  35% {
+    transform: translateY(-6px) translateX(1px);
+  }
+  65% {
+    transform: translateY(-3px) translateX(-1.5px);
+  }
+}
+
+/* HomePage-specific title word animations */
+:global {
+  .title-word[data-word="N3XUS"] {
+    animation: pageTitleShimmer 5s ease-in-out infinite, particleArrivalTopLeft 1.8s cubic-bezier(0.22, 1, 0.36, 1) forwards, titleFloatLayer1 7s ease-in-out infinite;
+    animation-delay: 0s, 0s, 1.8s;
+  }
+
+  .title-word[data-word="GE0M"] {
+    animation: pageTitleShimmer 5s ease-in-out infinite, particleArrivalRight 1.8s cubic-bezier(0.22, 1, 0.36, 1) forwards, titleFloatLayer2 5.5s ease-in-out infinite;
+    animation-delay: 0s, 0.3s, 2.1s;
+  }
+
+  .title-word[data-word="LVB"] {
+    animation: pageTitleShimmer 5s ease-in-out infinite, particleArrivalBottomLeft 2s cubic-bezier(0.22, 1, 0.36, 1) forwards, titleFloatLayer3 6.5s ease-in-out infinite;
+    animation-delay: 0s, 0.6s, 2.6s;
+  }
 }
 
 /* Animations */
@@ -430,6 +568,227 @@ input,
 /* ===== GLOBAL STYLES FROM Home.css AND home.css ===== */
 
 :global {
+  /* ScrambleOnHover span */
+  .scramble-hover-span {
+    cursor: none;
+    font-family: 'Future Z', 'Orbitron', 'Rajdhani', sans-serif;
+  }
+
+  /* Nav bar with dynamic quantum colors */
+  .quantum-nav {
+    width: 100vw;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 40px;
+    height: 110px;
+    font-family: 'Orbitron','JetBrains Mono', monospace;
+    transition: all 1.2s ease;
+    /* Dynamic colors set via CSS variables */
+    background: var(--nav-background);
+    backdrop-filter: var(--nav-backdrop-filter);
+    border-bottom: var(--nav-border-bottom);
+    box-shadow: var(--nav-box-shadow);
+  }
+
+  /* Logo text with dynamic filter */
+  .logo-text {
+    position: relative;
+    font-family: 'Orbitron','JetBrains Mono', monospace;
+    font-size: 28px;
+    font-weight: 800;
+    color: #fff;
+    background: linear-gradient(135deg, #00ffff72, #ff00668d, #ffff0094, #00ff33, #cc00ff, #ff3300);
+    background-size: 300% 300%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-shadow: 0 0 20px rgba(45, 86, 86, 0.4);
+    animation: logoGlitch 6s ease-in-out infinite, gradientShift 4s ease-in-out infinite;
+    transition: filter 1.2s;
+    /* Dynamic filter set via CSS variable */
+    filter: var(--logo-filter);
+
+    &::before {
+      content: attr(data-text);
+      position: absolute;
+      top: 0;
+      left: 2px;
+      color: #ff00ff;
+      animation: glitchShift1 3s ease-in-out infinite;
+      z-index: -1;
+      opacity: 0.7;
+    }
+
+    &::after {
+      content: attr(data-text);
+      position: absolute;
+      top: 0;
+      left: -2px;
+      color: #00ffff;
+      animation: glitchShift2 4s ease-in-out infinite;
+      z-index: -2;
+      opacity: 0.5;
+    }
+  }
+
+  /* Quantum glyphs in navbar */
+  .nav-quantum-glyphs {
+    margin-left: 10px;
+    font-size: 16px;
+    letter-spacing: 0.12em;
+    vertical-align: middle;
+    opacity: 0.8;
+    transition: color 1.2s, filter 1.2s, opacity 1.2s, text-shadow 1.2s;
+    /* Dynamic colors set via CSS variables */
+    color: var(--glyph-color);
+    filter: var(--glyph-filter);
+    text-shadow: var(--glyph-text-shadow);
+  }
+
+  /* Dynamic Portal Background wrapper */
+  .dynamic-portal-bg {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 10vw;
+    height: 10vh;
+    z-index: -3;
+    pointer-events: none;
+  }
+
+  /* Dynamic Portal SVG */
+  .portal-svg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    pointer-events: none;
+    transition: background 1.2s cubic-bezier(0.4,0,0.2,1);
+    filter: brightness(1.3) saturate(1.8);
+    /* Dynamic background set via CSS variable */
+    background: var(--portal-svg-background);
+  }
+
+  /* Parallax SVG backgrounds */
+  .parallax-svg-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 40vh;
+    pointer-events: none;
+    opacity: 0.05;
+  }
+
+  .parallax-svg-fg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 40vh;
+    pointer-events: none;
+    opacity: 0.02;
+  }
+
+  /* Reality scene section */
+  .reality-scene-section {
+    position: relative;
+    z-index: 1;
+  }
+
+  /* Scene bg-reality positioning */
+  .bg-reality-position {
+    position: absolute;
+    z-index: -1;
+  }
+
+  /* Scene content wrapper */
+  .scene-content-wrapper {
+    position: relative;
+    z-index: 10;
+    pointer-events: auto;
+  }
+
+  /* Particles wrapper */
+  .particles-wrapper {
+    position: relative;
+    z-index: -1;
+    pointer-events: none;
+  }
+
+  /* Title wrapper div */
+  .title-wrapper {
+    position: relative;
+    z-index: 10;
+    pointer-events: none;
+  }
+
+  /* Quantum title h1 */
+  .quantum-title-h1 {
+    position: relative;
+    z-index: 10;
+    pointer-events: auto;
+    margin-bottom: -10px;
+  }
+
+  /* Title word span */
+  .title-word-span {
+    position: relative;
+    z-index: 10;
+  }
+
+  /* Stat value with dynamic colors */
+  .stat-value-dynamic {
+    transition: color 1.2s, text-shadow 1.2s;
+    /* Dynamic colors set via CSS variables */
+    color: var(--stat-color);
+    text-shadow: var(--stat-text-shadow);
+  }
+
+  /* Button wrapper authenticated */
+  .button-wrapper-auth {
+    display: flex;
+    justify-content: center;
+    margin-top: 48px;
+    margin-bottom: 24px;
+    position: relative;
+    z-index: 100;
+    pointer-events: auto;
+  }
+
+  /* Button wrapper not authenticated */
+  .button-wrapper-no-auth {
+    display: flex;
+    gap: 48px;
+    justify-content: center;
+    margin-top: 32px;
+    position: relative;
+    z-index: 100;
+    pointer-events: auto;
+  }
+
+  /* Inverted N span */
+  .inverted-n-span {
+    display: inline-block;
+    transform: scaleX(-1);
+  }
+
+  /* Entanglement scene content */
+  .entanglement-scene-content {
+    transform: translateY(-50%);
+  }
+
+  /* Superposition scene div */
+  .superposition-scene-div {
+    transform: translateY(-40%);
+  }
+
   /* Holographic parallax effect for ProgressBar floating text */
   .parallax-holo {
     will-change: transform, opacity, filter;

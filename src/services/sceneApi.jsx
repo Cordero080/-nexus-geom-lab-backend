@@ -1,47 +1,38 @@
-// sceneApi.jsx - Handles all scene-related API calls
 
-// THIS file contains functions that communicate with the backend
+// 📁 FILE: sceneApi.jsx
+// 🔄 Makes HTTP request to backend
+// ⬆️ RECEIVES: sceneData (object), token (string) from saveButtonHandlers.js
+// ⬇️ SENDS: HTTP POST request to backend server
+// ⬇️ RETURNS: Response data back to saveButtonHandlers.js
 
-// BASE URL FOR API -> where the backend server lives
-// Basically a variable that stores the address of the backend server
 
-// Frontend (React app) runs on one port (like 5173)
-// Backend (Express server) runs on another port (like 3000)
-// They need to talk to each other, so we store the backend's address
-
-// The || part (OR operator):
-
-// First, try to get URL from environment variable (for production)
-// If that doesn't exist, use http://localhost:3000 (for development)
-
-// Real example:
-
-// Development: Uses http://localhost:3000
-// Production: Uses https://your-backend.onrender.com
-// In development, use a relative base URL so Vite's dev proxy can forward to the backend
-// In production, use VITE_API_BASE_URL (or fall back to localhost:3000 if not provided)
 const API_BASE_URL = import.meta.env.DEV
   ? ''
   : (import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000');
 
 export const saveScene = async (sceneData, token) => {
-// try to make the API call
-try {
-  // Build the full URL for the API endpoint
-  //Combines base URL + the specific route for saving scenes
-  const url = `${API_BASE_URL}/api/scenes`;
 
-  // Make the HTTP request to the backend
-  // fetch() sends the request and waits for response
-  // A built-in JavaScript function that makes HTTP requests to servers.
+// ↑ sceneData = { name: 'My Scene', config: { metalness: 0.5, baseColor: '#ff00ff', ... } }
+  // ↑ token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...' (JWT string)
+try {
+   // ↑ try = Start error handling block
+  const url = `${API_BASE_URL}/api/scenes`;
+// ↑ fetch = BROWSER FUNCTION for HTTP requests
+    // ↑ API_BASE_URL = 'http://localhost:5001/api' (from environment variable)
+    // ↑ Full URL = 'http://localhost:5001/api/scenes'
+    // ↑ await = WAITS for network request to complete
+  
   const response = await fetch(url, { //"Wait for this to finish before moving to next line"
     method: 'POST',
     headers: {   // Envelope information
       'Content-Type': 'application/json',
+      // ↑ Tells backend: "I'm sending JSON data"
+
       'Authorization': `Bearer ${token}` //  ID card
-      // Why "Bearer"?
-// It's a standard format: Bearer <token>
-// Like saying "The bearer of this token is authenticated"
+      // ↑ JWT token goes in Authorization header
+      // ↑ Backend will read this to know WHO is making the request
+      // ↑ Format: "Bearer eyJhbGci..."
+
     },
     body: JSON.stringify(sceneData) // The actual letter contents
 //     **Why stringify?**
@@ -110,7 +101,8 @@ try {
   });
 
   // Check if the request was successful 
-  // Response.ok => is true if status 200-299
+  // Response.ok => is true if status 200-299 
+  // Validates HTTP status before parsing JSON
   if(!response.ok) {
     throw new Error(`HTTP error! Status: ${response.status}`);
   }

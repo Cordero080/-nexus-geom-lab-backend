@@ -1,4 +1,4 @@
-import React from 'react';
+import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ScrambleButton from "../../ui/ScrambleButton/ScrambleButton";
 
@@ -11,7 +11,7 @@ export default function AnimationUnlockModal({
   const navigate = useNavigate();
 
   // Play unlock sound effect when modal opens
-  React.useEffect(() => {
+  useEffect(() => {
     if (isOpen) {
       const audio = new Audio('/soundEffects/unlock.wav');
       audio.volume = 0.5; // Set volume to 50%

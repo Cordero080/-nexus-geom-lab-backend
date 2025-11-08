@@ -39,6 +39,23 @@ Your study materials organized by topic and learning stage.
 | hooks-customHooks/HOOKS_INVENTORY.md    | All 11 hooks in table format | Need quick hook info       |
 | hooks-customHooks/CUSTOM_HOOKS_GUIDE.md | Detailed hook documentation  | Need full hook explanation |
 
+### Presentation Prep (Portfolio/Interviews) 🎤
+
+| File                                                 | Purpose                           | Read When                    |
+| ---------------------------------------------------- | --------------------------------- | ---------------------------- |
+| study-plan-update/HOMEPAGE_FEATURES_STUDY_GUIDE.md   | Feature catalog with demo scripts | Preparing to present         |
+| study-plan-update/HOMEPAGE_ARCHITECTURE_REFERENCE.md | Component structure & study paths | Learning HomePage structure  |
+| study-plan-update/PRESENTATION_PREP_FLOWS.md         | General presentation strategies   | Planning your presentation   |
+| refactoring/HOMEPAGE_MODULARIZATION.md               | Refactoring process & benefits    | Discussing code organization |
+
+### Refactoring & Code Organization 🔧
+
+| File                                   | Purpose                       | Read When                       |
+| -------------------------------------- | ----------------------------- | ------------------------------- |
+| refactoring/REFACTORING_PROGRESS.md    | Overall refactoring log       | Want to see all improvements    |
+| refactoring/HOMEPAGE_MODULARIZATION.md | HomePage component extraction | Learning component architecture |
+| refactoring/CSS_MODULES_MIGRATION.md   | CSS refactoring process       | Understanding styling approach  |
+| refactoring/SHOWCASE_REORGANIZATION.md | Showcase page improvements    | Studying that page structure    |
 
 ## How to Use These Docs
 
@@ -273,6 +290,15 @@ A: Read UNDERSTANDING_DATA_FLOW.md → "Visual Diagram: The Complete Flow"
 
 Q: "What's the complete user journey?"
 A: Read STUDY_PLAN.md → "Complete App Flow (What You'll Understand)"
+
+Q: "Which feature should I demo for my presentation?"
+A: Read HOMEPAGE_FEATURES_STUDY_GUIDE.md → "Recommended Presentation Feature" (Text Scramble is top pick!)
+
+Q: "How is HomePage organized?"
+A: Read HOMEPAGE_ARCHITECTURE_REFERENCE.md → "File Tree" + "Study Paths by Interest"
+
+Q: "What refactoring was done?"
+A: Read REFACTORING_PROGRESS.md → See both geometry extraction (89%) and HomePage modularization (62%)
 
 ---
 

@@ -84,7 +84,7 @@
   transition: opacity 0.2s;
 }
 
-.energyWave {
+:global(.energy-wave) {
   position: fixed;
   width: 8px;
   height: 8px;
@@ -95,6 +95,20 @@
   pointer-events: none;
   z-index: 99996;
   opacity: 0.5;
+}
+
+/* Trail particles for smooth cursor following effect */
+:global(.trail-particle) {
+  position: fixed;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 99995;
+  opacity: 0;
+  transition: opacity 0.3s ease-out;
+  transform: translate(-50%, -50%);
+  will-change: transform, opacity;
 }
 
 /* Global classes for dynamically created elements */

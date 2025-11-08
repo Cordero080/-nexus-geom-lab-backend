@@ -253,8 +253,8 @@ function GeomLab() {
   return (
     <>
       <NavBar />
-      <SaveControls sceneConfig={sceneConfig} textColor="#ccffff" />
-      <ExitButton onClick={handleExit} textColor="#ffccdd" />
+      <SaveControls sceneConfig={sceneConfig} />
+      <ExitButton onClick={handleExit} />
       
       {/* Save Prompt Modal */}
       {showSavePrompt && (

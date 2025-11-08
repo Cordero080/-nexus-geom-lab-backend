@@ -1,6 +1,25 @@
-// (We rename them signupApi and loginApi to avoid conflict with your context function names)
+/**
+ * 🔐 AUTHCONTEXT - Global authentication state manager
+ * 
+ * MANAGES: User login/signup/logout + unlocked animations/noetechs
+ * 
+ * USED BY: All components via useAuth() hook
+ *   Example: const { isAuthenticated, login, logout } = useAuth();
+ * 
+ * FLOW:
+ * 1. User logs in → Stores user/token in state + localStorage
+ * 2. User saves scene → Backend may unlock animations → Updates state
+ * 3. App.jsx checks isAuthenticated → Shows/hides protected routes
+ * 
+ * PERSISTENCE: Uses localStorage to remember user between page refreshes
+ * 
+ * 📌 useCallback: Wraps functions so they don't get recreated on every render
+ *    - Without it: login() would be a "new" function each render → causes unnecessary re-renders
+ *    - With it: login() stays the same function → components using it don't re-render needlessly
+ *    - Think of it as "memorizing" the function for performance
+ */
 
-import { signup as signupApi, login as loginApi, getCurrentUser } from '../services/sceneApi';
+import { signup as signupApi, login as loginApi } from '../services/sceneApi';
 import React, { createContext, useContext, useState, useCallback } from "react";
 
 
@@ -14,28 +33,23 @@ export function AuthProvider({ children }) {
   const [unlockedAnimations, setUnlockedAnimations] = useState([]);
 
   // Check if user is authenticated
+  // !!user converts to boolean !!token converts to boolean
   const isAuthenticated = !!user && !!token;
 
-  // Helper function to check if specific animation is unlocked
+  // Check if animation is unlocked for a specific noetech (e.g., "tesseract-pulse")
   const isAnimationUnlocked = useCallback((noetechKey, animationId) => {
     return unlockedAnimations.some(
       ua => ua.noetechKey === noetechKey && ua.animationId === animationId
     );
   }, [unlockedAnimations]);
 
-  // Helper function to get all unlocked animations for a Noetech
+  // Get list of all animations user has unlocked for a noetech (used in Showcase filters)
   const getUnlockedAnimationsForNoetech = useCallback((noetechKey) => {
     return unlockedAnimations.filter(ua => ua.noetechKey === noetechKey);
   }, [unlockedAnimations]);
 
-  // Debug logging removed for production
 
-  /**
-   * Login user
-   * @param {string} email - User email
-   * @param {string} password - User password
-   * @returns {Promise<Object>} - User data and token
-   */
+  // Login: Calls API → Updates state → Saves to localStorage
   const login = useCallback(async (email, password) => {
     // Mock login for now
     try {
@@ -61,13 +75,7 @@ export function AuthProvider({ children }) {
   }, []);
     
 
-  /**
-   * Signup new user
-   * @param {string} username - Username
-   * @param {string} email - User email
-   * @param {string} password - User password
-   * @returns {Promise<Object>} - User data and token
-   */
+  // Signup: Creates new account → Calls API → Updates state → Saves to localStorage
   const signup = useCallback(async (username, email, password) => {
     
     try {
@@ -93,9 +101,7 @@ export function AuthProvider({ children }) {
       throw error;
     }
   }, []);
-  /**
-   * Logout user
-   */
+  // Logout: Clears all state + localStorage
   const logout = useCallback(() => {
     setUser(null);
     setToken(null);
@@ -127,7 +133,7 @@ export function AuthProvider({ children }) {
     setIsLoading(false);
   }, []);
 
-  // Merge new unlocked noetechs into the current user and persist (LEGACY)
+  // Legacy: Adds newly unlocked noetechs from save responses (before animation system)
   const addUnlockedNoetechs = useCallback((newKeys) => {
     if (!newKeys || newKeys.length === 0) return;
     setUser((prev) => {
@@ -142,7 +148,7 @@ export function AuthProvider({ children }) {
     });
   }, []);
 
-  // NEW: Add unlocked animations from API responses
+  // Adds newly unlocked animations from API responses (called after saving scenes)
   const addUnlockedAnimations = useCallback((newAnimations) => {
     if (!newAnimations || newAnimations.length === 0) return;
     
