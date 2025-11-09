@@ -13,8 +13,6 @@ import {
   createWireframeToggleHandler,
   createHyperframeColorHandler,
   createHyperframeLineColorHandler,
-  createCameraViewHandler,
-  createEnvironmentHandler,
   createEnvironmentHueHandler,
   createObjectCountHandler,
   createAnimationStyleHandler,
@@ -92,6 +90,12 @@ function Controls({
    */
   
   // Create handler functions using factories from controlsHandlers.js
+
+  // example to track the flow for metalness:
+
+  // handleMetalnessChange(event) → 
+  // onMetalnessChange(newValue) → 
+  // setMetalness(newValue)
   const handleMetalnessChange = createMetalnessHandler(onMetalnessChange);
   const handleScaleChange = createScaleHandler(onScaleChange);
   const handleObjectSpeedChange = (e) => onObjectSpeedChange(parseFloat(e.target.value));
@@ -102,8 +106,6 @@ function Controls({
   const handleWireframeToggle = createWireframeToggleHandler(onWireframeIntensityChange);
   const handleHyperframeColorChange = createHyperframeColorHandler(onHyperframeColorChange);
   const handleHyperframeLineColorChange = createHyperframeLineColorHandler(onHyperframeLineColorChange);
-  const handleCameraViewChange = createCameraViewHandler(onCameraViewChange);
-  const handleEnvironmentChange = createEnvironmentHandler(onEnvironmentChange);
   const handleEnvironmentHueChange = createEnvironmentHueHandler(onEnvironmentHueChange);
   const handleObjectCountChange = createObjectCountHandler(onObjectCountChange);
   const handleAnimationStyleChange = createAnimationStyleHandler(onAnimationStyleChange);
@@ -245,4 +247,4 @@ function Controls({
   )
 }
 
-export default Controls
+export default Controls;

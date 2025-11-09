@@ -54,29 +54,6 @@
   letter-spacing: 0.5px;
 }
 
-/* Quote Highlight */
-.quote-highlight {
-  margin: 180px 0 32px 0;
-  padding: 24px 32px;
-  border: none;
-  border-radius: 18px;
-  font-size: 1.18em;
-  font-style: italic;
-  font-family: 'Orbitron', 'JetBrains Mono', monospace;
-  font-weight: 800;
-  background: linear-gradient(135deg, #00ffff72, #ff00668d, #ffff0094, #00ff33, #cc00ff, #ff3300);
-  background-size: 300% 300%;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  color: #ffffff;
-  text-shadow: 0 0 20px rgba(45, 86, 86, 0.4);
-  animation: gradientShift 4s ease-in-out infinite;
-  letter-spacing: 0.01em;
-  z-index: 1;
-  opacity: 1;
-}
-
 /* Parallax Container */
 .parallax-container {
   width: 100vw;

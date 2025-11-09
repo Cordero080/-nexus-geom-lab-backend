@@ -1,1 +1,41 @@
 /* Quote component styles */
+
+/* Quote Highlight */
+/* Quote component styles */
+
+.quoteHighlight {
+  position: relative !important;
+  z-index: 100 !important;
+  transform-style: preserve-3d;
+  will-change: text-shadow, opacity;
+  line-height: 2.5;
+  margin: 120px 0 32px 0;
+  padding: 24px 32px;
+  border: none;
+  
+  font-size: 0.7em;
+  font-style: italic;
+  font-family: 'Future Z', 'Orbitron', 'JetBrains Mono', monospace;
+  font-weight: 800;
+  background: linear-gradient(135deg, #00ffff72, #ff00668d, #ffff0094, #00ff33, #cc00ff, #ff3300);
+  background-size: 300% 300%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  color: #ffffff;
+  animation: gradientShift 8s ease-in-out infinite;
+  letter-spacing: 0.01em;
+  z-index: 100;
+  opacity: 1;
+  filter: none;
+  -webkit-font-smoothing: antialiased;
+}
+
+@keyframes gradientShift {
+  0%, 100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}

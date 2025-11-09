@@ -197,7 +197,7 @@
   /* Use shared pageSubtitle; override color for showcase theme */
   font-family: 'Orbitron', monospace !important;
   color: #7ffdff92;
-  font-size: 1.1em;
+  font-size: 1em;
   margin: 0;
   text-shadow: 0 0 20px rgba(0, 212, 255, 0.4);
 }
@@ -216,7 +216,7 @@
   text-transform: uppercase;
   letter-spacing: 10px;
   /* Vibrant gradient like Home page */
-  background: linear-gradient(135deg, #48f0d4 0%, #ff7fb4 55%, #5fbab4 75%, #ffd27f 100%);
+  background: linear-gradient(135deg, #27efce 0%, #ea619a 55%, #12cabe 75%, #f9bc4b 100%);
   background-size: 200% 200%;
   -webkit-background-clip: text;
   background-clip: text;
@@ -483,8 +483,8 @@
 
 .parallax-model-card:hover {
   transform: scale(1.03) !important;
-  border-color: rgba(255, 0, 255, 0.6);
-  box-shadow: 0 20px 60px rgba(255, 0, 255, 0.5), 0 0 40px rgba(0, 255, 255, 0.3);
+  border-color: rgba(68, 0, 255, 0.6);
+  box-shadow: 0 20px 60px rgba(0, 115, 255, 0.5), 0 0 40px rgba(0, 128, 255, 0.3);
 }
 
 /* Holographic shimmer overlay */
@@ -497,7 +497,7 @@
     45deg,
     rgba(0, 255, 255, 0.1),
     transparent 50%,
-    rgba(255, 0, 255, 0.1)
+    rgba(50, 4, 50, 0.1)
   );
   background-size: 200% 200%;
   animation: holographic-shimmer 8s ease-in-out infinite;
@@ -555,9 +555,9 @@
   position: relative;
   background: linear-gradient(
     135deg,
-    rgba(0, 0, 0, 0.3) 0%,
+    rgba(28, 24, 50, 0.3) 0%,
     rgba(0, 0, 0, 0.935) 50%,
-    rgba(3, 90, 119, 0.447) 90%
+    rgba(1, 49, 65, 0.447) 90%
   );
 }
 

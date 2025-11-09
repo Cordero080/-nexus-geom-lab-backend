@@ -1,15 +1,15 @@
 /**
- * Controls Component Handlers
+ * Controls Component Event Handlers
  *
- * Event handlers for Controls component functionality.
- * Co-located with component following React best practices.
+ * Factory functions that create event handlers for Controls.jsx input elements.
+ * These handlers are registered in Controls.jsx and passed down to section components (_sections/).
+ * Flow: User input → Handler → Callback to App.jsx → State update → Re-render with new props.
+ *
+ * parseFloat(): Converts a string to a decimal number (e.g., "1.5" → 1.5). Used for slider values.
+ * parseInt(): Converts a string to an integer (e.g., "42" → 42). Used for whole number inputs.
  */
 
-/**
- * Creates handler for metalness slider changes
- * @param {Function} onMetalnessChange - Callback to update metalness
- * @returns {Function} Event handler
- */
+// Parses float from slider input and updates metalness material property
 export const createMetalnessHandler = (onMetalnessChange) => {
   return (event) => {
     const newMetalness = parseFloat(event.target.value);
@@ -17,22 +17,14 @@ export const createMetalnessHandler = (onMetalnessChange) => {
   };
 };
 
-/**
- * Creates handler for scale slider changes
- * @param {Function} onScaleChange - Callback to update scale
- * @returns {Function} Event handler
- */
+// Parses float from slider input and updates object scale
 export const createScaleHandler = (onScaleChange) => {
   return (event) => {
     onScaleChange(parseFloat(event.target.value));
   };
 };
 
-/**
- * Creates handler for emissive intensity slider changes
- * @param {Function} onEmissiveIntensityChange - Callback to update emissive intensity
- * @returns {Function} Event handler
- */
+// Parses float from slider input and updates emissive intensity for glow effect
 export const createEmissiveIntensityHandler = (onEmissiveIntensityChange) => {
   return (event) => {
     const newIntensity = parseFloat(event.target.value);
@@ -40,11 +32,7 @@ export const createEmissiveIntensityHandler = (onEmissiveIntensityChange) => {
   };
 };
 
-/**
- * Creates handler for base color picker changes
- * @param {Function} onBaseColorChange - Callback to update base color
- * @returns {Function} Event handler
- */
+// Extracts hex color from color picker and ensures alpha channel is included
 export const createBaseColorHandler = (onBaseColorChange) => {
   return (event) => {
     const newColor = event.target.value;
@@ -54,11 +42,7 @@ export const createBaseColorHandler = (onBaseColorChange) => {
   };
 };
 
-/**
- * Creates handler for wireframe intensity slider changes
- * @param {Function} onWireframeIntensityChange - Callback to update wireframe intensity
- * @returns {Function} Event handler
- */
+// Parses float from slider input and updates wireframe visibility intensity
 export const createWireframeIntensityHandler = (onWireframeIntensityChange) => {
   return (event) => {
     const newIntensity = parseFloat(event.target.value);
@@ -66,22 +50,14 @@ export const createWireframeIntensityHandler = (onWireframeIntensityChange) => {
   };
 };
 
-/**
- * Creates handler for wireframe toggle checkbox
- * @param {Function} onWireframeIntensityChange - Callback to update wireframe intensity
- * @returns {Function} Event handler
- */
+// Toggles wireframe on/off by setting intensity to 100 or 0
 export const createWireframeToggleHandler = (onWireframeIntensityChange) => {
   return (event) => {
     onWireframeIntensityChange(event.target.checked ? 100 : 0);
   };
 };
 
-/**
- * Creates handler for hyperframe color picker changes
- * @param {Function} onHyperframeColorChange - Callback to update hyperframe color
- * @returns {Function} Event handler
- */
+// Extracts hex color from color picker and updates hyperframe face color
 export const createHyperframeColorHandler = (onHyperframeColorChange) => {
   return (event) => {
     const newColor = event.target.value;
@@ -89,11 +65,7 @@ export const createHyperframeColorHandler = (onHyperframeColorChange) => {
   };
 };
 
-/**
- * Creates handler for hyperframe line color picker changes
- * @param {Function} onHyperframeLineColorChange - Callback to update hyperframe line color
- * @returns {Function} Event handler
- */
+// Extracts hex color from color picker and updates hyperframe line/edge color
 export const createHyperframeLineColorHandler = (
   onHyperframeLineColorChange
 ) => {
@@ -103,11 +75,7 @@ export const createHyperframeLineColorHandler = (
   };
 };
 
-/**
- * Creates handler for camera view dropdown changes
- * @param {Function} onCameraViewChange - Callback to update camera view
- * @returns {Function} Event handler
- */
+// Extracts selected value from dropdown and updates camera view preset
 export const createCameraViewHandler = (onCameraViewChange) => {
   return (event) => {
     const newView = event.target.value;
@@ -115,11 +83,7 @@ export const createCameraViewHandler = (onCameraViewChange) => {
   };
 };
 
-/**
- * Creates handler for environment dropdown changes
- * @param {Function} onEnvironmentChange - Callback to update environment
- * @returns {Function} Event handler
- */
+// Extracts selected value from dropdown and updates environment preset
 export const createEnvironmentHandler = (onEnvironmentChange) => {
   return (event) => {
     const newEnv = event.target.value;
@@ -127,11 +91,7 @@ export const createEnvironmentHandler = (onEnvironmentChange) => {
   };
 };
 
-/**
- * Creates handler for environment hue slider changes
- * @param {Function} onEnvironmentHueChange - Callback to update environment hue
- * @returns {Function} Event handler
- */
+// Parses integer from slider input and updates environment hue rotation
 export const createEnvironmentHueHandler = (onEnvironmentHueChange) => {
   return (event) => {
     const newHue = parseInt(event.target.value, 10);
@@ -139,11 +99,7 @@ export const createEnvironmentHueHandler = (onEnvironmentHueChange) => {
   };
 };
 
-/**
- * Creates handler for object count slider changes
- * @param {Function} onObjectCountChange - Callback to update object count
- * @returns {Function} Event handler
- */
+// Parses integer from slider input and updates number of objects in scene
 export const createObjectCountHandler = (onObjectCountChange) => {
   return (event) => {
     const newCount = parseInt(event.target.value);
@@ -151,22 +107,14 @@ export const createObjectCountHandler = (onObjectCountChange) => {
   };
 };
 
-/**
- * Creates handler for animation style dropdown changes
- * @param {Function} onAnimationStyleChange - Callback to update animation style
- * @returns {Function} Event handler
- */
+// Receives value directly from CustomSelect and updates animation style
 export const createAnimationStyleHandler = (onAnimationStyleChange) => {
   return (value) => {
     onAnimationStyleChange(value);
   };
 };
 
-/**
- * Creates handler for object type dropdown changes
- * @param {Function} onObjectTypeChange - Callback to update object type
- * @returns {Function} Event handler
- */
+// Receives value directly from CustomSelect and updates object geometry type
 export const createObjectTypeHandler = (onObjectTypeChange) => {
   return (value) => {
     onObjectTypeChange(value);

@@ -160,13 +160,12 @@ h1.quantum-title {
 
 /* Apply upside-down A transform to all Orbitron text elements */
 .nav-link,
-.quote-highlight,
 .zero-char {
   --orbitron-a-transform: scaleY(-1) translateY(0.08em);
 }
 
 /* This uses CSS content replacement to flip A's - use class approach instead */
-.nav-inverted-a,
+.nav-inverted-v,
 .quote-inverted-a,
 .orbitron-inverted-a {
   display: inline-block !important;
@@ -177,18 +176,8 @@ h1.quantum-title {
 }
 
 /* BeamScanButton label variant */
-.beamScanLabel .nav-inverted-a {
+.beamScanLabel .nav-inverted-v {
   color: inherit !important;
-}
-
-/* Nav link variant */
-.nav-link .nav-inverted-a {
-  background: inherit;
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-  color: inherit;
-  transform: scaleY(-1) translateY(0.05em) !important;
 }
 
 .zero-char {

@@ -52,7 +52,7 @@
   display: inline-block; /* Ensure padding applies properly */
 }
 
-.logo-text .nav-inverted-a {
+.logo-text .nav-inverted-v {
   display: inline-block !important;
   transform: scaleY(-1) translateY(-0.02em) !important;
   transform-origin: center !important;
@@ -62,6 +62,16 @@
   background-clip: text !important;
   -webkit-text-fill-color: transparent !important;
   background: inherit !important;
+}
+
+/* Nav link variant - inverted V styling */
+.nav-link .nav-inverted-v {
+  background: inherit;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: inherit;
+  transform: scaleY(-1) translateY(0.05em) !important;
 }
 
 .nav-links {
@@ -86,26 +96,25 @@
   text-shadow: 0 0 10px #ff00cc;
 }
 
-/* Brighter HOME link with a faint golden glow */
+/* Brighter HOME link with a golden gradient */
 /* Stronger specificity to ensure HOME glow wins over page-level .nav-link rules */
 .nav-links .nav-link.nav-link--home,
 .nav-links .nav-link--home {
-  /* Brighter gold to match LOGOUT brightness */
-  color: #fff4bf !important;
-  text-shadow:
-    0 0 8px rgba(255, 215, 0, 0.90),
-    0 0 24px rgba(255, 230, 140, 0.75),
-    0 0 48px rgba(255, 230, 140, 0.35) !important;
+  background: linear-gradient(135deg, #ffd700, #ffed4e, #ffa500, #ffd700);
+  background-size: 200% 200%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: gradientShift 3s ease-in-out infinite;
 }
 
 .nav-links .nav-link.nav-link--home:hover,
 .nav-links .nav-link--home:hover {
-  /* Even brighter on hover */
-  color: #fffbd1 !important;
-  text-shadow:
-    0 0 12px rgba(255, 220, 0, 1),
-    0 0 32px rgba(255, 235, 170, 0.9),
-    0 0 64px rgba(255, 235, 170, 0.55) !important;
+  background: linear-gradient(135deg, #ffed4e, #ffd700, #ffed4e, #ffa500);
+  background-size: 200% 200%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
 .nav-link.nav-link-button {

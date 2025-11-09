@@ -9,8 +9,9 @@ import { GEOM_LAB_LINK_TEXT, SHOWCASE_LINK_TEXT } from '../../../layout/NavBar/n
  * @param {boolean} navScrolled - Whether nav is in scrolled state
  * @param {boolean} isAuthenticated - User authentication status
  * @param {Function} logout - Logout handler
+ * @param {string} currentPage - Current page to hide from nav (optional)
  */
-export default function QuantumNav({ portalState, glyphState, navScrolled, isAuthenticated, logout }) {
+export default function QuantumNav({ portalState, glyphState, navScrolled, isAuthenticated, logout, currentPage }) {
   return (
     <nav
       className="quantum-nav"
@@ -48,10 +49,9 @@ export default function QuantumNav({ portalState, glyphState, navScrolled, isAut
       <div className="nav-links">
         {isAuthenticated && (
           <>
-            {/* Hide HOME link since we're on this page */}
-            <Link to="/scenes" className="nav-link" data-dimension="1">// SCENES</Link>
-            <Link to="/showcase" className="nav-link" data-dimension="2">{SHOWCASE_LINK_TEXT}</Link>
-            <Link to="/geom-lab" className="nav-link" data-dimension="3">{GEOM_LAB_LINK_TEXT}</Link>
+            {currentPage !== 'scenes' && <Link to="/scenes" className="nav-link" data-dimension="1">// SCENES</Link>}
+            {currentPage !== 'showcase' && <Link to="/showcase" className="nav-link" data-dimension="2">{SHOWCASE_LINK_TEXT}</Link>}
+            {currentPage !== 'geom-lab' && <Link to="/geom-lab" className="nav-link" data-dimension="3">{GEOM_LAB_LINK_TEXT}</Link>}
             <div className="nav-terminal">
               <button 
                 onClick={logout}

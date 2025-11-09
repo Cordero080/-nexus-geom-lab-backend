@@ -59,16 +59,16 @@ export default function NavBar({ portalColors = null, glyphs = null, navScrolled
         )}
       </div>
       <div className="nav-links">
-         {/* ALWAYS show these - public links (hide if on current page) */}
-  {location.pathname !== '/' && <Link to="/" className="nav-link nav-link--home">// HOME</Link>}
-        {location.pathname !== '/geometry-lab' && (
+        {/* ALWAYS show these - public links (hide if on current page) */}
+        {location.pathname !== '/' && <Link to="/" className="nav-link nav-link--home">// HOME</Link>}
+        {location.pathname !== '/scenes' && <Link to="/scenes" className="nav-link">// SCENES</Link>}
+        {location.pathname !== '/showcase' && <Link to="/showcase" className="nav-link">{SHOWCASE_LINK_TEXT}</Link>}
+        {location.pathname !== '/geometry-lab' && location.pathname !== '/geom-lab' && (
           <Link to="/geometry-lab" className="nav-link">{GEOM_LAB_LINK_TEXT}</Link>
         )}
-  <Link to="/showcase" className="nav-link">{SHOWCASE_LINK_TEXT}</Link>
-         {/* Conditional links based on authentication */}
+        {/* Conditional links based on authentication */}
         {isAuthenticated ? (
           <>
-            {location.pathname !== '/scenes' && <Link to="/scenes" className="nav-link">// SCENES</Link>}
             <div className="nav-terminal">
               <button 
                 onClick={logout}

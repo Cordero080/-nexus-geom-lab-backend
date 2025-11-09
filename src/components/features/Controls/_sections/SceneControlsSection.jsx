@@ -16,15 +16,12 @@ import CustomSelect from '../../../ui/CustomSelect/CustomSelect';
  */
 function SceneControlsSection({
   scale,
-  onScaleChange,
   cameraView,
   onCameraViewChange,
   environment,
   onEnvironmentChange,
   environmentHue,
-  onEnvironmentHueChange,
   objectCount,
-  onObjectCountChange,
   
   // Handler functions (already created in Controls.jsx)
   handleScaleChange,

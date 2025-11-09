@@ -2,7 +2,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 
 // Components
-import Quote from './Quote';
+import Quote from '../../shared/Quote/Quote';
 import ProgressBar from './ProgressBar';
 import Scene from './Scene';
 import ScrambleOnHover from './components/ScrambleOnHover';
@@ -92,6 +92,7 @@ export default function HomePage() {
         navScrolled={navScrolled}
         isAuthenticated={isAuthenticated}
         logout={logout}
+        currentPage="home"
       />
 
       {/* Background Layers */}
@@ -179,7 +180,7 @@ MANIFOLD: A mathematical surface or multi-dimensional space that can be curved o
                     console.log('🟢 ENTER GEOM LAB BUTTON CLICKED!', e);
                     window.location.href = '/geom-lab';
                   }}
-                  label={<>ENTER GE0M L<span className="nav-inverted-a">V</span>B</>}
+                  label={<>ENTER GE0M L<span className="nav-inverted-v">V</span>B</>}
                   className="home-enter-geom-lab-btn"
                 />
               </div>
@@ -222,9 +223,9 @@ MANIFOLD: A mathematical surface or multi-dimensional space that can be curved o
             </p>
             <div className="probability-waves"></div>
             <div className="code-snippets">
-              <div className="floating-code">import name from './exportingFile.js';</div>
+              {/* <div className="floating-code">import name from './exportingFile.js';</div>
               <div className="floating-code">console.future(identity);</div>
-              <div className="floating-code">PABLO D C0RDER0</div>
+              <div className="floating-code">PABLO D C0RDER0</div> */}
               <Quote />
               
       
@@ -243,8 +244,6 @@ MANIFOLD: A mathematical surface or multi-dimensional space that can be curved o
             </p>
             <div className="entanglement-network"></div>
             <div className="connected-nodes">
-              <div className="node" data-module="export">NO</div>
-              <div className="node" data-module="import">TRY</div>
               <div className="quantum-bridge"></div>
             </div>
           </div>
@@ -262,12 +261,12 @@ MANIFOLD: A mathematical surface or multi-dimensional space that can be curved o
               All possibilities exist simultaneously
             </p>
             <div className="superposition-field"></div>
-            <div className="quantum-console">
+            {/* <div className="quantum-console">
               <div className="console-line">&gt;&gt;&gt; Initializing quantum state...</div>
               <div className="console-line">&gt;&gt;&gt; PVBLO C0RDER0 = ψ(quantum_state)</div>
               <div className="console-line">&gt;&gt;&gt; Observation collapsed wave function</div>
               <div className="console-line">&gt;&gt;&gt; Result: "ETHEREAL"</div>
-            </div>
+            </div> */}
           </div>
         </Scene>
       </div>
