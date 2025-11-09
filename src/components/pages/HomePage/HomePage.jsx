@@ -22,7 +22,7 @@ import useWormholeEffect from './hooks/useWormholeEffect';
 import useParallax from './hooks/useParallax';
 
 // External
-import { BeamScanButton } from '../../features/HUD';
+import BeamScanButton from '../../ui/BeamScanButton/BeamScanButton';
 import { Link } from 'react-router-dom';
 import { GEOM_LAB_LINK_TEXT, SHOWCASE_LINK_TEXT } from '../../layout/NavBar/navLabels';
 import { useAuth } from '../../../context/AuthContext';

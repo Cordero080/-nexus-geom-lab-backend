@@ -1,6 +1,6 @@
 import React, { useRef, useEffect } from 'react';
 import styles from './BeamScanButton.module.scss';
-import sharedStyles from '../../../../styles/shared.module.scss';
+import sharedStyles from '../../../styles/shared.module.scss';
 
 // Example code to reveal on hover
 const RAW_CODE = `function quantumLeap() {

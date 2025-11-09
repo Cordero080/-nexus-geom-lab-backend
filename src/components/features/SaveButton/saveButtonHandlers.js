@@ -1,11 +1,11 @@
 /**
  * 🏭 FACTORY FUNCTION - Creates save handlers for SaveButton
  * 
- *RECEIVES: Config object with functions and data
-// ⬇️ RETURNS: Async function that executes entire save flow
+ *RECEIVES: Config object with functions and data from backend
+// RETURNS: Async function that executes entire save flow
 
  * FLOW STEP 2: After user clicks Save button → This handles the actual save logic
- *
+ 
  * Used in SaveButton.jsx as:
  *   const handleSave = createSaveHandler({ ...dependencies });
  *   <button onClick={handleSave}>Save</button>
@@ -18,11 +18,12 @@
  *
  * WHY A FACTORY: Keeps SaveButton.jsx clean by separating business logic
  */
+// ⬆️ RECEIVES: Config object with functions and data from backend
 export const createSaveHandler = ({
   token,
   saveScene,
   addUnlockedNoetechs, // Pass: context update function
-  navigate,
+  navigate,// navigation to naviate to scenes page after save
   setIsSaving, // Pass: state setter for button
   sceneConfig, // Pass: scene data to save
   onSuccess,
@@ -48,13 +49,29 @@ export const createSaveHandler = ({
         config: sceneConfig,
       };
 
-      // Call API     await saveScene = sends data to backend and gets response
+      // CALLED: sceneApi.jsx saveScene function
+// ⬇️ RECEIVES: Response data from backend
       const response = await saveScene(sceneData, token);
-
-      // Handle unlocked noetechs
+      // THIS line just finished executing
+      // sceneApi.jsx returned the data object
+      // response = OBJECT from backend
+      // EXAMPLE
+      //   {
+//     success: true,
+//     scene: { _id: '...', name: 'My Scene', ... },
+//     totalScenes: 1,
+//     unlockedNoetechs: ['icarus-x']
+//   }
+//  NOW check if noetechs unlocked
       if (response.unlockedNoetechs && response.unlockedNoetechs.length > 0) {
+        // response.unlockedNoetechs = ['icarus-x] (from backend)
+        // .length > 0 = true (array has 1 item)
+        // Condition is TRUE, enter this block
         try {
           addUnlockedNoetechs(response.unlockedNoetechs);
+          // addUnlockedNoetechs = FUNCTION from AuthContext
+          // Passing: ['icarus-x']
+          // THIS CALLS AuthContext.jsx
         } catch (err) {
           // Silently fail if context update fails
         }

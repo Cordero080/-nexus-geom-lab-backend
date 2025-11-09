@@ -1,3 +1,7 @@
+// 📁 FILE: UnlockModal.jsx
+// ⬆️ RECEIVES: isOpen={true}, unlockedNoetechs=['icarus-x']
+// ⬇️ RENDERS: Modal with unlock notification
+
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ScrambleButton from "../../ui/ScrambleButton/ScrambleButton";
@@ -20,6 +24,7 @@ export default function UnlockModal({
   }, [isOpen]);
 
   if (!isOpen) return null;
+   // ↑ If modal not open, render nothing
 
   const handleClose = () => {
     onClose();
@@ -31,7 +36,7 @@ export default function UnlockModal({
       <div className="save-modal unlock-modal" onClick={(e) => e.stopPropagation()}>
         <div className="unlock-modal__content">
           <div className="unlock-modal__icon">⬡</div>
-          <h2 className="unlock-modal__title">Noetech Unlocked!</h2>
+          <h2 className="unlock-modal__title">¡Noetech Unlocked!</h2>
           <div className="unlock-modal__noetechs">
             {unlockedNoetechs.map((noetech, index) => (
               <div key={index} className="unlock-modal__noetech-name">
@@ -39,8 +44,9 @@ export default function UnlockModal({
               </div>
             ))}
           </div>
+           {/* ↑ Shows: "ICARUS-X" */}
           <p className="unlock-modal__message">
-            You can now view this in the showcase!
+            ¡You can now view this in the showcase!
           </p>
           <div className="unlock-modal__actions">
             <ScrambleButton

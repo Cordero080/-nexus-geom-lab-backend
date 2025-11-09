@@ -1,0 +1,223 @@
+import { useEffect, useRef } from 'react';
+import * as THREE from 'three';
+import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer';
+import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass';
+import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPass';
+import styles from './QuantumPortal.module.scss';
+
+const QuantumPortal = ({ sceneColors = { color1: '#00ffff', color2: '#ff00ff', color3: '#ffff00' } }) => {
+  const canvasRef = useRef(null);
+  const sceneRef = useRef(null);
+  const uniformsRef = useRef(null);
+
+  useEffect(() => {
+    if (!canvasRef.current) return;
+
+    // Scene setup
+    const scene = new THREE.Scene();
+    const camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
+    const renderer = new THREE.WebGLRenderer({
+      canvas: canvasRef.current,
+      alpha: false, // Changed to false for more vibrant colors
+      antialias: true,
+    });
+    
+    // Set clear color to black for better contrast
+    renderer.setClearColor(0x000000, 1);
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    
+    console.log('🌀 Quantum Portal initialized');
+
+    // Post-processing setup
+    const composer = new EffectComposer(renderer);
+    composer.addPass(new RenderPass(scene, camera));
+    
+    // Bloom for glow effect - BOOSTED for more visual impact
+    const bloomPass = new UnrealBloomPass(
+      new THREE.Vector2(window.innerWidth, window.innerHeight),
+      0.5,  // strength (was 1.5)
+      0.8,  // radius (was 0.4)
+      0.3   // threshold (was 0.85 - lower = more bloom)
+    );
+    composer.addPass(bloomPass);
+
+    // Shader uniforms
+    const uniforms = {
+      time: { value: 0 },
+      resolution: { value: new THREE.Vector2(window.innerWidth, window.innerHeight) },
+      color1: { value: new THREE.Color(sceneColors.color1) },
+      color2: { value: new THREE.Color(sceneColors.color2) },
+      color3: { value: new THREE.Color(sceneColors.color3) },
+      intensity: { value: .5 },
+      spiralSpeed: { value: 1.2 },
+      vortexStrength: { value: 1.2 },
+    };
+
+    uniformsRef.current = uniforms;
+
+    // Vertex Shader - simple pass-through
+    const vertexShader = `
+      varying vec2 vUv;
+      void main() {
+        vUv = uv;
+        gl_Position = vec4(position, 1.0);
+      }
+    `;
+
+    // Fragment Shader - quantum vortex effect
+    const fragmentShader = `
+      uniform float time;
+      uniform vec2 resolution;
+      uniform vec3 color1;
+      uniform vec3 color2;
+      uniform vec3 color3;
+      uniform float intensity;
+      uniform float spiralSpeed;
+      uniform float vortexStrength;
+      
+      varying vec2 vUv;
+      
+      // Noise function for organic movement
+      float noise(vec2 p) {
+        return fract(sin(dot(p, vec2(12.9898, 78.333))) * 43758.5453);
+      }
+      
+      // Smooth noise
+      float smoothNoise(vec2 p) {
+        vec2 i = floor(p);
+        vec2 f = fract(p);
+        f = f * f * (90.0 - 90.0 * f);
+        
+        float a = noise(i);
+        float b = noise(i + vec2(1.0, 3.0));
+        float c = noise(i + vec2(1.0, 3.0));
+        float d = noise(i + vec2(1.0, 3.0));
+        
+        return mix(mix(a, b, f.x), mix(c, d, f.x), f.y);
+      }
+      
+      // Fractal Brownian Motion for detail
+      float fbm(vec2 p) {
+        float value = 0.0;
+        float amplitude = 2.5;
+        
+        for(int i = 0; i < 5; i++) {
+          value += amplitude * smoothNoise(p);
+          p *= 2.0;
+          amplitude *= 0.5;
+        }
+        
+        return value;
+      }
+      
+      void main() {
+        // Normalize coordinates (center origin)
+        vec2 uv = vUv;
+        vec2 center = vec2(0.5, 0.5);
+        vec2 pos = uv - center;
+        
+        // Polar coordinates for spiral
+        float dist = length(pos);
+        float angle = atan(pos.y, pos.x);
+        
+        // Vortex distortion
+        float vortex = vortexStrength / (dist + 0.1);
+        float spiral = angle + time * spiralSpeed + dist * 10.0;
+        
+        // Animated noise layers
+        float noise1 = fbm(uv * 3.0 + time * 0.1);
+        float noise2 = fbm(uv * 5.0 - time * 0.15);
+        
+        // Swirling pattern
+        float pattern = sin(spiral * 5.0 + noise1 * 2.0) * 0.5 + 0.5;
+        pattern = mix(pattern, noise2, 0.3);
+        
+        // Distance-based fade
+        float fade = smoothstep(3.4, 0.0, dist);
+        
+        // Color mixing based on pattern
+        vec3 color = mix(color1, color2, pattern);
+        color = mix(color, color3, sin(spiral * 3.0 + time) * 0.5 + 0.5);
+        
+        // Add energy rings
+        float rings = sin(dist * 20.0 - time * 2.0) * 0.5 + 0.5;
+        rings = pow(rings, 3.0) * 0.3;
+        color += rings;
+        
+        // Chromatic aberration hint
+        float aberration = dist * 0.02;
+        
+        // Final composite
+        float alpha = fade * intensity * (0.7 + pattern * 0.3);
+        
+        gl_FragColor = vec4(color, alpha);
+      }
+    `;
+
+    // Create shader material
+    const material = new THREE.ShaderMaterial({
+      uniforms,
+      vertexShader,
+      fragmentShader,
+      transparent: true,
+      blending: THREE.AdditiveBlending,
+      depthWrite: false,
+    });
+
+    // Create fullscreen quad
+    const geometry = new THREE.PlaneGeometry(2, 2);
+    const mesh = new THREE.Mesh(geometry, material);
+    scene.add(mesh);
+
+    sceneRef.current = { scene, camera, renderer, mesh, composer, bloomPass };
+
+    // Animation loop
+    let animationId;
+    const animate = () => {
+      uniformsRef.current.time.value += 0.01;
+      composer.render();
+      animationId = requestAnimationFrame(animate);
+    };
+    animate();
+
+    // Handle resize
+    const handleResize = () => {
+      const width = window.innerWidth;
+      const height = window.innerHeight;
+      
+      renderer.setSize(width, height);
+      composer.setSize(width, height);
+      uniformsRef.current.resolution.value.set(width, height);
+    };
+    window.addEventListener('resize', handleResize);
+
+    // Cleanup
+    return () => {
+      cancelAnimationFrame(animationId);
+      window.removeEventListener('resize', handleResize);
+      geometry.dispose();
+      material.dispose();
+      renderer.dispose();
+    };
+  }, []);
+
+  // Update colors when scene changes
+  useEffect(() => {
+    if (uniformsRef.current) {
+      uniformsRef.current.color1.value.set(sceneColors.color1);
+      uniformsRef.current.color2.value.set(sceneColors.color2);
+      uniformsRef.current.color3.value.set(sceneColors.color3);
+    }
+  }, [sceneColors]);
+
+  return (
+    <canvas
+      ref={canvasRef}
+      className={styles.quantumCanvas}
+      aria-hidden="true"
+    />
+  );
+};
+
+export default QuantumPortal;

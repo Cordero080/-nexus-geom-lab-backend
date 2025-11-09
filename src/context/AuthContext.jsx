@@ -1,22 +1,22 @@
 /**
- * 🔐 AUTHCONTEXT - Global authentication state manager
+ * Context = React pattern for sharing state across many components without prop drilling.
+ * AuthContext - Manages global auth state (user, token, unlocked animations) accessible from any component.
  * 
- * MANAGES: User login/signup/logout + unlocked animations/noetechs
+ * Access: const { isAuthenticated, login, logout, user, token } = useAuth();
  * 
- * USED BY: All components via useAuth() hook
- *   Example: const { isAuthenticated, login, logout } = useAuth();
+ * Login Flow:
+ *   1. login(email, password) → sceneApi.login() → POST /api/auth/login
+ *   2. Backend verifies credentials → returns { token, user }
+ *   3. Store in state (setUser, setToken) + localStorage
  * 
- * FLOW:
- * 1. User logs in → Stores user/token in state + localStorage
- * 2. User saves scene → Backend may unlock animations → Updates state
- * 3. App.jsx checks isAuthenticated → Shows/hides protected routes
- * 
- * PERSISTENCE: Uses localStorage to remember user between page refreshes
- * 
- * 📌 useCallback: Wraps functions so they don't get recreated on every render
- *    - Without it: login() would be a "new" function each render → causes unnecessary re-renders
- *    - With it: login() stays the same function → components using it don't re-render needlessly
- *    - Think of it as "memorizing" the function for performance
+ * Save Scene Flow (with unlock system):
+ *   1. SaveControls calls saveScene(sceneData, token)
+ *   2. Backend verifies token (middleware/auth.js) → attaches req.user
+ *   3. Backend saves scene → checks unlock criteria → may return 
+ * // ⬆️  MAY RECEIVE: ['icarus-x'] from saveButtonHandlers.jsunlockedAnimations
+ *   4. Frontend calls addUnlockedAnimations() → updates state + localStorage
+ *   5. Shows UnlockModal with newly unlocked animations/noetechs
+ * // ⬆️ RECEIVES: ['icarus-x'] from saveButtonHandlers.js
  */
 
 import { signup as signupApi, login as loginApi } from '../services/sceneApi';
@@ -133,18 +133,58 @@ export function AuthProvider({ children }) {
     setIsLoading(false);
   }, []);
 
+//----------------------------UNLOCKED NOETECHS------------------------
   // Legacy: Adds newly unlocked noetechs from save responses (before animation system)
+//----------------------------UNLOCKED NOETECHS------------------------
   const addUnlockedNoetechs = useCallback((newKeys) => {
+    // newKeys = ['icarus-x'] ( from saveButtonHandlers)
+
     if (!newKeys || newKeys.length === 0) return;
+    // Check if array exists and items
+    // ['icarus-x'].length = 1, so continue (when array empty, in case of user first save executed)
+
     setUser((prev) => {
+
+      // setUser = STATE SETTER for useState
+      // prev = PREVIOUS user state Object
+      // Example prev:
+      // ↑ Example prev:
+    //   {
+    //     id: '507f...',
+    //     username: 'pablo',
+    //     email: 'pablo@test.com',
+    //     unlockedNoetechs: []  ← Currently empty
+    //   }
+
       if (!prev) return prev; // require logged-in user
-      const prevList = Array.isArray(prev.unlockedNoetechs) ? prev.unlockedNoetechs : [];
+      // prev = latest STATE
+      // When user is logged in:
+      //  ↑ If prev is null, return null (don't try to update)
+// ↑ Prevents error: "Cannot read property 'unlockedNoetechs' of null"
+      const prevList = Array.isArray(prev.unlockedNoetechs) ? prev.
+      // Get existing unlocks : []
+      unlockedNoetechs : [];
       const merged = Array.from(new Set([...prevList, ...newKeys]));
+      // Merge arrays and remove duplicates
+       // ↑ [...[], ...['icarus-x']] = ['icarus-x']
+        // ↑ Set removes duplicates
+        // ↑ Array.from converts Set back to array
+          // ↑ merged = ['icarus-x']
       const updated = { ...prev, unlockedNoetechs: merged };
+       // ↑ Create NEW user object with updated unlocks
+        // ↑ Spread operator (...prev) copies all properties
+        // ↑ unlockedNoetechs: merged overwrites old value
       try {
         localStorage.setItem("user", JSON.stringify(updated));
+        // ↑ localStorage.setItem = BROWSER API
+        // needs to be a string to be inserted into the browsers locasl storage and persist
+         // ↑ Saves data to browser storage (persists after refresh)
+          // ↑ "user" = KEY name
+      // ↑ JSON.stringify(updated) = Converts object to string
       } catch {}
       return updated;
+      // ↑ Return new state to React
+    // ↑ This triggers re-render of components using user state
     });
   }, []);
 

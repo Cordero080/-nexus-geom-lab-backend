@@ -1,6 +1,8 @@
 import { useRef, useEffect } from "react";
 
 /**
+ //Creates multi-layered 3D parallax scrolling effects on the HomePage by transforming background layers, scenes, and text elements based on scroll position and mouse movement.
+ 
  * Custom hook for parallax scrolling effects with multiple depth layers
  * Manages 5 parallax layers plus foreground/background with mouse movement
  * @returns {Object} Object containing refs for all parallax elements

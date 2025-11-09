@@ -1,5 +1,6 @@
 import React from 'react';
 import styles from '../HomeIndex.module.scss';
+import QuantumPortal from './QuantumPortal';
 
 /**
  * All background layers for HomePage including portal bg and parallax layers
@@ -10,6 +11,15 @@ import styles from '../HomeIndex.module.scss';
 export default function BackgroundLayers({ portalState, bgRef, fgRef }) {
   return (
     <>
+      {/* Three.js Quantum Portal Effect */}
+      <QuantumPortal 
+        sceneColors={{
+          color1: portalState.colors[0],
+          color2: portalState.colors[1],
+          color3: portalState.colors[2]
+        }}
+      />
+
       {/* Base Dark Layer */}
       <div className={styles.baseDark}></div>
 

@@ -1,0 +1,13 @@
+/* QuantumPortal.module.scss */
+.quantumCanvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: -2; /* Behind content, above quantumPortalLayer (-5) */
+  pointer-events: none;
+  opacity: 0.3; /* Adjust this: 0.2 = subtle, 0.6 = strong */
+  /* Screen blend mode for additive glow */
+  mix-blend-mode: screen;
+}

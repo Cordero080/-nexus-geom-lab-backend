@@ -6,7 +6,7 @@ import { getMyScenes } from "../../../services/sceneApi"; // Import API function
 import SceneCard from "../../features/Scenes/SceneCard"; // Corrected import path to Scenes
 import CustomSelect from "../../ui/CustomSelect/CustomSelect";
 import ScrambleButton from "../../ui/ScrambleButton/ScrambleButton";
-import { BeamScanButton } from "../../features/HUD";
+import BeamScanButton from "../../ui/BeamScanButton/BeamScanButton";
 import { DeleteSuccessModal } from "../../ui/Modals";
 import NavBar from "../../layout/NavBar/NavBar";
 import HomeBackground from "../../shared/HomeBackground/HomeBackground";

@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../../context/AuthContext";
-import BeamScanButton from "../../features/HUD/BeamScanButton/BeamScanButton";
+import BeamScanButton from "../../ui/BeamScanButton/BeamScanButton";
 import { quantumCollapse } from "../../../utils/coreHelpers";
 import "./LoginPage.css";
 import "../../layout/NavBar/nav.css";

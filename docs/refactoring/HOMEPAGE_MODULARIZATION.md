@@ -10,7 +10,13 @@ Successfully refactored HomePage.jsx from **755 lines to 458 lines** (~40% reduc
 src/components/pages/HomePage/
 ├── HomePage.jsx (458 lines, down from 755)
 ├── components/
-│   └── ScrambleOnHover.jsx
+│   ├── ScrambleOnHover.jsx
+│   ├── BackgroundLayers.jsx
+│   ├── QuantumNav.jsx
+│   └── QuantumPortal/
+│       ├── QuantumPortal.jsx
+│       ├── QuantumPortal.module.scss
+│       └── index.js
 ├── hooks/
 │   ├── useQuantumState.js
 │   ├── useWormholeEffect.js
@@ -25,9 +31,18 @@ src/components/pages/HomePage/
 ### Components
 
 1. **ScrambleOnHover.jsx**
+
    - Text scrambling effect using katakana characters
    - Hover-triggered animation with progressive character settling
    - Props: `originalText`, `finalText`, `delay`
+
+2. **QuantumPortal/** (November 9, 2025)
+   - Three.js-based shader portal background effect
+   - GLSL vertex/fragment shaders for vortex rendering
+   - Real-time color transitions via uniforms
+   - Post-processing: UnrealBloomPass for glow effects
+   - Structure: Component + SCSS module + barrel export
+   - **Location**: Moved from `src/components/effects/` to `HomePage/components/` for better architecture
 
 ### Custom Hooks
 
