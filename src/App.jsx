@@ -477,8 +477,8 @@ function AppContent() {
       {/* Render QuantumCursor on all pages EXCEPT geom-lab */}
       {!isGeomLabPage && <QuantumCursor />}
       
-      {/* Footer only on homepage, showcase, and scenes pages */}
-      {(currentPath === '/' || currentPath === '/showcase' || currentPath === '/scenes') && <Footer />}
+      {/* Footer only on homepage bottom */}
+      {currentPath === '/' && <Footer />}
       
       <Routes>
         {/* PUBLIC ROUTE - anyone can access */}

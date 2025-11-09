@@ -11,8 +11,29 @@ import QuantumPortal from './QuantumPortal';
 export default function BackgroundLayers({ portalState, bgRef, fgRef }) {
   return (
     <>
-      {/* Three.js Quantum Portal Effect */}
+      {/* Three.js Quantum Portal Effect - Top */}
       <QuantumPortal 
+        position="top"
+        sceneColors={{
+          color1: portalState.colors[0],
+          color2: portalState.colors[1],
+          color3: portalState.colors[2]
+        }}
+      />
+
+      {/* Three.js Quantum Portal Effect - Bottom */}
+      <QuantumPortal 
+        position="bottom"
+        sceneColors={{
+          color1: portalState.colors[0],
+          color2: portalState.colors[1],
+          color3: portalState.colors[2]
+        }}
+      />
+
+      {/* Three.js Quantum Portal Effect - Middle */}
+      <QuantumPortal 
+        position="middle"
         sceneColors={{
           color1: portalState.colors[0],
           color2: portalState.colors[1],

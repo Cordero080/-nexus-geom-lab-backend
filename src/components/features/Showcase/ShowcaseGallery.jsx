@@ -6,6 +6,7 @@ import { useLocation } from 'react-router-dom';
 import { useAuth } from '../../../context/AuthContext';
 import RotatingCube from '../RotatingCube/RotatingCube';
 import ShowcaseViewer from '../ShowcaseViewer/ShowcaseViewer';
+import QuantumPortalShowcase from './QuantumPortalShowcase';
 import { mockAnimations } from './data/mockAnimations';
 import { portalWorlds, glyphSets } from '../../../data/portalWorlds';
 import { quantumCollapse, getCardPosition } from './utils/showcaseHelpers';
@@ -355,6 +356,36 @@ export default function ShowcaseGallery() {
 
   return (
     <>
+      {/* Three.js Quantum Portal Effect - Top */}
+      <QuantumPortalShowcase 
+        position="top"
+        sceneColors={{
+          color1: portalState.colors[0],
+          color2: portalState.colors[1],
+          color3: portalState.colors[2]
+        }}
+      />
+
+      {/* Three.js Quantum Portal Effect - Bottom */}
+      <QuantumPortalShowcase 
+        position="bottom"
+        sceneColors={{
+          color1: portalState.colors[0],
+          color2: portalState.colors[1],
+          color3: portalState.colors[2]
+        }}
+      />
+
+      {/* Three.js Quantum Portal Effect - Middle */}
+      <QuantumPortalShowcase 
+        position="middle"
+        sceneColors={{
+          color1: portalState.colors[0],
+          color2: portalState.colors[1],
+          color3: portalState.colors[2]
+        }}
+      />
+
       {/* Clip-path background layer (matching HomePage) */}
       <div className="bg-gallery-layer bg-gallery-reality" aria-hidden="true"></div>
       

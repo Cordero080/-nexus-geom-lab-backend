@@ -1,13 +1,13 @@
-/* QuantumPortal.module.scss */
+/* QuantumPortalShowcase.module.scss - Showcase-specific styling */
 .quantumCanvas {
   position: fixed;
   top: 0;
   left: 0;
   width: 100vw;
   height: 100vh;
-  z-index: -2; /* Behind content, above quantumPortalLayer (-5) */
+  z-index: -10; /* Much further back */
   pointer-events: none;
-  opacity: 0.3; /* Adjust this: 0.2 = subtle, 0.6 = strong */
+  opacity: 0.1; /* Much more subtle */
   /* Screen blend mode for additive glow */
   mix-blend-mode: screen;
 }
@@ -16,13 +16,13 @@
   top: auto;
   bottom: 0;
   transform: rotate(180deg); /* Flip for visual variety */
-  z-index: -3; /* Slightly behind the top portal */
-  opacity: 0.25; /* Slightly more subtle for depth */
+  z-index: -11; /* Even further back */
+  opacity: 0.08; /* Very subtle */
 }
 
 .quantumCanvasMiddle {
   top: 50%;
   transform: translateY(-50%); /* Center vertically */
-  z-index: -4; /* Behind both top and bottom */
-  opacity: 0.2; /* Most subtle for depth */
+  z-index: -12; /* Deepest layer */
+  opacity: 0.06; /* Most subtle for depth */
 }

@@ -6,7 +6,7 @@
   min-height: 100vh;
   width: 100vw;
   max-width: 100%;
-  padding: 120px 24px 40px; /* Increased top padding for fixed navbar (100px + 20px spacing) */
+  padding: 140px 60px 60px; /* Increased horizontal padding from 24px to 60px, bottom from 40px to 60px */
   background: transparent; /* Remove background to show clip-path scene background */
   color: #ffffff;
   overflow-x: hidden; /* Prevent horizontal scroll */
@@ -17,27 +17,40 @@
 /* Header */
 .my-scenes-page__header {
   max-width: 1400px;
-  margin: 0 auto 40px;
+  margin: 0 auto 60px; /* Increased margin from 40px to 60px */
   text-align: center;
-  min-height: 240px;
+  min-height: 160px; /* Reduced from 240px to 160px */
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 8px;
-  padding: 40px 20px 60px;
+  gap: 12px; /* Increased from 8px to 12px */
+  padding: 20px 20px 40px; /* Reduced top padding from 40px to 20px */
+}
+
+/* MyScenesPage-specific title size (smaller than showcase/home) */
+.my-scenes-page .quantum-page-title {
+  font-size: 3rem !important; /* Reduced from 4.2rem to 3rem */
+  letter-spacing: 6px !important; /* Reduced from 10px to 6px */
+  margin-bottom: 12px !important;
+}
+
+/* MyScenesPage-specific subtitle size */
+.my-scenes-page .quantum-page-subtitle {
+  font-size: 1rem !important; /* Reduced from 1.1em to 1rem */
+  letter-spacing: 2px !important; /* Reduced from 3px to 2px */
 }
 
 /* Controls */
 .my-scenes-page__controls {
   max-width: 1400px;
-  margin: 0 auto 32px;
+  margin: 0 auto 48px; /* Increased margin from 32px to 48px */
   display: flex;
-  gap: 24px;
+  gap: 32px; /* Increased gap from 24px to 32px */
   align-items: center;
   justify-content: center;
   flex-wrap: wrap;
-  transform: translateY(-20px) translateX(-24px);
+  /* Removed negative transforms - let it breathe naturally */
 }
 
 .my-scenes-page__control-group {
@@ -149,7 +162,7 @@
 .my-scenes-page__spinner {
   width: 48px;
   height: 48px;
-  margin: 0 auto 16px;
+  margin: 0 auto 24px; /* Increased from 16px to 24px */
   border: 4px solid rgba(0, 255, 255, 0.1);
   border-top-color: #00ffff;
   border-radius: 50%;
@@ -164,10 +177,10 @@
 
 /* Empty State */
 .my-scenes-page__empty {
-  max-width: 600px;
+  max-width: 700px; /* Increased from 600px to 700px */
   margin: 80px auto;
   text-align: center;
-  padding: 48px;
+  padding: 60px; /* Increased from 48px to 60px */
   /* Holographic cosmic black style */
   background:
     linear-gradient(145deg, rgba(10, 10, 10, 0.7), rgba(0, 0, 0, 0.55)),
@@ -251,10 +264,10 @@
 /* Scene Grid */
 .my-scenes-page__grid {
   max-width: 1400px;
-  margin: 50px auto 0;
+  margin: 0 auto; /* Removed top margin - spacing comes from controls margin */
   display: grid;
   grid-template-columns: repeat(3, 1fr); /* Changed from 4 to 3 columns for larger cards */
-  gap: 32px; /* Increased gap */
+  gap: 40px; /* Increased gap from 32px to 40px for more breathing room */
   animation: fadeIn 0.5s ease-in;
 }
 
@@ -341,7 +354,7 @@
 .create-scene-card__icon {
   font-size: 72px;
   font-weight: 200;
-  margin-bottom: 16px;
+  margin-bottom: 24px; /* Increased from 16px to 24px */
   transition: all 0.3s ease;
   line-height: 1;
   position: relative;
@@ -356,7 +369,7 @@
   font-size: 1.25rem;
   font-family: 'Orbitron', monospace;
   font-weight: 600;
-  margin: 0 0 8px;
+  margin: 0 0 12px; /* Increased from 8px to 12px */
   transition: all 0.3s ease;
   position: relative;
   z-index: 2;

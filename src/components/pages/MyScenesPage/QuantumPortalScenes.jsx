@@ -3,9 +3,9 @@ import * as THREE from 'three';
 import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer';
 import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass';
 import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPass';
-import styles from './QuantumPortal.module.scss';
+import styles from './QuantumPortalScenes.module.scss';
 
-const QuantumPortal = ({ 
+const QuantumPortalScenes = ({ 
   position = 'top',
   sceneColors = { color1: '#00ffff', color2: '#ff00ff', color3: '#ffff00' } 
 }) => {
@@ -16,36 +16,29 @@ const QuantumPortal = ({
   useEffect(() => {
     if (!canvasRef.current) return;
 
-    // Scene setup
     const scene = new THREE.Scene();
     const camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
     const renderer = new THREE.WebGLRenderer({
       canvas: canvasRef.current,
-      alpha: false, // Changed to false for more vibrant colors
+      alpha: false,
       antialias: true,
     });
     
-    // Set clear color to black for better contrast
     renderer.setClearColor(0x000000, 1);
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-    
-    console.log('🌀 Quantum Portal initialized');
 
-    // Post-processing setup
     const composer = new EffectComposer(renderer);
     composer.addPass(new RenderPass(scene, camera));
     
-    // Bloom for glow effect - BOOSTED for more visual impact
     const bloomPass = new UnrealBloomPass(
       new THREE.Vector2(window.innerWidth, window.innerHeight),
-      0.5,  // strength (was 1.5)
-      0.8,  // radius (was 0.4)
-      0.3   // threshold (was 0.85 - lower = more bloom)
+      0.5,
+      0.8,
+      0.3
     );
     composer.addPass(bloomPass);
 
-    // Shader uniforms
     const uniforms = {
       time: { value: 0 },
       resolution: { value: new THREE.Vector2(window.innerWidth, window.innerHeight) },
@@ -59,7 +52,6 @@ const QuantumPortal = ({
 
     uniformsRef.current = uniforms;
 
-    // Vertex Shader - simple pass-through
     const vertexShader = `
       varying vec2 vUv;
       void main() {
@@ -68,7 +60,6 @@ const QuantumPortal = ({
       }
     `;
 
-    // Fragment Shader - quantum vortex effect
     const fragmentShader = `
       uniform float time;
       uniform vec2 resolution;
@@ -81,12 +72,10 @@ const QuantumPortal = ({
       
       varying vec2 vUv;
       
-      // Noise function for organic movement
       float noise(vec2 p) {
         return fract(sin(dot(p, vec2(12.9898, 78.333))) * 43758.5453);
       }
       
-      // Smooth noise
       float smoothNoise(vec2 p) {
         vec2 i = floor(p);
         vec2 f = fract(p);
@@ -100,7 +89,6 @@ const QuantumPortal = ({
         return mix(mix(a, b, f.x), mix(c, d, f.x), f.y);
       }
       
-      // Fractal Brownian Motion for detail
       float fbm(vec2 p) {
         float value = 0.0;
         float amplitude = 2.5;
@@ -115,50 +103,39 @@ const QuantumPortal = ({
       }
       
       void main() {
-        // Normalize coordinates (center origin)
         vec2 uv = vUv;
         vec2 center = vec2(0.5, 0.5);
         vec2 pos = uv - center;
         
-        // Polar coordinates for spiral
         float dist = length(pos);
         float angle = atan(pos.y, pos.x);
         
-        // Vortex distortion
         float vortex = vortexStrength / (dist + 0.1);
         float spiral = angle + time * spiralSpeed + dist * 10.0;
         
-        // Animated noise layers
         float noise1 = fbm(uv * 3.0 + time * 0.1);
         float noise2 = fbm(uv * 5.0 - time * 0.15);
         
-        // Swirling pattern
         float pattern = sin(spiral * 5.0 + noise1 * 2.0) * 0.5 + 0.5;
         pattern = mix(pattern, noise2, 0.3);
         
-        // Distance-based fade
         float fade = smoothstep(3.4, 0.0, dist);
         
-        // Color mixing based on pattern
         vec3 color = mix(color1, color2, pattern);
         color = mix(color, color3, sin(spiral * 3.0 + time) * 0.5 + 0.5);
         
-        // Add energy rings
         float rings = sin(dist * 20.0 - time * 2.0) * 0.5 + 0.5;
         rings = pow(rings, 3.0) * 0.3;
         color += rings;
         
-        // Chromatic aberration hint
         float aberration = dist * 0.02;
         
-        // Final composite
         float alpha = fade * intensity * (0.7 + pattern * 0.3);
         
         gl_FragColor = vec4(color, alpha);
       }
     `;
 
-    // Create shader material
     const material = new THREE.ShaderMaterial({
       uniforms,
       vertexShader,
@@ -168,14 +145,12 @@ const QuantumPortal = ({
       depthWrite: false,
     });
 
-    // Create fullscreen quad
     const geometry = new THREE.PlaneGeometry(2, 2);
     const mesh = new THREE.Mesh(geometry, material);
     scene.add(mesh);
 
     sceneRef.current = { scene, camera, renderer, mesh, composer, bloomPass };
 
-    // Animation loop
     let animationId;
     const animate = () => {
       uniformsRef.current.time.value += 0.01;
@@ -184,7 +159,6 @@ const QuantumPortal = ({
     };
     animate();
 
-    // Handle resize
     const handleResize = () => {
       const width = window.innerWidth;
       const height = window.innerHeight;
@@ -195,7 +169,6 @@ const QuantumPortal = ({
     };
     window.addEventListener('resize', handleResize);
 
-    // Cleanup
     return () => {
       cancelAnimationFrame(animationId);
       window.removeEventListener('resize', handleResize);
@@ -205,7 +178,6 @@ const QuantumPortal = ({
     };
   }, []);
 
-  // Update colors when scene changes
   useEffect(() => {
     if (uniformsRef.current) {
       uniformsRef.current.color1.value.set(sceneColors.color1);
@@ -226,4 +198,4 @@ const QuantumPortal = ({
   );
 };
 
-export default QuantumPortal;
+export default QuantumPortalScenes;

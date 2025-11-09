@@ -216,16 +216,18 @@
 /* Actions */
 .sceneCardActions {
   display: flex;
-  gap: 12px;
+  gap: 16px; /* Increased from 12px to 16px */
   margin-top: auto;
-  padding-top: 16px;
+  padding-top: 20px; /* Increased from 16px to 20px */
   border-top: 1px solid rgba(255, 255, 255, 0.1);
   flex-wrap: nowrap; /* Keep buttons inline, no wrapping */
-  min-height: 48px; /* Ensure minimum height for buttons */
+  min-height: 52px; /* Increased from 48px to 52px for better button size */
   
   /* Override ScrambleButton font to use Orbitron */
   button {
     font-family: 'Orbitron', monospace !important;
+    flex: 1; /* Equal width buttons */
+    min-width: 0; /* Allow flex to work properly */
     
     span {
       font-family: 'Orbitron', monospace !important;

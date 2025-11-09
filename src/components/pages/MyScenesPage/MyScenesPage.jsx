@@ -8,7 +8,7 @@ import CustomSelect from "../../ui/CustomSelect/CustomSelect";
 import ScrambleButton from "../../ui/ScrambleButton/ScrambleButton";
 import BeamScanButton from "../../ui/BeamScanButton/BeamScanButton";
 import { DeleteSuccessModal } from "../../ui/Modals";
-import NavBar from "../../layout/NavBar/NavBar";
+import QuantumNav from "../HomePage/components/QuantumNav";
 import HomeBackground from "../../shared/HomeBackground/HomeBackground";
 import { quantumCollapse } from "../../../utils/coreHelpers";
 import "./MyScenesPage.css";
@@ -407,10 +407,12 @@ export default function MyScenesPage() {
       </div>
 
       <div className="my-scenes-page">
-        <NavBar 
-          portalColors={portalState.colors} 
-          glyphs={glyphState}
+        <QuantumNav 
+          portalState={portalState}
+          glyphState={glyphState}
           navScrolled={navScrolled}
+          isAuthenticated={isAuthenticated}
+          logout={logout}
         />
 
       {/* Header */}
