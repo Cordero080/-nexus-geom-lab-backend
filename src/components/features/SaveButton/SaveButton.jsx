@@ -5,7 +5,7 @@
 
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../../../context/AuthContext';
+import { useAuth } from '../../../features/auth/context/AuthContext';
 import { saveScene } from '../../../services/sceneApi';
 import { createSaveHandler } from './saveButtonHandlers';
 import ScrambleButton from '../../ui/ScrambleButton/ScrambleButton';

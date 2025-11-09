@@ -3,7 +3,7 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader';
 import { Canvas } from '@react-three/fiber';
 import { useLocation } from 'react-router-dom';
-import { useAuth } from '../../../context/AuthContext';
+import { useAuth } from '../../../features/auth/context/AuthContext';
 import RotatingCube from '../RotatingCube/RotatingCube';
 import ShowcaseViewer from '../ShowcaseViewer/ShowcaseViewer';
 import QuantumPortalShowcase from './QuantumPortalShowcase';

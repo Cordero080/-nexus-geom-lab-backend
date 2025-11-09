@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react";
-import { createSceneObject } from "../factories/objectFactory";
+import { createSceneObject } from "../objects/factories/objectFactory";
 
 /**
  * Manages object creation and updates

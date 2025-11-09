@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import { nearestVertexIndex } from "../../utils/geometryHelpers";
+import { nearestVertexIndex } from "../../../utils/geometryHelpers";
 
 /**
  * Create a wireframe for compound tesseract that shows all edges

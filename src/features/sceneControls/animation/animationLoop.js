@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import { animateSpectralOrbs } from "./spectralOrbs";
+import { animateSpectralOrbs } from "../objects/spectralOrbs";
 
 function applyUserRotation(meshes, objectId, interactionFns) {
   if (!interactionFns || !interactionFns.getUserRotation || !objectId) {

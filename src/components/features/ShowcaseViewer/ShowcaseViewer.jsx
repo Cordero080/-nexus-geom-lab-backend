@@ -3,10 +3,10 @@ import { Canvas } from '@react-three/fiber';
 import { OrbitControls } from '@react-three/drei';
 import RotatingCube from '../RotatingCube/RotatingCube';
 import ScrambleButton from '../../ui/ScrambleButton/ScrambleButton';
-import SpeedControl from './SpeedControl';
-import { useAuth } from '../../../context/AuthContext';
+import SpeedControl from './SpeedControl/SpeedControl';
+import { useAuth } from '../../../features/auth/context/AuthContext';
 import { mockAnimations } from '../Showcase/data/mockAnimations';
-import './ShowcaseViewer.css';
+import styles from './ShowcaseViewer.module.scss';
 import sharedStyles from '../../../styles/shared.module.scss';
 
 export default function ShowcaseViewer({ animation, onClose }) {
@@ -101,17 +101,17 @@ export default function ShowcaseViewer({ animation, onClose }) {
   return (
     <>
       {/* Immediate backdrop that appears instantly */}
-      <div className="viewer-backdrop" />
+      <div className={styles['viewer-backdrop']} />
       
       <div 
-        className={`viewer-overlay viewer-overlay-${currentAnimation?.id || 1}`}
+        className={`${styles['viewer-overlay']} viewer-overlay-${currentAnimation?.id || 1}`}
         style={{
           opacity: mounted ? 1 : 0
         }}
       >
-        <div className="viewer-back-button-container">
+        <div className={styles['viewer-back-button-container']}>
           <ScrambleButton
-            className="viewer-back-button"
+            className={styles['viewer-back-button']}
             onClick={onClose}
             variant="secondary"
           >
@@ -123,51 +123,51 @@ export default function ShowcaseViewer({ animation, onClose }) {
         {(hasMultipleCharacters || showNavForTesting) && (
           <>
             <button
-              className="viewer-nav-button viewer-nav-prev"
+              className={`${styles['viewer-nav-button']} ${styles['viewer-nav-prev']}`}
               onClick={goToPreviousCharacter}
               disabled={currentCharacterIndex === 0}
               title="Previous Character"
             >
-              <span className="nav-arrow">‹</span>
-              <span className="nav-label">Previous Character</span>
+              <span className={styles['nav-arrow']}>‹</span>
+              <span className={styles['nav-label']}>Previous Character</span>
             </button>
             
             <button
-              className="viewer-nav-button viewer-nav-next"
+              className={`${styles['viewer-nav-button']} ${styles['viewer-nav-next']}`}
               onClick={goToNextCharacter}
               disabled={currentCharacterIndex === allUnlockedCharacters.length - 1}
               title="Next Character"
             >
-              <span className="nav-label">Next Character</span>
-              <span className="nav-arrow">›</span>
+              <span className={styles['nav-label']}>Next Character</span>
+              <span className={styles['nav-arrow']}>›</span>
             </button>
           </>
         )}
         
         {/* Animation Switcher - only show if multiple animations available */}
         {showAnimationSwitcher && (
-          <div className="animation-switcher">
-            <h3 className="switcher-title">Available Animations:</h3>
-            <div className="animation-buttons">
+          <div className={styles['animation-switcher']}>
+            <h3 className={styles['switcher-title']}>Available Animations:</h3>
+            <div className={styles['animation-buttons']}>
               {availableAnimations.map((anim) => (
                 <button
                   key={anim.id}
-                  className={`animation-button ${currentAnimation.id === anim.id ? 'active' : ''}`}
+                  className={`${styles['animation-button']} ${currentAnimation.id === anim.id ? styles['active'] : ''}`}
                   onClick={() => setCurrentAnimation(anim)}
                 >
-                  <span className="button-animation">{anim.animation}</span>
-                  <span className="button-variant">{anim.variant}</span>
+                  <span className={styles['button-animation']}>{anim.animation}</span>
+                  <span className={styles['button-variant']}>{anim.variant}</span>
                 </button>
               ))}
             </div>
           </div>
         )}
         
-        <button className={`viewer-close ${sharedStyles.angledCorners}`} onClick={onClose}>
+        <button className={`${styles['viewer-close']} ${sharedStyles.angledCorners}`} onClick={onClose}>
           ✕
         </button>
       
-      <div className="viewer-canvas-container">
+      <div className={styles['viewer-canvas-container']}>
             <Canvas
               camera={{ position: [0, 0.8, 8], fov: 60 }}
               style={{ width: '100%', height: '100%', flex: '1 1 auto' }}

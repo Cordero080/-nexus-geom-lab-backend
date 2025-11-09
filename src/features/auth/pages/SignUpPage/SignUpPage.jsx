@@ -1,11 +1,11 @@
-import React, { useState, useEffect, useRef } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { useAuth } from "../../../context/AuthContext";
-import BeamScanButton from "../../ui/BeamScanButton/BeamScanButton";
-import { quantumCollapse } from "../../../utils/coreHelpers";
-import "./LoginPage.css";
-import "../../layout/NavBar/nav.css";
-import homeStyles from "../HomePage/HomeIndex.module.scss";
+import React, { useState, useEffect, useRef } from 'react';
+import { useNavigate, Link } from 'react-router-dom';
+import { useAuth } from '../../context/AuthContext';
+import BeamScanButton from '../../../../components/ui/BeamScanButton/BeamScanButton';
+import { quantumCollapse } from '../../../../utils/coreHelpers';
+import "./SignUpPage.css";
+import "../../../../components/layout/NavBar/nav.css";
+import homeStyles from "../../../../components/pages/HomePage/HomeIndex.module.scss";
 
 // Portal worlds system (matching MyScenesPage/Showcase)
 const portalWorlds = [
@@ -24,9 +24,9 @@ const glyphSets = [
   ['τ', 'β', 'η'],
 ];
 
-const LoginPage = () => {
-  const { login } = useAuth();
+export default function SignUpPage() {
   const navigate = useNavigate();
+  const { signup } = useAuth();
   
   // Quantum state management (matching MyScenesPage/Showcase)
   const [portalState, setPortalState] = useState(() => quantumCollapse(portalWorlds));
@@ -38,16 +38,13 @@ const LoginPage = () => {
   const fgRef = useRef(null);
   
   const [formData, setFormData] = useState({
-    email: '',
-    password: ''
-  });
-
-  const [errors, setErrors] = useState({
+    username: '',
     email: '',
     password: '',
-    submit: ''
+    confirmPassword: ''
   });
-
+  
+  const [errors, setErrors] = useState({});
   const [isLoading, setIsLoading] = useState(false);
 
   // Parallax effect (matching MyScenesPage/Showcase)
@@ -135,61 +132,73 @@ const LoginPage = () => {
     return () => window.removeEventListener('mousemove', handleMouseMove);
   }, []);
 
-  const validateField = (name, value) => {
-    switch (name) {
-      case 'email':
-        if (!value) return 'Email is required';
-        if (!/\S+@\S+\.\S+/.test(value)) return 'Email is invalid';
-        return '';
-      case 'password':
-        if (!value) return 'Password is required';
-        return '';
-      default:
-        return '';
+  const validateForm = () => {
+    const newErrors = {};
+    
+    // Username validation
+    if (!formData.username.trim()) {
+      newErrors.username = 'Username is required';
+    } else if (formData.username.length < 3) {
+      newErrors.username = 'Username must be at least 3 characters';
+    } else if (formData.username.length > 20) {
+      newErrors.username = 'Username must be less than 20 characters';
     }
+    
+    // Email validation
+    if (!formData.email.trim()) {
+      newErrors.email = 'Email is required';
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+      newErrors.email = 'Invalid email format';
+    }
+    
+    // Password validation
+    if (!formData.password) {
+      newErrors.password = 'Password is required';
+    } else if (formData.password.length < 6) {
+      newErrors.password = 'Password must be at least 6 characters';
+    }
+    
+    // Confirm password validation
+    if (formData.password !== formData.confirmPassword) {
+      newErrors.confirmPassword = 'Passwords do not match';
+    }
+    
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
   };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
-    
-    // Clear submit error when user starts typing
-    if (errors.submit) {
-      setErrors(prev => ({ ...prev, submit: '' }));
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+    // Clear error for this field when user starts typing
+    if (errors[name]) {
+      setErrors(prev => ({
+        ...prev,
+        [name]: ''
+      }));
     }
-    
-    // Validate field and update errors
-    const error = validateField(name, value);
-    setErrors(prev => ({ ...prev, [name]: error }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     
-    // Validate all fields
-    const emailError = validateField('email', formData.email);
-    const passwordError = validateField('password', formData.password);
-    
-    if (emailError || passwordError) {
-      setErrors({
-        email: emailError,
-        password: passwordError,
-        submit: ''
-      });
+    if (!validateForm()) {
       return;
     }
-
+    
     setIsLoading(true);
-    setErrors({ email: '', password: '', submit: '' });
-
+    
     try {
-      // Call login from AuthContext
-      await login(formData.email, formData.password);
+      // Call signup from AuthContext
+      await signup(formData.username, formData.email, formData.password);
       
       // Redirect to homepage on success
       navigate('/');
     } catch (error) {
-      setErrors({ submit: error.message || 'Login failed. Please try again.' });
+      setErrors({ submit: error.message || 'Sign up failed. Please try again.' });
     } finally {
       setIsLoading(false);
     }
@@ -253,13 +262,13 @@ const LoginPage = () => {
           filter: 'brightness(1.3) saturate(1.8)',
         }}>
           <defs>
-            <linearGradient id="login-portal-glow" x1="0" y1="0" x2="1" y2="1">
+            <linearGradient id="signup-portal-glow" x1="0" y1="0" x2="1" y2="1">
               <stop offset="0%" stopColor={portalState.colors[0]} stopOpacity="0.6"/>
               <stop offset="50%" stopColor={portalState.colors[1]} stopOpacity="0.4"/>
               <stop offset="100%" stopColor={portalState.colors[2]} stopOpacity="0.6"/>
             </linearGradient>
           </defs>
-          <rect x="0" y="0" width="1920" height="1080" fill="url(#login-portal-glow)"/>
+          <rect x="0" y="0" width="1920" height="1080" fill="url(#signup-portal-glow)"/>
         </svg>
       </div>
 
@@ -270,31 +279,32 @@ const LoginPage = () => {
       <div ref={bgRef} className="parallax-bg-layer" aria-hidden="true">
         <svg width="100%" height="100%" viewBox="0 0 1920 400" style={{position:'absolute',top:0,left:0,width:'100vw',height:'40vh',pointerEvents:'none', background: `linear-gradient(120deg, ${portalState.colors[0]} 0%, ${portalState.colors[1]} 60%, ${portalState.colors[2]} 100%)`, transition: 'background 3s cubic-bezier(0.4,0,0.2,1)'}}>
           <defs>
-            <linearGradient id="login-bg-grad1" x1="0" y1="0" x2="1" y2="1">
+            <linearGradient id="signup-bg-grad1" x1="0" y1="0" x2="1" y2="1">
               <stop offset="0%" stopColor={portalState.colors[0]} stopOpacity="0.18"/>
               <stop offset="100%" stopColor={portalState.colors[1]} stopOpacity="0.08"/>
             </linearGradient>
           </defs>
-          <polygon points="0,0 1920,0 1600,400 0,300" fill="url(#login-bg-grad1)"/>
+          <polygon points="0,0 1920,0 1600,400 0,300" fill="url(#signup-bg-grad1)"/>
           <ellipse cx="1600" cy="80" rx="220" ry="60" fill={portalState.colors[2] + '22'}/>
         </svg>
       </div>
       <div ref={fgRef} className="parallax-fg-layer" aria-hidden="true">
         <svg width="100%" height="100%" viewBox="0 0 1920 400" style={{position:'absolute',top:0,left:0,width:'100vw',height:'40vh',pointerEvents:'none'}}>
           <defs>
-            <linearGradient id="login-fg-grad1" x1="0" y1="0" x2="1" y2="1">
+            <linearGradient id="signup-fg-grad1" x1="0" y1="0" x2="1" y2="1">
               <stop offset="0%" stopColor="#fff" stopOpacity="0.12"/>
               <stop offset="100%" stopColor="#00f0ff" stopOpacity="0.22"/>
             </linearGradient>
           </defs>
-          <polygon points="1920,0 1920,400 400,400 0,200" fill="url(#login-fg-grad1)"/>
+          <polygon points="1920,0 1920,400 400,400 0,200" fill="url(#signup-fg-grad1)"/>
           <ellipse cx="320" cy="120" rx="180" ry="40" fill="#ffffff22"/>
         </svg>
       </div>
 
+      {/* Enhanced Holographic Cursor System */}
       <div className="cursor" id="cursor"></div>
 
-      <div className="login-page">
+      <div className="signup-page">
         <nav 
           className={`quantum-nav ${navScrolled ? 'scrolled' : ''}`}
         >
@@ -326,87 +336,127 @@ const LoginPage = () => {
           </div>
           <div className="nav-links">
             <Link to="/" className="nav-link nav-link--home" data-dimension="0">// HOME</Link>
-            <Link to="/signup" className="nav-link" data-dimension="1">// SIGN UP</Link>
+            <Link to="/login" className="nav-link" data-dimension="1">// LOGIN</Link>
           </div>
           <div className="nav-quantum-field"></div>
         </nav>
 
-        <div className="login-container">
-          <div className="login-header">
-            <h1 className="login-title">
-              <span className="title-glow title-word-left" data-word="VCCESS"><span className="title-inverted-v">V</span>CCESS</span>
-              <span className="title-separator">//</span>
-              <span className="title-glow title-word-right" data-word="PORTVL">PORT<span className="title-inverted-v">V</span>L</span>
-            </h1>
-            <p className="login-subtitle">
-              / / ENTER THE QUANTUM REALM
-            </p>
+        <div className="signup-container">
+        <div className="signup-header">
+          <h1 className="signup-title">
+            <span className="title-glow title-word-left" data-word="CREVTE">CRE<span className="title-inverted-v">V</span>TE</span>
+            <span className="title-separator">//</span>
+            <span className="title-glow title-word-right" data-word="VCCOUNT"><span className="title-inverted-v">V</span>CCOUNT</span>
+          </h1>
+          <p className="signup-subtitle">
+            / / JOIN THE QUANTUM REALM
+          </p>
+        </div>
+
+        <form className="signup-form" onSubmit={handleSubmit}>
+          <div className="form-group">
+            <label htmlFor="username" className="form-label">
+              USERNAME
+            </label>
+            <input
+              type="text"
+              id="username"
+              name="username"
+              value={formData.username}
+              onChange={handleChange}
+              className={`form-input ${errors.username ? 'error' : ''} ${formData.username ? 'has-value' : ''}`}
+              placeholder="Enter username..."
+              autoComplete="username"
+            />
+            {errors.username && (
+              <span className="error-message">{errors.username}</span>
+            )}
           </div>
 
-          <form className="login-form" onSubmit={handleSubmit}>
-            <div className="form-group">
-              <label htmlFor="email" className="form-label">
-                EMAIL
-              </label>
-              <input
-                type="email"
-                id="email"
-                name="email"
-                value={formData.email}
-                onChange={handleChange}
-                className={`form-input ${errors.email ? 'error' : ''} ${formData.email ? 'has-value' : ''}`}
-                placeholder="Enter email..."
-                autoComplete="email"
-              />
-              {errors.email && (
-                <span className="error-message">{errors.email}</span>
-              )}
-            </div>
-
-            <div className="form-group">
-              <label htmlFor="password" className="form-label">
-                PASSWORD
-              </label>
-              <input
-                type="password"
-                id="password"
-                name="password"
-                value={formData.password}
-                onChange={handleChange}
-                className={`form-input ${errors.password ? 'error' : ''} ${formData.password ? 'has-value' : ''}`}
-                placeholder="Enter password..."
-                autoComplete="current-password"
-              />
-              {errors.password && (
-                <span className="error-message">{errors.password}</span>
-              )}
-            </div>
-
-            {errors.submit && (
-              <div className="submit-error">{errors.submit}</div>
+          <div className="form-group">
+            <label htmlFor="email" className="form-label">
+              EMAIL
+            </label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              value={formData.email}
+              onChange={handleChange}
+              className={`form-input ${errors.email ? 'error' : ''} ${formData.email ? 'has-value' : ''}`}
+              placeholder="Enter email..."
+              autoComplete="email"
+            />
+            {errors.email && (
+              <span className="error-message">{errors.email}</span>
             )}
+          </div>
 
-            <div style={{ marginTop: '20px', display: 'flex', justifyContent: 'center' }}>
-              <BeamScanButton
-                onClick={handleSubmit}
-                label={isLoading ? "ACCESSING..." : "LOGIN"}
-                disabled={isLoading}
-              />
-            </div>
+          <div className="form-group">
+            <label htmlFor="password" className="form-label">
+              PASSWORD
+            </label>
+            <input
+              type="password"
+              id="password"
+              name="password"
+              value={formData.password}
+              onChange={handleChange}
+              className={`form-input ${errors.password ? 'error' : ''} ${formData.password ? 'has-value' : ''}`}
+              placeholder="Enter password..."
+              autoComplete="new-password"
+            />
+            {errors.password && (
+              <span className="error-message">{errors.password}</span>
+            )}
+          </div>
 
-            <div className="form-footer">
-              <p className="footer-text">
-                Don't have an account?{' '}
-                <Link to="/signup" className="footer-link">
-                  Sign Up
-                </Link>
-              </p>
-            </div>
-          </form>
-        </div>
+          <div className="form-group">
+            <label htmlFor="confirmPassword" className="form-label">
+              CONFIRM PASSWORD
+            </label>
+            <input
+              type="password"
+              id="confirmPassword"
+              name="confirmPassword"
+              value={formData.confirmPassword}
+              onChange={handleChange}
+              className={`form-input ${errors.confirmPassword ? 'error' : ''} ${formData.confirmPassword ? 'has-value' : ''}`}
+              placeholder="Confirm password..."
+              autoComplete="new-password"
+            />
+            {errors.confirmPassword && (
+              <span className="error-message">{errors.confirmPassword}</span>
+            )}
+          </div>
+
+          {errors.submit && (
+            <div className="submit-error">{errors.submit}</div>
+          )}
+
+          <div style={{ marginTop: '0px', display: 'flex', justifyContent: 'center' }}>
+            <BeamScanButton
+              onClick={handleSubmit}
+              label={isLoading ? "INITIALIZING..." : "SIGN UP"}
+              disabled={isLoading}
+            />
+          </div>
+
+          <div className="form-footer">
+            <p className="footer-text">
+              Already have an account?{' '}
+              <button
+                type="button"
+                onClick={() => navigate('/login')}
+                className="link-button"
+              >
+                Login here
+              </button>
+            </p>
+          </div>
+        </form>
       </div>
+    </div>
     </>
   );
-};
-
-export default LoginPage;
+}

@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import "./nav.css";
 import sharedStyles from "../../../styles/shared.module.scss";
 import { Link, useLocation } from "react-router-dom";
-import { useAuth } from "../../../context/AuthContext";
+import { useAuth } from '../../../features/auth/context/AuthContext';
 import ScrambleButton from "../../ui/ScrambleButton/ScrambleButton";
 import { GEOM_LAB_LINK_TEXT, SHOWCASE_LINK_TEXT } from "./navLabels";
 

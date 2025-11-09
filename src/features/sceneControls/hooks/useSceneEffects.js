@@ -1,6 +1,6 @@
 import { useEffect } from "react";
-import { updateMousePosition } from "../spectralOrbs";
-import { updateEnvironment } from "../environmentSetup";
+import { updateMousePosition } from "../objects/spectralOrbs";
+import { updateEnvironment } from "../core/environmentSetup";
 
 /**
  * Handles mouse tracking for orb interaction

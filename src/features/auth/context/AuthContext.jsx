@@ -19,7 +19,7 @@
  * // ⬆️ RECEIVES: ['icarus-x'] from saveButtonHandlers.js
  */
 
-import { signup as signupApi, login as loginApi } from '../services/sceneApi';
+import { signup as signupApi, login as loginApi } from '../services/authApi';
 import React, { createContext, useContext, useState, useCallback } from "react";
 
 

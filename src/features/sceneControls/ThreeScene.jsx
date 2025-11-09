@@ -1,4 +1,4 @@
-import { updateEnvironment } from './environmentSetup';
+import { updateEnvironment } from './core/environmentSetup';
 import { __UP, __Q, __TMP, __A, __B, __M, __Inv, nearestVertexIndex, updateThickWireframeCylinders } from '../../utils/geometryHelpers';
 import React, { useRef, useEffect } from 'react';
 import './ThreeScene.css';

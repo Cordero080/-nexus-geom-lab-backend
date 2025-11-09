@@ -3,7 +3,7 @@ import {
   createSpectralOrbs,
   removeSpectralOrbs,
   updateSpectralOrbHue,
-} from "./spectralOrbs";
+} from "../objects/spectralOrbs";
 
 // Track current environment and orb state per scene
 const sceneState = new WeakMap();

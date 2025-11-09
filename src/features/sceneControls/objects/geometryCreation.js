@@ -5,32 +5,32 @@ import {
 } from "three/examples/jsm/utils/BufferGeometryUtils";
 
 // Geometry modules
-import { createCompoundFloatingCity } from "./geometries/curved/compoundFloatingCity.js";
-import { createCompoundSphere } from "./geometries/compound/compoundSphere.js";
-import { createHessianPolychoron } from "./geometries/polytopes/hessianPolychoron.js";
-import { createSphere } from "./geometries/compound/sphere.js";
-import { createIcosahedron } from "./geometries/polytopes/icosahedron.js";
-import { createCompoundTesseract } from "./geometries/polytopes/compoundTesseract.js";
-import { createQuantumManifold } from "./geometries/manifolds/quantumManifold.js";
-import { createCompoundQuantumManifold } from "./geometries/manifolds/compoundQuantumManifold.js";
-import { createOctahedron } from "./geometries/polytopes/octahedron.js";
-import { createTetrahedron } from "./geometries/polytopes/tetrahedron.js";
-import { create120Cell } from "./geometries/polytopes/cell120.js";
-import { createCompound120Cell } from "./geometries/polytopes/compoundCell120.js";
-import { create24Cell } from "./geometries/polytopes/cell24.js";
-import { createCompound24Cell } from "./geometries/polytopes/compoundCell24.js";
-import { create16Cell } from "./geometries/polytopes/cell16.js";
-import { create600Cell } from "./geometries/polytopes/cell600.js";
-import { createCompound600Cell } from "./geometries/polytopes/compoundCell600.js";
-import { createMobiusSphere } from "./geometries/manifolds/mobiusSphere.js";
-import { createMegaTesseract } from "./geometries/polytopes/megaTesseract.js";
-import { createCompoundMegaTesseract } from "./geometries/polytopes/compoundMegaTesseract.js";
-import { createCompoundMegaTesseractNested } from "./geometries/polytopes/compoundMegaTesseract2.js";
-import { createCompoundMegaTesseractExperimental } from "./geometries/polytopes/compoundMegaTesseract3.js";
-import { createCompoundMegaTesseractAxisShift } from "./geometries/polytopes/compoundMegaTesseract4.js";
-import { createHypercube } from "./geometries/polytopes/hypercube.js";
-import { createSimpleCompoundHypercube } from "./geometries/polytopes/simpleCompoundHypercube.js";
-import { createCompoundHypercube } from "./geometries/polytopes/compoundHypercube.js";
+import { createCompoundFloatingCity } from "../geometries/curved/compoundFloatingCity.js";
+import { createCompoundSphere } from "../geometries/compound/compoundSphere.js";
+import { createHessianPolychoron } from "../geometries/polytopes/hessianPolychoron.js";
+import { createSphere } from "../geometries/compound/sphere.js";
+import { createIcosahedron } from "../geometries/polytopes/icosahedron.js";
+import { createCompoundTesseract } from "../geometries/polytopes/compoundTesseract.js";
+import { createQuantumManifold } from "../geometries/manifolds/quantumManifold.js";
+import { createCompoundQuantumManifold } from "../geometries/manifolds/compoundQuantumManifold.js";
+import { createOctahedron } from "../geometries/polytopes/octahedron.js";
+import { createTetrahedron } from "../geometries/polytopes/tetrahedron.js";
+import { create120Cell } from "../geometries/polytopes/cell120.js";
+import { createCompound120Cell } from "../geometries/polytopes/compoundCell120.js";
+import { create24Cell } from "../geometries/polytopes/cell24.js";
+import { createCompound24Cell } from "../geometries/polytopes/compoundCell24.js";
+import { create16Cell } from "../geometries/polytopes/cell16.js";
+import { create600Cell } from "../geometries/polytopes/cell600.js";
+import { createCompound600Cell } from "../geometries/polytopes/compoundCell600.js";
+import { createMobiusSphere } from "../geometries/manifolds/mobiusSphere.js";
+import { createMegaTesseract } from "../geometries/polytopes/megaTesseract.js";
+import { createCompoundMegaTesseract } from "../geometries/polytopes/compoundMegaTesseract.js";
+import { createCompoundMegaTesseractNested } from "../geometries/polytopes/compoundMegaTesseract2.js";
+import { createCompoundMegaTesseractExperimental } from "../geometries/polytopes/compoundMegaTesseract3.js";
+import { createCompoundMegaTesseractAxisShift } from "../geometries/polytopes/compoundMegaTesseract4.js";
+import { createHypercube } from "../geometries/polytopes/hypercube.js";
+import { createSimpleCompoundHypercube } from "../geometries/polytopes/simpleCompoundHypercube.js";
+import { createCompoundHypercube } from "../geometries/polytopes/compoundHypercube.js";
 
 /**
  * Create a tesseract with connecting frustum faces between outer and inner cubes

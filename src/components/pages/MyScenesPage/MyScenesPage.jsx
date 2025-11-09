@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useNavigate, Link, useLocation } from "react-router-dom";
 import { useScene } from "../../../context/SceneContext";
-import { useAuth } from "../../../context/AuthContext";
+import { useAuth } from '../../../features/auth/context/AuthContext';
 import { getMyScenes } from "../../../services/sceneApi"; // Import API function
 import SceneCard from "../../features/Scenes/SceneCard"; // Corrected import path to Scenes
 import CustomSelect from "../../ui/CustomSelect/CustomSelect";

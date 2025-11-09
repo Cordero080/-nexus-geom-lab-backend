@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import { nearestVertexIndex } from "../../utils/geometryHelpers";
+import { nearestVertexIndex } from "../../../utils/geometryHelpers";
 
 /**
  * Create a thick wireframe for BoxGeometry using cylinders

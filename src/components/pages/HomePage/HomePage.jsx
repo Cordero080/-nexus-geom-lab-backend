@@ -24,7 +24,7 @@ import useParallax from './hooks/useParallax';
 import BeamScanButton from '../../ui/BeamScanButton/BeamScanButton';
 import { Link } from 'react-router-dom';
 import { GEOM_LAB_LINK_TEXT, SHOWCASE_LINK_TEXT } from '../../layout/NavBar/navLabels';
-import { useAuth } from '../../../context/AuthContext';
+import { useAuth } from '../../../features/auth/context/AuthContext';
 
 export default function HomePage() {
   const { isAuthenticated, logout } = useAuth();
