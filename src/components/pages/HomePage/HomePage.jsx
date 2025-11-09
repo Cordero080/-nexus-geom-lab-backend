@@ -18,7 +18,6 @@ import { portalWorlds, glyphSets } from './utils/portalWorlds';
 
 // Custom Hooks
 import useQuantumState from './hooks/useQuantumState';
-import useWormholeEffect from './hooks/useWormholeEffect';
 import useParallax from './hooks/useParallax';
 
 // External
@@ -32,7 +31,6 @@ export default function HomePage() {
   
   // Custom Hooks
   const { portalState, glyphState, handleQuantumCollapse } = useQuantumState();
-  useWormholeEffect();
   const {
     parallaxRef,
     fgRef,
