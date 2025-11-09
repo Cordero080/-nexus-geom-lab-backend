@@ -183,6 +183,10 @@ npm install
 cp .env.example .env  # Add your MongoDB URI and JWT secret
 npm run dev
 
+# Run tests
+npm test                    # Run all tests once
+npm test -- --watch         # Run tests in watch mode (auto-runs on file changes)
+
 # Open http://localhost:5173
 ```
 
@@ -342,7 +346,7 @@ Scene 4+ → Unlock additional animations
 
 **Development Tools:**
 
-- Jest for unit testing with React Testing Library
+- Jest 30.2.0 for unit testing with React Testing Library (39 passing tests)
 - ESLint and Prettier for code quality
 - Git hooks for automated testing
 - Development user reset utilities
