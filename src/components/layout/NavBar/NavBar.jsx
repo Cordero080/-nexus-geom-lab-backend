@@ -1,5 +1,5 @@
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./nav.css";
 import sharedStyles from "../../../styles/shared.module.scss";
 import { Link, useLocation } from "react-router-dom";
@@ -11,6 +11,23 @@ export default function NavBar({ portalColors = null, glyphs = null, navScrolled
   const { isAuthenticated, user, logout, login } = useAuth();
   const [showAuthModal, setShowAuthModal] = useState(false);
   const location = useLocation();
+  const [isShowcaseViewer, setIsShowcaseViewer] = useState(false);
+
+  // Check if showcase viewer is active
+  useEffect(() => {
+    const checkViewerActive = () => {
+      setIsShowcaseViewer(document.body.classList.contains('showcase-viewer-active'));
+    };
+    
+    // Check initially
+    checkViewerActive();
+    
+    // Set up mutation observer to watch for body class changes
+    const observer = new MutationObserver(checkViewerActive);
+    observer.observe(document.body, { attributes: true, attributeFilter: ['class'] });
+    
+    return () => observer.disconnect();
+  }, []);
 
   // Quick login for demo (you can replace with a proper modal later)
   const handleQuickLogin = () => {
@@ -27,8 +44,9 @@ export default function NavBar({ portalColors = null, glyphs = null, navScrolled
     return '';
   };
 
-  // Check if we're on geom lab routes
+  // Check if we're on geom lab routes or showcase viewer
   const isGeomLab = location.pathname === '/geom-lab' || location.pathname === '/geometry-lab';
+  const shouldUseClearNav = isGeomLab || isShowcaseViewer;
   
   // Apply quantum reactive colors if provided
   const quantumStyle = portalColors ? {
@@ -42,7 +60,7 @@ export default function NavBar({ portalColors = null, glyphs = null, navScrolled
   } : {};
   
   return (
-    <nav className={`quantum-nav${isGeomLab ? ' geom-lab-navbar' : ''}`} style={quantumStyle}>
+    <nav className={`quantum-nav${shouldUseClearNav ? ' showcase-viewer-navbar' : ''}`} style={quantumStyle}>
       <div className="nav-logo">
         <span className="logo-text" data-text="N3XUS_GEOM">N3XUS_GEOM</span>
         {glyphs && (

@@ -88,6 +88,8 @@ export default function ShowcaseViewer({ animation, onClose }) {
   React.useEffect(() => {
     // Immediately freeze background scrolling
     document.body.style.overflow = 'hidden';
+    // Add class to body for navbar styling
+    document.body.classList.add('showcase-viewer-active');
     
     // Slight delay before showing the content (but backdrop appears immediately)
     setTimeout(() => setMounted(true), 50);
@@ -95,6 +97,8 @@ export default function ShowcaseViewer({ animation, onClose }) {
     return () => {
       // Restore scrolling when component unmounts
       document.body.style.overflow = '';
+      // Remove class from body
+      document.body.classList.remove('showcase-viewer-active');
     };
   }, []);
 

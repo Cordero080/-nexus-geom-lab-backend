@@ -10,7 +10,7 @@ export const mockAnimations = [
     animation: "Solar ᐱscension",
     variant: "Golden Phoenix",
     description:
-      "The Transcendent Seraph...Reborn from Digital Ashes to Touch the Infinite",
+      "A Neo Seraph...Reborn from Digital Ashes ",
     fbxUrl: "/models/icarus-bangs.fbx",
     scale: 0.023,
     galleryScale: 0.015,

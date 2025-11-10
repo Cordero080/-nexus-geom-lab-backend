@@ -23,7 +23,8 @@
 }
 
 /* Geom lab navbar ONLY - light/transparent override */
-.quantum-nav.geom-lab-navbar {
+.quantum-nav.geom-lab-navbar,
+.quantum-nav.showcase-viewer-navbar {
   background: rgba(0, 0, 0, 0.093) !important;
   backdrop-filter: blur(30px) !important;
   border: 1px solid rgba(0, 255, 255, 0.15) !important;
