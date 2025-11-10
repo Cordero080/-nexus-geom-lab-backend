@@ -1,5 +1,4 @@
 import React, { useRef, useEffect, useState } from 'react';
-import CompoundIcosahedronAnimation from './CompoundIcosahedronAnimation';
 
 // Utility for quantum collapse (random state selection)
 function quantumCollapse(states) {
@@ -227,8 +226,6 @@ export default function ProgressBar({ portalState, glyphState, onQuantumCollapse
           {layer.content}
         </div>
       ))}
-      {/* Compound Icosahedron Animation */}
-      <CompoundIcosahedronAnimation progress={progress} />
       <div className="progress-bar" style={{ marginBottom: '50px', width: 'auto', position: 'relative', zIndex: 3 }}>
         <div
           ref={textRef}

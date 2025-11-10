@@ -61,21 +61,6 @@ export default function NavBar({ portalColors = null, glyphs = null, navScrolled
   
   return (
     <nav className={`quantum-nav${shouldUseClearNav ? ' showcase-viewer-navbar' : ''}`} style={quantumStyle}>
-      <div className="nav-logo">
-        <span className="logo-text" data-text="N3XUS_GEOM">N3XUS_GEOM</span>
-        {glyphs && (
-          <span className="quantum-glyphs" style={{
-            marginLeft: '12px',
-            fontSize: '0.9em',
-            opacity: 0.6,
-            color: portalColors ? portalColors[1] : '#00fff7',
-            transition: 'color 1.2s cubic-bezier(0.4,0,0.2,1)',
-            letterSpacing: '0.3em'
-          }}>
-            {glyphs.join(' ')}
-          </span>
-        )}
-      </div>
       <div className="nav-links">
         {/* ALWAYS show these - public links (hide if on current page) */}
         {location.pathname !== '/' && <Link to="/" className="nav-link nav-link--home">// HOME</Link>}

@@ -19,9 +19,9 @@ import './cursor-override.module.scss';
 import sharedStyles from './styles/shared.module.scss';
 
 // Updated default colors for psychedelic theme and used in geom-lab state = these are the initial colors when user starts a new scene
-const defaultBaseColor = '#9e1c50ff'; // Vibrant magenta 
-const defaultHyperframeColor = '#65d708ff'; // Vivid orange-red
-const defaultHyperframeLineColor = '#00ccffff'; // Bright green
+const defaultBaseColor = '#670d48ff'; // Vibrant magenta
+const defaultHyperframeColor = '#ff4500'; // Vivid orange-red
+const defaultHyperframeLineColor = '#00ff00'; // Bright green
 
 function GeomLab() {
   const { loadedConfig, resetScene } = useScene(); // CUSTOM HOOK: Get loaded config from context
