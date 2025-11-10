@@ -69,32 +69,58 @@ export function useNebulaParticles(
 
         const color = sunsetColors[i % sunsetColors.length];
 
-        // Particles in front should be more transparent to not obscure view
-        const isFront = Math.random() > 0.5;
-        const baseOpacity = isFront ? 0.1 : 0.4;
+        // Assign to one of 3 orbital groups for symphonic motion
+        const orbitGroup = i % 3;
+
+        // Group 0: Inner fast clockwise (XY plane)
+        // Group 1: Middle medium counter-clockwise (XZ plane)
+        // Group 2: Outer slow figure-8 (combined XY and XZ)
+        let baseOpacity;
+        if (orbitGroup === 0) {
+          baseOpacity = 0.2; // Inner group slightly more visible
+        } else if (orbitGroup === 1) {
+          baseOpacity = 0.15; // Middle group
+        } else {
+          baseOpacity = 0.1; // Outer group more transparent
+        }
 
         const material = new THREE.MeshBasicMaterial({
           color: color,
           transparent: true,
           opacity: baseOpacity,
           wireframe: Math.random() > 0.1, // Mix of solid and wireframe
-          depthWrite: !isFront, // Particles in front don't write to depth buffer
+          depthWrite: false, // Don't write to depth buffer
+          depthTest: false, // Ignore depth - render in front of everything
         });
 
         const mesh = new THREE.Mesh(geometry, material);
+        mesh.renderOrder = 0; // Render after other objects
 
-        // Position particles in 3D space around origin
-        // Mix of close (in front) and far (behind) particles
-        const radius = isFront
-          ? 10 + Math.random() * 10 // Close particles (5-15 units from center)
-          : 20 + Math.random() * 20; // Far particles (20-80 units from center)
+        // Initial position based on orbital group
+        let radius, theta, phi;
+        if (orbitGroup === 0) {
+          // Inner group: tight around center, scattered vertically
+          radius = 5 + Math.random() * 5;
+          theta = Math.random() * Math.PI * 2;
+          phi = Math.random() * Math.PI; // Full sphere distribution
+        } else if (orbitGroup === 1) {
+          // Middle group: wider spread
+          radius = 15 + Math.random() * 15;
+          theta = Math.random() * Math.PI * 2;
+          phi = Math.PI * 0.3 + Math.random() * Math.PI * 0.4; // Flatter distribution
+        } else {
+          // Outer group: far out, very spread
+          radius = 35 + Math.random() * 25;
+          theta = Math.random() * Math.PI * 2;
+          phi = Math.random() * Math.PI; // Full sphere distribution
+        }
 
-        const theta = Math.random() * Math.PI * 2;
-        const phi = Math.random() * Math.PI;
-
-        mesh.position.x = radius * Math.sin(phi) * Math.cos(theta);
-        mesh.position.y = radius * Math.sin(phi) * Math.sin(theta);
-        mesh.position.z = radius * Math.cos(phi);
+        // Randomize starting positions in 3D space to avoid lines
+        mesh.position.x =
+          radius * Math.sin(phi) * Math.cos(theta) + (Math.random() - 0.5) * 10;
+        mesh.position.y =
+          radius * Math.sin(phi) * Math.sin(theta) + (Math.random() - 0.5) * 10;
+        mesh.position.z = radius * Math.cos(phi) + (Math.random() - 0.5) * 10;
 
         // Random rotation
         mesh.rotation.x = Math.random() * Math.PI * 2;
@@ -106,20 +132,15 @@ export function useNebulaParticles(
         // Store animation data
         dustParticles.push({
           mesh,
-          isFront,
+          orbitGroup,
           baseOpacity,
           rotationSpeed: {
-            x: (Math.random() - 1.5) * 0.01,
-            y: (Math.random() - 0.5) * 0.01,
-            z: (Math.random() - 3.5) * 0.01,
-          },
-          driftSpeed: {
             x: (Math.random() - 0.5) * 0.02,
-            y: (Math.random() - 1.5) * 0.015,
+            y: (Math.random() - 0.5) * 0.02,
             z: (Math.random() - 0.5) * 0.02,
           },
           initialPos: mesh.position.clone(),
-          phase: Math.random() * Math.PI * 2,
+          phase: Math.random() * Math.PI * 9,
         });
       }
 
@@ -141,9 +162,8 @@ export function useNebulaParticles(
         dustParticles.forEach((particle) => {
           const {
             mesh,
-            isFront,
+            orbitGroup,
             rotationSpeed,
-            driftSpeed,
             initialPos,
             phase,
             baseOpacity,
@@ -154,36 +174,82 @@ export function useNebulaParticles(
           mesh.rotation.y += rotationSpeed.y * speed;
           mesh.rotation.z += rotationSpeed.z * speed;
 
-          // Different orbital patterns for front vs back particles
-          if (isFront) {
-            // Front particles: clockwise orbit around object (XY plane)
-            const orbitRadius = 4;
-            const orbitSpeed = 0.2;
-            const angle = timeRef.current * orbitSpeed + phase;
+          // Beethoven's 9th Symphony - Musical Movement Patterns
+          // "Ode to Joy" theme: da-da-da-DA, da-da-da-DA
+          const t = timeRef.current;
 
-            mesh.position.x = Math.cos(angle) * orbitRadius;
+          if (orbitGroup === 0) {
+            // STRINGS (Violins): Smooth flowing melody - main "Ode to Joy" theme
+            // Graceful ascending and descending arcs, legato (connected notes)
+            const orbitRadius = 8;
+            const melodicPhrase = t * 0.25 + phase; // Moderate tempo
+
+            // Smooth sinusoidal motion like a bowed string - add randomization to spread
+            const spreadX = Math.sin(phase * 3.7) * 4; // Unique offset per particle
+            const spreadY = Math.cos(phase * 2.3) * 4;
+            const spreadZ = Math.sin(phase * 5.1) * 4;
+
+            mesh.position.x = Math.sin(melodicPhrase) * orbitRadius + spreadX;
             mesh.position.y =
-              Math.sin(angle) * orbitRadius +
-              Math.sin(timeRef.current * 0.3 + phase) * 2;
+              Math.sin(melodicPhrase * 2) * 6 + // Harmonic interval (octave)
+              Math.sin(melodicPhrase * 0.5) * 3 +
+              spreadY; // Slower phrase breathing
             mesh.position.z =
-              initialPos.z + Math.sin(timeRef.current * 0.4 + phase) * 3;
-          } else {
-            // Back particles: counter-clockwise orbit in larger radius (XZ plane)
-            const orbitRadius = 50;
-            const orbitSpeed = 0.15;
-            const angle = -(timeRef.current * orbitSpeed + phase); // Negative for counter-clockwise
+              Math.cos(melodicPhrase) * orbitRadius * 0.8 + spreadZ;
+          } else if (orbitGroup === 1) {
+            // BRASS (Horns/Trumpets): Bold punctuated phrases
+            // Stronger articulation with held notes and dramatic swells
+            const orbitRadius = 22;
+            const brassPhrase = t * 0.15 + phase; // Slower, more majestic
 
-            mesh.position.x =
-              Math.cos(angle) * orbitRadius +
-              Math.sin(timeRef.current * 2.2 + phase) * 22.2;
-            mesh.position.y =
-              initialPos.y + Math.sin(timeRef.current * 1.25 + phase) * 8;
-            mesh.position.z = Math.sin(angle) * orbitRadius;
+            // Square wave-like motion for staccato effect (stepped intervals)
+            const staccatoX = Math.floor(Math.sin(brassPhrase) * 4) / 4; // Quantized steps
+            const swellY = Math.pow(Math.sin(brassPhrase * 0.5), 3); // Dramatic crescendo/decrescendo
+
+            // Spread particles across different vertical layers
+            const layerOffset = Math.sin(phase * 7.3) * 15; // Vertical stratification
+            const horizontalSpread = Math.cos(phase * 4.7) * 12;
+
+            mesh.position.x = staccatoX * orbitRadius + horizontalSpread;
+            mesh.position.y = swellY * 12 + layerOffset; // Large vertical swells (fortissimo)
+            mesh.position.z =
+              Math.cos(brassPhrase) * orbitRadius +
+              Math.sin(brassPhrase * 2) * 8 +
+              Math.sin(phase * 6.1) * 10; // Secondary harmony
+          } else {
+            // TIMPANI/PERCUSSION: Rhythmic pulses - the heartbeat
+            // Sharp, periodic bursts that anchor the tempo (boom-boom-boom-BOOM)
+            const orbitRadius = 40;
+            const rhythmicPulse = t * 0.4 + phase; // Faster for rhythmic drive
+
+            // Pulsing radial bursts - particles rush outward and contract
+            const beat = Math.abs(Math.sin(rhythmicPulse * 4)); // 4/4 time signature
+            const accentedBeat = Math.floor(rhythmicPulse) % 4 === 3 ? 1.5 : 1; // Accent every 4th beat
+            const burstRadius = orbitRadius * (0.6 + beat * 0.4) * accentedBeat;
+
+            // Each particle at unique angle to create radial explosion effect
+            const angle = rhythmicPulse + phase * 2; // Phase multiplier spreads particles
+            const verticalLayer = Math.sin(phase * 8.9) * 20; // Vertical dispersion
+
+            mesh.position.x = Math.cos(angle) * burstRadius;
+            mesh.position.y = Math.sin(rhythmicPulse * 2) * 5 + verticalLayer; // Gentle up-down like drum resonance
+            mesh.position.z = Math.sin(angle) * burstRadius;
           }
 
-          // Subtle opacity pulse (use baseOpacity for front/back differentiation)
-          mesh.material.opacity =
-            baseOpacity + Math.sin(timeRef.current + phase) * 0.1;
+          // Dynamic opacity based on musical intensity (crescendo/diminuendo)
+          let intensityFactor;
+          if (orbitGroup === 0) {
+            // Strings: gentle dynamic swells
+            intensityFactor = Math.sin(t * 0.3 + phase) * 0.1;
+          } else if (orbitGroup === 1) {
+            // Brass: dramatic forte/piano contrast
+            intensityFactor = Math.pow(Math.sin(t * 0.2 + phase), 2) * 0.15;
+          } else {
+            // Timpani: sharp attack and decay
+            intensityFactor = Math.abs(Math.sin(t * 0.4 + phase)) * 0.12;
+          }
+
+          mesh.material.opacity = baseOpacity + intensityFactor;
         });
       }
 

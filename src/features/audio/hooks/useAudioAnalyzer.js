@@ -125,10 +125,21 @@ export function useAudioAnalyzer() {
       return count > 0 ? sum / count / 255 : 0; // Normalize to 0-1
     };
 
-    // Calculate frequency bands
-    const bass = getFrequencyRangeAverage(20, 200); // Bass/kick
-    const mids = getFrequencyRangeAverage(200, 2000); // Vocals/instruments
-    const highs = getFrequencyRangeAverage(2000, 20000); // Cymbals/sparkle
+    // Focus on bass (kicks, toms) and sub-bass
+    const subBass = getFrequencyRangeAverage(20, 60); // Deep bass/kick
+    const midBass = getFrequencyRangeAverage(60, 250); // Bass guitar, toms
+
+    // Sharp transients (snare, hi-hat, claps)
+    const sharpHighs = getFrequencyRangeAverage(2000, 8000); // Bright percussion
+
+    // Combine bass ranges with weighting toward sub-bass (kicks hit harder)
+    const bass = subBass * 0.7 + midBass * 0.3;
+
+    // Mids - less relevant for sharp/bass focus, but keep for context
+    const mids = getFrequencyRangeAverage(250, 2000);
+
+    // Only respond to sharp transients in highs (filter out sustained sounds)
+    const highs = sharpHighs;
 
     // Overall volume
     const overall =
