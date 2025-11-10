@@ -1,9 +1,9 @@
-const express = require("express");
-const router = express.Router();
-const jwt = require("jsonwebtoken");
-const { body, validationResult } = require("express-validator");
-const User = require("../models/User");
-const authMiddleware = require("../middleware/auth");
+const express = require("express"); // Web framework
+const router = express.Router(); // Create router instance
+const jwt = require("jsonwebtoken"); // For creating JWT tokens
+const { body, validationResult } = require("express-validator"); // Input validation
+const User = require("../models/User"); // User database model
+const authMiddleware = require("../middleware/auth"); // JWT verification middleware
 
 /**
  * SIGNUP ROUTE
@@ -12,49 +12,51 @@ const authMiddleware = require("../middleware/auth");
  * Public (no auth required)
  */
 router.post(
-  "/signup",
+  "/signup", // POST /api/auth/signup endpoint
   [
     // Validation rules - check input before processing
-    body("username").trim().isLength({ min: 3, max: 30 }),
-    body("email").trim().isEmail().normalizeEmail(),
-    body("password").isLength({ min: 6 }),
+    body("username").trim().isLength({ min: 3, max: 30 }), // Username: 3-30 chars
+    body("email").trim().isEmail().normalizeEmail(), // Valid email format
+    body("password").isLength({ min: 6 }), // Password: min 6 chars
   ],
   async (req, res) => {
+    // Route handler function
     try {
       // Log request body for debugging
       console.log("📝 Signup attempt:", {
         username: req.body.username,
         email: req.body.email,
-        hasPassword: !!req.body.password,
+        hasPassword: !!req.body.password, // Convert to boolean
         passwordLength: req.body.password?.length,
       });
 
       // Check if validation passed
-      const errors = validationResult(req);
+      const errors = validationResult(req); // Get validation results
       if (!errors.isEmpty()) {
+        // If any validation failed
         console.log(
           "❌ Validation errors:",
           JSON.stringify(errors.array(), null, 2)
         );
         return res.status(400).json({
+          // Send 400 Bad Request
           success: false,
-          errors: errors.array(),
+          errors: errors.array(), // Array of validation errors
           message: "Validation failed",
         });
       }
 
       // Extract data from request body
-      // Same as:
-      // const username = req.body.username;
-      // const email = req.body.email;
-      const { username, email, password } = req.body;
+      const { username, email, password } = req.body; // Destructure fields
 
       // Check if email or username already exists in database
       const existingUser = await User.findOne({
-        $or: [{ email }, { username }],
+        // Query MongoDB
+        $or: [{ email }, { username }], // Match either email OR username
       });
 
       if (existingUser) {
+        // If user already exists
         // Send specific error message
         console.log("❌ User already exists:", {
           existingEmail: existingUser.email,
@@ -63,49 +65,52 @@ router.post(
           attemptedUsername: username,
         });
         return res.status(400).json({
+          // Send 400 Bad Request
           success: false,
           message:
             existingUser.email === email
               ? "Email already registered"
-              : "Username already taken",
+              : "Username already taken", // Specific error message
         });
       }
 
       // Create new user object
-      // Password will be hashed automatically by User model's pre-save hook
       const user = new User({
+        // Create new user instance
         username,
         email,
-        password,
-        unlockedNoetechs: ["icarus-x"], // Welcome gift: Icarus-X unlocked!
+        password, // Will be hashed automatically by User model's pre-save hook
+        unlockedNoetechs: [], // Start with nothing unlocked - users must earn them
       });
 
       // Save to database
-      await user.save();
+      await user.save(); // Write to MongoDB (password gets hashed here)
 
-      // Create JWT token (like a special key for this user)
-      // Token contains userId and expires in 7 days
+      // Create JWT token
       const token = jwt.sign(
+        // Create signed token
         { userId: user._id }, // Payload (what's inside token)
-        process.env.JWT_SECRET, // Secret key (from .env)
+        process.env.JWT_SECRET, // Secret key from .env
         { expiresIn: "7d" } // Token valid for 7 days
       );
 
       // Send success response with token and user data
       res.status(201).json({
+        // Send 201 Created
         success: true,
         message: "Account created successfully",
-        token, // Frontend stores this!
+        token, // Frontend stores this in localStorage
         user: {
           id: user._id,
           username: user.username,
           email: user.email,
-          unlockedNoetechs: user.unlockedNoetechs,
+          unlockedNoetechs: user.unlockedNoetechs, // Empty array initially
         },
       });
     } catch (error) {
-      // If anything goes wrong, send error response
+      // If anything goes wrong
       res.status(500).json({
+        // Send 500 Server Error
         success: false,
         message: "Error creating account",
         error: error.message,
@@ -121,66 +126,76 @@ router.post(
  * Public (no auth required)
  */
 router.post(
-  "/login",
+  "/login", // POST /api/auth/login endpoint
   [
     // Validation rules
-    body("email").trim().isEmail(),
-    body("password").notEmpty(),
+    body("email").trim().isEmail().normalizeEmail(), // Valid email, normalized (lowercase, no dots in Gmail)
+    body("password").notEmpty(), // Password required
   ],
   async (req, res) => {
+    // Route handler function
     try {
       // Check validation
-      const errors = validationResult(req);
+      const errors = validationResult(req); // Get validation results
       if (!errors.isEmpty()) {
+        // If validation failed
         return res.status(400).json({
+          // Send 400 Bad Request
           success: false,
-          errors: errors.array(),
+          errors: errors.array(), // Validation error details
         });
       }
 
-      const { email, password } = req.body;
+      const { email, password } = req.body; // Extract login credentials
 
-      // Find user by email (converted to lowercase)
-      const user = await User.findOne({ email: email.toLowerCase() });
+      // Find user by email
+      const user = await User.findOne({ email }); // Query MongoDB (email already normalized by validator)
 
-      // If no user found, return generic error (don't reveal if email exists)
+      // If no user found, return generic error
       if (!user) {
+        // User doesn't exist
         return res.status(401).json({
+          // Send 401 Unauthorized
           success: false,
-          message: "Invalid email or password",
+          message: "Invalid email or password", // Don't reveal if email exists (security)
         });
       }
 
       // Compare provided password with hashed password in database
-      // Uses bcrypt.compare() from User model method
-      const isPasswordValid = await user.comparePassword(password);
+      const isPasswordValid = await user.comparePassword(password); // Uses bcrypt.compare() from User model method
 
       // If password wrong, return generic error
       if (!isPasswordValid) {
+        // Password doesn't match
         return res.status(401).json({
+          // Send 401 Unauthorized
           success: false,
-          message: "Invalid email or password",
+          message: "Invalid email or password", // Same message as above (security)
         });
       }
 
       // Password correct! Generate JWT token
       const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
-        expiresIn: "7d",
+        // Create signed token
+        expiresIn: "7d", // Valid for 7 days
       });
 
       // Send token and user data back
       res.json({
+        // Send 200 OK
         success: true,
         message: "Login successful",
-        token, // Frontend stores this!
+        token, // Frontend stores this in localStorage
         user: {
           id: user._id,
           username: user.username,
-          unlockedNoetechs: user.unlockedNoetechs, // Shows what they've unlocked!
+          unlockedNoetechs: user.unlockedNoetechs, // Shows what they've unlocked
         },
       });
     } catch (error) {
+      // If anything goes wrong
       res.status(500).json({
+        // Send 500 Server Error
         success: false,
         message: "Error logging in",
         error: error.message,
@@ -196,31 +211,29 @@ router.post(
  * Private (requires valid JWT token in header)
  */
 router.get("/me", authMiddleware, async (req, res) => {
+  // GET /api/auth/me with auth middleware
   try {
     // authMiddleware already verified token and attached user to req.user
-    // So we just return that user's data
     res.json({
+      // Send user profile data
       success: true,
       user: {
         id: req.user._id,
         username: req.user.username,
         email: req.user.email,
-        unlockedNoetechs: req.user.unlockedNoetechs,
-        createdAt: req.user.createdAt,
+        unlockedNoetechs: req.user.unlockedNoetechs, // What they've unlocked
+        createdAt: req.user.createdAt, // Account creation date
       },
     });
   } catch (error) {
+    // If anything goes wrong
     res.status(500).json({
+      // Send 500 Server Error
       success: false,
       message: "Error fetching profile",
     });
   }
 });
 
-// Export router so server.js can use it
-module.exports = router;
-
-// Signup/Login → Server creates token → Send to frontend
-// → Frontend stores token in localStorage
-// → Every future request includes token in header
-// → Server verifies token → Knows who you are!
+// Export router so index.js can mount it
+module.exports = router; // Makes router available to index.js

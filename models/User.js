@@ -1,60 +1,102 @@
-const mongoose = require("mongoose");
-const bcrypt = require("bcryptjs");
-//BLUEPRINT FOR DOCUMENT
+const mongoose = require("mongoose"); // MongoDB ODM library
+const bcrypt = require("bcryptjs"); // Password hashing library
+
+// User schema - blueprint for user documents
 const userSchema = new mongoose.Schema({
-  // FIELD (or Property)
   username: {
-    //FIELD DEFINITIONS(or SCHEMA OPTIONS)
-    type: String,
-    required: true,
-    unique: true,
-    trim: true,
-    minlength: 3,
-    maxlength: 30,
+    // Username field
+    type: String, // Data type
+    required: true, // Cannot be empty
+    unique: true, // No duplicate usernames
+    trim: true, // Remove whitespace
+    minlength: 3, // Minimum 3 characters
+    maxlength: 30, // Maximum 30 characters
   },
   email: {
-    // FIELD 2
-    type: String,
-    required: true,
-    unique: true,
-    lowercase: true,
-    trim: true,
+    // Email field
+    type: String, // Data type
+    required: true, // Cannot be empty
+    unique: true, // No duplicate emails
+    lowercase: true, // Convert to lowercase
+    trim: true, // Remove whitespace
   },
   password: {
-    // FIELD 3
-    type: String,
-    required: true,
-    minlength: 6,
+    // Password field
+    type: String, // Data type
+    required: true, // Cannot be empty
+    minlength: 6, // Minimum 6 characters
   },
   scenesSaved: {
-    //FIELD 4
-    type: Number,
-    default: 0,
+    // Scene count field
+    type: Number, // Data type
+    default: 0, // Start at 0
   },
   unlockedAnimations: [
+    // Array of unlocked animations
     {
-      noetechKey: { type: String, required: true },
-      animationId: { type: String, required: true },
-      unlockedAt: { type: Date, default: Date.now },
+      noetechKey: { type: String, required: true }, // Which character
+      animationId: { type: String, required: true }, // Which animation
+      unlockedAt: { type: Date, default: Date.now }, // When unlocked
     },
   ],
   unlockedNoetechs: {
-    //FIELD 5
-    type: [String],
-    default: [], // No Noetechs unlocked initially
+    // Array of unlocked characters
+    type: [String], // Array of strings
+    default: [], // Start with empty array
   },
   createdAt: {
-    //FIELD 6
-    type: Date,
-    default: Date.now,
+    // Account creation timestamp
+    type: Date, // Data type
+    default: Date.now, // Set to current time when created
   },
 });
 
-// Hash password before saving
-
+// Pre-save hook - runs before saving to database
 userSchema.pre("save", async function (next) {
+  // Middleware that runs before save()
   if (!this.isModified("password")) {
-    return next();
+    // If password hasn't changed
+    return next(); // Skip hashing, continue to save
+  }
+
+  const salt = await bcrypt.genSalt(10); // Generate salt for hashing (10 rounds)
+  this.password = await bcrypt.hash(this.password, salt); // Hash password with salt
+  next(); // Continue to save
+});
+
+// Instance method - compare password for login
+userSchema.methods.comparePassword = async function (candidatePassword) {
+  // Method available on user instances
+  return await bcrypt.compare(candidatePassword, this.password); // Returns true if password matches
+};
+
+// Instance method - check if specific animation is unlocked
+userSchema.methods.hasUnlockedAnimation = function (noetechKey, animationId) {
+  // Check if user has specific animation
+  return this.unlockedAnimations.some(
+    // Check if any item in array matches
+    (ua) => ua.noetechKey === noetechKey && ua.animationId === animationId
+  );
+};
+
+// Instance method - get all unlocked animations for a character
+userSchema.methods.getUnlockedAnimationsForNoetech = function (noetechKey) {
+  // Get animations for specific character
+  return this.unlockedAnimations.filter((ua) => ua.noetechKey === noetechKey); // Filter by character key
+};
+
+// Instance method - check if any animation is unlocked for a character
+userSchema.methods.hasUnlockedNoetech = function (noetechKey) {
+  // Check if character has any unlocked animations
+  return this.unlockedAnimations.some((ua) => ua.noetechKey === noetechKey); // Returns true if any animation exists
+};
+
+// Pre-save hook - runs before saving to database
+userSchema.pre("save", async function (next) {
+  // Middleware that runs before save()
+  if (!this.isModified("password")) {
+    // If password hasn't changed
+    return next(); // Skip hashing, continue to save
   }
 
   const salt = await bcrypt.genSalt(10);
@@ -80,49 +122,54 @@ userSchema.methods.getUnlockedAnimationsForNoetech = function (noetechKey) {
   return this.unlockedAnimations.filter((ua) => ua.noetechKey === noetechKey);
 };
 
-// Method to check if any animation is unlocked for a Noetech (backwards compatibility)
+// Instance method - check if any animation is unlocked for a character
 userSchema.methods.hasUnlockedNoetech = function (noetechKey) {
-  return this.unlockedAnimations.some((ua) => ua.noetechKey === noetechKey);
+  // Check if character has any unlocked animations
+  return this.unlockedAnimations.some((ua) => ua.noetechKey === noetechKey); // Returns true if any animation exists
 };
 
-// PROGRESSIVE UNLOCK SYSTEM
-// Method to increment scenes saved and check for Noetech unlocks
+// Instance method - increment scenes saved and check for unlocks
 userSchema.methods.incrementScenesSaved = function () {
-  this.scenesSaved += 1;
-  const newlyUnlocked = [];
+  // Called when user saves a scene
+  this.scenesSaved += 1; // Increment counter
+  const newlyUnlocked = []; // Track what unlocks during this save
 
-  // Scene 1 → Unlock icarus-x (first Noetech)
+  // Scene 1 → Unlock icarus-x (first character)
   if (this.scenesSaved === 1 && !this.unlockedNoetechs.includes("icarus-x")) {
-    this.unlockedNoetechs.push("icarus-x");
-    newlyUnlocked.push("icarus-x");
+    // First save
+    this.unlockedNoetechs.push("icarus-x"); // Add Icarus-X to unlocked characters
+    newlyUnlocked.push("icarus-x"); // Track for response
   }
 
-  // Scene 2 → Unlock vectra (second Noetech)
+  // Scene 2 → Unlock vectra (second character)
   if (this.scenesSaved === 2 && !this.unlockedNoetechs.includes("vectra")) {
-    this.unlockedNoetechs.push("vectra");
-    newlyUnlocked.push("vectra");
+    // Second save
+    this.unlockedNoetechs.push("vectra"); // Add Vectra to unlocked characters
+    newlyUnlocked.push("vectra"); // Track for response
   }
 
-  // Scene 3 → Unlock nexus (third Noetech)
+  // Scene 3 → Unlock nexus (third character)
   if (this.scenesSaved === 3 && !this.unlockedNoetechs.includes("nexus")) {
-    this.unlockedNoetechs.push("nexus");
-    newlyUnlocked.push("nexus");
+    // Third save
+    this.unlockedNoetechs.push("nexus"); // Add Nexus to unlocked characters
+    newlyUnlocked.push("nexus"); // Track for response
   }
 
   // Scene 4 → Unlock icarus-x second animation (Phoenix Dive)
   if (
-    this.scenesSaved === 4 &&
-    !this.hasUnlockedAnimation("icarus-x", "phoenix-dive")
+    this.scenesSaved === 4 && // Fourth save
+    !this.hasUnlockedAnimation("icarus-x", "phoenix-dive") // Don't already have Phoenix Dive
   ) {
     this.unlockedAnimations.push({
-      noetechKey: "icarus-x",
-      animationId: "phoenix-dive",
-      unlockedAt: new Date(),
+      // Add animation unlock entry
+      noetechKey: "icarus-x", // For Icarus-X character
+      animationId: "phoenix-dive", // Phoenix Dive animation
+      unlockedAt: new Date(), // Current timestamp
     });
-    newlyUnlocked.push({ noetechKey: "icarus-x", animationId: "phoenix-dive" });
+    newlyUnlocked.push({ noetechKey: "icarus-x", animationId: "phoenix-dive" }); // Track for response
   }
 
-  return newlyUnlocked;
+  return newlyUnlocked; // Return array of what was unlocked
 };
 
-module.exports = mongoose.model("User", userSchema);
+module.exports = mongoose.model("User", userSchema); // Export User model for use in routes

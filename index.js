@@ -1,37 +1,37 @@
 // Load environment variables from .env file
-require("dotenv").config();
+require("dotenv").config(); // Must be first - loads env vars like MONGODB_URI, JWT_SECRET
 
-const express = require("express");
-const cors = require("cors");
-const helmet = require("helmet");
-const morgan = require("morgan");
-const rateLimit = require("express-rate-limit");
-const connectDB = require("./config/db");
+const express = require("express"); // Web framework for Node.js
+const cors = require("cors"); // Allow frontend to make requests from different domain
+const helmet = require("helmet"); // Security headers middleware
+const morgan = require("morgan"); // HTTP request logger
+const rateLimit = require("express-rate-limit"); // Prevent abuse by limiting requests
+const connectDB = require("./config/db"); // Database connection function
 
 // Import routes
-const authRoutes = require("./routes/auth");
-const sceneRoutes = require("./routes/scenes");
+const authRoutes = require("./routes/auth"); // Signup/login routes
+const sceneRoutes = require("./routes/scenes"); // Scene CRUD routes
 
 // Initialize Express app
-const app = express();
+const app = express(); // Create Express application instance
 
 // Connect to MongoDB database
-connectDB();
+connectDB(); // Establishes connection to MongoDB using URI from .env
 
 // Middleware
-app.use(helmet());
+app.use(helmet()); // Add security headers to all responses
 
 // Request logging
-app.use(morgan(process.env.NODE_ENV === "production" ? "combined" : "dev"));
+app.use(morgan(process.env.NODE_ENV === "production" ? "combined" : "dev")); // Log requests (detailed in dev, minimal in production)
 
 // Global rate limit
 const globalLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 300, // limit each IP to 300 requests per windowMs
-  standardHeaders: true,
-  legacyHeaders: false,
+  windowMs: 15 * 60 * 1000, // 15 minutes time window
+  max: 300, // Limit each IP to 300 requests per 15 minutes
+  standardHeaders: true, // Send rate limit info in RateLimit-* headers
+  legacyHeaders: false, // Don't send X-RateLimit-* headers
 });
-app.use(globalLimiter);
+app.use(globalLimiter); // Apply to all routes
 
 app.use(
   cors({
@@ -58,30 +58,34 @@ app.use(
   })
 );
 
-app.use(express.json()); // Parse JSON request bodies
-app.use(express.urlencoded({ extended: true })); // Parse URL-encoded bodies
+app.use(express.json()); // Parse JSON request bodies automatically
+app.use(express.urlencoded({ extended: true })); // Parse URL-encoded bodies (form data)
 
 // Log all incoming requests
 app.use((req, res, next) => {
-  next();
+  // Simple middleware that just continues
+  next(); // Continue to next middleware
 });
+
 // Routes
 // Tighter rate limit for auth endpoints
 const authLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000,
-  max: 20,
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 20, // Only 20 requests per 15 min (stricter than global limit)
   standardHeaders: true,
   legacyHeaders: false,
 });
-app.use("/api/auth", authLimiter, authRoutes);
-app.use("/api/scenes", sceneRoutes);
+app.use("/api/auth", authLimiter, authRoutes); // Mount auth routes with strict rate limit
+app.use("/api/scenes", sceneRoutes); // Mount scene routes with global rate limit
 
 // Health check routes
 app.get("/health", (req, res) => {
-  res.json({ ok: true, uptime: process.uptime() });
+  // Simple health check endpoint
+  res.json({ ok: true, uptime: process.uptime() }); // Shows server is running
 });
 
 app.get("/", (req, res) => {
+  // Root endpoint
   res.json({
     success: true,
     message: "Nexus Geom API is running",

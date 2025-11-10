@@ -1,176 +1,134 @@
-const express = require("express");
-const router = express.Router();
-const { body, validationResult } = require("express-validator");
-const Scene = require("../models/Scene");
-const User = require("../models/User"); // Add User import
-const authMiddleware = require("../middleware/auth");
+/**
+ * Scene Routes
+ * Handles scene CRUD operations and unlock progression system.
+ */
+
+const express = require("express"); // Web framework for Node.js
+const router = express.Router(); // Create router instance for scene routes
+const { body, validationResult } = require("express-validator"); // Input validation tools
+const Scene = require("../models/Scene"); // Scene database model
+const User = require("../models/User"); // User database model
+const authMiddleware = require("../middleware/auth"); // JWT authentication middleware
+
+// Unlock progression rules - defines what unlocks at each scene count milestone
 const UNLOCK_PROGRESSION = [
-  // Scene 1: Unlock first Noetech (icarus-x) - character appears in showcase
-  { sceneCount: 1, noetechKey: "icarus-x", type: "noetech" },
-  // Scene 2: Unlock second Noetech (vectra) - second character appears
-  { sceneCount: 2, noetechKey: "vectra", type: "noetech" },
-  // Scene 3: Unlock third Noetech (nexus) - third character appears
-  { sceneCount: 3, noetechKey: "nexus", type: "noetech" },
-  // Scene 4: Unlock second animation for icarus-x - animation switcher appears
+  { sceneCount: 1, noetechKey: "icarus-x", type: "noetech" }, // 1st save → unlock Icarus-X character
+  { sceneCount: 2, noetechKey: "vectra", type: "noetech" }, // 2nd save → unlock Vectra character
+  { sceneCount: 3, noetechKey: "nexus", type: "noetech" }, // 3rd save → unlock Nexus character
   {
     sceneCount: 4,
     noetechKey: "icarus-x",
     animationId: "phoenix-dive",
-    type: "animation",
+    type: "animation", // 4th save → unlock Phoenix Dive animation for Icarus-X
   },
 ];
 
+// Check unlock progression and update user document
 const checkAndUnlockAnimations = async (user) => {
-  console.log(
-    `🔍 Debug: Checking unlocks for user with ${user.scenesSaved} scenes`
-  );
-  console.log(`🔍 Debug: Current unlocked Noetechs:`, user.unlockedNoetechs);
-  console.log(
-    `🔍 Debug: Current unlocked animations:`,
-    user.unlockedAnimations
-  );
-
-  const newlyUnlocked = [];
+  const newlyUnlocked = []; // Track what unlocks during this save
 
   for (const unlock of UNLOCK_PROGRESSION) {
-    console.log(
-      `🔍 Debug: Checking unlock - Scene ${unlock.sceneCount}: ${unlock.noetechKey} (${unlock.type})`
-    );
-
-    // Only unlock on EXACT scene count match
+    // Loop through each unlock rule
     if (user.scenesSaved === unlock.sceneCount) {
-      console.log(
-        `✅ Debug: Scene count matches! Checking type: ${unlock.type}`
-      );
-
+      // Does user's scene count match this rule's requirement?
       if (unlock.type === "noetech") {
-        // Unlock Noetech (character appears in showcase)
+        // This unlock is a character
         const alreadyUnlocked = user.unlockedNoetechs.includes(
           unlock.noetechKey
-        );
-
+        ); // Check if already have this character
         if (!alreadyUnlocked) {
-          console.log(`🎉 Debug: UNLOCKING NOETECH ${unlock.noetechKey}!`);
-          user.unlockedNoetechs.push(unlock.noetechKey);
-          newlyUnlocked.push(unlock);
-        } else {
-          console.log(
-            `⚠️ Debug: Noetech ${unlock.noetechKey} already unlocked`
-          );
+          // If not already unlocked
+          user.unlockedNoetechs.push(unlock.noetechKey); // Add character to user's unlocked list
+          newlyUnlocked.push(unlock); // Track for response
         }
       } else if (unlock.type === "animation") {
-        // Unlock additional animation for existing Noetech
+        // This unlock is an animation
         const alreadyUnlocked = user.unlockedAnimations.some(
           (ua) =>
             ua.noetechKey === unlock.noetechKey &&
             ua.animationId === unlock.animationId
-        );
+        ); // Check if already have this specific animation
 
         if (!alreadyUnlocked) {
-          console.log(
-            `🎉 Debug: UNLOCKING ANIMATION ${unlock.noetechKey}:${unlock.animationId}!`
-          );
+          // If not already unlocked
           user.unlockedAnimations.push({
             noetechKey: unlock.noetechKey,
             animationId: unlock.animationId,
-          });
-          newlyUnlocked.push(unlock);
-        } else {
-          console.log(
-            `⚠️ Debug: Animation ${unlock.noetechKey}:${unlock.animationId} already unlocked`
-          );
+          }); // Add animation to user's unlocked list
+          newlyUnlocked.push(unlock); // Track for response
         }
       }
-    } else {
-      console.log(
-        `❌ Debug: Scene count doesn't match (${user.scenesSaved} !== ${unlock.sceneCount})`
-      );
     }
   }
 
-  console.log(
-    `🎯 Debug: Returning ${newlyUnlocked.length} newly unlocked items`
-  );
-  return newlyUnlocked;
+  return newlyUnlocked; // Return array of what was just unlocked
 };
-/**
- * CREATE SCENE ROUTE
- * POST /api/scenes
- * Saves a new scene + checks for Noetech unlocks
- * Private (requires login)
- */
+
+// Create new scene
 router.post(
-  "/",
-  authMiddleware,
+  "/", // POST /api/scenes endpoint
+  authMiddleware, // Verify user is logged in
   [
-    body("name")
-      .trim()
-      .notEmpty()
+    body("name") // Validate scene name field
+      .trim() // Remove whitespace
+      .notEmpty() // Must not be empty
       .withMessage("Scene name is required")
-      .isLength({ max: 100 })
+      .isLength({ max: 100 }) // Max 100 characters
       .withMessage("Scene name cannot exceed 100 characters"),
-
-    body("config").isObject().withMessage("Config must be an object"),
-
-    // No animationStyle validation - all visual effects are always available
+    body("config").isObject().withMessage("Config must be an object"), // Config must be object
   ],
-
   async (req, res) => {
+    // Route handler function
     try {
-      const errors = validationResult(req);
+      // Validate input
+      const errors = validationResult(req); // Check if validation passed
       if (!errors.isEmpty()) {
+        // If validation failed
         return res.status(400).json({
+          // Send 400 Bad Request
           success: false,
-          errors: errors.array(),
+          errors: errors.array(), // Send validation errors
         });
       }
 
-      const { name, description, config } = req.body;
+      const { name, description, config } = req.body; // Extract scene data from request
 
+      // Create and save scene
       const scene = new Scene({
-        name,
-        description: description || "",
-        userId: req.user._id,
-        config,
+        // Create new scene document
+        name, // Scene name
+        description: description || "", // Description or empty string
+        userId: req.user._id, // Link to user who created it
+        config, // All control values from frontend
       });
 
-      const savedScene = await scene.save();
+      const savedScene = await scene.save(); // Save scene to MongoDB
 
-      // Update user's scene count and check for animation unlocks
-      const user = await User.findById(req.user._id);
-      user.scenesSaved += 1;
+      // Update user scene count and check unlocks
+      const user = await User.findById(req.user._id); // Fetch fresh user document
+      user.scenesSaved += 1; // Increment scene counter
+      const newUnlocks = await checkAndUnlockAnimations(user); // Check if this save unlocks anything
+      await user.save(); // Save updated user to MongoDB
 
-      console.log(
-        `🎯 Debug: User ${user.email} now has ${user.scenesSaved} scenes saved`
-      );
-
-      // Check for new animation/noetech unlocks
-      const newUnlocks = await checkAndUnlockAnimations(user);
-
-      console.log(
-        `🎯 Debug: Found ${newUnlocks.length} new unlocks:`,
-        newUnlocks
-      );
-
-      await user.save();
-
-      // Populate the scene for response
-      await savedScene.populate("userId", "username");
+      // Populate user info for response
+      await savedScene.populate("userId", "username"); // Replace userId with username for response
 
       // Separate unlocks by type
-      const noetechUnlocks = newUnlocks.filter((u) => u.type === "noetech");
-      const animationUnlocks = newUnlocks.filter((u) => u.type === "animation");
+      const noetechUnlocks = newUnlocks.filter((u) => u.type === "noetech"); // Filter for character unlocks
+      const animationUnlocks = newUnlocks.filter((u) => u.type === "animation"); // Filter for animation unlocks
 
+      // Build response
       const response = {
         success: true,
         message: "Scene created successfully",
-        scene: savedScene,
-        totalScenes: user.scenesSaved,
+        scene: savedScene, // Full scene document
+        totalScenes: user.scenesSaved, // Total scenes user has saved
       };
 
-      // Add unlocks to response if any exist
+      // Add unlocks if any
       if (noetechUnlocks.length > 0) {
-        response.unlockedNoetechs = noetechUnlocks.map((u) => u.noetechKey);
+        // If any characters unlocked
+        response.unlockedNoetechs = noetechUnlocks.map((u) => u.noetechKey); // Extract character keys
       }
 
       if (animationUnlocks.length > 0) {
@@ -187,10 +145,12 @@ router.post(
         }));
       }
 
-      res.status(201).json(response);
+      res.status(201).json(response); // Send 201 Created with response data
     } catch (error) {
-      console.error("Create scene error:", error);
+      // If anything goes wrong
+      console.error("Create scene error:", error); // Log error
       res.status(500).json({
+        // Send 500 Server Error
         success: false,
         message: "Error creating scene",
         error: error.message,
@@ -199,74 +159,72 @@ router.post(
   }
 );
 
-/**
- * GET MY SCENES ROUTE
- * GET /api/scenes/my-scenes
- * Gets current user's scenes only
- * Private (requires login)
- */
+// Get current user's scenes
 router.get("/my-scenes", authMiddleware, async (req, res) => {
+  // GET /api/scenes/my-scenes
   try {
     const scenes = await Scene.find({ userId: req.user._id }).sort({
-      createdAt: -1,
+      // Find all scenes by this user
+      createdAt: -1, // Sort newest first
     });
 
     res.json({
+      // Send response
       success: true,
-      count: scenes.length,
-      scenes,
+      count: scenes.length, // Total number of scenes
+      scenes, // Array of scene documents
     });
   } catch (error) {
-    console.error("Get my scenes error:", error);
+    // If query fails
+    console.error("Get my scenes error:", error); // Log error
     res.status(500).json({
+      // Send 500 Server Error
       success: false,
       message: "Error fetching your scenes",
     });
   }
 });
 
-/**
- * UPDATE SCENE ROUTE
- * PUT /api/scenes/:id
- * Updates an existing scene (merges config instead of replacing)
- * Private (must be scene owner)
- */
+// Update existing scene
 router.put(
-  "/:id",
-  authMiddleware,
+  "/:id", // PUT /api/scenes/:id endpoint
+  authMiddleware, // Verify user is logged in
   [
-    body("name")
-      .optional()
-      .trim()
-      .isLength({ max: 100 })
+    body("name") // Validate name if provided
+      .optional() // Field is optional for updates
+      .trim() // Remove whitespace
+      .isLength({ max: 100 }) // Max 100 characters
       .withMessage("Scene name cannot exceed 100 characters"),
-
-    body("config")
-      .optional()
-      .isObject()
+    body("config") // Validate config if provided
+      .optional() // Field is optional for updates
+      .isObject() // Must be object
       .withMessage("Config must be an object"),
-
-    // No animationStyle validation - all visual effects are always available
-
-    body("config.environmentHue")
-      .optional()
-      .isFloat({ min: 0, max: 360 })
+    body("config.environmentHue") // Validate hue if provided
+      .optional() // Field is optional for updates
+      .isFloat({ min: 0, max: 360 }) // Must be 0-360
       .withMessage("Environment hue must be between 0 and 360"),
   ],
   async (req, res) => {
+    // Route handler function
     try {
-      const errors = validationResult(req);
+      // Validate input
+      const errors = validationResult(req); // Check if validation passed
       if (!errors.isEmpty()) {
+        // If validation failed
         return res.status(400).json({
+          // Send 400 Bad Request
           success: false,
-          errors: errors.array(),
+          errors: errors.array(), // Send validation errors
         });
       }
 
-      const scene = await Scene.findById(req.params.id);
+      // Find scene
+      const scene = await Scene.findById(req.params.id); // Look up scene by ID from URL
 
       if (!scene) {
+        // If scene doesn't exist
         return res.status(404).json({
+          // Send 404 Not Found
           success: false,
           message: "Scene not found",
         });
@@ -274,39 +232,42 @@ router.put(
 
       // Check ownership
       if (scene.userId.toString() !== req.user._id.toString()) {
+        // If user doesn't own this scene
         return res.status(403).json({
+          // Send 403 Forbidden
           success: false,
           message: "Not authorized to update this scene",
         });
       }
 
-      // Update fields if provided
-      const { name, description, config } = req.body;
+      // Update fields
+      const { name, description, config } = req.body; // Extract update data
 
-      if (name) scene.name = name;
-      if (description !== undefined) scene.description = description;
+      if (name) scene.name = name; // Update name if provided
+      if (description !== undefined) scene.description = description; // Update description if provided
 
-      // IMPORTANT: Merge config instead of replacing wholesale
+      // Merge config instead of replacing
       if (config) {
+        // If config provided
         scene.config = {
-          ...scene.config.toObject(), // Existing config
-          ...config, // New config (overwrites matching keys)
+          ...scene.config.toObject(), // Spread existing config
+          ...config, // Spread new config (overwrites matching keys)
         };
       }
 
-      await scene.save();
+      await scene.save(); // Save updated scene to MongoDB
 
-      // Scene updates should NOT trigger unlocks - only scene creation should
-      const response = {
+      res.json({
+        // Send response
         success: true,
         message: "Scene updated successfully",
-        scene,
-      };
-
-      res.json(response);
+        scene, // Updated scene document
+      });
     } catch (error) {
-      console.error("Update scene error:", error);
+      // If anything goes wrong
+      console.error("Update scene error:", error); // Log error
       res.status(500).json({
+        // Send 500 Server Error
         success: false,
         message: "Error updating scene",
       });
@@ -314,18 +275,17 @@ router.put(
   }
 );
 
-/**
- * DELETE SCENE ROUTE
- * DELETE /api/scenes/:id
- * Deletes a scene
- * Private (must be scene owner)
- */
+// Delete scene
 router.delete("/:id", authMiddleware, async (req, res) => {
+  // DELETE /api/scenes/:id endpoint
   try {
-    const scene = await Scene.findById(req.params.id);
+    // Find scene
+    const scene = await Scene.findById(req.params.id); // Look up scene by ID from URL
 
     if (!scene) {
+      // If scene doesn't exist
       return res.status(404).json({
+        // Send 404 Not Found
         success: false,
         message: "Scene not found",
       });
@@ -333,35 +293,30 @@ router.delete("/:id", authMiddleware, async (req, res) => {
 
     // Check ownership
     if (scene.userId.toString() !== req.user._id.toString()) {
+      // If user doesn't own this scene
       return res.status(403).json({
+        // Send 403 Forbidden
         success: false,
         message: "Not authorized to delete this scene",
       });
     }
 
-    await Scene.findByIdAndDelete(req.params.id);
+    await Scene.findByIdAndDelete(req.params.id); // Delete scene from MongoDB
 
     res.json({
+      // Send response
       success: true,
       message: "Scene deleted successfully",
     });
   } catch (error) {
-    console.error("Delete scene error:", error);
+    // If anything goes wrong
+    console.error("Delete scene error:", error); // Log error
     res.status(500).json({
+      // Send 500 Server Error
       success: false,
       message: "Error deleting scene",
     });
   }
 });
 
-module.exports = router;
-
-// REMOVED ROUTES (no longer needed):
-// - GET /api/scenes (public gallery)
-// - GET /api/scenes/:id (view single public scene)
-//
-// FINAL ROUTES (4 total):
-// ✅ POST   /api/scenes           - Create your scene
-// ✅ GET    /api/scenes/my-scenes - Get your scenes
-// ✅ PUT    /api/scenes/:id       - Update your scene
-// ✅ DELETE /api/scenes/:id       - Delete your scene
+module.exports = router; // Export router to be mounted in server
