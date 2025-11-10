@@ -17,8 +17,8 @@ jest.mock("three", () => ({
     toneMapping: 0,
     toneMappingExposure: 1.0,
   })),
-  Scene: jest.fn(() => ({ 
-    add: jest.fn(), 
+  Scene: jest.fn(() => ({
+    add: jest.fn(),
     children: [],
     background: null,
     environment: null,
@@ -79,7 +79,10 @@ describe("initializeScene", () => {
 
     // Verify renderer configuration
     const rendererInstance = THREE.WebGLRenderer.mock.results[1].value; // Second call is main renderer
-    expect(rendererInstance.setSize).toHaveBeenCalledWith(window.innerWidth, window.innerHeight);
+    expect(rendererInstance.setSize).toHaveBeenCalledWith(
+      window.innerWidth,
+      window.innerHeight
+    );
     expect(rendererInstance.setClearColor).toHaveBeenCalledWith(0x000000, 0);
     expect(rendererInstance.shadowMap.enabled).toBe(true);
     expect(rendererInstance.toneMappingExposure).toBe(1.0);

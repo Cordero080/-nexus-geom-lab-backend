@@ -9,7 +9,7 @@
  * - Hopf flow lines showing topological structure
  * - Wave propagation from center
  * - Internal orbiting spheres
- * 
+ *
  * Includes special handling for Floating City geometries (reduced density)
  */
 
@@ -509,7 +509,7 @@ export function createCompoundSphereExtras(geometry) {
 /**
  * Creates reduced-density extras for Floating City geometries
  * Lighter version to maintain visibility of city structures
- * 
+ *
  * @param {THREE.BufferGeometry} geometry - The base floating city geometry
  * @returns {THREE.Group} Group containing minimal extra visual elements
  */

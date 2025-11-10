@@ -71,6 +71,7 @@ _Gamified character and animation unlocks with sound effects_
 ---
 
 ## 🎨 Design & Plannin
+
 ### Database Schema (ERD)
 
 ![ERD Diagram](./screenshots/erd-diagram.png)
@@ -116,6 +117,7 @@ A full-stack MERN application that transforms abstract 4D geometry into an inter
 - **6 Animation Algorithms**: Rotate, Float, Omni-Intellect (5-phase choreography)
 - **Dynamic Lighting**: Ambient + directional lights with full 3D positioning
 - **Environment System**: Quantum-themed backgrounds with 360° hue shifting
+- **Audio Reactive Visuals**: Microphone-driven geometry with FFT(Fast Fourier Transform) analysis, adaptive noise filtering (40%/35%/15% thresholds), frequency-to-geometry mapping (bass→X-axis rotation + scale + Z-position movement, mids→Y/Z-axis rotation), and momentum physics with 50% friction for natural deceleration. Tuned extensively to feel responsive without being jittery—geometry and accelerates with sound then smoothly slows when audio stops.
 
 ### 🎭 Character Showcase
 
@@ -214,64 +216,106 @@ PORT=3000
 ```
 nexus-geom-3D/
 ├── 📁 public/
-│   ├── 📁 fonts/                    # Custom typography
-│   ├── 📁 models/                   # 3D FBX character files
+│   ├── 📁 assets/                   # Logo and SVG assets
+│   ├── 📁 fonts/                    # Future Z custom typography
+│   ├── 📁 models/                   # 3D FBX character files (Icarus, Vectra, Nexus-Prime, etc.)
 │   └── 📁 soundEffects/
-│       └── unlock.wav               # Audio feedback system
+│       └── unlock.wav               # Audio feedback for unlocks
 ├── 📁 src/
 │   ├── App.jsx                      # Main application component
 │   ├── main.jsx                     # React 19.1 entry point
+│   ├── index.css                    # Global styles
 │   ├── 📁 components/
-│   │   ├── 📁 features/             # Business logic components
-│   │   │   └── 📁 SaveButton/       # Scene management with unlock modals
-│   │   ├── 📁 layout/               # App structure components
-│   │   ├── 📁 pages/                # Route-level components
-│   │   ├── 📁 shared/               # Reusable components
+│   │   ├── 📁 features/             # Feature-specific components
+│   │   │   └── 📁 SaveButton/       # Scene save with unlock modals
+│   │   ├── 📁 layout/               # App structure (Header, Footer, etc.)
+│   │   ├── 📁 pages/                # Route-level page components
+│   │   ├── 📁 shared/               # Reusable UI components
 │   │   └── 📁 ui/
-│   │       └── 📁 ScrambleButton/   # Interactive text animation system
+│   │       └── 📁 ScrambleButton/   # Text animation effects
 │   ├── 📁 context/
-│   │   ├── AuthContext.jsx          # JWT authentication state
 │   │   └── SceneContext.jsx         # 3D scene state management
+│   ├── 📁 data/
+│   │   └── portalWorlds.js          # Environment configuration data
 │   ├── 📁 features/
+│   │   ├── 📁 audio/
+│   │   │   ├── 📁 components/
+│   │   │   │   ├── AudioToggle.jsx          # Audio control UI
+│   │   │   │   └── AudioToggle.module.scss  # Styles
+│   │   │   └── 📁 hooks/
+│   │   │       ├── useAudioAnalyzer.js      # Web Audio API + FFT
+│   │   │       └── useAudioReactive.js      # Audio-to-3D mapping
+│   │   ├── 📁 auth/
+│   │   │   ├── 📁 context/
+│   │   │   │   └── AuthContext.jsx          # JWT authentication
+│   │   │   └── 📁 services/
+│   │   │       └── authApi.js               # Auth API integration
 │   │   └── 📁 sceneControls/
-│   │       ├── ThreeScene.jsx       # Main 3D rendering component
-│   │       ├── lightingSetup.js     # Three.js lighting system
-│   │       ├── sceneSetup.js        # Scene initialization
-│   │       └── 📁 hooks/            # Custom React hooks
-│   │           ├── useSceneInitialization.js
-│   │           ├── useLightingUpdates.js
-│   │           ├── useObjectManager.js
-│   │           └── useMaterialUpdates.js
-│   ├── 📁 hooks/
-│   │   └── useQuantumNavState.js    # Navigation state management
+│   │       ├── ThreeScene.jsx               # Main 3D renderer
+│   │       ├── ThreeScene.css
+│   │       ├── controls.css
+│   │       ├── 📁 animation/                # Animation systems
+│   │       ├── 📁 core/
+│   │       │   ├── environmentSetup.js
+│   │       │   ├── lightingSetup.js
+│   │       │   └── sceneSetup.js
+│   │       ├── 📁 geometries/               # Geometry factory patterns
+│   │       ├── 📁 hooks/                    # Scene-specific hooks
+│   │       │   ├── useSceneInitialization.js
+│   │       │   ├── useLightingUpdates.js
+│   │       │   ├── useObjectManager.js
+│   │       │   ├── useMaterialUpdates.js
+│   │       │   ├── useAnimationLoop.js
+│   │       │   ├── useCameraController.js
+│   │       │   └── useNebulaParticles.js
+│   │       ├── 📁 objects/
+│   │       │   ├── geometryCreation.js
+│   │       │   └── spectralOrbs.js
+│   │       └── 📁 utils/                    # Scene utilities
 │   ├── 📁 services/
-│   │   └── sceneApi.jsx             # API integration layer
+│   │   └── sceneApi.jsx                     # Scene CRUD API
 │   ├── 📁 styles/
-│   │   ├── shared.module.scss       # Global SCSS modules
-│   │   ├── quantumBackground.css    # Interactive backgrounds
-│   │   └── quantumTitles.css        # Text scrambling styles
+│   │   ├── 📁 components/                   # Component-specific styles
+│   │   ├── 📁 core/                         # Core style system
+│   │   ├── 📁 layout/                       # Layout styles
+│   │   ├── 📁 shared/                       # Shared SCSS modules
+│   │   ├── shared.module.scss
+│   │   ├── quantumBackground.css
+│   │   └── quantumTitles.css
 │   └── 📁 utils/
-│       ├── textScrambler.js         # Code symbol animations
-│       ├── textScrambler.jsx        # Katakana character effects
-│       ├── geometryHelpers.js       # 3D geometry utilities
-│       └── threeConstants.js        # Three.js configuration
-├── 📁 backend/                      # Express.js REST API
-│   ├── index.js                     # Server entry point
-│   ├── 📁 models/
-│   │   ├── User.js                  # MongoDB user schema
-│   │   └── Scene.js                 # Scene persistence schema
-│   ├── 📁 routes/
-│   │   ├── auth.js                  # Authentication endpoints
-│   │   └── scenes.js                # Scene CRUD operations
+│       ├── 📁 handlers/                     # Event handlers
+│       ├── coreHelpers.js
+│       ├── geometryHelpers.js               # 3D math utilities
+│       ├── textScrambler.js                 # Code symbol effects
+│       ├── textScrambler.jsx                # Katakana effects
+│       └── threeConstants.js                # Three.js config
+├── 📁 nexus-geom-lab-backend/               # Express.js REST API
+│   ├── index.js                             # Server entry
+│   ├── 📁 config/
+│   │   └── db.js                            # MongoDB connection
 │   ├── 📁 middleware/
-│   │   └── auth.js                  # JWT verification
-│   └── resetDevUser.js              # Development utility
-├── 📁 docs/                         # Technical documentation
-│   ├── TECHNICAL_SPECIFICATION.md   # Full technical specs
-│   ├── ARCHITECTURE_DIAGRAM.md      # System architecture
-│   ├── INTERACTIVE_SYSTEMS.md       # UI/UX documentation
-│   └── 📁 hooks-customHooks/        # Custom hooks documentation
-└── package.json                     # React 19.1 + Three.js 0.180
+│   │   └── auth.js                          # JWT verification
+│   ├── 📁 models/
+│   │   ├── User.js                          # User schema
+│   │   └── Scene.js                         # Scene schema
+│   ├── 📁 routes/
+│   │   ├── auth.js                          # Auth endpoints
+│   │   └── scenes.js                        # Scene CRUD
+│   ├── resetDevUser.js                      # Dev utility
+│   └── package.json
+├── 📁 docs/                                 # Technical documentation
+│   ├── ARCHITECTURE_DIAGRAM.md
+│   ├── INTERACTIVE_SYSTEMS.md
+│   ├── TESTING_GUIDE.md
+│   ├── 📁 hooks-customHooks/
+│   │   ├── CUSTOM_HOOKS_GUIDE.md
+│   │   └── HOOKS_INVENTORY.md
+│   ├── 📁 refactoring/                      # Refactoring notes
+│   └── 📁 study-plan/                       # Learning documentation
+├── 📁 screenshots/                          # UI screenshots
+├── index.html
+├── vite.config.js
+└── package.json                             # React 19.1 + Three.js 0.180
 ```
 
 ---

@@ -9,7 +9,7 @@ import * as THREE from "three";
 
 /**
  * Creates a symmetric golden tube ring around the calm core
- * 
+ *
  * @returns {THREE.Mesh} Animated golden ring mesh
  */
 export function createCentralGoldenSymmetry() {

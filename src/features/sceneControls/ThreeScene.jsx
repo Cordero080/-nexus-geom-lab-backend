@@ -12,6 +12,9 @@ import { useMouseTracking, useEnvironmentUpdate } from './hooks/useSceneEffects'
 import { useAnimationLoop } from './hooks/useAnimationLoop';
 import { useObjectInteraction } from './hooks/useObjectInteraction';
 import { useNebulaParticles } from './hooks/useNebulaParticles';
+import { useAudioAnalyzer } from '../audio/hooks/useAudioAnalyzer';
+import { useAudioReactive } from '../audio/hooks/useAudioReactive';
+import AudioToggle from '../audio/components/AudioToggle';
 
 
 
@@ -48,6 +51,10 @@ function ThreeScene({
 	useEffect(() => {
 		orbSpeedRef.current = orbSpeed;
 	}, [orbSpeed]);
+	
+	// Audio reactivity
+	const { bass, mids, highs, overall, isActive, toggleAudio } = useAudioAnalyzer();
+	useAudioReactive(objectsRef, { bass, mids, highs, overall }, isActive);
 	
 	// Initialize scene, camera, renderer, and lights
 	useSceneInitialization(
@@ -132,6 +139,12 @@ function ThreeScene({
 					width: '100%',
 					height: '100%'
 				}}
+			/>
+			{/* Audio Reactive Toggle */}
+			<AudioToggle 
+				isActive={isActive} 
+				onToggle={toggleAudio}
+				audioData={{ bass, mids, highs }}
 			/>
 		</div>
 	);
