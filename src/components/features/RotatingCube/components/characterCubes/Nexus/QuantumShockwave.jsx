@@ -14,10 +14,11 @@ export default function QuantumShockwave({ triggerTimes = [], animationTime = 0 
   const lastTriggeredIndexRef = useRef(-1);
   const previousAnimationTimeRef = useRef(0);
 
-  // Create green energy particles
+  // Create gradient particles (magenta to green)
   const particleCount = 333;
   const particles = useMemo(() => {
     const positions = new Float32Array(particleCount * 3);
+    const colors = new Float32Array(particleCount * 3);
     const velocities = [];
     const sizes = [];
     
@@ -26,6 +27,16 @@ export default function QuantumShockwave({ triggerTimes = [], animationTime = 0 
       positions[i * 3] = 0;
       positions[i * 3 + 1] = 0;
       positions[i * 3 + 2] = 0;
+      
+      // Gradient from magenta to green based on particle index
+      const gradient = i / particleCount;
+      const magenta = new THREE.Color('#ff00ff');
+      const green = new THREE.Color('#00ff00');
+      const color = magenta.clone().lerp(green, gradient);
+      
+      colors[i * 3] = color.r;
+      colors[i * 3 + 1] = color.g;
+      colors[i * 3 + 2] = color.b;
       
       // Radial outward velocities
       const angle = (i / particleCount) * Math.PI * 2;
@@ -41,7 +52,7 @@ export default function QuantumShockwave({ triggerTimes = [], animationTime = 0 
       sizes.push(0.1 + Math.random() * 0.2);
     }
     
-    return { positions, velocities, sizes };
+    return { positions, colors, velocities, sizes };
   }, [particleCount]);
 
   useFrame((state, delta) => {
@@ -155,10 +166,10 @@ export default function QuantumShockwave({ triggerTimes = [], animationTime = 0 
           rotation={[Math.PI / 1.5, 4, 0]}
         >
           {/* Make first shockwave thinner - check if it's the first trigger */}
-          <torusGeometry args={[2, 0.03, 8, 32]} />
+          <torusGeometry args={[2, 0.015, 8, 32]} />
           {/* 🎨 RING COLOR CONTROL - Change the hex color below */}
           <meshBasicMaterial
-            color={new THREE.Color("#10c22e")} // ← CHANGE THIS COLOR (6-char hex only)
+            color={new THREE.Color("#ff00ff")} // ← CHANGE THIS COLOR (6-char hex only)
             transparent
             opacity={0}
             side={THREE.DoubleSide}
@@ -168,13 +179,19 @@ export default function QuantumShockwave({ triggerTimes = [], animationTime = 0 
         </mesh>
       ))}
       
-      {/* Green Energy Particles */}
+      {/* Gradient Energy Particles (Magenta to Green) */}
       <points>
         <bufferGeometry ref={particlesRef}>
           <bufferAttribute
             attach="attributes-position"
             count={particleCount}
             array={particles.positions}
+            itemSize={3}
+          />
+          <bufferAttribute
+            attach="attributes-color"
+            count={particleCount}
+            array={particles.colors}
             itemSize={3}
           />
           <bufferAttribute
@@ -185,10 +202,10 @@ export default function QuantumShockwave({ triggerTimes = [], animationTime = 0 
           />
         </bufferGeometry>
         <pointsMaterial
-          color="#10c22e"
+          vertexColors
           size={0.15}
           transparent
-          opacity={activeShockwaveRef.current ? 0.9 : 0}
+          opacity={activeShockwaveRef.current ? 0.5 : 0}
           blending={THREE.AdditiveBlending}
           depthWrite={false}
           sizeAttenuation={true}

@@ -8,9 +8,9 @@ export const mockAnimations = [
     animationId: "solar-ascension",
     name: "Icᐱrus-X #001",
     animation: "Solar ᐱscension",
-    variant: "Golden Phoenix",
+    variant: "Code Breaker",
     description:
-      "A Neo Seraph...Reborn from Digital Ashes ",
+      "A Digital Phoenix ascending through cascading data streams...Breaking through firewalls of light",
     fbxUrl: "/models/icarus-bangs.fbx",
     scale: 0.023,
     galleryScale: 0.015,
@@ -21,9 +21,9 @@ export const mockAnimations = [
     offsetZ: 0.15,
     isDefaultAnimation: true,
     background:
-      "linear-gradient(180deg, rgba(15, 5, 0, 0.95) 0%, rgba(255, 140, 0, 0.8) 20%, rgba(255, 215, 0, 0.7) 40%, rgba(255, 165, 0, 0.6) 60%, rgba(255, 69, 0, 0.7) 80%, rgba(139, 69, 19, 0.9) 100%)",
+      "linear-gradient(180deg, rgba(10, 10, 10, 0.95) 0%, rgba(78, 205, 196, 0.8) 20%, rgba(255, 140, 0, 0.7) 40%, rgba(136, 197, 233, 0.6) 60%, rgba(255, 140, 0, 0.7) 80%, rgba(10, 10, 10, 0.9) 100%)",
     viewerBackground:
-      "linear-gradient(135deg, #2d1810 0%, #ff8c00 25%, #ffd700 50%, #ff8c00 75%, #2d1810 100%)",
+      "linear-gradient(135deg, #0a0a0a 0%, #4ecdc4 25%, #ff8c00 50%, #88c5e9 75%, #0a0a0a 100%)",
   },
   {
     id: 4,
@@ -31,9 +31,9 @@ export const mockAnimations = [
     animationId: "phoenix-dive",
     name: "Icᐱrus-X #001",
     animation: "Qi Flow",
-    variant: "Crimson Descent",
+    variant: "System Breach",
     description:
-      "The Seraph's devastating descent from celestial heights...Wings ablaze with divine fury",
+      "Diving through layers of encrypted geometries...Shattering digital barriers with each strike",
     fbxUrl: "/models/icarus-ninja-2.fbx",
     scale: 0.023,
     galleryScale: 0.015,
@@ -44,9 +44,9 @@ export const mockAnimations = [
     offsetZ: -0.5,
     isDefaultAnimation: false,
     background:
-      "linear-gradient(180deg, rgba(20, 0, 0, 0.95) 0%, rgba(255, 69, 0, 0.8) 20%, rgba(220, 20, 60, 0.7) 40%, rgba(139, 0, 0, 0.6) 60%, rgba(178, 34, 34, 0.7) 80%, rgba(75, 0, 0, 0.9) 100%)",
+      "linear-gradient(180deg, rgba(10, 10, 10, 0.95) 0%, rgba(78, 205, 196, 0.8) 20%, rgba(255, 140, 0, 0.7) 40%, rgba(136, 197, 233, 0.6) 60%, rgba(255, 140, 0, 0.7) 80%, rgba(10, 10, 10, 0.9) 100%)",
     viewerBackground:
-      "linear-gradient(135deg, #2d1010 0%, #ff4500 25%, #dc143c 50%, #ff4500 75%, #2d1010 100%)",
+      "linear-gradient(135deg, #0a0a0a 0%, #4ecdc4 25%, #ff8c00 50%, #88c5e9 75%, #0a0a0a 100%)",
   },
   {
     id: 2,

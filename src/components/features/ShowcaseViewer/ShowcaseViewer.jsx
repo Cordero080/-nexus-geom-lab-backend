@@ -7,6 +7,7 @@ import SpeedControl from './SpeedControl/SpeedControl';
 import { useAuth } from '../../../features/auth/context/AuthContext';
 import { mockAnimations } from '../Showcase/data/mockAnimations';
 import IcarusEnvironment from './backgrounds/IcarusEnvironment';
+import NexusEnvironment from './backgrounds/NexusEnvironment';
 import styles from './ShowcaseViewer.module.scss';
 import sharedStyles from '../../../styles/shared.module.scss';
 
@@ -182,6 +183,11 @@ export default function ShowcaseViewer({ animation, onClose }) {
             <IcarusEnvironment />
           )}
           
+          {/* Render Nexus-Prime skybox environment background */}
+          {currentAnimation?.id === 3 && (
+            <NexusEnvironment />
+          )}
+          
           <ambientLight intensity={0.64} />
           {/* Spectral skylight - colorful lights from above */}
           <spotLight 
@@ -235,8 +241,8 @@ export default function ShowcaseViewer({ animation, onClose }) {
                 position={[2, 4, 3]} 
                 angle={0.6} 
                 penumbra={0.3} 
-                intensity={4.5} 
-                color="#8b00ff"
+                intensity={10.0} 
+                color="#ffffff"
                 target-position={[0, -1, 0]}
               />
               {/* Secondary purple rim light */}
@@ -244,12 +250,12 @@ export default function ShowcaseViewer({ animation, onClose }) {
                 position={[-2, 3, 2]} 
                 angle={0.5} 
                 penumbra={0.4} 
-                intensity={3.2} 
-                color="#9932cc"
+                intensity={8.0} 
+                color="#ffffff"
                 target-position={[0, -1, 0]}
               />
               {/* Purple ambient boost for mesh visibility */}
-              <pointLight position={[0, 2, 1]} intensity={2.8} color="#6a0dad" distance={8} />
+              <pointLight position={[0, 2, 1]} intensity={6.0} color="#ffffff" distance={10} />
             </>
           )}
           

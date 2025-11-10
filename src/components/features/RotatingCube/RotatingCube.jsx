@@ -3,7 +3,7 @@ import { useFrame } from '@react-three/fiber';
 import FBXModel from '../Showcase/models/FBXModel';
 import HolographicCube from './components/HolographicCube';
 import TesseractGeometry from './components/TesseractGeometry';
-import TripleTesseractGeometry from './components/characterCubes/Nexus/TripleTesseractGeometry';
+import NexusCube from './components/characterCubes/Nexus/NexusCube';
 import CompoundTesseractGeometry from './components/characterCubes/Vectra/CompoundTesseractGeometry';
 import FloatingOrbs from './components/FloatingOrbs';
 import HolographicPanels from './components/HolographicPanels';
@@ -97,18 +97,14 @@ export default function RotatingCube({
       {/* Holographic Cube Layers */}
       <HolographicCube size={size} />
       
-      {/* Basic Tesseract - For Icarus and Nexus Prime */}
-      {(animationId === 1 || animationId === 4 || animationId === 3) && (
+      {/* Basic Tesseract - For Icarus only */}
+      {(animationId === 1 || animationId === 4) && (
         <TesseractGeometry size={size} />
       )}
       
-      {/* Triple Tesseract - Only for Nexus Prime */}
+      {/* NexusCube - Compound Tesseract for Nexus Prime */}
       {animationId === 3 && (
-        <TripleTesseractGeometry 
-          size={size} 
-          fourthTesseractInnerRef={fourthTesseractInnerRef}
-          fourthTesseractOuterRef={fourthTesseractOuterRef}
-        />
+        <NexusCube size={size} />
       )}
       
       {/* Compound Tesseract - Only for Vectra */}

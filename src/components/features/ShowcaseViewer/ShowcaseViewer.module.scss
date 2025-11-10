@@ -85,66 +85,9 @@
 
 /* Animation 3 - Nexus-Prime #003 (Matrix Geometry Green) */
 :global(.viewer-overlay-3) {
-  width: 100vw;
-  height: 100vh;
-  min-height: 100vh;
-  max-height: 100vh;
-  background: 
-    /* Core energy center */
-    radial-gradient(circle at 50% 50%, rgba(0, 255, 127, 0.4) 0%, transparent 20%),
-    /* Concentric rings */
-    repeating-radial-gradient(circle at 50% 50%,
-      transparent 0%,
-      transparent 8%,
-      rgba(0, 255, 127, 0.1) 8.5%,
-      transparent 19%
-    ),
-    /* Grid lines - vertical */
-    repeating-linear-gradient(
-      90deg,
-      transparent 0px,
-      transparent 48px,
-      rgba(0, 255, 127, 0.15) 48px,
-      rgba(0, 255, 127, 0.15) 50px,
-      transparent 50px,
-      transparent 98px
-    ),
-    /* Grid lines - horizontal */
-    repeating-linear-gradient(
-      0deg,
-      transparent 0px,
-      transparent 48px,
-      rgba(0, 255, 127, 0.15) 48px,
-      rgba(0, 255, 127, 0.15) 50px,
-      transparent 50px,
-      transparent 98px
-    ),
-    /* Horizon glow */
-    linear-gradient(
-      to bottom,
-      #000a05 0%,
-      #001a0d 40%,
-      #003d1a 50%,
-      #001a0d 60%,
-      #000a05 100%
-    );
-  
-  background-color: #000a05;
-  background-size: 
-    100% 30%,          /* Core energy center - full viewport */
-    10% 2%,          /* Concentric rings - larger for smooth pattern */
-    50px 80px,          /* Grid vertical - smaller for finer detail */
-    80px 80px,          /* Grid horizontal - smaller for finer detail */ 
-    10% 120%;          /* Horizon glow - full viewport */
-  
-  background-position:
-    center center,      /* Core energy center */
-    center center,      /* Concentric rings */
-    0 0,               /* Grid vertical */
-    0 0,               /* Grid horizontal */
-    center center;      /* Horizon glow */
-  
-  animation: matrixPulse 4s ease-in-out infinite alternate;
+  /* Skybox environment replaces CSS gradient - make transparent */
+  background: transparent;
+  background-color: #000a05; /* Subtle dark green base */
 }
 
 @keyframes matrixPulse {
@@ -426,35 +369,35 @@
 :global(.viewer-overlay-1) {
   :global(.viewer-info) {
     background: 
-      radial-gradient(ellipse at top left, rgba(149, 212, 208, 0.133) 0%, transparent 50%),
-      radial-gradient(ellipse at bottom right, rgba(173, 174, 207, 0.153) 0%, transparent 50%),
-      linear-gradient(135deg, rgba(81, 68, 124, 0.3) 0%, rgba(64, 81, 149, 0.4) 50%, rgba(81, 68, 124, 0.5) 100%);
-    border-top: 1px solid rgba(136, 197, 233, 0.3);
+      radial-gradient(ellipse at top left, rgba(4, 57, 63, 0.282) 0%, transparent 50%),
+      radial-gradient(ellipse at bottom right, rgba(17, 19, 73, 0.153) 0%, transparent 50%),
+      linear-gradient(135deg, rgba(81, 68, 124, 0.099) 0%, rgba(64, 81, 149, 0.119) 50%, rgba(81, 68, 124, 0.153) 100%);
+    border-top: 1px solid rgba(157, 124, 7, 0.469);
     backdrop-filter: blur(12px) saturate(180%);
     box-shadow: 
-      0 -8px 32px rgba(78, 205, 196, 0.25),
+      0 -2px 32px rgba(84, 78, 205, 0.25),
       0 -4px 16px rgba(136, 197, 233, 0.2),
       inset 0 1px 0 rgba(255, 255, 255, 0.2),
       inset 0 -1px 0 rgba(0, 0, 0, 0.1);
   }
 
   :global(.viewer-title) {
-    background: linear-gradient(135deg, #4ecdc4, #88c5e9, #95d4d0) !important;
+    background: linear-gradient(135deg, #066cba, #c90fd6, #02baae) !important;
     -webkit-background-clip: text !important;
     background-clip: text !important;
     -webkit-text-fill-color: transparent !important;
-    text-shadow: 0 0 20px rgba(78, 205, 196, 0.5) !important;
+    text-shadow: 0 0 0.1px rgba(78, 118, 205, 0.5) !important;
   }
 
   :global(.viewer-description) {
-    color: rgba(255, 255, 255, 0.9);
+    color: rgba(255, 255, 255, 0.386);
     text-shadow: none;
   }
 
   :global(.meta-tag) {
-    background: rgba(78, 205, 196, 0.15) !important;
+    background: rgba(1, 4, 20, 0.336) !important;
     border: 1px solid rgba(136, 197, 233, 0.3) !important;
-    color: #88c5e9 !important;
+    color: #88c6e982 !important;
     box-shadow: 0 2px 8px rgba(78, 205, 196, 0.2) !important;
   }
 
@@ -506,40 +449,47 @@
   }
 }
 
-/* Nexus-Prime #003 - Ninja Green Theme */
+/* Nexus-Prime #003 - Dark Glassmorphic Quantum Theme */
 :global(.viewer-overlay-3) {
   :global(.viewer-info) {
     background: 
-      radial-gradient(ellipse at top center, rgba(0, 255, 127, 0.1) 0%, transparent 50%),
-      linear-gradient(180deg, rgba(0, 100, 50, 0.2) 0%, rgba(0, 50, 25, 0.3) 100%);
-    border-top: 2px solid rgba(0, 255, 127, 0.4);
-    backdrop-filter: blur(12px) saturate(150%);
-    box-shadow: 0 -5px 30px rgba(0, 255, 127, 0.2);
+      radial-gradient(ellipse at top left, rgba(40, 0, 40, 0.28) 0%, transparent 50%),
+      radial-gradient(ellipse at bottom right, rgba(0, 30, 20, 0.25) 0%, transparent 50%),
+      linear-gradient(135deg, rgba(50, 20, 60, 0.12) 0%, rgba(20, 40, 30, 0.15) 50%, rgba(30, 15, 40, 0.18) 100%);
+    border-top: 1px solid rgba(180, 100, 200, 0.35);
+    backdrop-filter: blur(12px) saturate(180%);
+    box-shadow: 
+      0 -2px 32px rgba(150, 50, 180, 0.15),
+      0 -4px 16px rgba(50, 180, 100, 0.1),
+      inset 0 1px 0 rgba(255, 255, 255, 0.08),
+      inset 0 -1px 0 rgba(0, 0, 0, 0.3);
   }
 
   :global(.viewer-title) {
-    background: linear-gradient(135deg, #00ff7f, #32cd32, #228b22, #00ff7f) !important;
+    background: linear-gradient(135deg, #aa66dd, #66dd99, #88aacc) !important;
     -webkit-background-clip: text !important;
     background-clip: text !important;
     -webkit-text-fill-color: transparent !important;
-    text-shadow: 0 0 20px rgba(0, 255, 127, 0.5) !important;
+    text-shadow: 0 0 0.1px rgba(150, 100, 180, 0.4) !important;
   }
 
   :global(.viewer-description) {
-    color: rgba(200, 255, 200, 0.55);
+    color: rgba(255, 255, 255, 0.38);
     text-shadow: none;
   }
 
   :global(.meta-tag) {
-    background: rgba(0, 255, 127, 0.1) !important;
-    border: 1px solid rgba(0, 255, 127, 0.3) !important;
-    color: #00ff7f !important;
-    box-shadow: 0 2px 8px rgba(0, 255, 127, 0.2) !important;
+    background: rgba(20, 10, 25, 0.4) !important;
+    border: 1px solid rgba(150, 100, 180, 0.3) !important;
+    color: rgba(180, 150, 200, 0.65) !important;
+    box-shadow: 0 2px 8px rgba(100, 50, 120, 0.2) !important;
   }
 
   :global(.meta-tag:hover) {
-    background: rgba(0, 255, 127, 0.2) !important;
-    box-shadow: 0 2px 12px rgba(0, 255, 127, 0.4) !important;
+    background: rgba(80, 40, 100, 0.25) !important;
+    border-color: rgba(180, 100, 200, 0.45) !important;
+    color: rgba(200, 180, 220, 0.8) !important;
+    box-shadow: 0 2px 12px rgba(120, 60, 150, 0.3) !important;
   }
 }
 

@@ -1,23 +1,15 @@
 import React from 'react';
-import TesseractGeometry from '../../TesseractGeometry';
-import TripleTesseractGeometry from './TripleTesseractGeometry';
+import CompoundTesseractGeometry from '../Vectra/CompoundTesseractGeometry';
 
 /**
  * NexusCube - Dedicated cube configuration for Nexus Prime character
- * Includes basic tesseract, triple tesseract, and green lighting
+ * Now uses Vectra's compound tesseract (5 nested cubes with asymmetric scaling)
  */
-export default function NexusCube({ size, fourthTesseractInnerRef, fourthTesseractOuterRef }) {
+export default function NexusCube({ size }) {
   return (
     <>
-      {/* Nexus's Basic Tesseract */}
-      <TesseractGeometry size={size} />
-      
-      {/* Triple Tesseract - Multiple animated layers */}
-      <TripleTesseractGeometry 
-        size={size} 
-        fourthTesseractInnerRef={fourthTesseractInnerRef}
-        fourthTesseractOuterRef={fourthTesseractOuterRef}
-      />
+      {/* Vectra's Compound Tesseract - 5 asymmetric nested cubes */}
+      <CompoundTesseractGeometry size={size} />
       
       {/* Green reflective lighting - unique to Nexus Prime */}
       <pointLight 
