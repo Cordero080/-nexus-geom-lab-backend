@@ -8,6 +8,8 @@ import Scene from './Scene';
 import ScrambleOnHover from './components/ScrambleOnHover';
 import QuantumNav from './components/QuantumNav';
 import BackgroundLayers from './components/BackgroundLayers';
+import HessianPolychoronAnimation from './HessianPolychoronAnimation';
+import QuantumManifoldAnimation from './QuantumManifoldAnimation';
 
 // Styles
 import styles from './HomeIndex.module.scss';
@@ -237,11 +239,8 @@ MANIFOLD: A mathematical surface or multi-dimensional space that can be curved o
         {/* Scene 3: Quantum Entanglement */}
         <section className={`quantum-scene${activeScene === 2 ? ' active' : ''}`} id="entanglement" data-scene="2">
           <div className="scene-background bg-entanglement" aria-hidden="true"></div>
+          <HessianPolychoronAnimation isActive={activeScene === 2} />
           <div className="scene-content entanglement-scene-content">
-            <h2 className="scene-title">QUANTUM ENTANGLEMENT</h2>
-            <p className="scene-description">
-              Modules connected across infinite space
-            </p>
             <div className="entanglement-network"></div>
             <div className="connected-nodes">
               <div className="quantum-bridge"></div>
@@ -254,6 +253,7 @@ MANIFOLD: A mathematical surface or multi-dimensional space that can be curved o
           id="superposition"
           isActive={activeScene === 3}
           backgroundClass="bg-superposition"
+          animation={<QuantumManifoldAnimation isActive={activeScene === 3} />}
         >
           <div className="superposition-scene-div">
             <h2 className="scene-title">SUPERPOSITION STATE</h2>

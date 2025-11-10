@@ -1,4 +1,5 @@
 import React, { useRef, useEffect, useState } from 'react';
+import CompoundIcosahedronAnimation from './CompoundIcosahedronAnimation';
 
 // Utility for quantum collapse (random state selection)
 function quantumCollapse(states) {
@@ -164,105 +165,6 @@ export default function ProgressBar({ portalState, glyphState, onQuantumCollapse
         </svg>
       ),
     },
-    {
-      className: 'parallax-mid',
-      style: (progress) => ({
-        transform: `translateY(${-progress * 120}px) scale(1.04) rotate(${anim*8}deg)`,
-        opacity: 0.8,
-        zIndex: 1,
-        position: 'absolute',
-        left: 0,
-        right: 0,
-        top: 0,
-        bottom: 0,
-        pointerEvents: 'none',
-        background: 'none',
-      }),
-      content: (
-        <svg width="100%" height="100%" style={{ position: 'absolute', left: 0, top: 0, cursor: 'none' }} onClick={onQuantumCollapse}>
-          {/* Quantum glyphs/runes - collapse to new set on click */}
-          <g opacity="0.18">
-            <text x="50%" y="40%" textAnchor="middle" fontSize="60" fill="#00fff7" fontFamily="monospace" letterSpacing="0.2em" style={{filter:'blur(0.5px)'}}>{glyphState[0]}</text>
-            <text x="50%" y="70%" textAnchor="middle" fontSize="38" fill="#ff00cc" fontFamily="monospace" letterSpacing="0.2em" style={{filter:'blur(0.7px)'}}>{glyphState[1]}</text>
-            <text x="50%" y="55%" textAnchor="middle" fontSize="28" fill="#ffff00" fontFamily="monospace" letterSpacing="0.2em" style={{filter:'blur(0.3px)'}}>{glyphState[2]}</text>
-          </g>
-        </svg>
-      ),
-    },
-    {
-      className: 'parallax-fg',
-      style: (progress) => ({
-        transform: `translateY(${-progress * 220}px) scale(1)`,
-        opacity: 1,
-        zIndex: 2,
-        position: 'absolute',
-        left: 0,
-        right: 0,
-        top: 0,
-        bottom: 0,
-        pointerEvents: 'none',
-        background: 'none',
-      }),
-      content: (
-        <svg width="100%" height="100%" style={{ position: 'absolute', left: 0, top: 0, cursor: 'none' }} onClick={onQuantumCollapse}>
-          <defs>
-            {/* Portal edge glow */}
-            <radialGradient id="portal-glow" cx="50%" cy="60%" r="30%">
-              <stop offset="0%" stopColor="#fff" stopOpacity="0.95" />
-              <stop offset="60%" stopColor="#00fff7" stopOpacity="0.5" />
-              <stop offset="100%" stopColor="#0a0f1a" stopOpacity="0" />
-            </radialGradient>
-            {/* Quantum-collapsed world inside portal */}
-            <radialGradient id="fractal-world" cx="50%" cy="60%" r="80%">
-              <stop offset="0%" stopColor={portalState.colors[0]} stopOpacity="0.7" />
-              <stop offset="40%" stopColor={portalState.colors[1]} stopOpacity="0.5" />
-              <stop offset="100%" stopColor={portalState.colors[2]} stopOpacity="0.2" />
-            </radialGradient>
-            {/* Edge distortion filter */}
-            <filter id="portal-distort" x="-20%" y="-20%" width="140%" height="140%">
-              <feTurbulence type="turbulence" baseFrequency="0.08" numOctaves="2" seed="7" result="turb" />
-              <feDisplacementMap in2="turb" in="SourceGraphic" scale="18" xChannelSelector="R" yChannelSelector="G" />
-            </filter>
-          </defs>
-          {/* Portal: grows/rips open as you scroll, collapses to new world on click */}
-          <g>
-            {/* Quantum-collapsed world revealed inside portal */}
-            <ellipse
-              cx="50%"
-              cy="60%"
-              rx={8 + 24 * scrollState.progress}
-              ry={8 + 24 * scrollState.progress}
-              fill="url(#fractal-world)"
-              filter="url(#portal-distort)"
-              style={{ transition: 'rx 0.7s, ry 0.7s' }}
-            />
-            {/* Portal edge glow */}
-            <ellipse
-              cx="50%"
-              cy="60%"
-              rx={12 + 24 * scrollState.progress}
-              ry={12 + 24 * scrollState.progress}
-              fill="none"
-              stroke="url(#portal-glow)"
-              strokeWidth="8"
-              opacity="0.7"
-              filter="url(#portal-distort)"
-              style={{ transition: 'rx 0.7s, ry 0.7s' }}
-            />
-            {/* Portal core */}
-            <ellipse
-              cx="50%"
-              cy="60%"
-              rx={6 + 6 * Math.abs(Math.sin(anim*2))}
-              ry={6 + 6 * Math.abs(Math.cos(anim*2))}
-              fill="#fff"
-              opacity="0.8"
-              style={{ filter: 'blur(2px)' }}
-            />
-          </g>
-        </svg>
-      ),
-    },
   ];
 
   // Scroll effect
@@ -325,6 +227,8 @@ export default function ProgressBar({ portalState, glyphState, onQuantumCollapse
           {layer.content}
         </div>
       ))}
+      {/* Compound Icosahedron Animation */}
+      <CompoundIcosahedronAnimation progress={progress} />
       <div className="progress-bar" style={{ marginBottom: '50px', width: 'auto', position: 'relative', zIndex: 3 }}>
         <div
           ref={textRef}
@@ -343,10 +247,8 @@ export default function ProgressBar({ portalState, glyphState, onQuantumCollapse
             fontFamily: "'Orbitron', 'Rajdhani', monospace",
           }}
         >
-          "Be the defiance"
         </div>
       </div>
-      <div className="progress-particles" style={{ position: 'relative', zIndex: 3, marginTop: '30px' }}>&gt;&gt;&gt;The illusion is already awake."&gt;&gt;&gt;</div>
     </section>
   );
 }

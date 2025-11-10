@@ -298,10 +298,8 @@ export default function ProgressBar({ portalState, glyphState, onQuantumCollapse
             mixBlendMode: atBottom ? 'normal' : 'screen',
           }}
         >
-          "Be the defiance.
         </div>
       </div>
-      <div className="progress-particles" style={{ position: 'relative', zIndex: 3 }}>&gt;&gt;&gt;The illusion is already awake."&gt;&gt;&gt;</div>
     </section>
   );
 }

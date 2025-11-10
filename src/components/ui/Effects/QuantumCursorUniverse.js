@@ -21,9 +21,9 @@ export default class QuantumCursorUniverse {
     this.particles = [];
     this.trailParticles = []; // New: Dedicated trail particles
     this.energyWaves = [];
-    this.maxParticles = 100;
+    this.maxParticles = 10;
     this.maxTrailParticles = 500; // Much larger pool to prevent cutoff
-    this.maxEnergyWaves = 6; // Hexagon formation
+    this.maxEnergyWaves = 3; // Hexagon formation
 
     this.isMouseMoving = false;
     this.moveTimeout = null;
@@ -135,9 +135,9 @@ export default class QuantumCursorUniverse {
 
       this.energyWaves.push({
         element: wave,
-        angle: (60 / this.maxEnergyWaves) * i,
-        distance: 50,
-        speed: Math.random() * 1.5 + 0.8,
+        angle: (40 / this.maxEnergyWaves) * i,
+        distance: 20,
+        speed: Math.random() * 2.5 + 0.8,
       });
     }
   }
@@ -157,7 +157,7 @@ export default class QuantumCursorUniverse {
         targetY: -100,
         life: 0,
         maxLife: 1.0, // Much longer lifetime for extended dragon trail
-        size: 4 + Math.random() * 6,
+        size: 40 + Math.random() * 6,
         delay: i * 0.02, // Stagger the particles
         hue: 0,
         active: false,
@@ -200,7 +200,7 @@ export default class QuantumCursorUniverse {
     const particle =
       this.particles[Math.floor(Math.random() * this.particles.length)];
     if (particle) {
-      particle.x = this.mouseX + (Math.random() - 0.5) * 200;
+      particle.x = this.mouseX + (Math.random() - 0.5) * 30;
       particle.y = this.mouseY + (Math.random() - 0.5) * 200;
       particle.vx = (Math.random() - 0.5) * 8;
       particle.vy = (Math.random() - 0.5) * 8;
