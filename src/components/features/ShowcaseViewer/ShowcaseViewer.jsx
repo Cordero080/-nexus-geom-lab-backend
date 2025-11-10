@@ -6,6 +6,7 @@ import ScrambleButton from '../../ui/ScrambleButton/ScrambleButton';
 import SpeedControl from './SpeedControl/SpeedControl';
 import { useAuth } from '../../../features/auth/context/AuthContext';
 import { mockAnimations } from '../Showcase/data/mockAnimations';
+import IcarusEnvironment from './backgrounds/IcarusEnvironment';
 import styles from './ShowcaseViewer.module.scss';
 import sharedStyles from '../../../styles/shared.module.scss';
 
@@ -176,6 +177,11 @@ export default function ShowcaseViewer({ animation, onClose }) {
               camera={{ position: [0, 0.8, 8], fov: 60 }}
               style={{ width: '100%', height: '100%', flex: '1 1 auto' }}
         >
+          {/* Render Icarus-X Three.js environment background */}
+          {(currentAnimation?.id === 1 || currentAnimation?.id === 4) && (
+            <IcarusEnvironment />
+          )}
+          
           <ambientLight intensity={0.64} />
           {/* Spectral skylight - colorful lights from above */}
           <spotLight 
