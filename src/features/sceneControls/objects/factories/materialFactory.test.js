@@ -1,6 +1,9 @@
 import { jest } from "@jest/globals";
 import * as THREE from "three";
-import { createSolidMaterial, createWireframeMaterial } from "./materialFactory";
+import {
+  createSolidMaterial,
+  createWireframeMaterial,
+} from "./materialFactory";
 
 // Mock THREE.MeshStandardMaterial
 jest.mock("three", () => ({
@@ -13,7 +16,7 @@ jest.mock("three", () => ({
     transparent: config.transparent || false,
     side: config.side || 2,
   })),
-  Color: jest.fn(function(hex) {
+  Color: jest.fn(function (hex) {
     this.hex = hex;
     this.multiplyScalar = jest.fn((scalar) => this);
     this.copy = jest.fn(() => this);
