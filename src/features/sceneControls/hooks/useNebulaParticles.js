@@ -497,7 +497,7 @@ export function useNebulaParticles(
           } else {
             // Dead cell: born with 3-4 neighbors
             newCellStates[i] =
-              aliveNeighbors >= 3 && aliveNeighbors <= 4 ? 1 : 0;
+              aliveNeighbors >= 3 && aliveNeighbors <= 8 ? 1 : 0;
           }
 
           // Energy spreads from neighbors

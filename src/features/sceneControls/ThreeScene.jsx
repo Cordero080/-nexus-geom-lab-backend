@@ -140,6 +140,22 @@ function ThreeScene({
 					height: '100%'
 				}}
 			/>
+			{/* Foreground layer that bleeds over 3D objects (space environment only) */}
+			{environment === 'space' && (
+				<div 
+					className="bg-gradient-space-foreground"
+					style={{
+						position: 'absolute',
+						top: 0,
+						left: 0,
+						width: '100%',
+						height: '100%',
+						zIndex: 3,
+						pointerEvents: 'none',
+						filter: `hue-rotate(${environmentHue}deg)`
+					}}
+				/>
+			)}
 			{/* Audio Reactive Toggle */}
 			<AudioToggle 
 				isActive={isActive} 
