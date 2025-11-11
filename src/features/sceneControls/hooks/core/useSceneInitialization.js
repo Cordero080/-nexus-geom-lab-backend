@@ -1,6 +1,6 @@
 import { useEffect } from "react";
-import { initializeScene } from "../core/sceneSetup";
-import { initializeLighting } from "../core/lightingSetup";
+import { initializeScene } from "../../setup/sceneSetup";
+import { initializeLighting } from "../../setup/lightingSetup";
 
 /**
  * Initializes the Three.js scene, camera, renderer, and lighting

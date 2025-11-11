@@ -1,17 +1,27 @@
-import { updateEnvironment } from './core/environmentSetup';
+import { updateEnvironment } from './setup/environmentSetup';
 import { __UP, __Q, __TMP, __A, __B, __M, __Inv, nearestVertexIndex, updateThickWireframeCylinders } from '../../utils/geometryHelpers';
 import React, { useRef, useEffect } from 'react';
 import './ThreeScene.css';
-import { useSceneInitialization } from './hooks/useSceneInitialization';
-import { useObjectManager } from './hooks/useObjectManager';
-import { useCameraController } from './hooks/useCameraController';
-import { useMaterialUpdates } from './hooks/useMaterialUpdates';
-import { useLightingUpdates } from './hooks/useLightingUpdates';
-import { useMetalnessLighting } from './hooks/useMetalnessLighting';
-import { useMouseTracking, useEnvironmentUpdate } from './hooks/useSceneEffects';
-import { useAnimationLoop } from './hooks/useAnimationLoop';
-import { useObjectInteraction } from './hooks/useObjectInteraction';
-import { useNebulaParticles } from './hooks/useNebulaParticles';
+
+// CORE INFRASTRUCTURE HOOKS - Run ONCE on mount, create fundamental Three.js objects
+import { useSceneInitialization } from './hooks/core/useSceneInitialization';
+import { useObjectManager } from './hooks/core/useObjectManager';
+
+// PROPERTY UPDATE HOOKS - React to prop changes, modify existing objects
+import { useCameraController } from './hooks/updates/useCameraController';
+import { useMaterialUpdates } from './hooks/updates/useMaterialUpdates';
+import { useLightingUpdates } from './hooks/updates/useLightingUpdates';
+
+// VISUAL EFFECTS HOOKS - Add environmental effects and lighting
+import { useMetalnessLighting } from './hooks/effects/useMetalnessLighting';
+import { useMouseTracking, useEnvironmentUpdate } from './hooks/effects/useSceneEffects';
+import { useNebulaParticles } from './hooks/effects/useNebulaParticles';
+
+// USER INTERACTION HOOKS - Handle animation loops and user input
+import { useAnimationLoop } from './hooks/interaction/useAnimationLoop';
+import { useObjectInteraction } from './hooks/interaction/useObjectInteraction';
+
+// AUDIO FEATURES
 import { useAudioAnalyzer } from '../audio/hooks/useAudioAnalyzer';
 import { useAudioReactive } from '../audio/hooks/useAudioReactive';
 import AudioToggle from '../audio/components/AudioToggle';
@@ -56,23 +66,49 @@ function ThreeScene({
 	const { bass, mids, highs, overall, isActive, toggleAudio } = useAudioAnalyzer();
 	useAudioReactive(objectsRef, { bass, mids, highs, overall }, isActive);
 	
-	// Initialize scene, camera, renderer, and lights
+	/* ========================================================================
+	 * HOOK EXECUTION ORDER - Critical for Three.js scene setup
+	 * ========================================================================
+	 * 
+	 * 1. CORE INFRASTRUCTURE (runs ONCE on mount)
+	 *    - Creates scene, camera, renderer, lights
+	 *    - Creates 3D objects
+	 *    - Everything else depends on these being initialized first
+	 * 
+	 * 2. VISUAL EFFECTS
+	 *    - Adds particles, environment effects, extra lighting
+	 *    - Depends on scene being initialized
+	 * 
+	 * 3. PROPERTY UPDATES
+	 *    - Reacts to prop changes
+	 *    - Updates materials, lighting, camera position
+	 *    - Depends on objects existing
+	 * 
+	 * 4. USER INTERACTION
+	 *    - Handles mouse events and animation loop
+	 *    - Runs last, orchestrates everything
+	 * ======================================================================== */
+	
+	// 1. CORE INFRASTRUCTURE - Initialize scene, camera, renderer, and lights
 	useSceneInitialization(
 		{ sceneRef, cameraRef, rendererRef, mountRef, ambientLightRef, directionalLightRef, animationIdRef },
 		{ ambientLightColor, ambientLightIntensity, directionalLightColor, directionalLightIntensity, 
 		  directionalLightX, directionalLightY, directionalLightZ }
 	);
 
-	useMouseTracking(rendererRef, cameraRef);
-	useEnvironmentUpdate(sceneRef, environment, environmentHue);
-	useNebulaParticles(sceneRef, environment, environmentHue, orbSpeedRef);
-	
 	useObjectManager(
 		{ sceneRef, objectsRef, materialRef },
 		{ objectCount, objectType, baseColor, metalness, emissiveIntensity, 
 		  wireframeIntensity, hyperframeColor, hyperframeLineColor }
 	);
 
+	// 2. VISUAL EFFECTS - Add environmental effects
+	useMouseTracking(rendererRef, cameraRef);
+	useEnvironmentUpdate(sceneRef, environment, environmentHue);
+	useNebulaParticles(sceneRef, environment, environmentHue, orbSpeedRef);
+	useMetalnessLighting(sceneRef, metalness);
+	
+	// 3. PROPERTY UPDATES - React to prop changes
 	useCameraController(cameraRef, cameraView);
 	
 	useMaterialUpdates(objectsRef, {
@@ -86,10 +122,7 @@ function ThreeScene({
 		  directionalLightX, directionalLightY, directionalLightZ, metalness }
 	);
 
-	// Add extra lights from multiple angles ONLY when metalness is high
-	useMetalnessLighting(sceneRef, metalness);
-
-	// Handle mouse-over object rotation
+	// 4. USER INTERACTION - Handle mouse-over object rotation and animation loop
 	const { getUserRotation, decayUserRotations } = useObjectInteraction(
 		{ sceneRef, cameraRef, rendererRef }
 	);
