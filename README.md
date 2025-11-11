@@ -93,18 +93,11 @@ _UI/UX design and user flow planning_
 
 ## Overview
 
-A full-stack MERN application that transforms abstract 4D geometry into an interactive 3D platform with progressive character unlocks and gamified scene creation.
+Nexus-Geom 3D is a full-stack MERN application that transforms complex 4D mathematical concepts into an interactive, gamified 3D experience. Built through **287+ solo commits**, the project combines Three.js, React, and a custom geometry engine to let users explore, manipulate, and save hyperdimensional shapes while progressively unlocking animated characters.
 
-**The Vision**: Coming from art and motion graphics, I wanted to visualize how compound polytopes (4D shapes) work in 3D space. I designed the spatial relationships and aesthetic direction, then collaborated with AI tools to handle the mathematical implementation.
+**The Vision**: With a background in art and motion graphics, I wanted to build a tool that makes compound polytopes and 4D structures intuitive through interaction. I designed the spatial logic, user flow, UI aesthetic, and overall architecture, and used AI tools to assist with heavy mathematical implementation and complex Three.js scaffolding.
 
-**What Makes It Different**:
-
-- **Gamification Through Creation**: Saving scenes unlocks animated characters progressively—turning geometric exploration into a reward-based progression system
-- **24 Hyperdimensional Shapes**: From basic geometry to compound tesseracts and 4D polytopes (120-cell, 600-cell), with custom wireframe and hyperframe structures
-- **Cohesive Quantum Aesthetic**: Glassmorphic UI, interactive backgrounds, and theatrical character presentation
-- **Full-Stack Platform**: JWT authentication, MongoDB persistence, RESTful API, and progressive unlock system
-
-**Tech Stack**: React 19 • Three.js 0.180 • Express.js • MongoDB • Node.js 20+
+This project represents a fusion of artistic direction, engineering architecture, and mathematical visualization.
 
 ---
 
@@ -136,7 +129,6 @@ A full-stack MERN application that transforms abstract 4D geometry into an inter
 - **Gamified progression**: Saving scenes unlocks new characters and animations
 - **Personal gallery**: "My Scenes" page to organize and manage your collection
 - **Full CRUD operations**: Load, edit, update, or delete your saved scenes
-- **Authentication system**: Secure user accounts with JWT to protect your creations
 
 **The Experience**: Explore 4D geometry, discover hidden animations through saving scenes, and curate your own collection of interactive 3D moments—all in a visually stunning quantum-themed interface.
 
@@ -398,18 +390,6 @@ Scene 3 → Unlock Nexus-Prime (Warrior Flip)
 Scene 4+ → Unlock additional animations
          → Animation switcher appears!
 ```
-
----
-
-## 🎮 User Experience Flow
-
-1. **Sign Up** → Create account with JWT authentication
-2. **Geometry Lab** → Manipulate 24 advanced geometries with real-time controls
-3. **Save Scene** → Persist 20+ control values to MongoDB
-4. **Unlock Character** → First save unlocks Icarus-X in showcase
-5. **Progressive Unlocks** → More scenes = more characters + animations
-6. **Animation Switcher** → Toggle between multiple animations per character
-7. **Scene Management** → Load/edit/delete from personal gallery
 
 ---
 
