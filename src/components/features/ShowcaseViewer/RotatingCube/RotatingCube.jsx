@@ -1,15 +1,15 @@
 import React, { useRef, useState } from 'react';
 import { useFrame } from '@react-three/fiber';
-import FBXModel from '../Showcase/models/FBXModel';
+import FBXModel from '../../Showcase/models/FBXModel';
 import HolographicCube from './components/HolographicCube';
 import TesseractGeometry from './components/TesseractGeometry';
-import NexusCube from './components/characterCubes/Nexus/NexusCube';
-import CompoundTesseractGeometry from './components/characterCubes/Vectra/CompoundTesseractGeometry';
+import NexusCube from '../characters/Nexus/NexusCube';
+import CompoundTesseractGeometry from '../characters/Vectra/CompoundTesseractGeometry';
 import FloatingOrbs from './components/FloatingOrbs';
 import HolographicPanels from './components/HolographicPanels';
-import GlitchBurst from './components/characterCubes/Icarus/GlitchBurst';
-import RadialSquares from './components/characterCubes/Vectra/RadialSquares';
-import QuantumShockwave from './components/characterCubes/Nexus/QuantumShockwave';
+import GlitchBurst from '../characters/Icarus/GlitchBurst';
+import RadialSquares from '../characters/Vectra/RadialSquares';
+import QuantumShockwave from '../characters/Nexus/QuantumShockwave';
 
 export default function RotatingCube({ 
   size = 3, 
@@ -48,7 +48,7 @@ export default function RotatingCube({
   // Define punch times for Nexus Prime (Warrior Flip animation)
   // TODO: Watch animation and adjust these timing values
   const nexusPunchTimes = animationId === 3 
-    ? [2, 2.8] // Placeholder - adjust after watching animation
+    ? [1.5, 2.4, 2.8] // ONE explosion only - at the last punch
     : [];
   
   const handleAnimationTimeUpdate = (time) => {
@@ -57,9 +57,11 @@ export default function RotatingCube({
 
   // 🎮 CUBE ROTATION & ANIMATIONS
   useFrame((state, delta) => {
-    // Main cube rotation - apply speed multiplier
+    // Main cube rotation - apply speed multiplier (all axes)
     if (cubeRef.current) {
-      cubeRef.current.rotation.y += delta * 0.5 * speed;
+      cubeRef.current.rotation.x += delta * 0.1 * speed;
+      // cubeRef.current.rotation.y += delta * 0.1 * speed;
+      cubeRef.current.rotation.z += delta * 0.1 * speed;
     }
     
     // Inner light pulsing - apply speed multiplier

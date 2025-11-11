@@ -15,7 +15,7 @@ export default function NexusCube({ size }) {
       <pointLight 
         position={[4, 12, 4]} 
         color="#10c22e" 
-        intensity={1.5} 
+        intensity={1} 
         distance={size} 
       />
     </>

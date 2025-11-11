@@ -36,6 +36,12 @@
   cursor: none !important;
 }
 
+/* ShowcaseViewer - override cursor: none when viewer is active */
+:global(body.showcase-viewer-active),
+:global(body.showcase-viewer-active *) {
+  cursor: pointer !important;
+}
+
 /* Force cursor visibility on canvas and all geom-lab elements */
 :global(body.geom-lab-page *),
 :global(body.geom-lab-page canvas),

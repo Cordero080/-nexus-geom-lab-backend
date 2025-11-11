@@ -4,7 +4,7 @@ import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader';
 import { Canvas } from '@react-three/fiber';
 import { useLocation } from 'react-router-dom';
 import { useAuth } from '../../../features/auth/context/AuthContext';
-import RotatingCube from '../RotatingCube/RotatingCube';
+import RotatingCube from '../ShowcaseViewer/RotatingCube/RotatingCube';
 import ShowcaseViewer from '../ShowcaseViewer/ShowcaseViewer';
 import QuantumPortalShowcase from './QuantumPortalShowcase';
 import { mockAnimations } from './data/mockAnimations';

@@ -81,7 +81,7 @@ export const mockAnimations = [
     animation: "Warrior Flip",
     variant: "Shadow Striker",
     description:
-      "The Quantum ᐱrchitect of the Digital Nexus...Master of hyperdimensional Combat",
+      "The ᐱrchitect of the Digital Nexus...Master of Cybergalactic Combat",
     fbxUrl: "/models/green-plexus-upper.fbx",
     scale: 0.02744,
     galleryScale: 0.02058,

@@ -49,6 +49,7 @@ export default function QuantumNav({ portalState, glyphState, navScrolled, isAut
       <div className="nav-links">
         {isAuthenticated && (
           <>
+            {currentPage !== 'home' && <Link to="/" className="nav-link nav-link--home" data-dimension="0">// HOME</Link>}
             {currentPage !== 'scenes' && <Link to="/scenes" className="nav-link" data-dimension="1">// SCENES</Link>}
             {currentPage !== 'showcase' && <Link to="/showcase" className="nav-link" data-dimension="2">{SHOWCASE_LINK_TEXT}</Link>}
             {currentPage !== 'geom-lab' && <Link to="/geom-lab" className="nav-link" data-dimension="3">{GEOM_LAB_LINK_TEXT}</Link>}

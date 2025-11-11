@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { OrbitControls } from '@react-three/drei';
-import RotatingCube from '../RotatingCube/RotatingCube';
+import RotatingCube from './RotatingCube/RotatingCube';
 import ScrambleButton from '../../ui/ScrambleButton/ScrambleButton';
 import SpeedControl from './SpeedControl/SpeedControl';
 import { useAuth } from '../../../features/auth/context/AuthContext';
 import { mockAnimations } from '../Showcase/data/mockAnimations';
-import IcarusEnvironment from './backgrounds/IcarusEnvironment';
-import NexusEnvironment from './backgrounds/NexusEnvironment';
+import IcarusEnvironment from './characters/Icarus/IcarusEnvironment';
+import NexusEnvironment from './characters/Nexus/NexusEnvironment';
 import styles from './ShowcaseViewer.module.scss';
 import sharedStyles from '../../../styles/shared.module.scss';
 

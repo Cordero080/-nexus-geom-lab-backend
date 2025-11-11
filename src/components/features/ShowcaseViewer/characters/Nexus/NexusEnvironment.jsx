@@ -6,11 +6,12 @@ export default function NexusEnvironment() {
   const matrixCubeRef = useRef();
   const materialRef = useRef();
   const electricalSignals = useRef([]); // Track active electrical signals
+  const hasTriggered = useRef(false); // Only trigger once
   
   // Create Matrix cube with interconnected vertices
   const matrixGeometry = useMemo(() => {
     const size = 90; // Large distant cube
-    const segments = 50; // High detail for intricate look
+    const segments = 60; // High detail for intricate look
     const geometry = new THREE.BufferGeometry();
     const vertices = [];
     const colors = [];
@@ -120,17 +121,18 @@ export default function NexusEnvironment() {
       matrixCubeRef.current.rotation.x += delta * 0.03;
     }
     
-    // Randomly spawn electrical signals
-    if (Math.random() < 0.15) { // 15% chance per frame to spawn a signal
+    // Trigger ONE electrical signal explosion at start
+    if (!hasTriggered.current) {
       const totalLines = matrixCubeRef.current?.geometry.attributes.lineIndex?.array.length || 0;
       if (totalLines > 0) {
         const randomLine = Math.floor(Math.random() * totalLines / 2);
         electricalSignals.current.push({
           lineIndex: randomLine,
           intensity: .1,
-          color: Math.random() > 0.5 ? 'magenta' : 'green', // Random color
+          color: 'magenta',
           decayRate: 5.0 + Math.random() * 3.0 // Random decay speed
         });
+        hasTriggered.current = true;
       }
     }
     
@@ -149,7 +151,7 @@ export default function NexusEnvironment() {
         const lineIdx = lineIndices.array[i];
         
         // Base wave pattern
-        const wave = Math.sin(time * 3 + lineIdx * 0.05);
+        const wave = Math.sin(time * 3 + lineIdx * .05);
         
         // Base colors
         let r, g, b;
