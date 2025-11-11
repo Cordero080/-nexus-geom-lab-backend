@@ -1,12 +1,19 @@
 import { useEffect } from "react";
-import { updateMousePosition } from "../objects/spectralOrbs";
-import { updateEnvironment } from "../../setup/environmentSetup";
+import * as THREE from "three";
+import { updateEnvironment } from "../../threeSetup/environmentSetup";
+import { updateMousePosition } from "../../objects/spectralOrbs";
 
 /**
- * Handles mouse tracking for orb interaction
+ * VISUAL EFFECTS HOOK - Mouse tracking for spectral orbs
  *
- * @param {Object} rendererRef - Reference to the Three.js renderer
- * @param {Object} cameraRef - Reference to the Three.js camera
+ * What it does:
+ * 1. Tracks mouse movement across the window
+ * 2. Updates spectral orb positions to follow cursor
+ * 3. Provides smooth interactive movement
+ *
+ * Why it matters:
+ * - Creates interactive visual feedback
+ * - Runs once on mount, listener persists until unmount
  */
 export function useMouseTracking(rendererRef, cameraRef) {
   useEffect(() => {
@@ -31,11 +38,17 @@ export function useMouseTracking(rendererRef, cameraRef) {
 }
 
 /**
- * Update environment when environment type or hue changes
+ * VISUAL EFFECTS HOOK - Updates scene environment settings
  *
- * @param {Object} sceneRef - Reference to the Three.js scene
- * @param {string} environment - Environment type
- * @param {number} environmentHue - Hue shift in degrees (0-360)
+ * What it does:
+ * 1. Calls threeSetup/environmentSetup to configure fog, background, etc
+ * 2. Updates when environment or hue changes
+ * 3. Applies environment-specific visual settings to the scene
+ *
+ * Why it matters:
+ * - Keeps environment visuals in sync with user selections
+ * - Bridges React state changes to Three.js scene properties
+ * - Runs after scene initialization but before rendering
  */
 export function useEnvironmentUpdate(sceneRef, environment, environmentHue) {
   useEffect(() => {

@@ -1,21 +1,21 @@
 import { useEffect } from "react";
 
 /**
- * Manages lighting updates based on prop changes
- * Updates ambient and directional lights without recreating them
+ * PROPERTY UPDATE HOOK - Updates light properties when state changes
  *
- * @param {Object} refs - References to light objects
- * @param {Object} refs.ambientLightRef - Reference to ambient light
- * @param {Object} refs.directionalLightRef - Reference to directional light
- * @param {Object} lightingProps - Lighting configuration properties
- * @param {string} lightingProps.ambientLightColor - Ambient light color hex
- * @param {number} lightingProps.ambientLightIntensity - Ambient light intensity
- * @param {string} lightingProps.directionalLightColor - Directional light color hex
- * @param {number} lightingProps.directionalLightIntensity - Directional light intensity
- * @param {number} lightingProps.directionalLightX - Directional light X position
- * @param {number} lightingProps.directionalLightY - Directional light Y position
- * @param {number} lightingProps.directionalLightZ - Directional light Z position
- * @param {number} lightingProps.metalness - Metalness value (0-1) for intensity boosting
+ * What it does:
+ * 1. Accesses existing lights via refs (created by useSceneInitialization)
+ * 2. Updates color, intensity, and position without recreating lights
+ * 3. Boosts intensity when metalness is high for dramatic effect
+ * 4. Reacts to any lighting prop changes
+ *
+ * Why it matters:
+ * - Efficient updates (modify existing objects, don't recreate)
+ * - Keeps Three.js lights in sync with React state
+ * - Runs AFTER useSceneInitialization (depends on lights existing in refs)
+ *
+ * @param {Object} refs - Refs containing light objects
+ * @param {Object} lightingProps - Current state values for lighting
  */
 export function useLightingUpdates(refs, lightingProps) {
   const { ambientLightRef, directionalLightRef } = refs;

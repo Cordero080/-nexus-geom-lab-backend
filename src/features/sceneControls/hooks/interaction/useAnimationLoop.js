@@ -1,23 +1,25 @@
 import { useEffect } from "react";
-import { startAnimationLoop } from "../animation/animationLoop";
+import { startAnimationLoop } from "../../animation/animationLoop";
 
 /**
- * Hook to manage the main animation loop
+ * USER INTERACTION HOOK - Main animation loop (runs last!)
  *
- * @param {Object} refs - References to Three.js objects
- * @param {Object} refs.rendererRef - Renderer reference
- * @param {Object} refs.sceneRef - Scene reference
- * @param {Object} refs.cameraRef - Camera reference
- * @param {Object} refs.animationIdRef - Animation ID reference
- * @param {Object} refs.objectsRef - Objects reference
- * @param {Object} refs.objectSpeedRef - Object speed reference (allows speed changes without restarting animation)
- * @param {Object} refs.orbSpeedRef - Orb speed reference (allows speed changes without restarting animation)
- * @param {Object} settings - Animation settings
- * @param {string} settings.animationStyle - Current animation style
- * @param {string} settings.cameraView - Current camera view
- * @param {Object} interactionFns - Functions for user interaction (rotation overrides)
- * @param {Function} interactionFns.getUserRotation - Returns rotation offset for objectId
- * @param {Function} interactionFns.decayUserRotations - Decays stored rotation offsets each frame
+ * What it does:
+ * 1. Starts the requestAnimationFrame loop
+ * 2. Renders scene every frame
+ * 3. Applies animation styles (orbital, chaotic, static, etc)
+ * 4. Handles user rotation overrides from mouse interactions
+ * 5. Stores animation ID for cleanup
+ *
+ * Why it matters:
+ * - This is what makes everything move!
+ * - MUST run AFTER all other hooks (needs objects/lights to exist)
+ * - Cancels animation on unmount to prevent memory leaks
+ * - Restarts when animation style or camera view changes
+ *
+ * @param {Object} refs - All Three.js object references
+ * @param {Object} settings - Animation settings (style, view, speeds)
+ * @param {Object} interactionFns - Functions for user rotation overrides
  */
 export function useAnimationLoop(refs, settings, interactionFns = {}) {
   const {

@@ -2,13 +2,24 @@ import { useEffect, useRef } from "react";
 import * as THREE from "three";
 
 /**
- * Creates an unconventional nebula particle system with:
- * - Volumetric layered sheets (not just dots)
- * - Procedural color mutations
- * - Turbulent flow fields
- * - Depth-reactive opacity
+ * VISUAL EFFECTS HOOK - Creates environment-specific particle systems
  *
- * For sunset environment: Creates floating geometric dust particles
+ * What it does:
+ * 1. Creates volumetric particle system (not just dots - layered sheets!)
+ * 2. Procedurally animates particles with turbulent flow fields
+ * 3. Adapts particle style/color based on environment (space, sunset, void, etc)
+ * 4. Updates particle motion in animation loop via orbSpeedRef
+ *
+ * Why it matters:
+ * - Adds atmospheric depth to each environment
+ * - Creates unconventional particle effects (geometric dust, nebula sheets)
+ * - Performance-optimized with depth-reactive opacity
+ * - Cleans up and recreates when environment changes
+ *
+ * @param {Object} sceneRef - Three.js scene to add particles to
+ * @param {string} environment - Current environment type
+ * @param {number} environmentHue - Hue shift for particle colors
+ * @param {Object} orbSpeedRef - Speed reference for animation
  */
 export function useNebulaParticles(
   sceneRef,

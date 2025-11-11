@@ -1,6 +1,6 @@
 import { jest } from "@jest/globals";
 import * as THREE from "three";
-import { initializeScene } from "./features/sceneControls/setup/sceneSetup";
+import { initializeScene } from "./features/sceneControls/threeSetup/sceneSetup";
 
 // Mock Three.js classes and methods
 jest.mock("three", () => ({

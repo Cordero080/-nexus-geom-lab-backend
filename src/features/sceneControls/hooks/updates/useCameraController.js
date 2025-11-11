@@ -1,10 +1,20 @@
 import { useEffect } from "react";
 
 /**
- * Controls camera position based on cameraView prop
+ * PROPERTY UPDATE HOOK - Controls camera position based on view mode
  *
- * @param {Object} cameraRef - Reference to the Three.js camera
- * @param {string} cameraView - Camera view mode ('free', 'orbit', 'top')
+ * What it does:
+ * 1. Updates camera position when cameraView prop changes
+ * 2. Switches between 'free', 'orbit', and 'top' view modes
+ * 3. Adjusts lookAt direction for some views
+ *
+ * Why it matters:
+ * - Provides different perspectives for viewing 3D objects
+ * - Simple position updates (no complex camera controls needed)
+ * - Runs whenever user changes view mode
+ *
+ * @param {Object} cameraRef - Camera object reference
+ * @param {string} cameraView - View mode ('free', 'orbit', 'top')
  */
 export function useCameraController(cameraRef, cameraView) {
   useEffect(() => {

@@ -2,7 +2,23 @@ import { useRef, useCallback, useEffect } from "react";
 import * as THREE from "three";
 
 /**
- * Hook for handling object rotation interference on mouse-over (no click required)
+ * USER INTERACTION HOOK - Mouse-over rotation interference (no click required!)
+ *
+ * What it does:
+ * 1. Raycasts from mouse position to detect hovered objects
+ * 2. Adds rotation interference when mouse hovers over object
+ * 3. Stores rotation offsets per object ID
+ * 4. Gradually decays rotation when mouse leaves (damping effect)
+ * 5. Provides getUserRotation/decayUserRotations to animation loop
+ *
+ * Why it matters:
+ * - Creates playful, tactile interaction without clicks
+ * - Objects "react" to mouse presence
+ * - Smooth damping makes it feel natural
+ * - Returns functions for animation loop to use each frame
+ *
+ * @param {Object} refs - Scene, camera, renderer references for raycasting
+ * @returns {Object} Functions: getUserRotation, setUserRotation, decayUserRotations
  */
 export function useObjectInteraction(refs) {
   const { sceneRef, cameraRef, rendererRef } = refs;

@@ -2,10 +2,21 @@ import { useEffect, useRef } from "react";
 import * as THREE from "three";
 
 /**
- * Adds additional lights from multiple angles ONLY when metalness is high
- * This gives metallic surfaces more to reflect, making the effect visible from all angles
+ * VISUAL EFFECTS HOOK - Adds extra lights when metalness is high
  *
- * @param {Object} sceneRef - Reference to the Three.js scene
+ * What it does:
+ * 1. Dynamically adds 7 rim/back/spot lights when metalness > 0.4
+ * 2. Gives metallic surfaces more light sources to reflect from all angles
+ * 3. Scales light intensity based on metalness value
+ * 4. Removes lights when metalness drops below threshold
+ *
+ * Why it matters:
+ * - Makes metalness effect visible from all camera angles
+ * - Without these lights, metallic objects look flat from certain views
+ * - Adds dramatic rim lighting and volumetric effects
+ * - Performance-friendly: only active when needed
+ *
+ * @param {Object} sceneRef - Three.js scene to add lights to
  * @param {number} metalness - Current metalness value (0-1)
  */
 export function useMetalnessLighting(sceneRef, metalness) {

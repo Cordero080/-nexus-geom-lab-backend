@@ -7,7 +7,7 @@ src/features/sceneControls/
 ├── ThreeScene.jsx              → Main React component
 ├── ThreeScene.css              → Scene styles
 │
-├── core/                       → ⚠️ CONFUSING NAME - Should be "setup/"
+├── threeSetup/                 → ⭐ Pure functions - React→Three.js bridge
 │   ├── environmentSetup.js     → Pure functions for environment config
 │   ├── lightingSetup.js        → Pure functions for lighting setup
 │   └── sceneSetup.js           → Pure functions for scene creation
@@ -47,37 +47,43 @@ src/features/sceneControls/
 
 ---
 
-## 🎯 Key Distinction: `core/` vs `hooks/core/`
+## 🎯 Revolutionary Naming: `threeSetup/`
 
-### ❌ Problem: Two folders named "core"
+### Why `threeSetup/` instead of generic `utils/` or `helpers/`?
 
-1. **`sceneControls/core/`** (should be renamed to `setup/`)
+**The folder name teaches the architecture:**
+
+1. **`threeSetup/`** - Pure JavaScript functions (React→Three.js bridge)
+
    - **Type:** Pure JavaScript functions
-   - **Purpose:** Setup utilities for Three.js
+   - **Purpose:** Where React state values become Three.js objects
    - **No React:** Just functions, no hooks
-   - **Example:** `createScene()`, `setupLighting()`, `updateEnvironment()`
+   - **Example:** `createScene()`, `initializeLighting()`, `updateEnvironment()`
+   - **Revolutionary:** Name explicitly shows this is the Three.js connection point
 
-2. **`sceneControls/hooks/core/`**
+2. **`hooks/core/`** - React infrastructure hooks
    - **Type:** React hooks
    - **Purpose:** Core infrastructure hooks that run ONCE on mount
    - **Uses React:** useState, useEffect, useRef
    - **Example:** `useSceneInitialization()`, `useObjectManager()`
-   - **Dependencies:** Calls the functions from `core/setup/`
+   - **Dependencies:** Calls the functions from `threeSetup/`
 
-### ✅ Recommended Fix: Rename `core/` → `setup/`
+### The Mental Model
 
-```diff
-src/features/sceneControls/
-- ├── core/                    → Pure utility functions
-+ ├── setup/                   → Pure utility functions
-  │   ├── environmentSetup.js
-  │   ├── lightingSetup.js
-  │   └── sceneSetup.js
-  │
-  ├── hooks/
-  │   ├── core/                → Core React hooks (keep this name)
-  │   │   ├── useSceneInitialization.js  (calls setup/ functions)
-  │   │   └── useObjectManager.js
+```
+React Layer (hooks/)
+      ↓
+  threeSetup/  ← "This is where we SET UP THREE.js"
+      ↓
+Three.js Layer
+```
+
+### Code Self-Documentation
+
+```javascript
+// Anyone reading this instantly knows where Three.js happens:
+import { initializeLighting } from "../../threeSetup/lightingSetup";
+// ↑ "Ah! This is the Three.js bridge!"
 ```
 
 ---
@@ -117,16 +123,19 @@ src/features/sceneControls/
 
 ## 📝 Naming Convention
 
-### Setup Functions (in `setup/` folder)
+### Setup Functions (in `threeSetup/` folder)
+
 - **Pattern:** `verbNoun()` - imperative, action-based
 - **Examples:**
   - `createScene()`
   - `updateEnvironment()`
-  - `setupLighting()`
+  - `initializeLighting()`
 - **Return:** Three.js objects or void
 - **No React:** Pure functions
+- **Location:** `threeSetup/` - the React→Three.js bridge
 
 ### React Hooks (in `hooks/` folders)
+
 - **Pattern:** `useSomething()` - React convention
 - **Examples:**
   - `useSceneInitialization()`
@@ -141,15 +150,15 @@ src/features/sceneControls/
 
 ```javascript
 // In hooks/core/useSceneInitialization.js
-import { createScene } from '../../setup/sceneSetup';      // Pure function
-import { updateEnvironment } from '../../setup/environmentSetup';  // Pure function
+import { createScene } from "../../threeSetup/sceneSetup"; // Pure function
+import { updateEnvironment } from "../../threeSetup/environmentSetup"; // Pure function
 
 export function useSceneInitialization(refs, config) {
   useEffect(() => {
-    // Hook CALLS the pure setup functions
+    // Hook CALLS the pure threeSetup functions
     const scene = createScene();
     updateEnvironment(scene, config.environment);
-    
+
     // Store in refs for other hooks to access
     refs.sceneRef.current = scene;
   }, []);
@@ -157,8 +166,9 @@ export function useSceneInitialization(refs, config) {
 ```
 
 **Flow:**
+
 1. `ThreeScene.jsx` calls `useSceneInitialization()` (React hook)
-2. Hook calls `createScene()` (pure function from `setup/`)
+2. Hook calls `initializeLighting()` (pure function from `threeSetup/`)
 3. Hook stores result in refs
 4. Other hooks access refs to modify scene
 
@@ -183,9 +193,9 @@ Think of it as layers:
 └─────────────────────────────────────────┘
                     ↓
 ┌─────────────────────────────────────────┐
-│   setup/ (Pure Functions Layer)         │
-│   - createScene()                       │
-│   - setupLighting()                     │
+│   threeSetup/ (React→Three.js Bridge) ⭐│
+│   - initializeScene()                   │
+│   - initializeLighting()                │
 │   - updateEnvironment()                 │
 └─────────────────────────────────────────┘
                     ↓
@@ -201,14 +211,15 @@ Think of it as layers:
 
 ## 📌 Summary
 
-| Folder | Type | React? | Purpose | Example |
-|--------|------|--------|---------|---------|
-| `setup/` | Functions | ❌ No | Create Three.js objects | `createScene()` |
-| `hooks/core/` | Hooks | ✅ Yes | Initialize on mount | `useSceneInitialization()` |
-| `hooks/effects/` | Hooks | ✅ Yes | Add visual effects | `useNebulaParticles()` |
-| `hooks/updates/` | Hooks | ✅ Yes | React to prop changes | `useMaterialUpdates()` |
-| `hooks/interaction/` | Hooks | ✅ Yes | Handle user input | `useAnimationLoop()` |
+| Folder               | Type      | React? | Purpose                     | Example                    |
+| -------------------- | --------- | ------ | --------------------------- | -------------------------- |
+| `threeSetup/`        | Functions | ❌ No  | React→Three.js bridge       | `initializeLighting()`     |
+| `hooks/core/`        | Hooks     | ✅ Yes | Initialize on mount         | `useSceneInitialization()` |
+| `hooks/effects/`     | Hooks     | ✅ Yes | Add visual effects          | `useNebulaParticles()`     |
+| `hooks/updates/`     | Hooks     | ✅ Yes | React to prop changes       | `useMaterialUpdates()`     |
+| `hooks/interaction/` | Hooks     | ✅ Yes | Handle user input/animation | `useAnimationLoop()`       |
 
-**Key Insight:** 
-- `setup/` = **What** to create (pure functions)
+**Key Insight:**
+
+- `threeSetup/` = **What** to create & **Where** Three.js happens (pure functions)
 - `hooks/` = **When** to create it (React lifecycle)

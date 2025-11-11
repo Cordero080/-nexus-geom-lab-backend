@@ -11,7 +11,6 @@ import { getSolidMaterial, getMaterialPoolKey } from "./materialCache";
 import { assembleWireframe } from "./wireframeAssembler";
 import { assembleHyperframe } from "./hyperframeAssembler";
 import { createQuantumManifoldExtras } from "./decorators/quantumManifoldExtras";
-import { createCentralGoldenSymmetry } from "./decorators/centralGoldenSymmetry";
 import {
   createCompoundSphereExtras,
   createFloatingCityExtras,

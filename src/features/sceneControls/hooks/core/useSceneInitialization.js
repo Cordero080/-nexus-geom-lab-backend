@@ -1,27 +1,24 @@
 import { useEffect } from "react";
-import { initializeScene } from "../../setup/sceneSetup";
-import { initializeLighting } from "../../setup/lightingSetup";
+import { initializeScene } from "../../threeSetup/sceneSetup";
+import { initializeLighting } from "../../threeSetup/lightingSetup";
 
 /**
- * Initializes the Three.js scene, camera, renderer, and lighting
- * Runs once on component mount
+ * CORE INFRASTRUCTURE HOOK - Initializes Three.js scene on component mount
  *
- * @param {Object} refs - References to Three.js objects
- * @param {Object} refs.sceneRef - Reference to store the scene
- * @param {Object} refs.cameraRef - Reference to store the camera
- * @param {Object} refs.rendererRef - Reference to store the renderer
- * @param {Object} refs.mountRef - Reference to the DOM element to mount the canvas
- * @param {Object} refs.ambientLightRef - Reference to store ambient light
- * @param {Object} refs.directionalLightRef - Reference to store directional light
- * @param {Object} refs.animationIdRef - Reference to store animation frame ID
- * @param {Object} lightingProps - Lighting configuration
- * @param {string} lightingProps.ambientLightColor - Ambient light color hex
- * @param {number} lightingProps.ambientLightIntensity - Ambient light intensity
- * @param {string} lightingProps.directionalLightColor - Directional light color hex
- * @param {number} lightingProps.directionalLightIntensity - Directional light intensity
- * @param {number} lightingProps.directionalLightX - Directional light X position
- * @param {number} lightingProps.directionalLightY - Directional light Y position
- * @param {number} lightingProps.directionalLightZ - Directional light Z position
+ * What it does:
+ * 1. Calls threeSetup/ functions to create Three.js objects (scene, camera, renderer, lights)
+ * 2. Stores Three.js objects in refs so other hooks can access/modify them
+ * 3. Adds renderer canvas to DOM
+ * 4. Sets up window resize listener to keep canvas responsive
+ * 5. Cleans up on unmount (removes listeners, disposes renderer)
+ *
+ * Why it matters:
+ * - This is the React→Three.js bridge - where state values become 3D objects
+ * - Runs ONCE on mount (empty dependency array)
+ * - All other hooks depend on these refs being populated
+ *
+ * @param {Object} refs - Empty ref containers to fill with Three.js objects
+ * @param {Object} lightingProps - Current state values for lighting (color, intensity, position)
  */
 export function useSceneInitialization(refs, lightingProps) {
   const {

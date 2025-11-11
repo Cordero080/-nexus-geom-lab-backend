@@ -2,18 +2,22 @@ import { useEffect } from "react";
 import * as THREE from "three";
 
 /**
- * Manages material property updates for all objects
- * Responds to material prop changes without recreating objects
+ * PROPERTY UPDATE HOOK - Updates material properties when state changes
  *
- * @param {Object} objectsRef - Reference to array of object data
- * @param {Object} materialProps - Material configuration properties
- * @param {number} materialProps.scale - Scale value for all objects
- * @param {number} materialProps.metalness - Metalness value (0-1)
- * @param {number} materialProps.emissiveIntensity - Emissive intensity (0-2, multiplied by baseColor)
- * @param {string} materialProps.baseColor - Base color hex
- * @param {number} materialProps.wireframeIntensity - Wireframe opacity (0-100)
- * @param {string} materialProps.hyperframeColor - Spiral color hex
- * @param {string} materialProps.hyperframeLineColor - Edge color hex
+ * What it does:
+ * 1. Accesses existing objects via objectsRef (created by useObjectManager)
+ * 2. Updates scale, metalness, emissive, colors without recreating objects
+ * 3. Each property has its own useEffect for targeted updates
+ * 4. Handles special materials (wireframe, hyperframe spiral, edges)
+ *
+ * Why it matters:
+ * - Efficient updates (modify existing materials, don't recreate geometry)
+ * - Keeps Three.js materials in sync with React state
+ * - Separated effects = only update what changed
+ * - Runs AFTER useObjectManager (depends on objects existing in ref)
+ *
+ * @param {Object} objectsRef - Ref containing array of object data
+ * @param {Object} materialProps - Current state values for materials
  */
 export function useMaterialUpdates(objectsRef, materialProps) {
   const {

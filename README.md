@@ -153,10 +153,14 @@ A full-stack MERN application that transforms abstract 4D geometry into an inter
 - **Environment System**: Quantum-themed backgrounds with 360° hue shifting
 - **Audio Reactive Visuals**:
   - Microphone-driven geometry with real-time FFT (Fast Fourier Transform) analysis
-  - Adaptive noise filtering with 40%/35%/15% sensitivity thresholds
+  - Adaptive noise filtering with 55%/50% sensitivity thresholds
   - Frequency-to-geometry mapping:
-    - Bass frequencies (20-250 Hz) → X-axis rotation + scale pulsing + Z-position movement
+    - Bass frequencies (20-250 Hz) → X-axis rotation + scale pulsing (only when very loud) + Z-position movement
     - Mid frequencies (250-2000 Hz) → Y/Z-axis rotation
+  - **Dynamic Color Cycling**: Mesh and hyperframe change colors independently every 3 full rotations
+    - Mesh uses darker complementary palette (based on base color #670d48)
+    - Hyperframe uses brighter, vibrant palette for contrast
+    - Creates evolving color combinations as components drift out of sync
   - Momentum-based physics with 50% friction for natural deceleration
   - Extensive tuning for responsive feel without jitter
   - Smooth acceleration with sound, natural slowdown when audio stops
@@ -269,7 +273,7 @@ nexus-geom-3D/
 │   ├── App.jsx                      # Main application component
 │   ├── main.jsx                     # React 19.1 entry point
 │   ├── index.css                    # Global styles
-│   ├── 📁 components/
+│   ├── 📁 components/my object is reacing to quickly to loew noise
 │   │   ├── 📁 features/             # Feature-specific components
 │   │   │   └── 📁 SaveButton/       # Scene save with unlock modals
 │   │   ├── 📁 layout/               # App structure (Header, Footer, etc.)
