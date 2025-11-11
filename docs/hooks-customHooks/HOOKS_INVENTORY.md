@@ -4,7 +4,7 @@ Quick reference list of all custom hooks in the application.
 
 ## Summary
 
-**Total Custom Hooks: 11**
+**Total Custom Hooks: 18**
 
 ---
 
@@ -24,6 +24,7 @@ Quick reference list of all custom hooks in the application.
 | `useSceneInitialization()` | `/src/features/sceneControls/hooks/useSceneInitialization.js` | Initialize scene, camera, renderer |
 | `useCameraController()`    | `/src/features/sceneControls/hooks/useCameraController.js`    | Control camera view modes          |
 | `useLightingUpdates()`     | `/src/features/sceneControls/hooks/useLightingUpdates.js`     | Update lighting in real-time       |
+| `useMetalnessLighting()`   | `/src/features/sceneControls/hooks/useMetalnessLighting.js`   | Metalness-specific lighting setup  |
 
 ### Object & Material Hooks
 
@@ -41,10 +42,24 @@ Quick reference list of all custom hooks in the application.
 
 ### Effects & Environment Hooks
 
-| Hook                     | Location                                               | Purpose                  |
-| ------------------------ | ------------------------------------------------------ | ------------------------ |
-| `useMouseTracking()`     | `/src/features/sceneControls/hooks/useSceneEffects.js` | Track mouse for effects  |
-| `useEnvironmentUpdate()` | `/src/features/sceneControls/hooks/useSceneEffects.js` | Update scene environment |
+| Hook                   | Location                                                  | Purpose                      |
+| ---------------------- | --------------------------------------------------------- | ---------------------------- |
+| `useSceneEffects()`    | `/src/features/sceneControls/hooks/useSceneEffects.js`    | Mouse tracking & environment |
+| `useNebulaParticles()` | `/src/features/sceneControls/hooks/useNebulaParticles.js` | Particle system generation   |
+
+### Audio Hooks
+
+| Hook                 | Location                                        | Purpose                   |
+| -------------------- | ----------------------------------------------- | ------------------------- |
+| `useAudioAnalyzer()` | `/src/features/audio/hooks/useAudioAnalyzer.js` | Audio frequency analysis  |
+| `useAudioReactive()` | `/src/features/audio/hooks/useAudioReactive.js` | Audio-reactive animations |
+
+### Homepage Hooks
+
+| Hook                | Location                                                  | Purpose                     |
+| ------------------- | --------------------------------------------------------- | --------------------------- |
+| `useParallax()`     | `/src/components/pages/HomePage/hooks/useParallax.js`     | Background parallax effects |
+| `useQuantumState()` | `/src/components/pages/HomePage/hooks/useQuantumState.js` | Homepage animation state    |
 
 ### Text Effects Hooks
 
@@ -61,11 +76,12 @@ Quick reference list of all custom hooks in the application.
 1. `useScene()` - Full scene state and methods
 2. `useAuth()` - User authentication and permissions
 
-### 🖼️ Three.js Initialization (3)
+### 🖼️ Three.js Initialization (4)
 
 1. `useSceneInitialization()` - Setup scene and renderer
 2. `useCameraController()` - Manage camera position
 3. `useLightingUpdates()` - Control lighting
+4. `useMetalnessLighting()` - Metalness-specific lighting
 
 ### 🎨 Object & Material (2)
 
@@ -79,8 +95,18 @@ Quick reference list of all custom hooks in the application.
 
 ### ✨ Effects & Environment (2)
 
-1. `useMouseTracking()` - Mouse position tracking
-2. `useEnvironmentUpdate()` - Scene background/environment
+1. `useSceneEffects()` - Mouse tracking & environment updates
+2. `useNebulaParticles()` - Particle systems
+
+### 🎵 Audio (2)
+
+1. `useAudioAnalyzer()` - Frequency analysis
+2. `useAudioReactive()` - Audio-driven animations
+
+### 🏠 Homepage (2)
+
+1. `useParallax()` - Background parallax effects
+2. `useQuantumState()` - Homepage animation state
 
 ### 📝 UI Effects (1)
 

@@ -44,7 +44,9 @@ export default class QuantumCursorUniverse {
 
     document.addEventListener("mousemove", (e) => this.updateMousePosition(e));
     document.addEventListener("click", (e) => {
-      // Wormhole ripple effect removed
+      if (!this.isInGeomLab() && !this.isOverControl) {
+        this.createWormhole();
+      }
     });
     document.addEventListener("mousedown", (e) => {
       // Disable dimensional rift effect in the geom-lab route and over controls
@@ -225,6 +227,29 @@ export default class QuantumCursorUniverse {
     }
   }
 
+  createWormhole() {
+    const wormhole = document.getElementById("wormhole");
+    if (wormhole) {
+      wormhole.style.opacity = "1";
+      wormhole.style.left = this.mouseX + "px";
+      wormhole.style.top = this.mouseY + "px";
+      wormhole.style.transform = "translate(-50%, -50%) scale(0)";
+
+      // Animate wormhole ripple
+      requestAnimationFrame(() => {
+        wormhole.style.transition = "all 0.8s ease-out";
+        wormhole.style.transform = "translate(-50%, -50%) scale(3)";
+        wormhole.style.opacity = "0";
+      });
+
+      // Reset after animation
+      setTimeout(() => {
+        wormhole.style.transition = "none";
+        wormhole.style.transform = "translate(-50%, -50%) scale(0)";
+      }, 800);
+    }
+  }
+
   closeDimensionalRift() {
     this.dimensionalTear = false;
     if (this.dimensionalRift) {
@@ -237,8 +262,8 @@ export default class QuantumCursorUniverse {
     this.targetY += (this.mouseY - this.targetY) * 0.15;
 
     if (this.cursor) {
-      this.cursor.style.left = this.targetX - 8 + "px"; // Smaller focal point
-      this.cursor.style.top = this.targetY - 8 + "px";
+      this.cursor.style.left = this.targetX + "px";
+      this.cursor.style.top = this.targetY + "px";
 
       // Electric blues to vibrant magenta - full cyberpunk spectrum (220-300 hue range)
       const baseHue = 220 + ((this.quantumState * 100) % 80); // Cycles through 220-300 (deep blue to magenta)

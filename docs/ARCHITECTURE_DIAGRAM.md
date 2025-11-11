@@ -43,41 +43,60 @@
 │  └─────────────────────────────────────────────────────────────────────────────────┘ │
 │                                         │                                           │
 │                                         ▼                                           │
-│  ┌─────────────────┐     ┌─────────────────┐     ┌─────────────────┐               │
-│  │  Controls.jsx   │────▶│  ThreeScene.jsx │◀────│ SaveControls.jsx│               │
-│  ├─────────────────┤     ├─────────────────┤     ├─────────────────┤               │
-│  │ • Material UI   │     │ • Receives all  │     │ • Collects state│               │
-│  │ • Scene UI      │     │   20 props      │     │ • API calls     │               │
-│  │ • Lighting UI   │     │ • Passes to     │     │ • Scene saving  │               │
-│  │ • Event handlers│     │   custom hooks  │     │ • User feedback │               │
-│  │ • User interaction      │ • Renders 3D    │     └─────────────────┘               │
-│  └─────────────────┘     └─────────────────┘                                       │
+│  ┌───────────────────────────────────────────────────────────────────────────────┐ │
+│  │                        COMPONENT ORGANIZATION                                 │ │
+│  ├───────────────────────────────────────────────────────────────────────────────┤ │
+│  │  components/                                                                  │ │
+│  │  ├─ features/          (Business Logic Components)                            │ │
+│  │  │  ├─ Controls/       → Material, Scene, Lighting UI                        │ │
+│  │  │  ├─ LightingControls/ → Light configuration                               │ │
+│  │  │  ├─ SaveButton/     → Scene save modal & logic                            │ │
+│  │  │  ├─ SceneCard/      → Scene gallery cards                                 │ │
+│  │  │  ├─ Scenes/         → 3D scene rendering (ThreeScene)                     │ │
+│  │  │  ├─ Showcase/       → Gallery displays                                    │ │
+│  │  │  └─ ShowcaseViewer/ → Full-screen 3D viewers                              │ │
+│  │  │                                                                            │ │
+│  │  ├─ pages/             (Page-Level Components)                               │ │
+│  │  │  ├─ HomePage/       → Landing page with animations                        │ │
+│  │  │  │  ├─ HessianPolychoronAnimation.jsx                                     │ │
+│  │  │  │  ├─ QuantumManifoldAnimation.jsx                                       │ │
+│  │  │  │  └─ hooks/ (useParallax, useQuantumState)                              │ │
+│  │  │  └─ MyScenesPage/   → User scene gallery                                  │ │
+│  │  │                                                                            │ │
+│  │  ├─ layout/            (Layout Wrappers)                                     │ │
+│  │  │  └─ Navigation, headers, footers                                          │ │
+│  │  │                                                                            │ │
+│  │  ├─ shared/            (Reusable Across Features)                            │ │
+│  │  │  └─ Common components used by multiple features                           │ │
+│  │  │                                                                            │ │
+│  │  └─ ui/                (Pure UI Components)                                  │ │
+│  │     └─ Buttons, modals, cards, etc.                                          │ │
+│  └───────────────────────────────────────────────────────────────────────────────┘ │
+│  └───────────────────────────────────────────────────────────────────────────────┘ │
 │                                                                                     │
-│  ┌─────────────────┐     ┌─────────────────┐     ┌─────────────────┐               │
-│  │ShowcaseViewer   │────▶│ RotatingCube.jsx│◀────│  FBXModel.jsx   │               │
-│  ├─────────────────┤     ├─────────────────┤     ├─────────────────┤               │
-│  │ • Animation data│     │ • Character     │     │ • 3D Model      │               │
-│  │ • Scene configs │     │   container     │     │   Loading       │               │
-│  │ • Lighting      │     │ • Conditional   │     │ • FBX Parser    │               │
-│  │   controls      │     │   lighting      │     │ • Material      │               │
-│  │ • Background    │     │ • Environment   │     │   Application   │               │
-│  │   animations    │     │   setup         │     │ • Animation     │               │
-│  └─────────────────┘     └─────────────────┘     └─────────────────┘               │
-│           │                       │                                                 │
-│           │                       ▼                                                 │
-│           │              ┌─────────────────┐                                        │
-│           │              │ Custom Hooks    │                                        │
-│           │              │ Layer           │                                        │
-│           │              ├─────────────────┤                                        │
-│           │              │useObjectManager │                                        │
-│           │              │useMaterialUpdate│                                        │
-│           │              │useLightingUpdate│                                        │
-│           │              │useAnimationLoop │                                        │
-│           │              │useSceneSetup    │                                        │
-│           │              │useEnvironment   │                                        │
-│           │              └─────────────────┘                                        │
-│           │                       │                                                 │
-│           └───────────────────────┼─────────────────────────────────────────────────┤
+│  ┌───────────────────────────────────────────────────────────────────────────────┐ │
+│  │                          CUSTOM HOOKS LAYER                                   │ │
+│  ├───────────────────────────────────────────────────────────────────────────────┤ │
+│  │  features/sceneControls/hooks/                                                │ │
+│  │  ├─ useSceneInitialization  → Scene, camera, renderer setup                  │ │
+│  │  ├─ useObjectManager        → Create/manage 3D objects                       │ │
+│  │  ├─ useMaterialUpdates      → Real-time material tweaks                      │ │
+│  │  ├─ useLightingUpdates      → Lighting configuration                         │ │
+│  │  ├─ useAnimationLoop        → Main render loop                               │ │
+│  │  ├─ useCameraController     → Camera view modes                              │ │
+│  │  ├─ useObjectInteraction    → Mouse-based rotation                           │ │
+│  │  ├─ useSceneEffects         → Environment & effects                          │ │
+│  │  ├─ useNebulaParticles      → Particle systems                               │ │
+│  │  └─ useMetalnessLighting    → Metalness-specific lighting                    │ │
+│  │                                                                                │ │
+│  │  features/audio/hooks/                                                        │ │
+│  │  ├─ useAudioAnalyzer        → Audio frequency analysis                       │ │
+│  │  └─ useAudioReactive        → Reactive animations                            │ │
+│  │                                                                                │ │
+│  │  components/pages/HomePage/hooks/                                             │ │
+│  │  ├─ useParallax             → Background parallax effects                    │ │
+│  │  └─ useQuantumState         → Homepage animation state                       │ │
+│  └───────────────────────────────────────────────────────────────────────────────┘ │
 │                                   ▼                                                 │
 └─────────────────────────────────────────────────────────────────────────────────────┘
 
