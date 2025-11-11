@@ -5,6 +5,7 @@ import sharedStyles from "../../../styles/shared.module.scss";
 import { Link, useLocation } from "react-router-dom";
 import { useAuth } from '../../../features/auth/context/AuthContext';
 import ScrambleButton from "../../ui/ScrambleButton/ScrambleButton";
+import ScrambleLink from "../../ui/ScrambleLink/ScrambleLink";
 import { GEOM_LAB_LINK_TEXT, SHOWCASE_LINK_TEXT } from "./navLabels";
 
 export default function NavBar({ portalColors = null, glyphs = null, navScrolled = false }) {
@@ -63,11 +64,11 @@ export default function NavBar({ portalColors = null, glyphs = null, navScrolled
     <nav className={`quantum-nav${shouldUseClearNav ? ' showcase-viewer-navbar' : ''}`} style={quantumStyle}>
       <div className="nav-links">
         {/* ALWAYS show these - public links (hide if on current page) */}
-        {location.pathname !== '/' && <Link to="/" className="nav-link nav-link--home">// HOME</Link>}
-        {location.pathname !== '/scenes' && <Link to="/scenes" className="nav-link">// SCENES</Link>}
-        {location.pathname !== '/showcase' && <Link to="/showcase" className="nav-link">{SHOWCASE_LINK_TEXT}</Link>}
+        {location.pathname !== '/' && <ScrambleLink to="/" className="nav-link nav-link--home">// HOME</ScrambleLink>}
+        {location.pathname !== '/scenes' && <ScrambleLink to="/scenes" className="nav-link">// SCENES</ScrambleLink>}
+        {location.pathname !== '/showcase' && <ScrambleLink to="/showcase" className="nav-link">{SHOWCASE_LINK_TEXT}</ScrambleLink>}
         {location.pathname !== '/geometry-lab' && location.pathname !== '/geom-lab' && (
-          <Link to="/geometry-lab" className="nav-link">{GEOM_LAB_LINK_TEXT}</Link>
+          <ScrambleLink to="/geometry-lab" className="nav-link">{GEOM_LAB_LINK_TEXT}</ScrambleLink>
         )}
         {/* Conditional links based on authentication */}
         {isAuthenticated ? (
@@ -83,8 +84,8 @@ export default function NavBar({ portalColors = null, glyphs = null, navScrolled
           </>
         ) : (
           <>
-            {location.pathname !== '/signup' && <Link to="/signup" className="nav-link">// SIGN UP</Link>}
-            {location.pathname !== '/login' && <Link to="/login" className="nav-link">// LOGIN</Link>}
+            {location.pathname !== '/signup' && <ScrambleLink to="/signup" className="nav-link">// SIGN UP</ScrambleLink>}
+            {location.pathname !== '/login' && <ScrambleLink to="/login" className="nav-link">// LOGIN</ScrambleLink>}
           </>
         )}
       </div>
