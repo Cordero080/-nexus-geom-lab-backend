@@ -47,6 +47,8 @@ export default function HomePage() {
   // Local state
   const [activeScene, setActiveScene] = useState(0);
   const [navScrolled, setNavScrolled] = useState(false);
+  const [probabilityFlipped, setProbabilityFlipped] = useState(false);
+  const [superpositionDisassembled, setSuperpositionDisassembled] = useState(false);
 
 
   // Scene fade/scroll logic
@@ -65,6 +67,22 @@ export default function HomePage() {
         }
       }
       setActiveScene(found);
+      
+      // Check if we've scrolled past the probability description text itself
+      const probabilityDescription = document.querySelector('#probability .scene-description');
+      if (probabilityDescription) {
+        const descRect = probabilityDescription.getBoundingClientRect();
+        // Flip when the description itself passes the middle of viewport
+        setProbabilityFlipped(descRect.top < window.innerHeight / 3);
+      }
+      
+      // Check if we've entered the superposition section
+      const superpositionSection = document.querySelector('#superposition');
+      if (superpositionSection) {
+        const superRect = superpositionSection.getBoundingClientRect();
+        // Disassemble when superposition section enters viewport
+        setSuperpositionDisassembled(superRect.top < window.innerHeight * 0.1);
+      }
     };
     window.addEventListener('scroll', handleScroll);
     handleScroll();
@@ -220,7 +238,7 @@ MANIFOLD: A mathematical surface or multi-dimensional space that can be curved o
           <div className="scene-background bg-probability" aria-hidden="true"></div>
           <div className="scene-content">
             <h2 className="scene-title">PROBABILITY CLOUD</h2>
-            <p className="scene-description">
+            <p className={`scene-description${probabilityFlipped ? ' flipped' : ''}`}>
               Where code exists in superposition until observed
             </p>
             <div className="probability-waves"></div>
@@ -257,7 +275,7 @@ MANIFOLD: A mathematical surface or multi-dimensional space that can be curved o
         >
           <div className="superposition-scene-div">
             <h2 className="scene-title">SUPERPOSITION STATE</h2>
-            <p className="scene-description">
+            <p className={`scene-description${superpositionDisassembled ? ' disassemble' : ''}`}>
               All possibilities exist simultaneously
             </p>
             <div className="superposition-field"></div>
