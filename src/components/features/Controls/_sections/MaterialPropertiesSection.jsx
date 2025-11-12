@@ -146,7 +146,7 @@ function MaterialPropertiesSection({
           </label>
           <input 
             type="color" 
-            value={hyperframeColor}
+            value={hyperframeColor.slice(0, 7)}
             onChange={handleHyperframeColorChange}
             onMouseDown={(e) => e.stopPropagation()}
             onMouseMove={(e) => e.stopPropagation()}
@@ -158,7 +158,7 @@ function MaterialPropertiesSection({
           </label>
           <input 
             type="color" 
-            value={hyperframeLineColor}
+            value={hyperframeLineColor.slice(0, 7)}
             onChange={handleHyperframeLineColorChange}
             onMouseDown={(e) => e.stopPropagation()}
             onMouseMove={(e) => e.stopPropagation()}
