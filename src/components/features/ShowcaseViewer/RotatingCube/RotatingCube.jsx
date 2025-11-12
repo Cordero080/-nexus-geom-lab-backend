@@ -1,5 +1,6 @@
 import React, { useRef, useState } from 'react';
-import { useFrame } from '@react-three/fiber';
+import { useFrame, useThree } from '@react-three/fiber';
+import * as THREE from 'three';
 import FBXModel from '../../Showcase/models/FBXModel';
 import HolographicCube from './components/HolographicCube';
 import TesseractGeometry from './components/TesseractGeometry';
@@ -37,6 +38,12 @@ export default function RotatingCube({
   // Track animation time for glitch effects
   const [animationTime, setAnimationTime] = useState(0);
   
+  // Mouse drag state for trackball-style rotation
+  const isDragging = useRef(false);
+  const previousMouse = useRef({ x: 0, y: 0 });
+  const rotationSpeed = useRef({ x: 0, y: 0 });
+  const { size: viewportSize } = useThree((state) => state.viewport);
+  
   // Define punch times for Icarus animations (in seconds)
   // Adjust these values to match the actual punch moments in the animations
   const icarusPunchTimes = animationId === 1 
@@ -57,11 +64,25 @@ export default function RotatingCube({
 
   // 🎮 CUBE ROTATION & ANIMATIONS
   useFrame((state, delta) => {
-    // Main cube rotation - apply speed multiplier (all axes)
     if (cubeRef.current) {
-      cubeRef.current.rotation.x += delta * 0.1 * speed;
-      // cubeRef.current.rotation.y += delta * 0.1 * speed;
-      cubeRef.current.rotation.z += delta * 0.1 * speed;
+      // Apply trackball rotation when dragging
+      if (isDragging.current && (rotationSpeed.current.x !== 0 || rotationSpeed.current.y !== 0)) {
+        // Create rotation quaternions for each axis - NEGATE Y for correct up/down
+        const rotX = new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(1, 0, 0), -rotationSpeed.current.y);
+        const rotY = new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0, 1, 0), rotationSpeed.current.x);
+        
+        // Combine rotations
+        const rotation = new THREE.Quaternion().multiplyQuaternions(rotY, rotX);
+        cubeRef.current.quaternion.premultiply(rotation);
+        
+        // Damping
+        rotationSpeed.current.x *= 0.95;
+        rotationSpeed.current.y *= 0.95;
+      } else if (!isDragging.current) {
+        // Gentle auto-rotate on y-axis only when not dragging
+        const autoRotY = new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0, 1, 0), delta * 0.5 * speed);
+        cubeRef.current.quaternion.premultiply(autoRotY);
+      }
     }
     
     // Inner light pulsing - apply speed multiplier
@@ -79,13 +100,46 @@ export default function RotatingCube({
   
   const sphereRadius = size * 0.27;
 
+  const handlePointerDown = (e) => {
+    e.stopPropagation();
+    isDragging.current = true;
+    previousMouse.current = { x: e.clientX, y: e.clientY };
+  };
+
+  const handlePointerMove = (e) => {
+    if (!isDragging.current) return;
+    
+    const deltaX = e.clientX - previousMouse.current.x;
+    const deltaY = e.clientY - previousMouse.current.y;
+    
+    // Trackball-style rotation - deltaY is applied directly (negation happens in useFrame)
+    rotationSpeed.current.x = deltaX * 0.01;
+    rotationSpeed.current.y = deltaY * 0.01;
+    
+    previousMouse.current = { x: e.clientX, y: e.clientY };
+  };
+
+  const handlePointerUp = () => {
+    isDragging.current = false;
+  };
+
+  React.useEffect(() => {
+    window.addEventListener('pointermove', handlePointerMove);
+    window.addEventListener('pointerup', handlePointerUp);
+    return () => {
+      window.removeEventListener('pointermove', handlePointerMove);
+      window.removeEventListener('pointerup', handlePointerUp);
+    };
+  }, []);
+
   return (
     <group 
       ref={cubeRef} 
+      onPointerDown={handlePointerDown}
       // 🎚️ CUBE POSITION CONTROL - Adjust Y position for each character's cube
       position={[
         0, 
-        animationId === 3 ? -.08 : cubeY,  // Nexus Prime lowered
+        animationId === 3 ? 0.2 : 0.2,  // Raised higher for better centering
         0
       ]}
       // 🎚️ CUBE SCALE CONTROL - Adjust these values to resize each character's cube

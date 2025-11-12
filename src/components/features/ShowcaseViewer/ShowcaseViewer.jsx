@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
-import { Canvas } from '@react-three/fiber';
-import { OrbitControls } from '@react-three/drei';
+import React, { useState, Suspense, memo, useRef } from 'react';
+import { createPortal } from 'react-dom';
+import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import RotatingCube from './RotatingCube/RotatingCube';
 import ScrambleButton from '../../ui/ScrambleButton/ScrambleButton';
 import SpeedControl from './SpeedControl/SpeedControl';
@@ -11,9 +11,30 @@ import NexusEnvironment from './characters/Nexus/NexusEnvironment';
 import styles from './ShowcaseViewer.module.scss';
 import sharedStyles from '../../../styles/shared.module.scss';
 
-export default function ShowcaseViewer({ animation, onClose }) {
+// Custom camera control component - just auto-rotate camera, no user interaction
+function CameraController({ speed }) {
+  const { camera } = useThree();
+  const rotationRef = useRef({ y: 0 });
+  
+  useFrame(() => {
+    // Auto-rotate camera around scene - independent slower rotation
+    rotationRef.current.y += 0.002;
+    
+    // Update camera position in orbit
+    const radius = 8;
+    camera.position.x = Math.sin(rotationRef.current.y) * radius;
+    camera.position.z = Math.cos(rotationRef.current.y) * radius;
+    camera.position.y = 0.8;
+    camera.lookAt(0, 0.22, 0);
+  });
+  
+  return null;
+}
+
+function ShowcaseViewer({ animation, onClose }) {
   // Store the mounted state to handle animations properly
   const [mounted, setMounted] = React.useState(false);
+  const [canvasReady, setCanvasReady] = React.useState(false);
   
   // Animation speed state
   const [speed, setSpeed] = useState(1.0);
@@ -21,6 +42,11 @@ export default function ShowcaseViewer({ animation, onClose }) {
   // Animation switcher state
   const { getUnlockedAnimationsForNoetech, user } = useAuth();
   const [currentAnimation, setCurrentAnimation] = useState(animation);
+  
+  // Safety check - don't render if no animation
+  if (!currentAnimation) {
+    return null;
+  }
   
   // Get all unlocked animations for this Noetech
   const unlockedAnimationsForNoetech = getUnlockedAnimationsForNoetech(currentAnimation.noetechKey);
@@ -81,6 +107,9 @@ export default function ShowcaseViewer({ animation, onClose }) {
     // Slight delay before showing the content (but backdrop appears immediately)
     setTimeout(() => setMounted(true), 50);
     
+    // Delay Canvas ready state to ensure it's fully initialized
+    setTimeout(() => setCanvasReady(true), 100);
+    
     return () => {
       // Restore scrolling when component unmounts
       document.body.style.overflow = '';
@@ -89,7 +118,7 @@ export default function ShowcaseViewer({ animation, onClose }) {
     };
   }, []);
 
-  return (
+  const viewerContent = (
     <>
       {/* Immediate backdrop that appears instantly */}
       <div className={styles['viewer-backdrop']} />
@@ -158,19 +187,24 @@ export default function ShowcaseViewer({ animation, onClose }) {
           ✕
         </button>
       
-      <div className={styles['viewer-canvas-container']}>
+        <div className={styles['viewer-canvas-container']}>
+          {canvasReady && (
             <Canvas
               camera={{ position: [0, 0.8, 8], fov: 60 }}
               style={{ width: '100%', height: '100%', flex: '1 1 auto' }}
-        >
+            >
           {/* Render Icarus-X Three.js environment background */}
           {(currentAnimation?.id === 1 || currentAnimation?.id === 4) && (
-            <IcarusEnvironment />
+            <Suspense fallback={null}>
+              <IcarusEnvironment />
+            </Suspense>
           )}
           
           {/* Render Nexus-Prime skybox environment background */}
           {currentAnimation?.id === 3 && (
-            <NexusEnvironment />
+            <Suspense fallback={null}>
+              <NexusEnvironment />
+            </Suspense>
           )}
           
           <ambientLight intensity={0.64} />
@@ -182,8 +216,7 @@ export default function ShowcaseViewer({ animation, onClose }) {
             intensity={3.2} 
             color="#00ffff"
             castShadow
-            shadow-mapSize-width={1024}
-            shadow-mapSize-height={1024}
+            shadow-mapSize={[1024, 1024]}
           />
           <spotLight 
             position={[0, 10, -2]} 
@@ -228,7 +261,6 @@ export default function ShowcaseViewer({ animation, onClose }) {
                 penumbra={0.3} 
                 intensity={10.0} 
                 color="#ffffff"
-                target-position={[0, -1, 0]}
               />
               {/* Secondary purple rim light */}
               <spotLight 
@@ -237,7 +269,6 @@ export default function ShowcaseViewer({ animation, onClose }) {
                 penumbra={0.4} 
                 intensity={8.0} 
                 color="#ffffff"
-                target-position={[0, -1, 0]}
               />
               {/* Purple ambient boost for mesh visibility */}
               <pointLight position={[0, 2, 1]} intensity={6.0} color="#ffffff" distance={10} />
@@ -245,31 +276,27 @@ export default function ShowcaseViewer({ animation, onClose }) {
           )}
           
           {/* Big cube - pass size as prop */}
-          <RotatingCube 
-            size={4.5} 
-            fbxUrl={currentAnimation?.fbxUrl} 
-            scale={currentAnimation?.scale} 
-            rotation={currentAnimation?.rotation} 
-            positionY={currentAnimation?.positionY} 
-            offsetX={currentAnimation?.offsetX} 
-            offsetZ={currentAnimation?.offsetZ} 
-            cubeY={-0.1} 
-            allowNaturalYMovement={currentAnimation?.allowNaturalYMovement} 
-            animationId={currentAnimation?.id}
-            speed={speed}
-          />
+          <Suspense fallback={null}>
+            <RotatingCube 
+              size={4.5} 
+              fbxUrl={currentAnimation?.fbxUrl} 
+              scale={currentAnimation?.scale} 
+              rotation={currentAnimation?.rotation} 
+              positionY={currentAnimation?.positionY} 
+              offsetX={currentAnimation?.offsetX} 
+              offsetZ={currentAnimation?.offsetZ} 
+              cubeY={-0.1} 
+              allowNaturalYMovement={currentAnimation?.allowNaturalYMovement} 
+              animationId={currentAnimation?.id}
+              speed={speed}
+            />
+          </Suspense>
           
-          {/* OrbitControls lets user rotate with mouse */}
-          <OrbitControls 
-            enableZoom={true}
-            enablePan={false}
-            minDistance={5}
-            maxDistance={15}
-            autoRotate={true}
-            autoRotateSpeed={0.5 * speed}
-          />
-        </Canvas>
-      </div>
+          {/* Custom camera control - replaces OrbitControls */}
+          <CameraController speed={speed} />
+          </Canvas>
+          )}
+        </div>
       
       {/* Speed Control */}
       <SpeedControl speed={speed} onSpeedChange={setSpeed} />
@@ -287,4 +314,9 @@ export default function ShowcaseViewer({ animation, onClose }) {
     </div>
     </>
   );
+  
+  // Render to body using portal to avoid any parent Canvas interference
+  return createPortal(viewerContent, document.body);
 }
+
+export default memo(ShowcaseViewer);

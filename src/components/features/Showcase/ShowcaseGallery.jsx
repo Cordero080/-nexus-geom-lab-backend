@@ -76,7 +76,7 @@ export default function ShowcaseGallery() {
   // Closes fullscreen viewer when user navigates to a different page (clean up on route change)
   useEffect(() => {
     setSelectedAnimation(null);
-  }, [location]);
+  }, [location.pathname]); // Only trigger on pathname change, not entire location object
 
   // Tagline rotation effect
   // Cycles through HERO_TAGLINES array every 4200ms (change interval timing to speed up/slow down tagline rotation)

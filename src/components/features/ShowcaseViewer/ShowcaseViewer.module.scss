@@ -20,7 +20,8 @@
   animation: fadeIn 0.3s ease;
   /* Ensure it blocks background content */
   overflow: hidden;
-  transition: opacity 0.2s ease-in;
+  /* REMOVED: transition causes Canvas to disappear - conflicts with R3F rendering */
+  /* transition: opacity 0.2s ease-in; */
   filter: brightness(1.5) saturate(1.2); /* Significantly increased brightness and saturation */
 }
 
@@ -554,11 +555,11 @@
 .animation-switcher {
   position: fixed;
   bottom: 30px;
-  right: 30px;
+  left: 200px; /* Position next to back button */
   z-index: 10000;
   display: flex;
   gap: 10px;
-  animation: slideInRight 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  animation: slideInLeft 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .switcher-title {
@@ -625,6 +626,17 @@
   from {
     opacity: 0;
     transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
   }
   to {
     opacity: 1;
