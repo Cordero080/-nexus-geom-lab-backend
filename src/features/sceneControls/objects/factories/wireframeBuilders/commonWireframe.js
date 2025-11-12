@@ -1,14 +1,7 @@
 import * as THREE from "three";
 import { nearestVertexIndex } from "../../../utils/geometryHelpers";
 
-/**
- * Create a thick wireframe for TetrahedronGeometry using cylinders
- * Uses EdgesGeometry to automatically extract all edges from compound geometry
- * @param {THREE.BufferGeometry} geometry - The tetrahedron geometry
- * @param {THREE.Material} wireframeMaterial - Material for the wireframe
- * @param {number} radiusScale - Scale factor for cylinder radius (default 1.0)
- * @returns {THREE.Group} The wireframe group with edge pairs in userData
- */
+
 export function createTetrahedronWireframe(
   geometry,
   wireframeMaterial,

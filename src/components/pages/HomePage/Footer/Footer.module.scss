@@ -1,11 +1,13 @@
 .footer {
   position: fixed;
   bottom: 60px;
-  right: 10px;
+  left: 50%;
+  transform: translateX(-50%);
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 0px;
-  padding: 1px 24px;
+  padding: 20px 10px;
   z-index: 1000;
   transition: opacity 0.3s ease;
 
@@ -20,8 +22,8 @@
 }
 
 .logo {
-  width: 120px;
-  height:120px;
+  width: 50px;
+  height: 200px;
   opacity: 0.9;
   filter: hue-rotate(0deg) saturate(1.5) brightness(1.2);
   animation: gradientShift 8s ease infinite;
@@ -34,30 +36,28 @@
 
 @keyframes gradientShift {
   0% {
-    filter: hue-rotate(0deg) saturate(1.5) brightness(1.2);
+    filter: hue-rotate(0deg) saturate(1) brightness(1.2);
   }
   25% {
-    filter: hue-rotate(90deg) saturate(1.8) brightness(1.3);
+    filter: hue-rotate(90deg) saturate(1.5) brightness(1.3);
   }
   50% {
-    filter: hue-rotate(180deg) saturate(1.5) brightness(1.2);
+    filter: hue-rotate(180deg) saturate(1.2) brightness(1.2);
   }
- 
 }
 
 .title {
   font-family: 'Courier New', monospace;
-  font-size: 20px;
+  font-size: 22px;
   font-weight: 600;
   letter-spacing: 1px;
   color: rgba(225, 231, 233, 0.656);
-  margin-right: 20px;
-  margin-left: -25px;
+  margin: 0 20px;
 }
 
 .copyright {
   font-family: 'Courier New', monospace;
-  font-size: 10px;
+  font-size: 20px;
   color: rgba(255, 255, 255, 0.4);
 }
 

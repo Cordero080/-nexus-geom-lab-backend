@@ -7,12 +7,23 @@ import * as THREE from "three";
  * Applies audio frequency data to geometry properties:
  * - Bass → Scale (pulsing) + X-axis rotation + Z-position movement
  * - Mids → Y-axis and Z-axis rotation
+ * - Color cycling preserves user's brightness/saturation, only cycles hue
  *
  * @param {Object} objectsRef - Reference to scene objects
  * @param {Object} audioData - Audio frequency data { bass, mids, highs, overall }
  * @param {boolean} isEnabled - Whether audio reactivity is enabled
+ * @param {string} baseColor - User's chosen base color (e.g., '#670d48')
+ * @param {string} hyperframeColor - User's chosen hyperframe color
+ * @param {string} hyperframeLineColor - User's chosen hyperframe line color
  */
-export function useAudioReactive(objectsRef, audioData, isEnabled) {
+export function useAudioReactive(
+  objectsRef,
+  audioData,
+  isEnabled,
+  baseColor,
+  hyperframeColor,
+  hyperframeLineColor
+) {
   const basePositionRef = useRef({});
   const rotationVelocityRef = useRef({}); // Track rotation momentum
   const meshRotationCountRef = useRef({}); // Track mesh rotations separately
@@ -24,29 +35,93 @@ export function useAudioReactive(objectsRef, audioData, isEnabled) {
   const meshTargetColorRef = useRef({}); // Target color for smooth transition
   const hyperframeTargetColorRef = useRef({}); // Target color for smooth transition
 
-  // Mesh colors - darker (based on baseColor #670d48)
-  const meshColorPalette = [
-    0x670d48, // Dark magenta (base color)
-    0x0d6748, // Dark teal (complementary)
-    0x67480d, // Dark amber
-    0x0d4867, // Dark blue
-    0x48670d, // Dark olive green
-    0x480d67, // Dark purple
-    0x670d30, // Dark crimson
-    0x30670d, // Dark lime
-  ];
+  // Helper function to convert hex to HSL
+  const hexToHSL = (hex) => {
+    const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+    if (!result) return { h: 0, s: 0, l: 0 };
 
-  // Hyperframe colors - brighter versions
-  const hyperframeColorPalette = [
-    0xff1a8c, // Bright magenta
-    0x1affb3, // Bright teal
-    0xffb31a, // Bright amber
-    0x1a8cff, // Bright blue
-    0xb3ff1a, // Bright lime green
-    0xb31aff, // Bright purple
-    0xff1a66, // Bright pink-red
-    0x66ff1a, // Bright chartreuse
-  ];
+    let r = parseInt(result[1], 16) / 255;
+    let g = parseInt(result[2], 16) / 255;
+    let b = parseInt(result[3], 16) / 255;
+
+    const max = Math.max(r, g, b);
+    const min = Math.min(r, g, b);
+    let h,
+      s,
+      l = (max + min) / 2;
+
+    if (max === min) {
+      h = s = 0;
+    } else {
+      const d = max - min;
+      s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+      switch (max) {
+        case r:
+          h = ((g - b) / d + (g < b ? 6 : 0)) / 6;
+          break;
+        case g:
+          h = ((b - r) / d + 2) / 6;
+          break;
+        case b:
+          h = ((r - g) / d + 4) / 6;
+          break;
+      }
+    }
+
+    return { h, s, l };
+  };
+
+  // Helper function to convert HSL to hex
+  const hslToHex = (h, s, l) => {
+    let r, g, b;
+
+    if (s === 0) {
+      r = g = b = l;
+    } else {
+      const hue2rgb = (p, q, t) => {
+        if (t < 0) t += 1;
+        if (t > 1) t -= 1;
+        if (t < 1 / 6) return p + (q - p) * 6 * t;
+        if (t < 1 / 2) return q;
+        if (t < 2 / 3) return p + (q - p) * (2 / 3 - t) * 6;
+        return p;
+      };
+      const q = l < 0.5 ? l * (1 + s) : l + s - l * s;
+      const p = 2 * l - q;
+      r = hue2rgb(p, q, h + 1 / 3);
+      g = hue2rgb(p, q, h);
+      b = hue2rgb(p, q, h - 1 / 3);
+    }
+
+    const toHex = (x) => {
+      const hex = Math.round(x * 255).toString(16);
+      return hex.length === 1 ? "0" + hex : hex;
+    };
+
+    return parseInt(`0x${toHex(r)}${toHex(g)}${toHex(b)}`);
+  };
+
+  // Generate color palette from base color (preserving saturation and lightness)
+  const generateColorPalette = (baseColorHex) => {
+    const { h, s, l } = hexToHSL(baseColorHex);
+    const palette = [];
+
+    // Generate 8 colors by cycling hue, keeping S and L constant
+    for (let i = 0; i < 8; i++) {
+      const newHue = (h + i / 8) % 1; // Evenly distribute hues around the color wheel
+      palette.push(hslToHex(newHue, s, l));
+    }
+
+    return palette;
+  };
+
+  // Mesh colors - generated from baseColor
+  const meshColorPalette = generateColorPalette(baseColor || "#670d48");
+
+  // Hyperframe colors - generated from hyperframeColor
+  const hyperframeColorPalette = generateColorPalette(
+    hyperframeColor || "#ff1a8c"
+  );
 
   useEffect(() => {
     if (!isEnabled || !objectsRef.current || objectsRef.current.length === 0) {

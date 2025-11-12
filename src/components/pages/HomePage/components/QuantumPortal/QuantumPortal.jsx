@@ -30,8 +30,6 @@ const QuantumPortal = ({
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     
-    console.log('🌀 Quantum Portal initialized');
-
     // Post-processing setup
     const composer = new EffectComposer(renderer);
     composer.addPass(new RenderPass(scene, camera));

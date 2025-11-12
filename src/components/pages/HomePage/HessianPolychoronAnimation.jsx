@@ -341,14 +341,14 @@ export default function HessianPolychoronAnimation({ isActive = false }) {
             }
             
             // When complete (reached the end), change wireframe color with flash
-            if (progress >= 0.99 && meshRef.current && !edge.userData.colorChanged) {
+            if (progress >= 0.99 && meshRef.current && meshRef.current.edgeSegments && !edge.userData.colorChanged) {
               edge.userData.colorChanged = true;
               edge.userData.flashStartTime = now;
               edge.userData.targetHue = edge.userData.hue;
             }
             
-            // Animate color change flash
-            if (edge.userData.colorChanged && edge.userData.flashStartTime) {
+            // Animate color change flash on the polychoron edges
+            if (edge.userData.colorChanged && edge.userData.flashStartTime && meshRef.current && meshRef.current.edgeSegments) {
               const flashAge = (now - edge.userData.flashStartTime) / 1000;
               
               if (flashAge < 0.02) {
@@ -366,17 +366,25 @@ export default function HessianPolychoronAnimation({ isActive = false }) {
                   flashIntensity = Math.exp(-decayProgress * 9); // Exponential fade
                 }
                 
-                // Very bright flash
+                // Very bright flash - apply to all edge segments
                 const saturation = 0.6 + (0.4 * flashIntensity);
                 const lightness = 0.35 + (0.55 * flashIntensity); // Peak at 0.9 (very bright)
                 const opacity = 0.2 + (0.5 * flashIntensity); // Peak at 0.9 (very visible)
                 
-                meshRef.current.material.color.setHSL(edge.userData.targetHue, saturation, lightness);
-                meshRef.current.material.opacity = opacity;
+                meshRef.current.edgeSegments.forEach(edgeSegment => {
+                  if (edgeSegment.material && edgeSegment.material.color) {
+                    edgeSegment.material.color.setHSL(edge.userData.targetHue, saturation, lightness);
+                    edgeSegment.material.opacity = opacity;
+                  }
+                });
               } else {
                 // Flash complete, set to final subdued color
-                meshRef.current.material.color.setHSL(edge.userData.targetHue, 0.6, 0.35);
-                meshRef.current.material.opacity = 0.2;
+                meshRef.current.edgeSegments.forEach(edgeSegment => {
+                  if (edgeSegment.material && edgeSegment.material.color) {
+                    edgeSegment.material.color.setHSL(edge.userData.targetHue, 0.6, 0.35);
+                    edgeSegment.material.opacity = 0.2;
+                  }
+                });
                 edge.userData.flashStartTime = null; // Stop flashing
               }
             }

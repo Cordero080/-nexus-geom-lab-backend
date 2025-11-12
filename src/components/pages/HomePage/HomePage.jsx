@@ -191,13 +191,9 @@ MANIFOLD: A mathematical surface or multi-dimensional space that can be curved o
             {isAuthenticated ? (
               <div 
                 className="button-wrapper-auth"
-                onClick={(e) => {
-                  console.log('🔵 DIV WRAPPER CLICKED (authenticated)', e.target);
-                }}
               >
                 <BeamScanButton
                   onClick={(e) => {
-                    console.log('🟢 ENTER GEOM LAB BUTTON CLICKED!', e);
                     window.location.href = '/geom-lab';
                   }}
                   label={<>ENTER GE0M L<span className="nav-inverted-v">V</span>B</>}
@@ -207,20 +203,15 @@ MANIFOLD: A mathematical surface or multi-dimensional space that can be curved o
             ) : (
               <div 
                 className="button-wrapper-no-auth"
-                onClick={(e) => {
-                  console.log('🔵 DIV WRAPPER CLICKED (not authenticated)', e.target);
-                }}
               >
                 <BeamScanButton
                   onClick={(e) => {
-                    console.log('🟢 LOGIN BUTTON CLICKED!', e);
                     window.location.href = '/login';
                   }}
                   label={<>LOGI<span className="inverted-n-span">N</span></>}
                 />
                 <BeamScanButton
                   onClick={(e) => {
-                    console.log('🟢 SIGNUP BUTTON CLICKED!', e);
                     window.location.href = '/signup';
                   }}
                   label="SIGN UP"

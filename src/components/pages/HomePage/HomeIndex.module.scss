@@ -1246,6 +1246,29 @@ input,
     }
   }
 
+  /* Probability section - center content vertically */
+  #probability .scene-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 80px 40px;
+  }
+
+  #probability .scene-title {
+    margin-top: 0;
+  }
+
+  #probability .scene-description {
+    margin-top: 250px;
+    margin-bottom: 50px;
+  }
+
+  #probability .code-snippets {
+    margin-top: 180px;
+  }
+
   .scene-title {
     font-size: .8em;
     font-family: 'Orbitron', 'JetBrains Mono', monospace;
@@ -1280,13 +1303,6 @@ input,
       -webkit-text-fill-color: transparent;
       background-clip: text;
       text-shadow: 0 0 12px #ff00ff66, 0 0 20px #00ff9944;
-    }
-    
-    &.disassemble {
-      opacity: 0;
-      letter-spacing: 0.8em;
-      filter: blur(8px);
-      transform: translateY(-30px) scale(1.2);
     }
   }
 

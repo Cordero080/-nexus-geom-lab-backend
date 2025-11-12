@@ -64,7 +64,7 @@ function ThreeScene({
 	
 	// Audio reactivity
 	const { bass, mids, highs, overall, isActive, toggleAudio } = useAudioAnalyzer();
-	useAudioReactive(objectsRef, { bass, mids, highs, overall }, isActive);
+	useAudioReactive(objectsRef, { bass, mids, highs, overall }, isActive, baseColor, hyperframeColor, hyperframeLineColor);
 	
 	/* ========================================================================
 	 * HOOK EXECUTION ORDER - Critical for Three.js scene setup
@@ -106,7 +106,7 @@ function ThreeScene({
 	useMouseTracking(rendererRef, cameraRef);
 	useEnvironmentUpdate(sceneRef, environment, environmentHue);
 	useNebulaParticles(sceneRef, environment, environmentHue, orbSpeedRef);
-	useMetalnessLighting(sceneRef, metalness);
+	useMetalnessLighting(sceneRef, metalness, baseColor);
 	
 	// 3. PROPERTY UPDATES - React to prop changes
 	useCameraController(cameraRef, cameraView);

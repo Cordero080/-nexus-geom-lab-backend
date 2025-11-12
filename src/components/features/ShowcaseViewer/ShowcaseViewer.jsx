@@ -48,13 +48,6 @@ export default function ShowcaseViewer({ animation, onClose }) {
     return user?.unlockedNoetechs?.includes(anim.noetechKey);
   });
   
-  // DEBUG: Log character navigation state
-  console.log('🎮 Character Navigation Debug:', {
-    allUnlockedCharacters: allUnlockedCharacters.map(a => ({ name: a.name, key: a.noetechKey })),
-    currentCharacter: currentAnimation.name,
-    unlockedNoetechs: user?.unlockedNoetechs
-  });
-  
   // Find current character index
   const currentCharacterIndex = allUnlockedCharacters.findIndex(
     anim => anim.noetechKey === currentAnimation.noetechKey
@@ -75,16 +68,8 @@ export default function ShowcaseViewer({ animation, onClose }) {
   
   const hasMultipleCharacters = allUnlockedCharacters.length > 1;
   
-  console.log('🎮 Navigation State:', {
-    hasMultipleCharacters,
-    currentIndex: currentCharacterIndex,
-    totalCharacters: allUnlockedCharacters.length
-  });
-  
   // TEMP: Force show navigation for testing (set to true to always show)
   const showNavForTesting = true;
-  
-  console.log('🔍 Should show nav buttons?', (hasMultipleCharacters || showNavForTesting));
   
   // Run once component mounts
   React.useEffect(() => {

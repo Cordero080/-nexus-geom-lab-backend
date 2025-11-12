@@ -14,7 +14,7 @@ import LoginPage from './features/auth/pages/LoginPage/LoginPage';
 import { SceneProvider, useScene } from './context/SceneContext';
 import { AuthProvider, useAuth } from './features/auth/context/AuthContext';
 import { QuantumCursor } from "./components/ui/Effects";
-import Footer from './components/layout/Footer/Footer';
+import Footer from './components/pages/HomePage/Footer/Footer';
 import './cursor-override.module.scss';
 import sharedStyles from './styles/shared.module.scss';
 
