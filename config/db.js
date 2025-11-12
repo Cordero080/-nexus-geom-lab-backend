@@ -8,8 +8,10 @@ const connectDB = async () => {
     // Tries to connect using the URI from .env file
     const conn = await mongoose.connect(process.env.MONGODB_URI); // Wait for connection to complete
 
-    // If successful, prints success message
-    console.log(`MongoDb Connected: ${conn.connection.host}`); // Shows database hostname
+    // If successful, prints success message only in development
+    if (process.env.NODE_ENV !== "production") {
+      console.log(`MongoDb Connected: ${conn.connection.host}`); // Shows database hostname
+    }
 
     // If it fails, prints error
   } catch (error) {

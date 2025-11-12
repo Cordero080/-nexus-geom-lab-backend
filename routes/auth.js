@@ -22,22 +22,10 @@ router.post(
   async (req, res) => {
     // Route handler function
     try {
-      // Log request body for debugging
-      console.log("📝 Signup attempt:", {
-        username: req.body.username,
-        email: req.body.email,
-        hasPassword: !!req.body.password, // Convert to boolean
-        passwordLength: req.body.password?.length,
-      });
-
       // Check if validation passed
       const errors = validationResult(req); // Get validation results
       if (!errors.isEmpty()) {
         // If any validation failed
-        console.log(
-          "❌ Validation errors:",
-          JSON.stringify(errors.array(), null, 2)
-        );
         return res.status(400).json({
           // Send 400 Bad Request
           success: false,
@@ -57,13 +45,6 @@ router.post(
 
       if (existingUser) {
         // If user already exists
-        // Send specific error message
-        console.log("❌ User already exists:", {
-          existingEmail: existingUser.email,
-          existingUsername: existingUser.username,
-          attemptedEmail: email,
-          attemptedUsername: username,
-        });
         return res.status(400).json({
           // Send 400 Bad Request
           success: false,

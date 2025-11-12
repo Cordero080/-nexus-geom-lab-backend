@@ -148,12 +148,12 @@ router.post(
       res.status(201).json(response); // Send 201 Created with response data
     } catch (error) {
       // If anything goes wrong
-      console.error("Create scene error:", error); // Log error
       res.status(500).json({
         // Send 500 Server Error
         success: false,
         message: "Error creating scene",
-        error: error.message,
+        error:
+          process.env.NODE_ENV === "development" ? error.message : undefined,
       });
     }
   }
@@ -176,7 +176,6 @@ router.get("/my-scenes", authMiddleware, async (req, res) => {
     });
   } catch (error) {
     // If query fails
-    console.error("Get my scenes error:", error); // Log error
     res.status(500).json({
       // Send 500 Server Error
       success: false,
@@ -265,7 +264,6 @@ router.put(
       });
     } catch (error) {
       // If anything goes wrong
-      console.error("Update scene error:", error); // Log error
       res.status(500).json({
         // Send 500 Server Error
         success: false,
@@ -310,7 +308,6 @@ router.delete("/:id", authMiddleware, async (req, res) => {
     });
   } catch (error) {
     // If anything goes wrong
-    console.error("Delete scene error:", error); // Log error
     res.status(500).json({
       // Send 500 Server Error
       success: false,
