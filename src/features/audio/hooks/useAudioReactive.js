@@ -32,12 +32,20 @@ export function useAudioReactive(
   const lastHyperframeRotationRef = useRef({});
   const meshColorIndexRef = useRef({});
   const hyperframeColorIndexRef = useRef({});
+  const hyperframeLineColorIndexRef = useRef({});
   const meshTargetColorRef = useRef({}); // Target color for smooth transition
   const hyperframeTargetColorRef = useRef({}); // Target color for smooth transition
+  const hyperframeLineTargetColorRef = useRef({}); // Target color for hyperframe lines
 
-  // Helper function to convert hex to HSL
+  // Helper function to convert hex to HSL (handles both hex strings and numbers)
   const hexToHSL = (hex) => {
-    const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+    // Convert number format (0x670d48) to hex string (#670d48)
+    let hexString = hex;
+    if (typeof hex === "number") {
+      hexString = "#" + hex.toString(16).padStart(6, "0");
+    }
+
+    const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hexString);
     if (!result) return { h: 0, s: 0, l: 0 };
 
     let r = parseInt(result[1], 16) / 255;
@@ -115,13 +123,28 @@ export function useAudioReactive(
     return palette;
   };
 
-  // Mesh colors - generated from baseColor
+  // Mesh colors - generated from baseColor (preserving user's saturation and lightness)
   const meshColorPalette = generateColorPalette(baseColor || "#670d48");
 
-  // Hyperframe colors - generated from hyperframeColor
+  // Hyperframe colors - generated from hyperframeColor (preserving user's saturation and lightness)
   const hyperframeColorPalette = generateColorPalette(
     hyperframeColor || "#ff1a8c"
   );
+
+  // Hyperframe line colors - generated from hyperframeLineColor (preserving user's saturation and lightness)
+  const hyperframeLineColorPalette = generateColorPalette(
+    hyperframeLineColor || hyperframeColor || "#ff1a8c"
+  );
+
+  // Debug: Log the color palettes to verify they're preserving user values
+  console.log("🎨 MESH COLOR DEBUG:");
+  console.log("Base Color Input (typeof):", typeof baseColor, baseColor);
+  console.log("Original Base Color HSL:", hexToHSL(baseColor));
+  console.log(
+    "Generated Mesh Palette:",
+    meshColorPalette.map((c) => "#" + c.toString(16).padStart(6, "0"))
+  );
+  console.log("First mesh color HSL:", hexToHSL(meshColorPalette[0]));
 
   useEffect(() => {
     if (!isEnabled || !objectsRef.current || objectsRef.current.length === 0) {
@@ -157,6 +180,7 @@ export function useAudioReactive(
         hyperframeRotationCountRef.current[index] = 0;
         lastHyperframeRotationRef.current[index] = 0;
         hyperframeColorIndexRef.current[index] = 0;
+        hyperframeLineColorIndexRef.current[index] = 0;
       }
 
       const velocity = rotationVelocityRef.current[index];
@@ -223,7 +247,11 @@ export function useAudioReactive(
         if (meshTargetColorRef.current[index]) {
           if (obj.material) {
             obj.material.color.lerp(meshTargetColorRef.current[index], 0.1);
-            obj.material.emissive.lerp(meshTargetColorRef.current[index], 0.1);
+            // Emissive should be much more subtle - use a dimmed version of the target color
+            const dimmedEmissive = meshTargetColorRef.current[index]
+              .clone()
+              .multiplyScalar(0.2);
+            obj.material.emissive.lerp(dimmedEmissive, 0.1);
           }
           if (obj.wireframeMaterial) {
             obj.wireframeMaterial.color.lerp(
@@ -251,19 +279,32 @@ export function useAudioReactive(
           completedRotations > prevCompleted &&
           completedRotations % 3 === 0
         ) {
+          // Update hyperframe center lines color
           hyperframeColorIndexRef.current[index] =
             (hyperframeColorIndexRef.current[index] + 1) %
             hyperframeColorPalette.length;
-          const newColorHex =
+          const newHyperframeColorHex =
             hyperframeColorPalette[hyperframeColorIndexRef.current[index]];
 
-          // Set target color for smooth transition
+          // Update hyperframe line color (curved lines) - use separate palette and cycling
+          hyperframeLineColorIndexRef.current[index] =
+            (hyperframeLineColorIndexRef.current[index] + 1) %
+            hyperframeLineColorPalette.length;
+          const newHyperframeLineColorHex =
+            hyperframeLineColorPalette[
+              hyperframeLineColorIndexRef.current[index]
+            ];
+
+          // Set target colors for smooth transition
           hyperframeTargetColorRef.current[index] = new THREE.Color(
-            newColorHex
+            newHyperframeColorHex
+          );
+          hyperframeLineTargetColorRef.current[index] = new THREE.Color(
+            newHyperframeLineColorHex
           );
         }
 
-        // Smoothly lerp to target color (10% per frame)
+        // Smoothly lerp hyperframe center lines to target color (10% per frame)
         if (hyperframeTargetColorRef.current[index]) {
           if (obj.centerLinesMaterial) {
             obj.centerLinesMaterial.color.lerp(
@@ -271,9 +312,13 @@ export function useAudioReactive(
               0.1
             );
           }
+        }
+
+        // Smoothly lerp hyperframe curved lines to separate target color (10% per frame)
+        if (hyperframeLineTargetColorRef.current[index]) {
           if (obj.curvedLinesMaterial) {
             obj.curvedLinesMaterial.color.lerp(
-              hyperframeTargetColorRef.current[index],
+              hyperframeLineTargetColorRef.current[index],
               0.1
             );
           }
