@@ -291,8 +291,8 @@ export default class QuantumCursorUniverse {
       this.cursor.style.transform = `translate(-50%, -50%) scale(${
         pulseScale * ringPulse
       })`;
-      this.cursor.style.width = "16px"; // Smaller but still bigger than particles
-      this.cursor.style.height = "16px";
+      this.cursor.style.width = "28px"; // Increased from 16px for larger glowing ball
+      this.cursor.style.height = "28px";
     }
 
     // Adjust gravity field visibility
