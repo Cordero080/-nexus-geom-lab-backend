@@ -136,16 +136,6 @@ export function useAudioReactive(
     hyperframeLineColor || hyperframeColor || "#ff1a8c"
   );
 
-  // Debug: Log the color palettes to verify they're preserving user values
-  console.log("🎨 MESH COLOR DEBUG:");
-  console.log("Base Color Input (typeof):", typeof baseColor, baseColor);
-  console.log("Original Base Color HSL:", hexToHSL(baseColor));
-  console.log(
-    "Generated Mesh Palette:",
-    meshColorPalette.map((c) => "#" + c.toString(16).padStart(6, "0"))
-  );
-  console.log("First mesh color HSL:", hexToHSL(meshColorPalette[0]));
-
   useEffect(() => {
     if (!isEnabled || !objectsRef.current || objectsRef.current.length === 0) {
       return;
