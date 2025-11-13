@@ -49,15 +49,9 @@ export function useMetalnessLighting(sceneRef, metalness) {
         // DEBUGGING: Check if light is still in scene
         const stillInScene = scene.getObjectById(rimLight1Ref.current.id);
         if (!stillInScene) {
-          console.log(`⚠️ rimLight1 was REMOVED from scene! Re-adding...`);
           scene.add(rimLight1Ref.current);
         }
         rimLight1Ref.current.intensity = metalness * 10; // EXTREME TEST
-        console.log(
-          `🔄 Updated rimLight1 intensity: ${
-            rimLight1Ref.current.intensity
-          }, inScene: ${!!stillInScene}`
-        );
       }
 
       if (!rimLight2Ref.current) {
@@ -72,15 +66,9 @@ export function useMetalnessLighting(sceneRef, metalness) {
         // DEBUGGING: Check if light is still in scene
         const stillInScene = scene.getObjectById(rimLight2Ref.current.id);
         if (!stillInScene) {
-          console.log(`⚠️ rimLight2 was REMOVED from scene! Re-adding...`);
           scene.add(rimLight2Ref.current);
         }
         rimLight2Ref.current.intensity = metalness * 3;
-        console.log(
-          `🔄 Updated rimLight2 intensity: ${
-            rimLight2Ref.current.intensity
-          }, inScene: ${!!stillInScene}`
-        );
       }
 
       if (!backLightRef.current) {
@@ -98,15 +86,9 @@ export function useMetalnessLighting(sceneRef, metalness) {
         // DEBUGGING: Check if light is still in scene
         const stillInScene = scene.getObjectById(backLightRef.current.id);
         if (!stillInScene) {
-          console.log(`⚠️ backLight was REMOVED from scene! Re-adding...`);
           scene.add(backLightRef.current);
         }
         backLightRef.current.intensity = metalness * 3; // FIXED: was metalness * 2
-        console.log(
-          `🔄 Updated backLight intensity: ${
-            backLightRef.current.intensity
-          }, inScene: ${!!stillInScene}`
-        );
       }
 
       if (!volumeLightRef.current) {
@@ -119,23 +101,14 @@ export function useMetalnessLighting(sceneRef, metalness) {
         volumeLight.position.set(8, -6, 12); // Bottom-right, angled upward | position.set(x, y, z) - x: left(-)/right(+), y: down(-)/up(+), z: back(-)/forward(+)
         volumeLightRef.current = volumeLight;
         scene.add(volumeLight);
-        console.log(
-          `🆕 Created volumeLight with intensity: ${volumeLight.intensity}`
-        );
       } else {
         // Update intensity based on metalness - MUST MATCH creation intensity formula
         // DEBUGGING: Check if light is still in scene
         const stillInScene = scene.getObjectById(volumeLightRef.current.id);
         if (!stillInScene) {
-          console.log(`⚠️ volumeLight was REMOVED from scene! Re-adding...`);
           scene.add(volumeLightRef.current);
         }
         volumeLightRef.current.intensity = metalness * 1.5;
-        console.log(
-          `🔄 Updated volumeLight intensity: ${
-            volumeLightRef.current.intensity
-          }, inScene: ${!!stillInScene}`
-        );
       }
 
       if (!southLightRef.current) {
@@ -148,23 +121,14 @@ export function useMetalnessLighting(sceneRef, metalness) {
         southLight.position.set(6, -8, 12); // South position, 8 o'clock angle | position.set(x, y, z) - x: left(-)/right(+), y: down(-)/up(+), z: back(-)/forward(+)
         southLightRef.current = southLight;
         scene.add(southLight);
-        console.log(
-          `🆕 Created southLight with intensity: ${southLight.intensity}`
-        );
       } else {
         // Update intensity based on metalness - MUST MATCH creation intensity formula
         // DEBUGGING: Check if light is still in scene
         const stillInScene = scene.getObjectById(southLightRef.current.id);
         if (!stillInScene) {
-          console.log(`⚠️ southLight was REMOVED from scene! Re-adding...`);
           scene.add(southLightRef.current);
         }
         southLightRef.current.intensity = metalness * 5; // FIXED: was metalness * 2
-        console.log(
-          `🔄 Updated southLight intensity: ${
-            southLightRef.current.intensity
-          }, inScene: ${!!stillInScene}`
-        );
       }
 
       if (!spotLightRef.current) {
@@ -181,23 +145,14 @@ export function useMetalnessLighting(sceneRef, metalness) {
         scene.add(spotLight);
         scene.add(spotLight.target); // SpotLight needs its target added to scene
         spotLightRef.current = spotLight;
-        console.log(
-          `🆕 Created spotLight with intensity: ${spotLight.intensity}`
-        );
       } else {
         // Update intensity based on metalness
         const stillInScene = scene.getObjectById(spotLightRef.current.id);
         if (!stillInScene) {
-          console.log(`⚠️ spotLight was REMOVED from scene! Re-adding...`);
           scene.add(spotLightRef.current);
           scene.add(spotLightRef.current.target);
         }
         spotLightRef.current.intensity = metalness * 8;
-        console.log(
-          `🔄 Updated spotLight intensity: ${
-            spotLightRef.current.intensity
-          }, inScene: ${!!stillInScene}`
-        );
       }
 
       if (!reflectiveLightRef.current) {
@@ -214,29 +169,17 @@ export function useMetalnessLighting(sceneRef, metalness) {
         scene.add(reflectiveLight);
         scene.add(reflectiveLight.target);
         reflectiveLightRef.current = reflectiveLight;
-        console.log(
-          `🆕 Created reflectiveLight with intensity: ${reflectiveLight.intensity}`
-        );
       } else {
         // Update intensity based on metalness
         const stillInScene = scene.getObjectById(reflectiveLightRef.current.id);
         if (!stillInScene) {
-          console.log(
-            `⚠️ reflectiveLight was REMOVED from scene! Re-adding...`
-          );
           scene.add(reflectiveLightRef.current);
           scene.add(reflectiveLightRef.current.target);
         }
         reflectiveLightRef.current.intensity = metalness * 12;
-        console.log(
-          `🔄 Updated reflectiveLight intensity: ${
-            reflectiveLightRef.current.intensity
-          }, inScene: ${!!stillInScene}`
-        );
       }
     } else {
       // If metalness is low, remove the extra lights
-      console.log(`❌ Removing metalness lights (metalness=${metalness})`);
       if (rimLight1Ref.current) {
         scene.remove(rimLight1Ref.current);
         rimLight1Ref.current = null;
