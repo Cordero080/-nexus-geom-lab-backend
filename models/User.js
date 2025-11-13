@@ -91,43 +91,6 @@ userSchema.methods.hasUnlockedNoetech = function (noetechKey) {
   return this.unlockedAnimations.some((ua) => ua.noetechKey === noetechKey); // Returns true if any animation exists
 };
 
-// Pre-save hook - runs before saving to database
-userSchema.pre("save", async function (next) {
-  // Middleware that runs before save()
-  if (!this.isModified("password")) {
-    // If password hasn't changed
-    return next(); // Skip hashing, continue to save
-  }
-
-  const salt = await bcrypt.genSalt(10);
-  this.password = await bcrypt.hash(this.password, salt);
-  next();
-});
-
-// Method to compare passwords
-userSchema.methods.comparePassword = async function (candidatePassword) {
-  return await bcrypt.compare(candidatePassword, this.password);
-};
-// NEW ANIMATION-BASED UNLOCK METHODS
-
-// Method to check if specific animation is unlocked
-userSchema.methods.hasUnlockedAnimation = function (noetechKey, animationId) {
-  return this.unlockedAnimations.some(
-    (ua) => ua.noetechKey === noetechKey && ua.animationId === animationId
-  );
-};
-
-// Method to get all unlocked animations for a Noetech
-userSchema.methods.getUnlockedAnimationsForNoetech = function (noetechKey) {
-  return this.unlockedAnimations.filter((ua) => ua.noetechKey === noetechKey);
-};
-
-// Instance method - check if any animation is unlocked for a character
-userSchema.methods.hasUnlockedNoetech = function (noetechKey) {
-  // Check if character has any unlocked animations
-  return this.unlockedAnimations.some((ua) => ua.noetechKey === noetechKey); // Returns true if any animation exists
-};
-
 // Instance method - increment scenes saved and check for unlocks
 userSchema.methods.incrementScenesSaved = function () {
   // Called when user saves a scene
