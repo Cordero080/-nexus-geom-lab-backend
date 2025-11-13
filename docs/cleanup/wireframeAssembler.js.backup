@@ -44,6 +44,7 @@ export function assembleWireframe(geometry, materialConfig, materialKey) {
     if (geometry.userData && geometry.userData.isCpdHypercube) {
       wireframeMaterial = getWireframeMaterial(null, materialConfig);
       wireframeMesh = createHypercubeWireframe(geometry, wireframeMaterial);
+      console.log("🔷 USING COMPOUND HYPERCUBE WIREFRAME");
     }
     // Check if it's the new hypercube (tesseract with hyperframe)
     else if (
@@ -53,6 +54,7 @@ export function assembleWireframe(geometry, materialConfig, materialKey) {
     ) {
       wireframeMaterial = getWireframeMaterial(null, materialConfig);
       wireframeMesh = createHypercubeWireframe(geometry, wireframeMaterial);
+      console.log("🔷 USING HYPERCUBE WIREFRAME");
     }
     // Check if it's a mega tesseract (4 tesseracts)
     else if (geometry.userData && geometry.userData.isMegaTesseract) {

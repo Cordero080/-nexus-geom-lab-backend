@@ -83,6 +83,7 @@ export function assembleHyperframe(
       );
       ({ centerLines, centerLinesMaterial, curvedLines, curvedLinesMaterial } =
         result);
+      console.log("🔷 USING 9-COMPOUND HYPERCUBE HYPERFRAME");
     }
     // Check if it's the simple compound hypercube (2 hypercubes interpenetrating)
     else if (
@@ -97,6 +98,7 @@ export function assembleHyperframe(
       );
       ({ centerLines, centerLinesMaterial, curvedLines, curvedLinesMaterial } =
         result);
+      console.log("🔷 USING SIMPLE COMPOUND HYPERCUBE HYPERFRAME");
     }
     // Check if it's the new hypercube (tesseract with hyperframe)
     else if (
