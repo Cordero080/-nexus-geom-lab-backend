@@ -9,16 +9,20 @@ A Node.js/Express backend for the Nexus-Geom 3D application. This API provides u
 npm install
 
 # Create dev user for testing
-node seedDevUser.js
+npm run seed
 
 # Start development server
 npm run dev
 
 # Start production server
 npm start
+
+# Additional dev commands
+npm run reset    # Reset dev user data
+npm run users    # Show user information
 ```
 
-Server runs on: `http://localhost:3000`
+Server runs on: `http://localhost:5000`
 
 ## 👤 Development Setup
 
@@ -58,12 +62,14 @@ backend/
 │   └── Scene.js         # 3D scene configurations
 ├── routes/
 │   ├── auth.js          # Signup/login endpoints
-│   └── scenes.js        # Scene CRUD operations (4 routes)
+│   └── scenes.js        # Scene CRUD + unlock logic (4 routes)
 ├── middleware/
-│   ├── auth.js          # JWT token verification
-│   └── unlockChecker.js # Animation unlock logic
+│   └── auth.js          # JWT token verification
 ├── config/
 │   └── db.js            # MongoDB connection
+├── seedDevUser.js       # Create development test user
+├── resetDevUser.js      # Reset dev user data
+├── clearDatabase.js     # Clear all database data
 ├── .env                 # Environment variables
 ├── .gitignore           # Git exclusions
 ├── package.json         # Dependencies & scripts
@@ -80,11 +86,12 @@ backend/
    - ✅ User model methods: `hasUnlockedNoetech()`, `unlockNoetech()`
    - ✅ Default unlocked: `["icarus-x"]` - everyone starts with Icarus-X
 
-2. **Noetech Unlock Thresholds**
+2. **Noetech & Animation Unlock System**
 
-   - ✅ Unlock logic in `unlockChecker.js`
-   - ✅ Thresholds: 1 scene→"vectra", 3 scenes→"nexus"
-   - ✅ Everyone starts with "icarus-x" unlocked
+   - ✅ Unlock logic built into `routes/scenes.js`
+   - ✅ Noetech unlocks: 1 scene→"icarus-x", 2 scenes→"vectra", 3 scenes→"nexus"
+   - ✅ Animation unlocks: 4 scenes→"Phoenix Dive" for Icarus-X
+   - ✅ Progressive unlock system with detailed progression tracking
 
 3. **Removed Public Gallery Features**
 
@@ -111,16 +118,19 @@ backend/
   username: String (required, unique, 3-30 chars),
   email: String (required, unique, lowercase),
   password: String (hashed with bcrypt, min 6 chars),
-  unlockedNoetechs: [String] (default: ["icarus-x"]),
+  unlockedNoetechs: [String] (default: []),
+  unlockedAnimations: [{
+    noetechKey: String,
+    animationId: String
+  }] (default: []),
+  scenesSaved: Number (default: 0),
   createdAt: Date
 }
 ```
 
 **Methods:**
 
-- `hasUnlockedNoetech(noetechName)` - Check if Noetech is unlocked
-- `unlockNoetech(noetechName)` - Add Noetech to unlocked array
-- `comparePassword(candidatePassword)` - Verify password
+- `comparePassword(candidatePassword)` - Verify password with bcrypt
 
 ### Scene Model
 
@@ -185,7 +195,7 @@ Response:
     "id": "...",
     "username": "artist123",
     "email": "artist@example.com",
-    "unlockedNoetechs": ["icarus-x"]
+    "unlockedNoetechs": []
   }
 }
 ```
@@ -206,7 +216,8 @@ Response:
   "user": {
     "id": "...",
     "username": "artist123",
-    "unlockedNoetechs": ["icarus-x", "vectra"]
+    "unlockedNoetechs": ["icarus-x", "vectra"],
+    "unlockedAnimations": []
   }
 }
 ```
@@ -224,6 +235,8 @@ Response:
     "username": "artist123",
     "email": "artist@example.com",
     "unlockedNoetechs": ["icarus-x", "vectra"],
+    "unlockedAnimations": [],
+    "scenesSaved": 2,
     "createdAt": "..."
   }
 }
@@ -253,7 +266,9 @@ Response:
   "success": true,
   "message": "Scene created successfully",
   "scene": { ... },
-  "unlockedNoetechs": ["vectra"] // If any unlocked
+  "totalScenes": 1,
+  "unlockedNoetechs": ["icarus-x"], // If any unlocked
+  "unlockedAnimations": [] // If any animations unlocked
 }
 ```
 
@@ -313,24 +328,24 @@ Response:
 }
 ```
 
-## 🎮 Noetech Unlock System
+## 🎮 Progressive Unlock System
 
-### Default Unlocked
+### Unlock Progression
 
-- **"icarus-x"** - Everyone starts with this Noetech (geometry type)
-
-### Unlock Thresholds
-
-- **1 scene saved** → Unlock "vectra"
-- **3 scenes saved** → Unlock "nexus"
+- **1st scene saved** → Unlock "icarus-x" (Noetech)
+- **2nd scene saved** → Unlock "vectra" (Noetech)
+- **3rd scene saved** → Unlock "nexus" (Noetech)
+- **4th scene saved** → Unlock "Phoenix Dive" animation for Icarus-X
 
 ### How It Works
 
 1. User creates/saves a scene
-2. `unlockChecker.js` middleware counts their total scenes
-3. If threshold reached, Noetech is added to `user.unlockedNoetechs`
-4. Response includes `unlockedNoetechs` array for frontend notification
-5. Frontend can show "New Noetech Unlocked!" message
+2. `scenesSaved` counter increments
+3. Unlock logic in `routes/scenes.js` checks thresholds
+4. New Noetechs added to `user.unlockedNoetechs` array
+5. New animations added to `user.unlockedAnimations` array
+6. Response includes unlock notifications for frontend
+7. Frontend can show "New Noetech Unlocked!" or "New Animation Unlocked!" messages
 
 ## 🔧 Environment Variables
 
@@ -354,7 +369,10 @@ PORT=5000
     "jsonwebtoken": "^9.0.2",
     "dotenv": "^17.2.3",
     "cors": "^2.8.5",
-    "express-validator": "^7.2.1"
+    "express-validator": "^7.2.1",
+    "express-rate-limit": "^7.4.0",
+    "helmet": "^8.0.0",
+    "morgan": "^1.10.0"
   },
   "devDependencies": {
     "nodemon": "^3.1.10"
@@ -368,32 +386,32 @@ PORT=5000
 
 ```bash
 # Health check
-curl http://localhost:3000/
+curl http://localhost:5000/
 
 # Signup
-curl -X POST http://localhost:3000/api/auth/signup \
+curl -X POST http://localhost:5000/api/auth/signup \
   -H "Content-Type: application/json" \
   -d '{"username": "testuser", "email": "test@example.com", "password": "password123"}'
 
 # Login (save the token from response)
-curl -X POST http://localhost:3000/api/auth/login \
+curl -X POST http://localhost:5000/api/auth/login \
   -H "Content-Type: application/json" \
   -d '{"email": "test@example.com", "password": "password123"}'
 
 # Create scene (replace TOKEN with actual token)
-curl -X POST http://localhost:3000/api/scenes \
+curl -X POST http://localhost:5000/api/scenes \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer TOKEN" \
   -d '{"name": "Test Scene", "config": {"animationStyle": "rotate"}}'
 
 # Get my scenes
-curl -X GET http://localhost:3000/api/scenes/my-scenes \
+curl -X GET http://localhost:5000/api/scenes/my-scenes \
   -H "Authorization: Bearer TOKEN"
 ```
 
 ### Using Browser:
 
-Visit `http://localhost:3000/` to see the health check response.
+Visit `http://localhost:5000/` to see the health check response.
 
 ## 🚀 Deployment
 
