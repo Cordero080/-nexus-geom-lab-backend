@@ -1,4 +1,4 @@
-# Nexus-Geom 3D 🌌
+# Nexus-Geom-Lab 🌌
 
 > Interactive 3D geometry platform with 24 hyperdimensional shapes, progressive character unlocks, and full-stack scene management
 
