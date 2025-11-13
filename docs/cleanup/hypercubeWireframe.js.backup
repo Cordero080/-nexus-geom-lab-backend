@@ -9,6 +9,10 @@ import { nearestVertexIndex } from "../../../utils/geometryHelpers";
  * @returns {THREE.Group} The wireframe group with edge pairs in userData
  */
 export function createHypercubeWireframe(geometry, wireframeMaterial) {
+  console.log("🔷 HYPERCUBE WIREFRAME CALLED");
+  console.log("Geometry:", geometry);
+  console.log("Material:", wireframeMaterial);
+
   // Use EdgesGeometry to reliably get all edges from the merged hypercube
   const edgesGeometry = new THREE.EdgesGeometry(geometry);
   const edgeVertices = edgesGeometry.attributes.position.array;
@@ -19,6 +23,8 @@ export function createHypercubeWireframe(geometry, wireframeMaterial) {
 
   // Thick cylinder parameters - MUCH THICKER
   const MAIN_RADIUS = 0.01728;
+
+  console.log("Edge vertices count:", edgeVertices.length / 6);
 
   for (let j = 0; j < edgeVertices.length; j += 6) {
     const start = new THREE.Vector3(
