@@ -234,6 +234,18 @@ npm test -- --watch         # Run tests in watch mode (auto-runs on file changes
 # Open http://localhost:5173
 ```
 
+---
+
+## 📊 Project Scale
+
+- **336 files** across **119 directories**
+- **36,366 lines** of React/Three.js code
+- **81 components** with **14 custom hooks**
+- **134 state variables** managing real-time interactions
+- **7 test suites** with **39 passing tests**
+
+---
+
 ### ✅ Test Coverage (Jest)
 
 ```bash
