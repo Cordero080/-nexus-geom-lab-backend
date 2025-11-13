@@ -234,13 +234,34 @@ npm test -- --watch         # Run tests in watch mode (auto-runs on file changes
 # Open http://localhost:5173
 ```
 
+### ✅ Test Coverage
+
+```bash
+Test Suites: 7 passed, 7 total
+Tests:       39 passed, 39 total
+```
+
+**Tested Components:**
+
+- Material Factory (geometry creation pipeline)
+- ScrambleButton (text animation effects)
+- CustomSelect (dropdown UI component)
+- Quote (shared UI component)
+- Scene Initialization (Three.js setup)
+- Controls Handlers (user input logic)
+- Quantum Collapse Utility (state transitions)
+
+All tests maintained and passing after code refactoring
+
+````
+
 ### Environment Variables
 
 **Frontend `.env`:**
 
 ```env
 VITE_API_URL=http://localhost:3000/api
-```
+````
 
 **Backend `.env`:**
 
