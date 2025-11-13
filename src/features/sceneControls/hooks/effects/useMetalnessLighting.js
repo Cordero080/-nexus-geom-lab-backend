@@ -46,7 +46,7 @@ export function useMetalnessLighting(sceneRef, metalness) {
         scene.add(rimLight1);
       } else {
         // Update intensity based on metalness - MUST MATCH creation intensity formula
-        // DEBUGGING: Check if light is still in scene
+        // Check if light is still in scene
         const stillInScene = scene.getObjectById(rimLight1Ref.current.id);
         if (!stillInScene) {
           scene.add(rimLight1Ref.current);
@@ -63,7 +63,7 @@ export function useMetalnessLighting(sceneRef, metalness) {
         scene.add(rimLight2);
       } else {
         // Update intensity based on metalness - MUST MATCH creation intensity formula
-        // DEBUGGING: Check if light is still in scene
+        // Check if light is still in scene
         const stillInScene = scene.getObjectById(rimLight2Ref.current.id);
         if (!stillInScene) {
           scene.add(rimLight2Ref.current);
@@ -83,7 +83,7 @@ export function useMetalnessLighting(sceneRef, metalness) {
         scene.add(backLight);
       } else {
         // Update intensity based on metalness - MUST MATCH creation intensity formula
-        // DEBUGGING: Check if light is still in scene
+        // Check if light is still in scene
         const stillInScene = scene.getObjectById(backLightRef.current.id);
         if (!stillInScene) {
           scene.add(backLightRef.current);
@@ -103,7 +103,7 @@ export function useMetalnessLighting(sceneRef, metalness) {
         scene.add(volumeLight);
       } else {
         // Update intensity based on metalness - MUST MATCH creation intensity formula
-        // DEBUGGING: Check if light is still in scene
+        // Check if light is still in scene
         const stillInScene = scene.getObjectById(volumeLightRef.current.id);
         if (!stillInScene) {
           scene.add(volumeLightRef.current);
@@ -123,7 +123,7 @@ export function useMetalnessLighting(sceneRef, metalness) {
         scene.add(southLight);
       } else {
         // Update intensity based on metalness - MUST MATCH creation intensity formula
-        // DEBUGGING: Check if light is still in scene
+        // Check if light is still in scene
         const stillInScene = scene.getObjectById(southLightRef.current.id);
         if (!stillInScene) {
           scene.add(southLightRef.current);

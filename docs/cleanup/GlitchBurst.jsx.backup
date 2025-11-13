@@ -107,6 +107,7 @@ export default function GlitchBurst({ triggerTimes = [], animationTime = 0 }) {
       glitchTimeRef.current = 0;
       lastTriggeredIndexRef.current = triggeredIndex;
       
+      // Debug: log when glitch triggers
       console.log(`Glitch burst ${triggeredIndex + 1} triggered at ${animationTime.toFixed(2)}s`);
       
       // Reset particles to center

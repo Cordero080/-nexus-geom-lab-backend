@@ -211,7 +211,7 @@ function Controls({
         </button>
 
       {/* 
-       * DISPLAY SECTION
+       * DEBUG DISPLAY SECTION
        * Shows current values FROM App.jsx - these update automatically when state changes
        * These are NOT interactive - they just display the current values
        */}

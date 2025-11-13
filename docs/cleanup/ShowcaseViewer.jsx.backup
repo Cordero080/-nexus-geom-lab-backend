@@ -94,7 +94,7 @@ function ShowcaseViewer({ animation, onClose }) {
   
   const hasMultipleCharacters = allUnlockedCharacters.length > 1;
   
-  // Force show navigation for testing (set to true to always show)
+  // TEMP: Force show navigation for testing (set to true to always show)
   const showNavForTesting = true;
   
   // Run once component mounts
