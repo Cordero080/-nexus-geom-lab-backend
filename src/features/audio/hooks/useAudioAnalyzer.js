@@ -28,6 +28,7 @@ export function useAudioAnalyzer() {
 
   /**
    * Initialize Web Audio API
+   * Creates microphone connection → audio context → analyzer → starts frequency analysis
    */
   const initAudio = useCallback(async () => {
     try {
@@ -95,6 +96,7 @@ export function useAudioAnalyzer() {
 
   /**
    * Analyze audio frequencies in real-time
+   * Runs every frame, reads frequency data, separates bass/mids/highs, updates state
    */
   const analyzeAudio = useCallback(() => {
     if (!analyzerRef.current || !dataArrayRef.current) return;
@@ -109,7 +111,7 @@ export function useAudioAnalyzer() {
     const nyquist = audioContextRef.current.sampleRate / 2;
     const binCount = dataArray.length;
 
-    // Helper to get average amplitude in frequency range
+    // Helper: calculates average amplitude for a specific Hz range (e.g., 20-250 Hz for bass)
     const getFrequencyRangeAverage = (lowFreq, highFreq) => {
       const lowBin = Math.floor((lowFreq / nyquist) * binCount);
       const highBin = Math.floor((highFreq / nyquist) * binCount);
@@ -154,6 +156,7 @@ export function useAudioAnalyzer() {
 
   /**
    * Stop audio analysis
+   * Cancels animation loop, disconnects microphone, closes audio context, resets state
    */
   const stopAudio = useCallback(() => {
     // Cancel animation frame
@@ -181,6 +184,7 @@ export function useAudioAnalyzer() {
 
   /**
    * Toggle audio on/off
+   * User-facing control: starts microphone if off, stops if on
    */
   const toggleAudio = useCallback(() => {
     if (isActive) {
@@ -192,6 +196,7 @@ export function useAudioAnalyzer() {
 
   /**
    * Cleanup on unmount
+   * Prevents memory leaks by stopping all audio processes when component unmounts
    */
   useEffect(() => {
     return () => {

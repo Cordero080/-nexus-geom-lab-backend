@@ -5,7 +5,9 @@
 <div align="center">
 
 ![React](https://img.shields.io/badge/React-19.1-61DAFB?style=for-the-badge&logo=react)
+![React Three Fiber](https://img.shields.io/badge/React_Three_Fiber-9.4-000000?style=for-the-badge&logo=three.js&logoColor=white)
 ![Three.js](https://img.shields.io/badge/Three.js-0.180-000000?style=for-the-badge&logo=three.js)
+![Vite](https://img.shields.io/badge/Vite-7.1-646CFF?style=for-the-badge&logo=vite&logoColor=white)
 ![Node.js](https://img.shields.io/badge/Node.js-20+-339933?style=for-the-badge&logo=node.js)
 ![Express](https://img.shields.io/badge/Express-4.x-000000?style=for-the-badge&logo=express)
 ![MongoDB](https://img.shields.io/badge/MongoDB-5.0-47A248?style=for-the-badge&logo=mongodb)
@@ -93,7 +95,7 @@ _UI/UX design and user flow planning_
 
 ## Overview
 
-Nexus-Geom 3D is a full-stack MERN application that transforms complex 4D mathematical concepts into an interactive, gamified 3D experience. Built through **287+ solo commits**, the project combines Three.js, React, and a custom geometry engine to let users explore, manipulate, and save hyperdimensional shapes while progressively unlocking animated characters.
+Nexus-Geom 3D is a full-stack MERN application that transforms complex 4D mathematical concepts into an interactive, gamified 3D experience. The project is experimental and combines Three.js, React, and a custom geometry engine to let users explore, manipulate, and save hyperdimensional shapes while progressively unlocking animated characters.
 
 **The Vision**: With a background in art and motion graphics, I wanted to build a tool that makes compound polytopes and 4D structures intuitive through interaction. I designed the spatial logic, user flow, UI aesthetic, and overall architecture, and used AI tools to assist with heavy mathematical implementation and complex Three.js scaffolding.
 
@@ -545,6 +547,42 @@ Free to use, modify, and distribute. Attribution appreciated but not required.
 
 ---
 
+## 🎯 Stretch Goals & Future Vision
+
+### 🔮 Planned Enhancements
+
+#### Blender Animation Pipeline Mastery
+
+- **Advanced Armature Work**: IK constraints, custom bones for facial expressions
+- **Material Nodes**: Procedural glowing effects matching quantum theme
+- **LOD Optimization**: Multiple detail levels for performance scaling
+- **Custom Animations**: Motion capture integration using Rokoko suit to record real human movements, then retarget to character armatures for nuanced, lifelike animation control
+
+#### Social & Discovery Features
+
+- **Public Scene Gallery**: Browse and remix community creations
+- **"Remix This" System**: Clone and customize other users' scenes
+- **Achievement System**: Unlock badges for mastery milestones
+- **Character Evolution**: XP system, costume unlocks, power-ups
+
+#### Advanced Rendering
+
+- **VR/AR Integration**: WebXR support for immersive exploration
+- **Ray Tracing**: Path-traced photorealistic rendering
+- **Particle Systems**: Dynamic effects tied to geometry
+- **Music Sync**: Real-time audio-reactive animations
+
+#### Creative Tools
+
+- **Animation Timeline**: Keyframe-based object choreography
+- **Camera Paths**: Cinematic camera movements
+- **AI Scene Generation**: "Create a quantum tesseract with purple aurora lighting"
+- **Export Options**: 4K images, video recordings, JSON scene data
+
+📖 **[Full Stretch Goals Document →](./docs/STRETCH_GOALS.md)**
+
+---
+
 <div align="center">
 
 ### Built with 🔥 and 🌊 by Pablo Cordero
@@ -563,6 +601,6 @@ _"The universe is written in the language of mathematics, and its alphabet is ci
 
 ⭐ **Star this repo** if you find it interesting! • 🍴 **Fork it** to experiment with your own ideas
 
-Made in 2025 | Last Updated: November 3, 2025
+Made in 2025 | Last Updated: November 12, 2025
 
 </div>
