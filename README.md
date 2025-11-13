@@ -234,12 +234,15 @@ npm test -- --watch         # Run tests in watch mode (auto-runs on file changes
 # Open http://localhost:5173
 ```
 
-### ✅ Test Coverage
+### ✅ Test Coverage (Jest)
 
 ```bash
 Test Suites: 7 passed, 7 total
 Tests:       39 passed, 39 total
+Time:        0.596 s
 ```
+
+**Testing Framework:** Jest 30.2.0 with React Testing Library
 
 **Tested Components:**
 
