@@ -3,6 +3,11 @@ node_modules/
 dist/
 *.log
 
+# Environment variables
+.env
+.env.local
+.env.production
+
 # Private study materials and verbose planning docs
 docs/study-plan/
 docs/study-plan-update/

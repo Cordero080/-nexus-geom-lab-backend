@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
 import App from './App.jsx';
+import ErrorBoundary from '@/components/shared/ErrorBoundary/ErrorBoundary';
 import './index.css';
 
 // Global portal color system
@@ -31,7 +32,9 @@ updateGlobalPortalColors();
 document.addEventListener('click', updateGlobalPortalColors);
 
 ReactDOM.createRoot(document.getElementById('root')).render(
-  <BrowserRouter>
-    <App />
-  </BrowserRouter>
+  <ErrorBoundary>
+    <BrowserRouter>
+      <App />
+    </BrowserRouter>
+  </ErrorBoundary>
 );

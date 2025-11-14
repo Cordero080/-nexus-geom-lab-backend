@@ -1,23 +1,23 @@
 import React, { useState, useEffect } from 'react';
 import { Routes, Route, useNavigate, Navigate, useLocation } from 'react-router-dom';
-import ThreeScene from './features/sceneControls/ThreeScene';
-import Controls from './components/features/Controls/Controls';
-import SaveControls from './components/features/SaveButton/SaveControls';
-import ExitButton from './components/features/Controls/ExitButton/ExitButton';
-import ScrambleButton from './components/ui/ScrambleButton/ScrambleButton';
-import HomePage from './components/pages/HomePage/HomePage';
-import NavBar from './components/layout/NavBar/NavBar';
-import ShowcaseGallery from './components/features/Showcase/ShowcaseGallery';
-import MyScenesPage from './components/pages/MyScenesPage/MyScenesPage';
-import SignUpPage from './features/auth/pages/SignUpPage/SignUpPage';
-import LoginPage from './features/auth/pages/LoginPage/LoginPage';
-import { SceneProvider, useScene } from './context/SceneContext';
-import { AuthProvider, useAuth } from './features/auth/context/AuthContext';
-import { QuantumCursor } from './components/ui/Effects';
-import Footer from './components/pages/HomePage/Footer/Footer';
-import useSceneState from './hooks/useSceneState';
+import ThreeScene from '@/features/sceneControls/ThreeScene';
+import Controls from '@/components/features/Controls/Controls';
+import SaveControls from '@/components/features/SaveButton/SaveControls';
+import ExitButton from '@/components/features/Controls/ExitButton/ExitButton';
+import ScrambleButton from '@/components/ui/ScrambleButton/ScrambleButton';
+import HomePage from '@/components/pages/HomePage/HomePage';
+import NavBar from '@/components/layout/NavBar/NavBar';
+import ShowcaseGallery from '@/components/features/Showcase/ShowcaseGallery';
+import MyScenesPage from '@/components/pages/MyScenesPage/MyScenesPage';
+import SignUpPage from '@/features/auth/pages/SignUpPage/SignUpPage';
+import LoginPage from '@/features/auth/pages/LoginPage/LoginPage';
+import { SceneProvider, useScene } from '@/context/SceneContext';
+import { AuthProvider, useAuth } from '@/features/auth/context/AuthContext';
+import { QuantumCursor } from '@/components/ui/Effects';
+import Footer from '@/components/pages/HomePage/Footer/Footer';
+import useSceneState from '@/hooks/useSceneState';
 import './cursor-override.module.scss';
-import sharedStyles from './styles/shared.module.scss';
+import sharedStyles from '@/styles/shared.module.scss';
 
 // Updated default colors for psychedelic theme and used in geom-lab state = these are the initial colors when user starts a new scene
 const defaultBaseColor = '#4a0e78'; // Deep purple
