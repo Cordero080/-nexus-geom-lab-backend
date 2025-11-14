@@ -58,74 +58,60 @@ export function useSceneState() {
   // RETURN: All state values and setters
   // ============================================
   return {
-    // All current state values in one object
-    sceneState: {
-      // Material properties
-      metalness,
-      emissiveIntensity,
-      baseColor,
-      wireframeIntensity,
+    // Material properties
+    metalness,
+    setMetalness,
+    emissiveIntensity,
+    setEmissiveIntensity,
+    baseColor,
+    setBaseColor,
+    wireframeIntensity,
+    setWireframeIntensity,
 
-      // Hyperframe
-      hyperframeColor,
-      hyperframeLineColor,
+    // Hyperframe
+    hyperframeColor,
+    setHyperframeColor,
+    hyperframeLineColor,
+    setHyperframeLineColor,
 
-      // Scene behavior
-      cameraView,
-      environment,
-      environmentHue,
-      objectCount,
-      animationStyle,
-      objectType,
+    // Scene behavior
+    cameraView,
+    setCameraView,
+    environment,
+    setEnvironment,
+    environmentHue,
+    setEnvironmentHue,
+    objectCount,
+    setObjectCount,
+    animationStyle,
+    setAnimationStyle,
+    objectType,
+    setObjectType,
 
-      // Lighting
-      ambientLightColor,
-      ambientLightIntensity,
-      directionalLightColor,
-      directionalLightIntensity,
-      directionalLightX,
-      directionalLightY,
-      directionalLightZ,
+    // Lighting
+    ambientLightColor,
+    setAmbientLightColor,
+    ambientLightIntensity,
+    setAmbientLightIntensity,
+    directionalLightColor,
+    setDirectionalLightColor,
+    directionalLightIntensity,
+    setDirectionalLightIntensity,
+    directionalLightX,
+    setDirectionalLightX,
+    directionalLightY,
+    setDirectionalLightY,
+    directionalLightZ,
+    setDirectionalLightZ,
 
-      // Animation
-      scale,
-      objectSpeed,
-      orbSpeed,
-    },
-
-    // All setter functions in one object
-    sceneActions: {
-      // Material property setters
-      setMetalness,
-      setEmissiveIntensity,
-      setBaseColor,
-      setWireframeIntensity,
-
-      // Hyperframe setters
-      setHyperframeColor,
-      setHyperframeLineColor,
-
-      // Scene behavior setters
-      setCameraView,
-      setEnvironment,
-      setEnvironmentHue,
-      setObjectCount,
-      setAnimationStyle,
-      setObjectType,
-
-      // Lighting setters
-      setAmbientLightColor,
-      setAmbientLightIntensity,
-      setDirectionalLightColor,
-      setDirectionalLightIntensity,
-      setDirectionalLightX,
-      setDirectionalLightY,
-      setDirectionalLightZ,
-
-      // Animation setters
-      setScale,
-      setObjectSpeed,
-      setOrbSpeed,
-    },
+    // Animation
+    scale,
+    setScale,
+    objectSpeed,
+    setObjectSpeed,
+    orbSpeed,
+    setOrbSpeed,
   };
 }
+
+export default useSceneState;

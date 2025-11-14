@@ -15,6 +15,7 @@ import { SceneProvider, useScene } from './context/SceneContext';
 import { AuthProvider, useAuth } from './features/auth/context/AuthContext';
 import { QuantumCursor } from './components/ui/Effects';
 import Footer from './components/pages/HomePage/Footer/Footer';
+import useSceneState from './hooks/useSceneState';
 import './cursor-override.module.scss';
 import sharedStyles from './styles/shared.module.scss';
 
@@ -37,37 +38,58 @@ function GeomLab() {
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
   const [allowNavigation, setAllowNavigation] = useState(false);
 
-  // MATERIAL PROPERTIES STATE
-  const [metalness, setMetalness] = useState(0.5); // 0 = plastic, 1 = full metal
-  const [emissiveIntensity, setEmissiveIntensity] = useState(0); // 0 = no glow, 2 = bright glow
-
-  const [baseColor, setBaseColor] = useState(defaultBaseColor);
-
-  const [wireframeIntensity, setWireframeIntensity] = useState(50);
-
-  // HYPERFRAME STATE
-  const [hyperframeColor, setHyperframeColor] = useState(defaultHyperframeColor);
-  const [hyperframeLineColor, setHyperframeLineColor] = useState(defaultHyperframeLineColor);
-
-  // SCENE BEHAVIOR STATE
-  const [cameraView, setCameraView] = useState('free');
-  const [environment, setEnvironment] = useState('matrix');
-  const [environmentHue, setEnvironmentHue] = useState(0); // Hue rotation for environment (0-360)
-  const [objectCount, setObjectCount] = useState(1);
-  const [animationStyle, setAnimationStyle] = useState('rotate');
-  const [objectType, setObjectType] = useState('icosahedron');
-
-  // LIGHTING STATE
-  const [ambientLightColor, setAmbientLightColor] = useState('#ffffff');
-  const [ambientLightIntensity, setAmbientLightIntensity] = useState(1.2);
-  const [directionalLightColor, setDirectionalLightColor] = useState('#ffffff');
-  const [directionalLightIntensity, setDirectionalLightIntensity] = useState(1.0);
-  const [directionalLightX, setDirectionalLightX] = useState(10);
-  const [directionalLightY, setDirectionalLightY] = useState(10);
-  const [directionalLightZ, setDirectionalLightZ] = useState(5);
-  const [scale, setScale] = useState(1);
-  const [objectSpeed, setObjectSpeed] = useState(1.0);
-  const [orbSpeed, setOrbSpeed] = useState(1.0);
+  // SCENE STATE - extracted to custom hook
+  const {
+    // Material properties
+    metalness,
+    setMetalness,
+    emissiveIntensity,
+    setEmissiveIntensity,
+    baseColor,
+    setBaseColor,
+    wireframeIntensity,
+    setWireframeIntensity,
+    // Hyperframe
+    hyperframeColor,
+    setHyperframeColor,
+    hyperframeLineColor,
+    setHyperframeLineColor,
+    // Scene behavior
+    cameraView,
+    setCameraView,
+    environment,
+    setEnvironment,
+    environmentHue,
+    setEnvironmentHue,
+    objectCount,
+    setObjectCount,
+    animationStyle,
+    setAnimationStyle,
+    objectType,
+    setObjectType,
+    // Lighting
+    ambientLightColor,
+    setAmbientLightColor,
+    ambientLightIntensity,
+    setAmbientLightIntensity,
+    directionalLightColor,
+    setDirectionalLightColor,
+    directionalLightIntensity,
+    setDirectionalLightIntensity,
+    directionalLightX,
+    setDirectionalLightX,
+    directionalLightY,
+    setDirectionalLightY,
+    directionalLightZ,
+    setDirectionalLightZ,
+    // Animation
+    scale,
+    setScale,
+    objectSpeed,
+    setObjectSpeed,
+    orbSpeed,
+    setOrbSpeed,
+  } = useSceneState();
 
   // Track changes to mark as unsaved
   useEffect(() => {
