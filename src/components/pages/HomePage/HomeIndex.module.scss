@@ -985,19 +985,19 @@ input,
     width: 100vw;
     min-height: 100vh;
     z-index: 1;
+  }
 
-    &:not(.active) {
-      opacity: 0;
-      pointer-events: none !important;
-      z-index: 1;
-    }
+  :global(.quantum-scene:not(.active)) {
+    opacity: 0;
+    pointer-events: none !important;
+    z-index: 1;
+  }
 
-    &.active {
-      opacity: 1;
-      pointer-events: none !important;
-      position: relative;
-      z-index: 2;
-    }
+  :global(.quantum-scene.active) {
+    opacity: 1;
+    pointer-events: none !important;
+    position: relative;
+    z-index: 2;
   }
 
   /* 3D Parallax Layers */
@@ -1402,16 +1402,16 @@ input,
     text-align: center;
     overflow: visible;
     pointer-events: auto !important;
+  }
 
-    /* All interactive children must be clickable */
-    button,
-    a,
-    input,
-    [role='button'] {
-      pointer-events: auto !important;
-      cursor: pointer !important;
-      z-index: 100 !important;
-    }
+  /* All interactive children must be clickable */
+  :global(.scene-content button),
+  :global(.scene-content a),
+  :global(.scene-content input),
+  :global(.scene-content [role='button']) {
+    pointer-events: auto !important;
+    cursor: pointer !important;
+    z-index: 100 !important;
   }
 
   /* Probability section - center content vertically */
@@ -1466,17 +1466,17 @@ input,
       -webkit-background-clip 0.8s cubic-bezier(0.4, 0, 0.2, 1),
       text-shadow 0.8s cubic-bezier(0.4, 0, 0.2, 1);
     transform-style: preserve-3d;
+  }
 
-    &.flipped {
-      transform: rotateX(180deg);
-      background: linear-gradient(90deg, #ff00ff, #00ff99);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-      text-shadow:
-        0 0 12px #ff00ff66,
-        0 0 20px #00ff9944;
-    }
+  :global(.scene-description.flipped) {
+    transform: rotateX(180deg);
+    background: linear-gradient(90deg, #ff00ff, #00ff99);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-shadow:
+      0 0 12px #ff00ff66,
+      0 0 20px #00ff9944;
   }
 
   .quantum-console {
