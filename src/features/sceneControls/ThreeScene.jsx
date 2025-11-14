@@ -9,7 +9,7 @@ import {
   __Inv,
   nearestVertexIndex,
   updateThickWireframeCylinders,
-} from '../../utils/geometryHelpers';
+} from './utils/geometryHelpers';
 import React, { useRef, useEffect } from 'react';
 import './ThreeScene.css';
 

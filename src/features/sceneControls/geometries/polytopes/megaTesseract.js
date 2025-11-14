@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import { mergeGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils';
+import { createTesseractWithFaces } from '../../utils/geometryHelpers';
 
 // Cache built geometries to avoid recomputing the expensive sweep on reselection.
 const geometryCache = new Map();
@@ -64,73 +65,6 @@ function cloneWithUserData(source) {
  * @param {number} rotation - Optional rotation to apply (in radians)
  * @returns {THREE.BufferGeometry} Complete tesseract
  */
-function createTesseractWithFaces(outerSize, innerSize, rotation = null) {
-  const geometries = [];
-
-  // Outer cube
-  const outer = new THREE.BoxGeometry(outerSize, outerSize, outerSize);
-  if (rotation) outer.rotateY(rotation);
-  geometries.push(outer);
-
-  // Inner cube
-  const inner = new THREE.BoxGeometry(innerSize, innerSize, innerSize);
-  if (rotation) inner.rotateY(rotation);
-  inner.translate(0, 0.01, 0); // Slight offset to prevent z-fighting
-  geometries.push(inner);
-
-  // Create 6 connecting frustums (one for each face of the cube)
-  const halfOuter = outerSize / 2;
-  const halfInner = innerSize / 2;
-  const depth = (outerSize - innerSize) / 2;
-
-  // Top face frustum (Y+)
-  const topFrustum = new THREE.CylinderGeometry(halfInner, halfOuter, depth, 4);
-  topFrustum.rotateY(Math.PI / 4);
-  topFrustum.translate(0, halfOuter + depth / 2, 0);
-  if (rotation) topFrustum.rotateY(rotation);
-  geometries.push(topFrustum);
-
-  // Bottom face frustum (Y-)
-  const bottomFrustum = new THREE.CylinderGeometry(halfOuter, halfInner, depth, 4);
-  bottomFrustum.rotateY(Math.PI / 4);
-  bottomFrustum.translate(0, -(halfOuter + depth / 2), 0);
-  if (rotation) bottomFrustum.rotateY(rotation);
-  geometries.push(bottomFrustum);
-
-  // Front face frustum (Z+)
-  const frontFrustum = new THREE.CylinderGeometry(halfInner, halfOuter, depth, 4);
-  frontFrustum.rotateY(Math.PI / 4);
-  frontFrustum.rotateX(Math.PI / 2);
-  frontFrustum.translate(0, 0, halfOuter + depth / 2);
-  if (rotation) frontFrustum.rotateY(rotation);
-  geometries.push(frontFrustum);
-
-  // Back face frustum (Z-)
-  const backFrustum = new THREE.CylinderGeometry(halfOuter, halfInner, depth, 4);
-  backFrustum.rotateY(Math.PI / 4);
-  backFrustum.rotateX(Math.PI / 2);
-  backFrustum.translate(0, 0, -(halfOuter + depth / 2));
-  if (rotation) backFrustum.rotateY(rotation);
-  geometries.push(backFrustum);
-
-  // Right face frustum (X+)
-  const rightFrustum = new THREE.CylinderGeometry(halfInner, halfOuter, depth, 4);
-  rightFrustum.rotateY(Math.PI / 4);
-  rightFrustum.rotateZ(Math.PI / 2);
-  rightFrustum.translate(halfOuter + depth / 2, 0, 0);
-  if (rotation) rightFrustum.rotateY(rotation);
-  geometries.push(rightFrustum);
-
-  // Left face frustum (X-)
-  const leftFrustum = new THREE.CylinderGeometry(halfOuter, halfInner, depth, 4);
-  leftFrustum.rotateY(Math.PI / 4);
-  leftFrustum.rotateZ(Math.PI / 2);
-  leftFrustum.translate(-(halfOuter + depth / 2), 0, 0);
-  if (rotation) leftFrustum.rotateY(rotation);
-  geometries.push(leftFrustum);
-
-  return mergeGeometries(geometries, false);
-}
 
 /**
  * Creates a mega tesseract - compound tesseract with outer encasing layer
