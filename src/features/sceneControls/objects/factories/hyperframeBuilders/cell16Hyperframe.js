@@ -1,4 +1,4 @@
-import * as THREE from "three";
+import * as THREE from 'three';
 
 /**
  * Create hyperframe for 16-cell (hyperdiamond/hyperoctahedron)
@@ -10,11 +10,7 @@ import * as THREE from "three";
  * @returns {Object} { centerLines, centerLinesMaterial, curvedLines, curvedLinesMaterial }
  */
 export function create16CellHyperframe(config = {}) {
-  const {
-    geometry,
-    hyperframeColor = "#ff6b6b",
-    hyperframeLineColor = "#4ecdc4",
-  } = config;
+  const { geometry, hyperframeColor = '#ff6b6b', hyperframeLineColor = '#4ecdc4' } = config;
 
   // Get layer sizes from geometry metadata
   const layers = geometry.userData.layers || {
@@ -74,12 +70,7 @@ export function create16CellHyperframe(config = {}) {
       const end = new THREE.Vector3(...vertices[j]);
       const distance = start.distanceTo(end);
 
-      const cylinderGeom = new THREE.CylinderGeometry(
-        radius,
-        radius,
-        distance,
-        segments
-      );
+      const cylinderGeom = new THREE.CylinderGeometry(radius, radius, distance, segments);
       const cylinderMesh = new THREE.Mesh(cylinderGeom, centerLinesMaterial);
 
       cylinderMesh.position.copy(start.clone().add(end).multiplyScalar(0.5));
@@ -94,9 +85,7 @@ export function create16CellHyperframe(config = {}) {
   createLayerEdges(middleVertices, 0.002, 6);
   createLayerEdges(innerVertices, 0.0015, 6);
 
-  console.log(
-    `Created 16-cell inner tetrahedra: 2 layers × 6 edges = 12 edges`
-  );
+  console.log(`Created 16-cell inner tetrahedra: 2 layers × 6 edges = 12 edges`);
 
   // ========================================
   // 2. CREATE VERTEX CONNECTIONS
@@ -116,9 +105,7 @@ export function create16CellHyperframe(config = {}) {
   const actualVertices = [];
   for (let i = 0; i < vertexCount; i++) {
     const idx = i * 3;
-    actualVertices.push(
-      new THREE.Vector3(positions[idx], positions[idx + 1], positions[idx + 2])
-    );
+    actualVertices.push(new THREE.Vector3(positions[idx], positions[idx + 1], positions[idx + 2]));
   }
 
   // Match canonical vertex to closest actual vertex
@@ -150,12 +137,7 @@ export function create16CellHyperframe(config = {}) {
     const end = new THREE.Vector3(...middleVertices[i]);
     const distance = start.distanceTo(end);
 
-    const cylinderGeom = new THREE.CylinderGeometry(
-      0.0025,
-      0.0025,
-      distance,
-      6
-    );
+    const cylinderGeom = new THREE.CylinderGeometry(0.0025, 0.0025, distance, 6);
     const cylinderMesh = new THREE.Mesh(cylinderGeom, curvedLinesMaterial);
 
     cylinderMesh.position.copy(start.clone().add(end).multiplyScalar(0.5));
@@ -181,9 +163,7 @@ export function create16CellHyperframe(config = {}) {
     connectionGroup.add(cylinderMesh);
   }
 
-  console.log(
-    `Created 16-cell connections: 4 outer→middle, 4 middle→inner = 8 total`
-  );
+  console.log(`Created 16-cell connections: 4 outer→middle, 4 middle→inner = 8 total`);
 
   // ========================================
   // 3. ADD SPACE DIAGONALS (optional)
@@ -203,12 +183,7 @@ export function create16CellHyperframe(config = {}) {
       const v2 = new THREE.Vector3(...vertices[j]);
       const distance = v1.distanceTo(v2);
 
-      const cylinderGeom = new THREE.CylinderGeometry(
-        radius,
-        radius,
-        distance,
-        6
-      );
+      const cylinderGeom = new THREE.CylinderGeometry(radius, radius, distance, 6);
       const cylinderMesh = new THREE.Mesh(cylinderGeom, curvedLinesMaterial);
 
       cylinderMesh.position.copy(v1.clone().add(v2).multiplyScalar(0.5));

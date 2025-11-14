@@ -16,14 +16,15 @@
 .baseDark {
   position: fixed;
   inset: 0;
-  background: linear-gradient(180deg,
+  background: linear-gradient(
+    180deg,
     rgba(0, 0, 0, 0.398) 0%,
     rgba(0, 0, 0, 0.254) 15%,
     rgba(0, 0, 0, 0.135) 30%,
     rgba(0, 0, 0, 0.106) 50%,
     rgba(0, 0, 0, 0.063) 70%,
     rgba(0, 0, 0, 0.025) 85%,
-    rgba(0,0,0,0) 100%
+    rgba(0, 0, 0, 0) 100%
   );
   z-index: -4;
 }
@@ -36,19 +37,21 @@
   opacity: 0.6;
   filter: brightness(1.2) saturate(1.5);
   mix-blend-mode: normal;
-  transition: all 4.2s cubic-bezier(0.4,0,0.2,1);
-  
+  transition: all 4.2s cubic-bezier(0.4, 0, 0.2, 1);
+
   /* Dynamic background gradients using CSS custom properties */
-  background: 
-    radial-gradient(circle at 30% 120%, 
-      var(--portal-color-0) 0%, 
-      var(--portal-color-1) 30%, 
-      var(--portal-color-2) 60%, 
+  background:
+    radial-gradient(
+      circle at 30% 120%,
+      var(--portal-color-0) 0%,
+      var(--portal-color-1) 30%,
+      var(--portal-color-2) 60%,
       transparent 80%
     ),
-    radial-gradient(circle at 70% 130%, 
-      var(--portal-color-1) 0%, 
-      var(--portal-color-2) 40%, 
+    radial-gradient(
+      circle at 70% 130%,
+      var(--portal-color-1) 0%,
+      var(--portal-color-2) 40%,
       var(--portal-color-0) 70%,
       transparent 90%
     );
@@ -59,11 +62,12 @@
   position: fixed;
   inset: 0;
   z-index: -4;
-  background: linear-gradient(180deg, 
-    rgba(0,0,0,1) 0%, 
-    rgba(0, 0, 0, 0.573) 30%, 
-    rgba(0, 0, 0, 0.472) 50%, 
-    rgba(0,0,0,0) 70%
+  background: linear-gradient(
+    180deg,
+    rgba(0, 0, 0, 1) 0%,
+    rgba(0, 0, 0, 0.573) 30%,
+    rgba(0, 0, 0, 0.472) 50%,
+    rgba(0, 0, 0, 0) 70%
   );
   pointer-events: none;
 }
@@ -75,7 +79,8 @@
   width: 100vw;
   height: 100vh;
   z-index: 0;
-  background: linear-gradient(120deg, #0a0f1aed 60%, #1a2a3a 100%),
+  background:
+    linear-gradient(120deg, #0a0f1aed 60%, #1a2a3a 100%),
     repeating-linear-gradient(-30deg, #00f0ff22 0 2px, transparent 2px 40px);
   opacity: 1.5;
   pointer-events: none;
@@ -83,8 +88,18 @@
   transition: transform 1.2s cubic-bezier(0.4, 0, 0.2, 1);
   transform-origin: center;
   /* Fade mask at top to blend into quantum SVG gradients above */
-  -webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,0.3) 15%, rgba(0,0,0,1) 35%);
-  mask-image: linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,0.3) 5%, rgba(0,0,0,1) 35%);
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0) 0%,
+    rgba(0, 0, 0, 0.3) 15%,
+    rgba(0, 0, 0, 1) 35%
+  );
+  mask-image: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0) 0%,
+    rgba(0, 0, 0, 0.3) 5%,
+    rgba(0, 0, 0, 1) 35%
+  );
 }
 
 /* Scene-specific clip paths create "windows" to see portal colors */
@@ -112,9 +127,10 @@
 .darkTopVeil {
   position: fixed;
   inset: 0;
-  z-index: -2;  /* MOVED BACK BEHIND CONTENT */
+  z-index: -2; /* MOVED BACK BEHIND CONTENT */
   height: 100vh;
-  background: linear-gradient(180deg,
+  background: linear-gradient(
+    180deg,
     rgba(0, 0, 0, 1) 0%,
     rgba(0, 0, 0, 1) 40%,
     rgba(0, 0, 0, 0.98) 60%,
@@ -143,7 +159,7 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background: linear-gradient(180deg, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.6) 100%);
+    background: linear-gradient(180deg, rgba(0, 0, 0, 0.85) 0%, rgba(0, 0, 0, 0.6) 100%);
     z-index: -1;
     pointer-events: none;
   }
@@ -157,22 +173,30 @@
   text-align: center;
   overflow: visible;
   pointer-events: none !important;
-  
+
   /* Ensure title and content are super front */
-  h1, h2, p, .terminal-header, .hero-stats, .quantum-title {
+  h1,
+  h2,
+  p,
+  .terminal-header,
+  .hero-stats,
+  .quantum-title {
     position: relative;
     z-index: 10;
     pointer-events: auto;
   }
-  
+
   /* Ensure all interactive elements work */
-  button, a, input, [role="button"] {
+  button,
+  a,
+  input,
+  [role='button'] {
     pointer-events: auto !important;
     cursor: pointer !important;
     position: relative;
     z-index: 100;
   }
-  
+
   /* Allow pointer events on button containers */
   > div {
     pointer-events: auto !important;
@@ -187,7 +211,7 @@
 
 /* Scene Titles */
 .sceneTitle {
-  font-size: .8em;
+  font-size: 0.8em;
   font-family: 'Orbitron', 'JetBrains Mono', monospace;
   font-weight: 900;
   letter-spacing: 0.15em;
@@ -202,7 +226,9 @@
   font-weight: 500;
   letter-spacing: 0.08em;
   color: #f4f6f871;
-  text-shadow: 0 0 1px #00b7ff66, 0 0 2px #07021f6a;
+  text-shadow:
+    0 0 1px #00b7ff66,
+    0 0 2px #07021f6a;
   margin-bottom: 30px;
   max-width: 700px;
   margin-left: auto;
@@ -221,11 +247,17 @@
   font-weight: 900;
   letter-spacing: 0.04em;
   color: #00fff7;
-  text-shadow: 0 0 24px #00fff7cc, 0 0 60px #00fff744, 0 0 2px #fff;
+  text-shadow:
+    0 0 24px #00fff7cc,
+    0 0 60px #00fff744,
+    0 0 2px #fff;
   filter: blur(0.5px) brightness(1.1) saturate(1.2);
   opacity: 0.7;
   transform: translateZ(0px) scale(1);
-  transition: transform 1.2s cubic-bezier(0.4,0,0.2,1), opacity 1.2s, filter 1.2s;
+  transition:
+    transform 1.2s cubic-bezier(0.4, 0, 0.2, 1),
+    opacity 1.2s,
+    filter 1.2s;
 
   &.animate {
     opacity: 0;
@@ -254,7 +286,9 @@
   transform-style: preserve-3d;
   position: relative !important;
   z-index: 9999 !important;
-  transition: transform 0.1s ease-out, text-shadow 0.3s ease;
+  transition:
+    transform 0.1s ease-out,
+    text-shadow 0.3s ease;
 
   &::after {
     content: attr(data-text);
@@ -276,7 +310,7 @@
 .quantumScene {
   opacity: 1;
   pointer-events: none !important;
-  transition: opacity 1.1s cubic-bezier(0.4,0,0.2,1);
+  transition: opacity 1.1s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
   width: 100vw;
   min-height: 100vh;
@@ -372,7 +406,9 @@
     background-clip: text;
     color: #ffffff;
     text-shadow: 0 0 20px rgba(45, 86, 86, 0.4);
-    animation: logoGlitch 6s ease-in-out infinite, gradientShift 4s ease-in-out infinite;
+    animation:
+      logoGlitch 6s ease-in-out infinite,
+      gradientShift 4s ease-in-out infinite;
     letter-spacing: 0.01em;
     z-index: -1;
     opacity: 0.7;
@@ -398,7 +434,9 @@
 .consoleLine {
   font-size: 1.3em;
   color: #00ff33;
-  text-shadow: 0 0 8px #00ff3366, 0 0 16px #00ff3322;
+  text-shadow:
+    0 0 8px #00ff3366,
+    0 0 16px #00ff3322;
   margin: 12px 0;
   letter-spacing: 0.05em;
 }
@@ -463,7 +501,8 @@
 }
 
 @keyframes titleFloatLayer1 {
-  0%, 100% {
+  0%,
+  100% {
     transform: translateY(0px) translateX(0px);
   }
   33% {
@@ -475,7 +514,8 @@
 }
 
 @keyframes titleFloatLayer2 {
-  0%, 100% {
+  0%,
+  100% {
     transform: translateY(0px) translateX(0px);
   }
   40% {
@@ -487,7 +527,8 @@
 }
 
 @keyframes titleFloatLayer3 {
-  0%, 100% {
+  0%,
+  100% {
     transform: translateY(0px) translateX(0px);
   }
   35% {
@@ -500,48 +541,77 @@
 
 /* HomePage-specific title word animations */
 :global {
-  .title-word[data-word="N3XUS"] {
-    animation: pageTitleShimmer 5s ease-in-out infinite, particleArrivalTopLeft 1.8s cubic-bezier(0.22, 1, 0.36, 1) forwards, titleFloatLayer1 7s ease-in-out infinite;
+  .title-word[data-word='N3XUS'] {
+    animation:
+      pageTitleShimmer 5s ease-in-out infinite,
+      particleArrivalTopLeft 1.8s cubic-bezier(0.22, 1, 0.36, 1) forwards,
+      titleFloatLayer1 7s ease-in-out infinite;
     animation-delay: 0s, 0s, 1.8s;
   }
 
-  .title-word[data-word="GE0M"] {
-    animation: pageTitleShimmer 5s ease-in-out infinite, particleArrivalRight 1.8s cubic-bezier(0.22, 1, 0.36, 1) forwards, titleFloatLayer2 5.5s ease-in-out infinite;
+  .title-word[data-word='GE0M'] {
+    animation:
+      pageTitleShimmer 5s ease-in-out infinite,
+      particleArrivalRight 1.8s cubic-bezier(0.22, 1, 0.36, 1) forwards,
+      titleFloatLayer2 5.5s ease-in-out infinite;
     animation-delay: 0s, 0.3s, 2.1s;
   }
 
-  .title-word[data-word="LVB"] {
-    animation: pageTitleShimmer 5s ease-in-out infinite, particleArrivalBottomLeft 2s cubic-bezier(0.22, 1, 0.36, 1) forwards, titleFloatLayer3 6.5s ease-in-out infinite;
+  .title-word[data-word='LVB'] {
+    animation:
+      pageTitleShimmer 5s ease-in-out infinite,
+      particleArrivalBottomLeft 2s cubic-bezier(0.22, 1, 0.36, 1) forwards,
+      titleFloatLayer3 6.5s ease-in-out infinite;
     animation-delay: 0s, 0.6s, 2.6s;
   }
 }
 
 /* Animations */
 @keyframes logoGlitch {
-  0%, 100% { filter: none; }
-  10% { filter: blur(1px) brightness(1.2); }
-  20% { filter: blur(0.5px) brightness(0.8); }
-  30% { filter: blur(2px) brightness(1.4); }
-  40% { filter: blur(0.5px) brightness(1.1); }
-  50% { filter: none; }
+  0%,
+  100% {
+    filter: none;
+  }
+  10% {
+    filter: blur(1px) brightness(1.2);
+  }
+  20% {
+    filter: blur(0.5px) brightness(0.8);
+  }
+  30% {
+    filter: blur(2px) brightness(1.4);
+  }
+  40% {
+    filter: blur(0.5px) brightness(1.1);
+  }
+  50% {
+    filter: none;
+  }
 }
 
 @keyframes gradientShift {
-  0%, 100% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
+  0%,
+  100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
 }
 
 /* Ensure interactive elements are properly layered */
-.navLinks, 
-.navLink, 
-.terminalCursor, 
-.quantumTitle, 
+.navLinks,
+.navLink,
+.terminalCursor,
+.quantumTitle,
 .sceneContent,
-.beamScanButton, 
-button, 
-a, 
-input, 
+.beamScanButton,
+button,
+a,
+input,
 .scrambleButton {
   position: relative;
   z-index: 100 !important;
@@ -557,9 +627,9 @@ input,
 }
 
 /* Make sure non-interactive elements don't block interactions */
-.cursor, 
-.wormhole, 
-.gravityField, 
+.cursor,
+.wormhole,
+.gravityField,
 .dimensionalRift {
   pointer-events: none !important;
   z-index: 99999;
@@ -586,7 +656,7 @@ input,
     justify-content: space-between;
     padding: 0 40px;
     height: 110px;
-    font-family: 'Orbitron','JetBrains Mono', monospace;
+    font-family: 'Orbitron', 'JetBrains Mono', monospace;
     transition: all 1.2s ease;
     /* Dynamic colors set via CSS variables */
     background: var(--nav-background);
@@ -598,7 +668,7 @@ input,
   /* Logo text with dynamic filter */
   .logo-text {
     position: relative;
-    font-family: 'Orbitron','JetBrains Mono', monospace;
+    font-family: 'Orbitron', 'JetBrains Mono', monospace;
     font-size: 28px;
     font-weight: 800;
     color: #fff;
@@ -608,7 +678,9 @@ input,
     -webkit-text-fill-color: transparent;
     background-clip: text;
     text-shadow: 0 0 20px rgba(45, 86, 86, 0.4);
-    animation: logoGlitch 6s ease-in-out infinite, gradientShift 4s ease-in-out infinite;
+    animation:
+      logoGlitch 6s ease-in-out infinite,
+      gradientShift 4s ease-in-out infinite;
     transition: filter 1.2s;
     /* Dynamic filter set via CSS variable */
     filter: var(--logo-filter);
@@ -643,7 +715,11 @@ input,
     letter-spacing: 0.12em;
     vertical-align: middle;
     opacity: 0.8;
-    transition: color 1.2s, filter 1.2s, opacity 1.2s, text-shadow 1.2s;
+    transition:
+      color 1.2s,
+      filter 1.2s,
+      opacity 1.2s,
+      text-shadow 1.2s;
     /* Dynamic colors set via CSS variables */
     color: var(--glyph-color);
     filter: var(--glyph-filter);
@@ -670,17 +746,18 @@ input,
     width: 100vw;
     height: 100vh;
     pointer-events: none;
-    transition: background 1.2s cubic-bezier(0.4,0,0.2,1), 
-                filter 1.2s ease,
-                opacity 1.2s ease;
+    transition:
+      background 1.2s cubic-bezier(0.4, 0, 0.2, 1),
+      filter 1.2s ease,
+      opacity 1.2s ease;
     filter: brightness(1.3) saturate(1.8);
     opacity: 0.7; /* Control overall visibility */
     /* Dynamic background set via CSS variable */
     background: var(--portal-svg-background);
-    
+
     /* Optional: Add blend mode for different color mixing */
     /* mix-blend-mode: screen; */
-    
+
     /* Optional: Add animation */
     /* animation: portalPulse 8s ease-in-out infinite; */
   }
@@ -755,7 +832,9 @@ input,
 
   /* Stat value with dynamic colors */
   .stat-value-dynamic {
-    transition: color 1.2s, text-shadow 1.2s;
+    transition:
+      color 1.2s,
+      text-shadow 1.2s;
     /* Dynamic colors set via CSS variables */
     color: var(--stat-color);
     text-shadow: var(--stat-text-shadow);
@@ -810,11 +889,17 @@ input,
     font-weight: 900;
     letter-spacing: 0.04em;
     color: #00fff7;
-    text-shadow: 0 0 24px #00fff7cc, 0 0 60px #00fff744, 0 0 2px #fff;
+    text-shadow:
+      0 0 24px #00fff7cc,
+      0 0 60px #00fff744,
+      0 0 2px #fff;
     filter: blur(0.5px) brightness(1.1) saturate(1.2);
     opacity: 0.7;
     transform: translateZ(0px) scale(1);
-    transition: transform 1.2s cubic-bezier(0.4,0,0.2,1), opacity 1.2s, filter 1.2s;
+    transition:
+      transform 1.2s cubic-bezier(0.4, 0, 0.2, 1),
+      opacity 1.2s,
+      filter 1.2s;
 
     &.animate {
       opacity: 0;
@@ -830,7 +915,9 @@ input,
     will-change: transform, text-shadow;
     perspective: 1000px;
     transform-style: preserve-3d;
-    transition: transform 0.1s ease-out, text-shadow 0.3s ease;
+    transition:
+      transform 0.1s ease-out,
+      text-shadow 0.3s ease;
 
     &::after {
       content: attr(data-text);
@@ -865,7 +952,15 @@ input,
       font-style: italic;
       font-family: 'Future Z', 'Orbitron', 'JetBrains Mono', monospace;
       font-weight: 800;
-      background: linear-gradient(135deg, #00ffff72, #ff00668d, #ffff0094, #00ff33, #cc00ff, #ff3300);
+      background: linear-gradient(
+        135deg,
+        #00ffff72,
+        #ff00668d,
+        #ffff0094,
+        #00ff33,
+        #cc00ff,
+        #ff3300
+      );
       background-size: 300% 300%;
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
@@ -884,7 +979,7 @@ input,
   .quantum-scene {
     opacity: 1;
     pointer-events: none !important;
-    transition: opacity 1.1s cubic-bezier(0.4,0,0.2,1);
+    transition: opacity 1.1s cubic-bezier(0.4, 0, 0.2, 1);
     position: relative;
     width: 100vw;
     min-height: 100vh;
@@ -940,16 +1035,18 @@ input,
       left: 0;
       width: 100vw;
       height: 100vh;
-      background: linear-gradient(180deg, 
+      background: linear-gradient(
+        180deg,
         rgba(0, 0, 0, 0.85) 0%,
-        rgba(0, 0, 0, 0.70) 25%,
-        rgba(0, 0, 0, 0.60) 35%,
-        rgba(0, 0, 0, 0.60) 45%,
-        rgba(0, 0, 0, 0.60) 55%,
-        rgba(0, 0, 0, 0.50) 65%,
+        rgba(0, 0, 0, 0.7) 25%,
+        rgba(0, 0, 0, 0.6) 35%,
+        rgba(0, 0, 0, 0.6) 45%,
+        rgba(0, 0, 0, 0.6) 55%,
+        rgba(0, 0, 0, 0.5) 65%,
         rgba(0, 0, 0, 0.25) 75%,
-        rgba(0, 0, 0, 0.10) 85%,
-        rgba(0, 0, 0, 0) 95%);
+        rgba(0, 0, 0, 0.1) 85%,
+        rgba(0, 0, 0, 0) 95%
+      );
       pointer-events: none !important;
       z-index: 0;
     }
@@ -998,14 +1095,16 @@ input,
   }
 
   @keyframes float-particle {
-    0%, 100% { 
-      transform: translateY(0px) rotate(0deg); 
+    0%,
+    100% {
+      transform: translateY(0px) rotate(0deg);
       opacity: 0;
     }
-    10%, 90% { 
+    10%,
+    90% {
       opacity: 1;
     }
-    50% { 
+    50% {
       transform: translateY(-100px) rotate(180deg);
     }
   }
@@ -1014,25 +1113,39 @@ input,
     z-index: -140;
   }
 
-  .shape-morph-1, .shape-morph-2 {
+  .shape-morph-1,
+  .shape-morph-2 {
     animation: subtle-morph 15s ease-in-out infinite;
     transform-origin: center;
   }
 
-  .floating-orb-1, .floating-orb-2 {
+  .floating-orb-1,
+  .floating-orb-2 {
     animation: float-orb 12s ease-in-out infinite;
     transform-origin: center;
   }
 
   @keyframes subtle-morph {
-    0%, 100% { transform: scale(1) rotate(0deg); }
-    33% { transform: scale(1.02) rotate(0.5deg); }
-    66% { transform: scale(0.98) rotate(-0.5deg); }
+    0%,
+    100% {
+      transform: scale(1) rotate(0deg);
+    }
+    33% {
+      transform: scale(1.02) rotate(0.5deg);
+    }
+    66% {
+      transform: scale(0.98) rotate(-0.5deg);
+    }
   }
 
   @keyframes float-orb {
-    0%, 100% { transform: translateY(0px) scale(1); }
-    50% { transform: translateY(-20px) scale(1.05); }
+    0%,
+    100% {
+      transform: translateY(0px) scale(1);
+    }
+    50% {
+      transform: translateY(-20px) scale(1.05);
+    }
   }
 
   .parallax-layer-3 {
@@ -1063,39 +1176,63 @@ input,
   }
 
   @keyframes grid-pulse {
-    0%, 100% { opacity: 0.3; }
-    50% { opacity: 0.6; }
+    0%,
+    100% {
+      opacity: 0.3;
+    }
+    50% {
+      opacity: 0.6;
+    }
   }
 
   @keyframes energy-flow {
-    0% { transform: translateX(-100%); opacity: 0; }
-    10%, 90% { opacity: 0.6; }
-    100% { transform: translateX(100%); opacity: 0; }
+    0% {
+      transform: translateX(-100%);
+      opacity: 0;
+    }
+    10%,
+    90% {
+      opacity: 0.6;
+    }
+    100% {
+      transform: translateX(100%);
+      opacity: 0;
+    }
   }
 
   .parallax-layer-4 {
     z-index: -120;
   }
 
-  .fg-shape-1, .fg-shape-2 {
+  .fg-shape-1,
+  .fg-shape-2 {
     animation: fg-breathe 10s ease-in-out infinite;
   }
 
-  .floating-orb-3, .floating-orb-4 {
+  .floating-orb-3,
+  .floating-orb-4 {
     animation: orb-glow 8s ease-in-out infinite;
   }
 
   @keyframes fg-breathe {
-    0%, 100% { opacity: 0.8; transform: scale(1); }
-    50% { opacity: 1; transform: scale(1.03); }
+    0%,
+    100% {
+      opacity: 0.8;
+      transform: scale(1);
+    }
+    50% {
+      opacity: 1;
+      transform: scale(1.03);
+    }
   }
 
   @keyframes orb-glow {
-    0%, 100% { 
+    0%,
+    100% {
       filter: brightness(1) blur(0px);
       transform: scale(1);
     }
-    50% { 
+    50% {
       filter: brightness(1.3) blur(2px);
       transform: scale(1.1);
     }
@@ -1127,8 +1264,15 @@ input,
   }
 
   @keyframes spark-twinkle {
-    0%, 100% { opacity: 0; transform: scale(0.5); }
-    50% { opacity: 1; transform: scale(1.5); }
+    0%,
+    100% {
+      opacity: 0;
+      transform: scale(0.5);
+    }
+    50% {
+      opacity: 1;
+      transform: scale(1.5);
+    }
   }
 
   .holographic-frames {
@@ -1145,24 +1289,45 @@ input,
   }
 
   .frame-1 {
-    top: 20%; left: 10%; width: 200px; height: 150px;
+    top: 20%;
+    left: 10%;
+    width: 200px;
+    height: 150px;
     animation-delay: 0s;
   }
 
   .frame-2 {
-    top: 60%; right: 15%; width: 180px; height: 120px;
+    top: 60%;
+    right: 15%;
+    width: 180px;
+    height: 120px;
     animation-delay: 4s;
   }
 
   .frame-3 {
-    bottom: 25%; left: 50%; width: 160px; height: 100px;
+    bottom: 25%;
+    left: 50%;
+    width: 160px;
+    height: 100px;
     animation-delay: 8s;
   }
 
   @keyframes frame-scan {
-    0%, 90%, 100% { opacity: 0; transform: rotateY(0deg); }
-    10%, 80% { opacity: 0.6; transform: rotateY(5deg); }
-    50% { opacity: 1; transform: rotateY(-5deg); }
+    0%,
+    90%,
+    100% {
+      opacity: 0;
+      transform: rotateY(0deg);
+    }
+    10%,
+    80% {
+      opacity: 0.6;
+      transform: rotateY(5deg);
+    }
+    50% {
+      opacity: 1;
+      transform: rotateY(-5deg);
+    }
   }
 
   .scene-background {
@@ -1174,51 +1339,50 @@ input,
     pointer-events: none !important;
     z-index: -1;
     will-change: transform, opacity, filter;
-    transition: transform 1.2s cubic-bezier(0.4, 0, 0.2, 1),
+    transition:
+      transform 1.2s cubic-bezier(0.4, 0, 0.2, 1),
       opacity 0.9s ease,
       filter 0.9s ease;
     transform-origin: center;
   }
 
   .scene-background.bg-reality {
-    background: linear-gradient(120deg, 
-      rgba(10, 15, 26, 0.95) 60%,
-      rgba(26, 42, 58, 0.85) 100%
-    );
+    background: linear-gradient(120deg, rgba(10, 15, 26, 0.95) 60%, rgba(26, 42, 58, 0.85) 100%);
     clip-path: polygon(0 0, 100% 0, 100% 80%, 60% 100%, 0 80%);
   }
 
-    .scene-background.bg-probability {
-    background: linear-gradient(135deg, 
-      rgba(10, 15, 26, 0.92) 60%,
-      rgba(26, 0, 58, 0.88) 100%
-    );
+  .scene-background.bg-probability {
+    background: linear-gradient(135deg, rgba(10, 15, 26, 0.92) 60%, rgba(26, 0, 58, 0.88) 100%);
     clip-path: polygon(0 20%, 100% 8%, 100% 90%, 0 100%);
   }
 
   .scene-background.bg-entanglement {
-    background: linear-gradient(110deg, 
-      rgba(10, 15, 26, 0.9) 60%,
-      rgba(0, 58, 42, 0.85) 100%
-    );
+    background: linear-gradient(110deg, rgba(10, 15, 26, 0.9) 60%, rgba(0, 58, 42, 0.85) 100%);
     clip-path: polygon(0 0, 100% 10%, 100% 100%, 40% 90%, 0 100%);
   }
 
   .scene-background.bg-superposition {
-    background: linear-gradient(160deg, 
-      rgba(10, 15, 26, 0.93) 60%,
-      rgba(0, 58, 58, 0.87) 100%
-    );
+    background: linear-gradient(160deg, rgba(10, 15, 26, 0.93) 60%, rgba(0, 58, 58, 0.87) 100%);
     clip-path: polygon(0 0, 100% 0, 100% 100%, 20% 90%, 0 100%);
   }
 
-  .cursor, .wormhole, .gravity-field, .dimensional-rift {
+  .cursor,
+  .wormhole,
+  .gravity-field,
+  .dimensional-rift {
     pointer-events: none !important;
     z-index: 99999;
   }
 
-  .nav-links, .nav-link, .terminal-cursor, .scene-content, 
-  .beam-scan-button, button, a, input, .scramble-button {
+  .nav-links,
+  .nav-link,
+  .terminal-cursor,
+  .scene-content,
+  .beam-scan-button,
+  button,
+  a,
+  input,
+  .scramble-button {
     position: relative;
     z-index: 100 !important;
     pointer-events: auto !important;
@@ -1237,9 +1401,12 @@ input,
     text-align: center;
     overflow: visible;
     pointer-events: auto !important;
-    
+
     /* All interactive children must be clickable */
-    button, a, input, [role="button"] {
+    button,
+    a,
+    input,
+    [role='button'] {
       pointer-events: auto !important;
       cursor: pointer !important;
       z-index: 100 !important;
@@ -1270,7 +1437,7 @@ input,
   }
 
   .scene-title {
-    font-size: .8em;
+    font-size: 0.8em;
     font-family: 'Orbitron', 'JetBrains Mono', monospace;
     font-weight: 900;
     letter-spacing: 0.15em;
@@ -1284,25 +1451,30 @@ input,
     font-weight: 500;
     letter-spacing: 0.08em;
     color: #00fff7dd;
-    text-shadow: 0 0 8px #00fff744, 0 0 16px #00fff722;
+    text-shadow:
+      0 0 8px #00fff744,
+      0 0 16px #00fff722;
     margin-bottom: 30px;
     max-width: 900px;
     margin-left: auto;
     margin-right: auto;
     line-height: 1.6;
-    transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1), 
-                background 0.8s cubic-bezier(0.4, 0, 0.2, 1),
-                -webkit-background-clip 0.8s cubic-bezier(0.4, 0, 0.2, 1),
-                text-shadow 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    transition:
+      transform 0.8s cubic-bezier(0.4, 0, 0.2, 1),
+      background 0.8s cubic-bezier(0.4, 0, 0.2, 1),
+      -webkit-background-clip 0.8s cubic-bezier(0.4, 0, 0.2, 1),
+      text-shadow 0.8s cubic-bezier(0.4, 0, 0.2, 1);
     transform-style: preserve-3d;
-    
+
     &.flipped {
       transform: rotateX(180deg);
       background: linear-gradient(90deg, #ff00ff, #00ff99);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
-      text-shadow: 0 0 12px #ff00ff66, 0 0 20px #00ff9944;
+      text-shadow:
+        0 0 12px #ff00ff66,
+        0 0 20px #00ff9944;
     }
   }
 
@@ -1324,7 +1496,9 @@ input,
   .console-line {
     font-size: 1.105em;
     color: #00ff33a7;
-    text-shadow: 0 0 8px #00eeffa5, 0 0 16px #00ff3322;
+    text-shadow:
+      0 0 8px #00eeffa5,
+      0 0 16px #00ff3322;
     margin: 12px 0;
     letter-spacing: 0.05em;
     font-family: 'Orbitron', monospace;
@@ -1350,7 +1524,7 @@ input,
     justify-content: space-between;
     padding: 0 40px;
     height: 110px;
-    font-family: 'Orbitron','JetBrains Mono', monospace;
+    font-family: 'Orbitron', 'JetBrains Mono', monospace;
   }
 
   .nav-logo {
@@ -1361,7 +1535,7 @@ input,
 
   .logo-text {
     position: relative;
-    font-family: 'Orbitron','JetBrains Mono', monospace;
+    font-family: 'Orbitron', 'JetBrains Mono', monospace;
     font-size: 28px;
     font-weight: 800;
     background: linear-gradient(135deg, #00ffff72, #ff00668d, #ffff0094, #00ff33, #cc00ff, #ff3300);
@@ -1371,7 +1545,9 @@ input,
     background-clip: text;
     color: #ffffff;
     text-shadow: 0 0 20px rgba(45, 86, 86, 0.4);
-    animation: logoGlitch 6s ease-in-out infinite, gradientShift 4s ease-in-out infinite;
+    animation:
+      logoGlitch 6s ease-in-out infinite,
+      gradientShift 4s ease-in-out infinite;
 
     &::before {
       content: attr(data-text);
@@ -1406,7 +1582,7 @@ input,
     color: #00ffff;
     text-decoration: none;
     font-size: 18px;
-    font-family: 'Orbitron','JetBrains Mono', monospace;
+    font-family: 'Orbitron', 'JetBrains Mono', monospace;
     font-weight: 700;
     letter-spacing: 1px;
     position: relative;
@@ -1422,7 +1598,7 @@ input,
     font-size: 14px;
     color: #00ff99;
     margin-left: 20px;
-    font-family: 'Orbitron','JetBrains Mono', monospace;
+    font-family: 'Orbitron', 'JetBrains Mono', monospace;
   }
 
   .nav-quantum-field {
@@ -1438,28 +1614,56 @@ input,
 
   /* Animations from home.css */
   @keyframes logoGlitch {
-    0%, 100% { filter: none; }
-    10% { filter: blur(1px) brightness(1.2); }
-    20% { filter: blur(0.5px) brightness(0.8); }
-    30% { filter: blur(2px) brightness(1.4); }
-    40% { filter: blur(0.5px) brightness(1.1); }
-    50% { filter: none; }
+    0%,
+    100% {
+      filter: none;
+    }
+    10% {
+      filter: blur(1px) brightness(1.2);
+    }
+    20% {
+      filter: blur(0.5px) brightness(0.8);
+    }
+    30% {
+      filter: blur(2px) brightness(1.4);
+    }
+    40% {
+      filter: blur(0.5px) brightness(1.1);
+    }
+    50% {
+      filter: none;
+    }
   }
 
   @keyframes glitchShift1 {
-    0%, 100% { left: 2px; }
-    50% { left: 6px; }
+    0%,
+    100% {
+      left: 2px;
+    }
+    50% {
+      left: 6px;
+    }
   }
 
   @keyframes glitchShift2 {
-    0%, 100% { left: -2px; }
-    50% { left: -6px; }
+    0%,
+    100% {
+      left: -2px;
+    }
+    50% {
+      left: -6px;
+    }
   }
 
   @keyframes gradientShift {
-    0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
+    0% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+    100% {
+      background-position: 0% 50%;
+    }
   }
 }
-

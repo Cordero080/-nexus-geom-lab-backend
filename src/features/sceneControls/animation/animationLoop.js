@@ -1,5 +1,5 @@
-import * as THREE from "three";
-import { animateSpectralOrbs } from "../objects/spectralOrbs";
+import * as THREE from 'three';
+import { animateSpectralOrbs } from '../objects/spectralOrbs';
 
 function applyUserRotation(meshes, objectId, interactionFns) {
   if (!interactionFns || !interactionFns.getUserRotation || !objectId) {
@@ -45,18 +45,12 @@ const animationStyles = {
     const objectId = objData.objectId || (solidMesh && solidMesh.uuid);
 
     // Apply automatic rotation
-    const meshes = [solidMesh, wireframeMesh, centerLines, curvedLines].filter(
-      Boolean
-    );
+    const meshes = [solidMesh, wireframeMesh, centerLines, curvedLines].filter(Boolean);
     meshes.forEach((mesh) => {
       mesh.rotation.x += 0.005 * speed;
       mesh.rotation.y += 0.01 * speed;
       if (originalPosition) {
-        mesh.position.set(
-          originalPosition.x,
-          originalPosition.y,
-          originalPosition.z
-        );
+        mesh.position.set(originalPosition.x, originalPosition.y, originalPosition.z);
       }
     });
 
@@ -89,9 +83,7 @@ const animationStyles = {
     const floatX = Math.cos(t * 0.3 + (phase || 0)) * 0.3;
     const floatZ = Math.sin(t * 0.4 + (phase || 0)) * 0.3;
 
-    const meshes = [solidMesh, wireframeMesh, centerLines, curvedLines].filter(
-      Boolean
-    );
+    const meshes = [solidMesh, wireframeMesh, centerLines, curvedLines].filter(Boolean);
     meshes.forEach((mesh) => {
       if (originalPosition) {
         mesh.position.set(
@@ -135,21 +127,13 @@ const animationStyles = {
     let cycleTime, orbitSize, reactionSpeed;
 
     // Utility Easing Functions
-    const easeInOutCubic = (t) =>
-      t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
-    const easeInOutQuad = (t) =>
-      t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
+    const easeInOutCubic = (t) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
+    const easeInOutQuad = (t) => (t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2);
     const easeInOutQuint = (t) =>
-      t < 0.5
-        ? 16 * t * t * t * t * t
-        : 1 + 16 * (t - 1) * (t - 1) * (t - 1) * (t - 1) * (t - 1);
+      t < 0.5 ? 16 * t * t * t * t * t : 1 + 16 * (t - 1) * (t - 1) * (t - 1) * (t - 1) * (t - 1);
     const easeOutElastic = (t) => {
       const c4 = (2 * Math.PI) / 3;
-      return t === 0
-        ? 0
-        : t === 1
-        ? 1
-        : Math.pow(2, -10 * t) * Math.sin((t * 10 - 0.75) * c4) + 1;
+      return t === 0 ? 0 : t === 1 ? 1 : Math.pow(2, -10 * t) * Math.sin((t * 10 - 0.75) * c4) + 1;
     };
 
     // Reset vertices to original positions
@@ -197,13 +181,10 @@ const animationStyles = {
 
       // Gentle floating with increasing awareness
       solidMesh.position.x =
-        originalPosition.x +
-        Math.sin(t * 0.8 + phase) * hoverIntensity * awakening;
+        originalPosition.x + Math.sin(t * 0.8 + phase) * hoverIntensity * awakening;
       solidMesh.position.y =
-        originalPosition.y +
-        Math.cos(t * 1.2 + phase) * hoverIntensity * (0.5 + awakening * 0.5);
-      solidMesh.position.z =
-        originalPosition.z + Math.sin(t * 0.6 + phase) * hoverIntensity * 0.4;
+        originalPosition.y + Math.cos(t * 1.2 + phase) * hoverIntensity * (0.5 + awakening * 0.5);
+      solidMesh.position.z = originalPosition.z + Math.sin(t * 0.6 + phase) * hoverIntensity * 0.4;
 
       // Curious tilting - looking around
       solidMesh.rotation.y = t * 0.15 + Math.sin(t * 0.5 + phase) * 0.3;
@@ -212,9 +193,7 @@ const animationStyles = {
 
       // Breathing with excitement (respect user's base scale)
       const baseScale = solidMesh.userData.baseScale || 1;
-      solidMesh.scale.setScalar(
-        baseScale * (1 + Math.sin(t * 2 + phase) * 0.04 * awakening)
-      );
+      solidMesh.scale.setScalar(baseScale * (1 + Math.sin(t * 2 + phase) * 0.04 * awakening));
     }
 
     // PHASE 2: Playful Discovery Dance (18% - 38%) - Beethoven's scherzo energy
@@ -229,8 +208,7 @@ const animationStyles = {
       const dartZ = Math.sin(t * 2.5 + phase * 3) * orbitSize * 0.3 * phaseT; // Reduced Z from 0.5 to 0.3
 
       solidMesh.position.x = originalPosition.x + dartX * playfulness;
-      solidMesh.position.y =
-        originalPosition.y + dartY + Math.abs(Math.sin(t * 2 + phase)) * 0.3;
+      solidMesh.position.y = originalPosition.y + dartY + Math.abs(Math.sin(t * 2 + phase)) * 0.3;
       solidMesh.position.z = originalPosition.z + dartZ;
 
       // Playful spinning - not too fast, full of joy
@@ -257,14 +235,12 @@ const animationStyles = {
       const swoopRadius = orbitSize * 0.8;
 
       solidMesh.position.x =
-        originalPosition.x +
-        Math.sin(swoopAngle) * swoopRadius * Math.cos(swoopAngle * 0.5);
+        originalPosition.x + Math.sin(swoopAngle) * swoopRadius * Math.cos(swoopAngle * 0.5);
       solidMesh.position.y =
         originalPosition.y +
         Math.sin(swoopAngle * 2) * swoopRadius * 0.6 +
         Math.sin(t * 1.5 + phase) * 0.4;
-      solidMesh.position.z =
-        originalPosition.z + Math.cos(swoopAngle) * swoopRadius * 0.4; // Reduced Z from 0.7 to 0.4
+      solidMesh.position.z = originalPosition.z + Math.cos(swoopAngle) * swoopRadius * 0.4; // Reduced Z from 0.7 to 0.4
 
       // Eager tilting to "look" at things from different angles
       solidMesh.rotation.x = Math.sin(swoopAngle * 1.3) * 0.6;
@@ -273,9 +249,7 @@ const animationStyles = {
 
       // Excited pulsing (respect user's base scale)
       const baseScale = solidMesh.userData.baseScale || 1;
-      solidMesh.scale.setScalar(
-        baseScale * (1 + Math.sin(t * 3 + phase) * 0.05)
-      );
+      solidMesh.scale.setScalar(baseScale * (1 + Math.sin(t * 3 + phase) * 0.05));
     }
 
     // PHASE 4: Triumphant Spiral Ascent (58% - 82%) - Ode to Joy building
@@ -289,12 +263,9 @@ const animationStyles = {
       const spiralRadius = orbitSize * (1 - phaseT * 0.3); // Spiraling inward as it rises
       const ascent = phaseT * orbitSize * 1.2; // Reduced from 1.5 to keep vertical movement in frame
 
-      solidMesh.position.x =
-        originalPosition.x + Math.cos(spiralAngle) * spiralRadius;
-      solidMesh.position.y =
-        originalPosition.y + ascent + Math.sin(t * 2 + phase) * 0.3;
-      solidMesh.position.z =
-        originalPosition.z + Math.sin(spiralAngle) * spiralRadius * 0.5; // Reduced Z depth from 1.0 to 0.5      // Triumphant spinning - like a figure skater's finish
+      solidMesh.position.x = originalPosition.x + Math.cos(spiralAngle) * spiralRadius;
+      solidMesh.position.y = originalPosition.y + ascent + Math.sin(t * 2 + phase) * 0.3;
+      solidMesh.position.z = originalPosition.z + Math.sin(spiralAngle) * spiralRadius * 0.5; // Reduced Z depth from 1.0 to 0.5      // Triumphant spinning - like a figure skater's finish
       solidMesh.rotation.x += 0.03 * triumph;
       solidMesh.rotation.y += 0.08 * (1 + triumph);
       solidMesh.rotation.z += 0.02 * Math.sin(spiralAngle);
@@ -317,11 +288,7 @@ const animationStyles = {
         settling
       );
       solidMesh.position.y =
-        THREE.MathUtils.lerp(
-          solidMesh.position.y,
-          originalPosition.y,
-          settling
-        ) +
+        THREE.MathUtils.lerp(solidMesh.position.y, originalPosition.y, settling) +
         Math.sin(t * 1.5 + phase) * 0.2 * (1 - settling);
       solidMesh.position.z = THREE.MathUtils.lerp(
         solidMesh.position.z,
@@ -389,7 +356,7 @@ const animationStyles = {
  * Camera animation for different views
  */
 function animateCamera(camera, cameraView, t) {
-  if (cameraView === "orbit") {
+  if (cameraView === 'orbit') {
     const orbitRadius = 8;
     camera.position.x = Math.cos(t * 0.3) * orbitRadius;
     camera.position.z = Math.sin(t * 0.3) * orbitRadius;
@@ -436,13 +403,7 @@ export function startAnimationLoop(
     // Animate objects based on animation style with object speed
     if (objectsRef.current && animationStyles[animationStyle]) {
       objectsRef.current.forEach((objData, index) => {
-        animationStyles[animationStyle](
-          objData,
-          t,
-          index,
-          interactionFns,
-          objectSpeed
-        );
+        animationStyles[animationStyle](objData, t, index, interactionFns, objectSpeed);
       });
     }
 

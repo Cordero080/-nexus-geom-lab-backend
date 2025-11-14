@@ -1,4 +1,4 @@
-import * as THREE from "three";
+import * as THREE from 'three';
 
 // Store orb references for cleanup and animation
 let orbGroup = null;
@@ -16,12 +16,7 @@ let mouse2D = new THREE.Vector2();
  * @param {number} orbitRadius - Distance from center
  * @param {number} hueShift - Hue rotation in degrees (0-360)
  */
-export function createSpectralOrbs(
-  scene,
-  count = 8,
-  orbitRadius = 4,
-  hueShift = 0
-) {
+export function createSpectralOrbs(scene, count = 8, orbitRadius = 4, hueShift = 0) {
   // Clean up existing orbs
   removeSpectralOrbs(scene);
 
@@ -63,18 +58,11 @@ export function createSpectralOrbs(
     // Create gradient vertex colors
     const colors = new Float32Array(positionAttribute.count * 3);
     const color1 = new THREE.Color(spectralColors[i % spectralColors.length]);
-    const color2 = new THREE.Color(
-      spectralColors[(i + 1) % spectralColors.length]
-    );
-    const color3 = new THREE.Color(
-      spectralColors[(i + 2) % spectralColors.length]
-    );
+    const color2 = new THREE.Color(spectralColors[(i + 1) % spectralColors.length]);
+    const color3 = new THREE.Color(spectralColors[(i + 2) % spectralColors.length]);
 
     for (let j = 0; j < positionAttribute.count; j++) {
-      const vertex = new THREE.Vector3().fromBufferAttribute(
-        positionAttribute,
-        j
-      );
+      const vertex = new THREE.Vector3().fromBufferAttribute(positionAttribute, j);
 
       // Use Y position to create vertical gradient
       const t = (vertex.y / 0.2 + 1) * 0.5; // Normalize to 0-1
@@ -92,7 +80,7 @@ export function createSpectralOrbs(
       colors[j * 3 + 2] = finalColor.b;
     }
 
-    geometry.setAttribute("color", new THREE.BufferAttribute(colors, 3));
+    geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
 
     // Create glowing material with vertex colors
     const material = new THREE.MeshBasicMaterial({
@@ -262,8 +250,7 @@ export function animateSpectralOrbs(delta) {
 
     // Add organic drifting movement
     x += Math.sin(time * data.driftX + data.driftPhaseX) * driftMultiplier;
-    y +=
-      Math.cos(time * data.driftY + data.driftPhaseY) * (driftMultiplier * 1.3);
+    y += Math.cos(time * data.driftY + data.driftPhaseY) * (driftMultiplier * 1.3);
     z += Math.sin(time * data.driftZ + data.driftPhaseZ) * driftMultiplier;
 
     // Add secondary wave for more mysterious movement
@@ -294,18 +281,13 @@ export function animateSpectralOrbs(delta) {
 
       // Create organic deformation with multiple noise layers
       const noise1 =
-        Math.sin(time * data.morphSpeed + ox * 10 + data.morphPhase) *
-        data.morphIntensity;
+        Math.sin(time * data.morphSpeed + ox * 10 + data.morphPhase) * data.morphIntensity;
       const noise2 =
-        Math.cos(
-          time * data.morphSpeed * 1.3 + oy * 8 + data.morphPhase * 1.5
-        ) *
+        Math.cos(time * data.morphSpeed * 1.3 + oy * 8 + data.morphPhase * 1.5) *
         data.morphIntensity *
         0.7;
       const noise3 =
-        Math.sin(
-          time * data.morphSpeed * 0.7 + oz * 12 + data.morphPhase * 0.8
-        ) *
+        Math.sin(time * data.morphSpeed * 0.7 + oz * 12 + data.morphPhase * 0.8) *
         data.morphIntensity *
         0.5;
 
@@ -328,8 +310,7 @@ export function animateSpectralOrbs(delta) {
       const glowPosition = data.glowGeometry.attributes.position;
       for (let i = 0; i < glowPosition.count; i++) {
         const vertex = new THREE.Vector3().fromBufferAttribute(glowPosition, i);
-        const distortion =
-          Math.sin(time * data.morphSpeed * 0.8 + vertex.length() * 5) * 0.15;
+        const distortion = Math.sin(time * data.morphSpeed * 0.8 + vertex.length() * 5) * 0.15;
         vertex.multiplyScalar(1 + distortion);
         glowPosition.setXYZ(i, vertex.x, vertex.y, vertex.z);
       }
@@ -337,8 +318,7 @@ export function animateSpectralOrbs(delta) {
     }
 
     // Pulsing glow effect
-    const pulse =
-      Math.sin(time * data.pulseSpeed + data.pulseOffset) * 0.5 + 0.5;
+    const pulse = Math.sin(time * data.pulseSpeed + data.pulseOffset) * 0.5 + 0.5;
     const opacity = data.baseOpacity * (0.5 + pulse * 0.5);
 
     orb.material.opacity = opacity;
@@ -351,12 +331,9 @@ export function animateSpectralOrbs(delta) {
 
     // Organic rotation (faster for small orbs)
     const rotSpeed = data.isSmall ? 1.5 : 1;
-    orb.rotation.x +=
-      delta * (0.3 + Math.sin(time * 0.5 + index) * 0.2) * rotSpeed;
-    orb.rotation.y +=
-      delta * (0.4 + Math.cos(time * 0.3 + index) * 0.3) * rotSpeed;
-    orb.rotation.z +=
-      delta * (0.2 + Math.sin(time * 0.7 + index) * 0.15) * rotSpeed;
+    orb.rotation.x += delta * (0.3 + Math.sin(time * 0.5 + index) * 0.2) * rotSpeed;
+    orb.rotation.y += delta * (0.4 + Math.cos(time * 0.3 + index) * 0.3) * rotSpeed;
+    orb.rotation.z += delta * (0.2 + Math.sin(time * 0.7 + index) * 0.15) * rotSpeed;
 
     // Glow counter-rotation for more organic feel
     data.glow.rotation.x -= delta * 0.3 * rotSpeed;
@@ -388,10 +365,8 @@ export function removeSpectralOrbs(scene) {
       }
       if (orb.userData.glowGeometry) orb.userData.glowGeometry.dispose();
       if (orb.userData.innerGlow) {
-        if (orb.userData.innerGlow.geometry)
-          orb.userData.innerGlow.geometry.dispose();
-        if (orb.userData.innerGlow.material)
-          orb.userData.innerGlow.material.dispose();
+        if (orb.userData.innerGlow.geometry) orb.userData.innerGlow.geometry.dispose();
+        if (orb.userData.innerGlow.material) orb.userData.innerGlow.material.dispose();
       }
     });
 
@@ -441,12 +416,8 @@ export function updateSpectralOrbHue(scene, hueShift = 0) {
 
       // Get the three gradient colors with hue shift
       const color1 = new THREE.Color(baseColors[index % baseColors.length]);
-      const color2 = new THREE.Color(
-        baseColors[(index + 1) % baseColors.length]
-      );
-      const color3 = new THREE.Color(
-        baseColors[(index + 2) % baseColors.length]
-      );
+      const color2 = new THREE.Color(baseColors[(index + 1) % baseColors.length]);
+      const color3 = new THREE.Color(baseColors[(index + 2) % baseColors.length]);
 
       color1.offsetHSL(hueShift / 360, 0, 0);
       color2.offsetHSL(hueShift / 360, 0, 0);
@@ -455,10 +426,7 @@ export function updateSpectralOrbHue(scene, hueShift = 0) {
       // Update vertex colors
       const positionAttribute = orb.geometry.attributes.position;
       for (let j = 0; j < positionAttribute.count; j++) {
-        const vertex = new THREE.Vector3().fromBufferAttribute(
-          positionAttribute,
-          j
-        );
+        const vertex = new THREE.Vector3().fromBufferAttribute(positionAttribute, j);
         const t = (vertex.y / 0.2 + 1) * 0.5;
 
         let finalColor;
@@ -503,12 +471,7 @@ export function updateSpectralOrbHue(scene, hueShift = 0) {
  * @param {number} orbitRadius - Orbit radius
  * @param {number} hueShift - Hue rotation in degrees (0-360)
  */
-export function updateSpectralOrbCount(
-  scene,
-  count,
-  orbitRadius = 4,
-  hueShift = 0
-) {
+export function updateSpectralOrbCount(scene, count, orbitRadius = 4, hueShift = 0) {
   createSpectralOrbs(scene, count, orbitRadius, hueShift);
 }
 
@@ -529,8 +492,7 @@ export function updateMousePosition(event, camera, domElement) {
 
   // Project mouse position onto a plane at z=0 (where orbs roughly are)
   const planeZ = 0;
-  const distance =
-    (planeZ - camera.position.z) / mouseRaycaster.ray.direction.z;
+  const distance = (planeZ - camera.position.z) / mouseRaycaster.ray.direction.z;
   mouse3D
     .copy(mouseRaycaster.ray.origin)
     .add(mouseRaycaster.ray.direction.multiplyScalar(distance));

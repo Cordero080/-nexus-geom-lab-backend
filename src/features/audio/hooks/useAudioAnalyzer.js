@@ -1,4 +1,4 @@
-import { useRef, useEffect, useState, useCallback } from "react";
+import { useRef, useEffect, useState, useCallback } from 'react';
 
 /**
  * Audio Analyzer Hook - Captures microphone input and analyzes frequency bands
@@ -42,8 +42,7 @@ export function useAudioAnalyzer() {
       });
 
       // Create audio context
-      const audioContext = new (window.AudioContext ||
-        window.webkitAudioContext)();
+      const audioContext = new (window.AudioContext || window.webkitAudioContext)();
       audioContextRef.current = audioContext;
 
       // Create analyzer node
@@ -67,25 +66,22 @@ export function useAudioAnalyzer() {
       // Start analyzing
       analyzeAudio();
     } catch (error) {
-      console.error("Failed to initialize audio:", error);
+      console.error('Failed to initialize audio:', error);
 
-      let errorMessage = "Microphone access denied or unavailable.\n\n";
+      let errorMessage = 'Microphone access denied or unavailable.\n\n';
 
-      if (
-        error.name === "NotAllowedError" ||
-        error.name === "PermissionDeniedError"
-      ) {
+      if (error.name === 'NotAllowedError' || error.name === 'PermissionDeniedError') {
         errorMessage +=
-          "Please allow microphone access:\n" +
-          "1. Click the 🔒 icon in browser address bar\n" +
-          "2. Allow microphone permissions\n" +
-          "3. Refresh the page";
-      } else if (error.name === "NotFoundError") {
-        errorMessage += "No microphone found. Please connect a microphone.";
-      } else if (error.name === "NotReadableError") {
-        errorMessage += "Microphone is already in use by another application.";
+          'Please allow microphone access:\n' +
+          '1. Click the 🔒 icon in browser address bar\n' +
+          '2. Allow microphone permissions\n' +
+          '3. Refresh the page';
+      } else if (error.name === 'NotFoundError') {
+        errorMessage += 'No microphone found. Please connect a microphone.';
+      } else if (error.name === 'NotReadableError') {
+        errorMessage += 'Microphone is already in use by another application.';
       } else {
-        errorMessage += "Error: " + error.message;
+        errorMessage += 'Error: ' + error.message;
       }
 
       alert(errorMessage);
@@ -143,8 +139,7 @@ export function useAudioAnalyzer() {
     const highs = sharpHighs;
 
     // Overall volume
-    const overall =
-      dataArray.reduce((sum, val) => sum + val, 0) / dataArray.length / 255;
+    const overall = dataArray.reduce((sum, val) => sum + val, 0) / dataArray.length / 255;
 
     // Update state
     setAudioData({ bass, mids, highs, overall });

@@ -1,4 +1,4 @@
-import * as THREE from "three";
+import * as THREE from 'three';
 
 /**
  * Create hyperframe for 120-cell (4D polytope of 120 dodecahedra)
@@ -8,12 +8,8 @@ import * as THREE from "three";
  * @param {string} hyperframeLineColor - Color for vertex connections
  * @returns {Object} { centerLines, centerLinesMaterial, curvedLines, curvedLinesMaterial }
  */
-export function create120CellHyperframe(
-  geometry,
-  hyperframeColor,
-  hyperframeLineColor
-) {
-  console.log("Creating 120-cell hyperframe");
+export function create120CellHyperframe(geometry, hyperframeColor, hyperframeLineColor) {
+  console.log('Creating 120-cell hyperframe');
 
   // Get layer sizes from geometry metadata
   const layers = geometry.userData.layers || {
@@ -144,12 +140,7 @@ export function create120CellHyperframe(
     const end = new THREE.Vector3(...layer2Vertices[j]);
     const distance = start.distanceTo(end);
 
-    const cylinderGeom = new THREE.CylinderGeometry(
-      0.0016,
-      0.0016,
-      distance,
-      6
-    );
+    const cylinderGeom = new THREE.CylinderGeometry(0.0016, 0.0016, distance, 6);
     const cylinderMesh = new THREE.Mesh(cylinderGeom, centerLinesMaterial);
 
     cylinderMesh.position.copy(start.clone().add(end).multiplyScalar(0.5));
@@ -165,12 +156,7 @@ export function create120CellHyperframe(
     const end = new THREE.Vector3(...layer3Vertices[j]);
     const distance = start.distanceTo(end);
 
-    const cylinderGeom = new THREE.CylinderGeometry(
-      0.0013,
-      0.0013,
-      distance,
-      6
-    );
+    const cylinderGeom = new THREE.CylinderGeometry(0.0013, 0.0013, distance, 6);
     const cylinderMesh = new THREE.Mesh(cylinderGeom, centerLinesMaterial);
 
     cylinderMesh.position.copy(start.clone().add(end).multiplyScalar(0.5));
@@ -225,16 +211,8 @@ export function create120CellHyperframe(
           dist < diagonalThreshold * Math.max(1, vertices[i][0])
         ) {
           const distance = v1.distanceTo(v2);
-          const cylinderGeom = new THREE.CylinderGeometry(
-            radius,
-            radius,
-            distance,
-            6
-          );
-          const cylinderMesh = new THREE.Mesh(
-            cylinderGeom,
-            centerLinesMaterial
-          );
+          const cylinderGeom = new THREE.CylinderGeometry(radius, radius, distance, 6);
+          const cylinderMesh = new THREE.Mesh(cylinderGeom, centerLinesMaterial);
 
           cylinderMesh.position.copy(v1.clone().add(v2).multiplyScalar(0.5));
           cylinderMesh.lookAt(v2);
@@ -272,9 +250,7 @@ export function create120CellHyperframe(
   const actualVertices = [];
   for (let i = 0; i < vertexCount; i++) {
     const idx = i * 3;
-    actualVertices.push(
-      new THREE.Vector3(positions[idx], positions[idx + 1], positions[idx + 2])
-    );
+    actualVertices.push(new THREE.Vector3(positions[idx], positions[idx + 1], positions[idx + 2]));
   }
 
   // Match canonical vertex to closest actual vertex
@@ -322,12 +298,7 @@ export function create120CellHyperframe(
     const end = new THREE.Vector3(...layer2Vertices[i]);
     const distance = start.distanceTo(end);
 
-    const cylinderGeom = new THREE.CylinderGeometry(
-      0.0028,
-      0.0028,
-      distance,
-      6
-    );
+    const cylinderGeom = new THREE.CylinderGeometry(0.0028, 0.0028, distance, 6);
     const cylinderMesh = new THREE.Mesh(cylinderGeom, curvedLinesMaterial);
 
     cylinderMesh.position.copy(start.clone().add(end).multiplyScalar(0.5));
@@ -343,12 +314,7 @@ export function create120CellHyperframe(
     const end = new THREE.Vector3(...layer3Vertices[i]);
     const distance = start.distanceTo(end);
 
-    const cylinderGeom = new THREE.CylinderGeometry(
-      0.0026,
-      0.0026,
-      distance,
-      6
-    );
+    const cylinderGeom = new THREE.CylinderGeometry(0.0026, 0.0026, distance, 6);
     const cylinderMesh = new THREE.Mesh(cylinderGeom, curvedLinesMaterial);
 
     cylinderMesh.position.copy(start.clone().add(end).multiplyScalar(0.5));
@@ -364,12 +330,7 @@ export function create120CellHyperframe(
     const end = new THREE.Vector3(...innerVertices[i]);
     const distance = start.distanceTo(end);
 
-    const cylinderGeom = new THREE.CylinderGeometry(
-      0.0024,
-      0.0024,
-      distance,
-      6
-    );
+    const cylinderGeom = new THREE.CylinderGeometry(0.0024, 0.0024, distance, 6);
     const cylinderMesh = new THREE.Mesh(cylinderGeom, curvedLinesMaterial);
 
     cylinderMesh.position.copy(start.clone().add(end).multiplyScalar(0.5));
@@ -406,10 +367,7 @@ export function create120CellHyperframe(
         const v2 = new THREE.Vector3(...vertices[j]);
         const dist = v1.distanceTo(v2);
 
-        if (
-          dist > maxDist &&
-          dist > spaceDiagonalThreshold * Math.max(1, vertices[i][0])
-        ) {
+        if (dist > maxDist && dist > spaceDiagonalThreshold * Math.max(1, vertices[i][0])) {
           maxDist = dist;
           oppositeIdx = j;
         }
@@ -423,12 +381,7 @@ export function create120CellHyperframe(
         const v2 = new THREE.Vector3(...vertices[oppositeIdx]);
         const distance = v1.distanceTo(v2);
 
-        const cylinderGeom = new THREE.CylinderGeometry(
-          radius,
-          radius,
-          distance,
-          6
-        );
+        const cylinderGeom = new THREE.CylinderGeometry(radius, radius, distance, 6);
         const cylinderMesh = new THREE.Mesh(cylinderGeom, curvedLinesMaterial);
 
         cylinderMesh.position.copy(v1.clone().add(v2).multiplyScalar(0.5));
@@ -459,12 +412,7 @@ export function create120CellHyperframe(
     const end = new THREE.Vector3(...layer2Vertices[i]);
     const distance = start.distanceTo(end);
 
-    const cylinderGeom = new THREE.CylinderGeometry(
-      0.0015,
-      0.0015,
-      distance,
-      6
-    );
+    const cylinderGeom = new THREE.CylinderGeometry(0.0015, 0.0015, distance, 6);
     const cylinderMesh = new THREE.Mesh(cylinderGeom, curvedLinesMaterial);
 
     cylinderMesh.position.copy(start.clone().add(end).multiplyScalar(0.5));
@@ -480,12 +428,7 @@ export function create120CellHyperframe(
     const end = new THREE.Vector3(...layer3Vertices[i]);
     const distance = start.distanceTo(end);
 
-    const cylinderGeom = new THREE.CylinderGeometry(
-      0.0013,
-      0.0013,
-      distance,
-      6
-    );
+    const cylinderGeom = new THREE.CylinderGeometry(0.0013, 0.0013, distance, 6);
     const cylinderMesh = new THREE.Mesh(cylinderGeom, curvedLinesMaterial);
 
     cylinderMesh.position.copy(start.clone().add(end).multiplyScalar(0.5));
@@ -501,12 +444,7 @@ export function create120CellHyperframe(
     const end = new THREE.Vector3(...innerVertices[i]);
     const distance = start.distanceTo(end);
 
-    const cylinderGeom = new THREE.CylinderGeometry(
-      0.0011,
-      0.0011,
-      distance,
-      6
-    );
+    const cylinderGeom = new THREE.CylinderGeometry(0.0011, 0.0011, distance, 6);
     const cylinderMesh = new THREE.Mesh(cylinderGeom, curvedLinesMaterial);
 
     cylinderMesh.position.copy(start.clone().add(end).multiplyScalar(0.5));
@@ -516,9 +454,7 @@ export function create120CellHyperframe(
     connectionGroup.add(cylinderMesh);
   }
 
-  console.log(
-    `Added 60 cross-layer connections (outer→layer2, layer1→layer3, layer2→inner)`
-  );
+  console.log(`Added 60 cross-layer connections (outer→layer2, layer1→layer3, layer2→inner)`);
 
   return {
     centerLines: innerDodecahedraGroup,

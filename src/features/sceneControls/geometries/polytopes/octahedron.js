@@ -1,5 +1,5 @@
-import * as THREE from "three";
-import { mergeGeometries } from "three/examples/jsm/utils/BufferGeometryUtils";
+import * as THREE from 'three';
+import { mergeGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils';
 
 /**
  * Creates a compound octahedron - two octahedra merged at 45° rotation
@@ -29,7 +29,7 @@ export function createOctahedron(options = {}) {
 
   // Mark it as compound for wireframe builders
   mergedOct.userData.isCompound = true;
-  mergedOct.userData.baseType = "OctahedronGeometry";
+  mergedOct.userData.baseType = 'OctahedronGeometry';
 
   return mergedOct;
 }
@@ -38,10 +38,10 @@ export function createOctahedron(options = {}) {
  * Metadata for the octahedron geometry
  */
 export const metadata = {
-  name: "octahedron",
-  displayName: "◆ Compound Octahedron",
-  category: "polytopes",
-  description: "Two octahedra merged at 45° rotation",
+  name: 'octahedron',
+  displayName: '◆ Compound Octahedron',
+  category: 'polytopes',
+  description: 'Two octahedra merged at 45° rotation',
   isCompound: true,
   defaultOptions: {},
 };

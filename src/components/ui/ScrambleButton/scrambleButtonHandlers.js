@@ -19,8 +19,8 @@ export const createMouseMoveHandler = (buttonRef) => {
     const y = e.clientY - rect.top; // y position within the element
 
     // Update CSS variables for the beam position
-    buttonRef.current.style.setProperty("--x", `${x}px`);
-    buttonRef.current.style.setProperty("--y", `${y}px`);
+    buttonRef.current.style.setProperty('--x', `${x}px`);
+    buttonRef.current.style.setProperty('--y', `${y}px`);
   };
 };
 

@@ -1,5 +1,5 @@
-import * as THREE from "three";
-import { mergeGeometries } from "three/examples/jsm/utils/BufferGeometryUtils";
+import * as THREE from 'three';
+import { mergeGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils';
 
 // Helper functions and constants for wireframe conformance
 const __UP = new THREE.Vector3(0, 1, 0);
@@ -66,8 +66,7 @@ function updateThickWireframeCylinders(objData) {
     cyl.quaternion.copy(__Q);
 
     // scale Y to length
-    const base =
-      cyl.userData.baseLength ?? (cyl.geometry?.parameters?.height || len);
+    const base = cyl.userData.baseLength ?? (cyl.geometry?.parameters?.height || len);
     cyl.userData.baseLength = base;
     cyl.scale.set(1, len / base, 1);
   }
@@ -84,11 +83,7 @@ function updateThickWireframeCylinders(objData) {
  * @param {number} rotation - Optional rotation to apply
  * @returns {THREE.BufferGeometry} Complete tesseract with outer, inner, and connecting faces
  */
-export function createTesseractWithFaces(
-  outerSize,
-  innerSize,
-  rotation = null
-) {
+export function createTesseractWithFaces(outerSize, innerSize, rotation = null) {
   const geometries = [];
 
   // Outer cube
@@ -116,24 +111,14 @@ export function createTesseractWithFaces(
   geometries.push(topFrustum);
 
   // Bottom face frustum (Y-)
-  const bottomFrustum = new THREE.CylinderGeometry(
-    halfOuter,
-    halfInner,
-    depth,
-    4
-  );
+  const bottomFrustum = new THREE.CylinderGeometry(halfOuter, halfInner, depth, 4);
   bottomFrustum.rotateY(Math.PI / 4);
   bottomFrustum.translate(0, -(halfOuter + depth / 2), 0);
   if (rotation) bottomFrustum.rotateY(rotation);
   geometries.push(bottomFrustum);
 
   // Front face frustum (Z+)
-  const frontFrustum = new THREE.CylinderGeometry(
-    halfInner,
-    halfOuter,
-    depth,
-    4
-  );
+  const frontFrustum = new THREE.CylinderGeometry(halfInner, halfOuter, depth, 4);
   frontFrustum.rotateY(Math.PI / 4);
   frontFrustum.rotateX(Math.PI / 2);
   frontFrustum.translate(0, 0, halfOuter + depth / 2);
@@ -141,12 +126,7 @@ export function createTesseractWithFaces(
   geometries.push(frontFrustum);
 
   // Back face frustum (Z-)
-  const backFrustum = new THREE.CylinderGeometry(
-    halfOuter,
-    halfInner,
-    depth,
-    4
-  );
+  const backFrustum = new THREE.CylinderGeometry(halfOuter, halfInner, depth, 4);
   backFrustum.rotateY(Math.PI / 4);
   backFrustum.rotateX(Math.PI / 2);
   backFrustum.translate(0, 0, -(halfOuter + depth / 2));
@@ -154,12 +134,7 @@ export function createTesseractWithFaces(
   geometries.push(backFrustum);
 
   // Right face frustum (X+)
-  const rightFrustum = new THREE.CylinderGeometry(
-    halfInner,
-    halfOuter,
-    depth,
-    4
-  );
+  const rightFrustum = new THREE.CylinderGeometry(halfInner, halfOuter, depth, 4);
   rightFrustum.rotateY(Math.PI / 4);
   rightFrustum.rotateZ(Math.PI / 2);
   rightFrustum.translate(halfOuter + depth / 2, 0, 0);
@@ -167,12 +142,7 @@ export function createTesseractWithFaces(
   geometries.push(rightFrustum);
 
   // Left face frustum (X-)
-  const leftFrustum = new THREE.CylinderGeometry(
-    halfOuter,
-    halfInner,
-    depth,
-    4
-  );
+  const leftFrustum = new THREE.CylinderGeometry(halfOuter, halfInner, depth, 4);
   leftFrustum.rotateY(Math.PI / 4);
   leftFrustum.rotateZ(Math.PI / 2);
   leftFrustum.translate(-(halfOuter + depth / 2), 0, 0);

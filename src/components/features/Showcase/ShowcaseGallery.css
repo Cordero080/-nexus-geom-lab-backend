@@ -26,13 +26,24 @@
 }
 
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 @keyframes pulse {
-  0%, 50%, 100% { opacity: 1; }
-  25%, 75% { opacity: 0.6; }
+  0%,
+  50%,
+  100% {
+    opacity: 1;
+  }
+  25%,
+  75% {
+    opacity: 0.6;
+  }
 }
 
 /* Parallax showcase container with 3D support */
@@ -80,108 +91,121 @@
 .showcase-title-stack {
   margin-top: 40px;
 }
-  .parallax-bg-layer,
-  .parallax-fg-layer {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 40vh;
-    z-index: -1;
-    pointer-events: none;
-    /* Fade the bottom edge to avoid a hard horizontal line */
-    -webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 85%);
-    mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 85%);
-  }
+.parallax-bg-layer,
+.parallax-fg-layer {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 40vh;
+  z-index: -1;
+  pointer-events: none;
+  /* Fade the bottom edge to avoid a hard horizontal line */
+  -webkit-mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 0) 85%);
+  mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 0) 85%);
+}
 
-  .parallax-bg-layer {
-    z-index: -2; /* Behind foreground layer */
-  }
+.parallax-bg-layer {
+  z-index: -2; /* Behind foreground layer */
+}
 
-  .parallax-fg-layer {
-    z-index: -1; /* In front of background layer */
-    mix-blend-mode: screen; /* Let colors blend through instead of covering */
-    opacity: 0.5; /* More transparent to show colorful background */
-  }
+.parallax-fg-layer {
+  z-index: -1; /* In front of background layer */
+  mix-blend-mode: screen; /* Let colors blend through instead of covering */
+  opacity: 0.5; /* More transparent to show colorful background */
+}
 
-  /* Layered geometric backgrounds matching Scenes page approach */
-  .bg-gallery-layer {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    min-height: 100vh;
-    pointer-events: none;
-    z-index: -3; /* Behind parallax layers, below content */
-    background: linear-gradient(120deg, #0a0f1a 60%, #1a2a3a 100%),
-      repeating-linear-gradient(-30deg, #00f0ff22 0 2px, transparent 2px 40px);
-    opacity: 0.68;
-    will-change: transform, opacity, filter;
-    transition: transform 1.2s cubic-bezier(0.4, 0, 0.2, 1),
-      opacity 0.9s ease,
-      filter 0.9s ease;
-    transform-origin: center;
-  }
+/* Layered geometric backgrounds matching Scenes page approach */
+.bg-gallery-layer {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  min-height: 100vh;
+  pointer-events: none;
+  z-index: -3; /* Behind parallax layers, below content */
+  background:
+    linear-gradient(120deg, #0a0f1a 60%, #1a2a3a 100%),
+    repeating-linear-gradient(-30deg, #00f0ff22 0 2px, transparent 2px 40px);
+  opacity: 0.68;
+  will-change: transform, opacity, filter;
+  transition:
+    transform 1.2s cubic-bezier(0.4, 0, 0.2, 1),
+    opacity 0.9s ease,
+    filter 0.9s ease;
+  transform-origin: center;
+}
 
-  /* Scene background layers inside parallax-scenes */
-  .scene-background {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100%;
-    z-index: 0;
-    pointer-events: none;
-    background: linear-gradient(120deg, #0a0f1a 60%, #1a2a3a 100%),
-      repeating-linear-gradient(-30deg, #00f0ff22 0 2px, transparent 2px 40px);
-    opacity: 1.88;
-    /* Fade mask at top to blend into quantum SVG gradients above */
-    -webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,0.3) 15%, rgba(0,0,0,1) 35%);
-    mask-image: linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,0.3) 5%, rgba(0,0,0,1) 35%);
-  }
+/* Scene background layers inside parallax-scenes */
+.scene-background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100%;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(120deg, #0a0f1a 60%, #1a2a3a 100%),
+    repeating-linear-gradient(-30deg, #00f0ff22 0 2px, transparent 2px 40px);
+  opacity: 1.88;
+  /* Fade mask at top to blend into quantum SVG gradients above */
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0) 0%,
+    rgba(0, 0, 0, 0.3) 15%,
+    rgba(0, 0, 0, 1) 35%
+  );
+  mask-image: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0) 0%,
+    rgba(0, 0, 0, 0.3) 5%,
+    rgba(0, 0, 0, 1) 35%
+  );
+}
 
-  /* HomePage clip-path variants for scene backgrounds */
-  .scene-background.bg-gallery-reality {
-    clip-path: polygon(0 0, 100% 0, 100% 80%, 60% 100%, 0 80%);
-  }
-  .scene-background.bg-gallery-probability {
-    clip-path: polygon(0 10%, 100% 0, 100% 90%, 0 100%);
-  }
-  .scene-background.bg-gallery-entanglement {
-    clip-path: polygon(0 0, 100% 10%, 100% 100%, 40% 90%, 0 100%);
-  }
-  .scene-background.bg-gallery-superposition {
-    clip-path: polygon(0 0, 100% 0, 100% 100%, 20% 90%, 0 100%);
-  }
+/* HomePage clip-path variants for scene backgrounds */
+.scene-background.bg-gallery-reality {
+  clip-path: polygon(0 0, 100% 0, 100% 80%, 60% 100%, 0 80%);
+}
+.scene-background.bg-gallery-probability {
+  clip-path: polygon(0 10%, 100% 0, 100% 90%, 0 100%);
+}
+.scene-background.bg-gallery-entanglement {
+  clip-path: polygon(0 0, 100% 10%, 100% 100%, 40% 90%, 0 100%);
+}
+.scene-background.bg-gallery-superposition {
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 20% 90%, 0 100%);
+}
 
-  /* Variants for fixed bg-gallery-layer */
-  .bg-gallery-layer.bg-gallery-reality {
-    clip-path: polygon(0 0, 100% 0, 100% 80%, 60% 100%, 0 80%);
-  }
-  .bg-gallery-layer.bg-gallery-probability {
-    clip-path: polygon(0 10%, 100% 0, 100% 90%, 0 100%);
-  }
-  .bg-gallery-layer.bg-gallery-entanglement {
-    clip-path: polygon(0 0, 100% 10%, 100% 100%, 40% 90%, 0 100%);
-  }
-  .bg-gallery-layer.bg-gallery-superposition {
-    clip-path: polygon(0 0, 100% 0, 100% 100%, 20% 90%, 0 100%);
-  }
+/* Variants for fixed bg-gallery-layer */
+.bg-gallery-layer.bg-gallery-reality {
+  clip-path: polygon(0 0, 100% 0, 100% 80%, 60% 100%, 0 80%);
+}
+.bg-gallery-layer.bg-gallery-probability {
+  clip-path: polygon(0 10%, 100% 0, 100% 90%, 0 100%);
+}
+.bg-gallery-layer.bg-gallery-entanglement {
+  clip-path: polygon(0 0, 100% 10%, 100% 100%, 40% 90%, 0 100%);
+}
+.bg-gallery-layer.bg-gallery-superposition {
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 20% 90%, 0 100%);
+}
 
-  /* Variants reusing Home’s clip-path shapes */
-  .bg-gallery-layer.bg-gallery-reality {
-    clip-path: polygon(0 0, 100% 0, 100% 80%, 60% 100%, 0 80%);
-  }
-  .bg-gallery-layer.bg-gallery-probability {
-    clip-path: polygon(0 10%, 100% 0, 100% 90%, 0 100%);
-  }
-  .bg-gallery-layer.bg-gallery-entanglement {
-    clip-path: polygon(0 0, 100% 10%, 100% 100%, 40% 90%, 0 100%);
-  }
-  .bg-gallery-layer.bg-gallery-superposition {
-    clip-path: polygon(0 0, 100% 0, 100% 100%, 20% 90%, 0 100%);
-  }
+/* Variants reusing Home’s clip-path shapes */
+.bg-gallery-layer.bg-gallery-reality {
+  clip-path: polygon(0 0, 100% 0, 100% 80%, 60% 100%, 0 80%);
+}
+.bg-gallery-layer.bg-gallery-probability {
+  clip-path: polygon(0 10%, 100% 0, 100% 90%, 0 100%);
+}
+.bg-gallery-layer.bg-gallery-entanglement {
+  clip-path: polygon(0 0, 100% 10%, 100% 100%, 40% 90%, 0 100%);
+}
+.bg-gallery-layer.bg-gallery-superposition {
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 20% 90%, 0 100%);
+}
 
 /* Soft, subtle hero background overlay to improve contrast */
 .showcase-hero::before {
@@ -221,7 +245,7 @@
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
-  
+
   animation: pageTitleShimmer 5s ease-in-out infinite;
   filter: drop-shadow(0 6px 24px rgba(6, 21, 185, 0.32));
   position: relative;
@@ -265,7 +289,9 @@
   z-index: -2;
   opacity: 0.4;
   transform: translateY(4px) translateX(0px);
-  text-shadow: 0 0 24px rgba(22, 10, 27, 0.503), 0 0 60px rgba(0, 132, 255, 0.5);
+  text-shadow:
+    0 0 24px rgba(22, 10, 27, 0.503),
+    0 0 60px rgba(0, 132, 255, 0.5);
 }
 
 .showcase-main-title .showcase-title-inverted {
@@ -342,7 +368,9 @@
   top: 50%;
   transform: translate(-50%, 40%);
   opacity: 0;
-  transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1), transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+  transition:
+    opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1),
+    transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
   white-space: nowrap;
   text-shadow: 0 0 12px rgba(0, 132, 255, 0.35);
   pointer-events: none;
@@ -366,7 +394,8 @@
 }
 
 @keyframes heroUnderlinePulse {
-  0%, 100% {
+  0%,
+  100% {
     opacity: 0.25;
     width: 110px;
   }
@@ -377,8 +406,13 @@
 }
 
 @keyframes pageTitleShimmer {
-  0%, 100% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
+  0%,
+  100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
 }
 
 .parallax-scene {
@@ -484,7 +518,9 @@
 .parallax-model-card:hover {
   transform: scale(1.03) !important;
   border-color: rgba(68, 0, 255, 0.6);
-  box-shadow: 0 20px 60px rgba(0, 115, 255, 0.5), 0 0 40px rgba(0, 128, 255, 0.3);
+  box-shadow:
+    0 20px 60px rgba(0, 115, 255, 0.5),
+    0 0 40px rgba(0, 128, 255, 0.3);
 }
 
 /* Holographic shimmer overlay */
@@ -493,12 +529,7 @@
   position: absolute;
   inset: 0;
   border-radius: 20px;
-  background: linear-gradient(
-    45deg,
-    rgba(0, 255, 255, 0.1),
-    transparent 50%,
-    rgba(50, 4, 50, 0.1)
-  );
+  background: linear-gradient(45deg, rgba(0, 255, 255, 0.1), transparent 50%, rgba(50, 4, 50, 0.1));
   background-size: 200% 200%;
   animation: holographic-shimmer 8s ease-in-out infinite;
   pointer-events: none;
@@ -542,7 +573,8 @@
 }
 
 @keyframes border-pulse {
-  0%, 100% {
+  0%,
+  100% {
     background-position: 0% 50%;
   }
   50% {
@@ -563,11 +595,14 @@
 
 /* Subtle light sweep animation */
 .parallax-model-card::before {
-  animation: light-reflection 6s ease-in-out infinite, holographic-shimmer 8s ease-in-out infinite;
+  animation:
+    light-reflection 6s ease-in-out infinite,
+    holographic-shimmer 8s ease-in-out infinite;
 }
 
 @keyframes light-reflection {
-  0%, 100% {
+  0%,
+  100% {
     transform: translateX(-100%);
     opacity: 0;
   }
@@ -601,8 +636,17 @@
     linear-gradient(145deg, rgba(15, 14, 24, 0.7), rgba(19, 9, 15, 0.55)),
     radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.1), transparent 50%),
     radial-gradient(circle at 70% 70%, rgba(0, 0, 0, 0.5), transparent 50%),
-    linear-gradient(45deg, rgba(138, 43, 226, 0.05), rgba(0, 212, 255, 0.05), rgba(138, 43, 226, 0.05));
-  background-size: 100% 100%, 150% 150%, 150% 150%, 200% 200%;
+    linear-gradient(
+      45deg,
+      rgba(138, 43, 226, 0.05),
+      rgba(0, 212, 255, 0.05),
+      rgba(138, 43, 226, 0.05)
+    );
+  background-size:
+    100% 100%,
+    150% 150%,
+    150% 150%,
+    200% 200%;
   background-blend-mode: overlay, multiply, overlay;
   animation: dark-holographic-shimmer 3s ease infinite;
   border: 1px solid rgba(0, 212, 255, 0.25);
@@ -639,13 +683,25 @@
 /* Keyframes duplicated locally so Showcase doesn't depend on Login CSS load */
 @keyframes dark-holographic-shimmer {
   0% {
-    background-position: 0% 50%, 50% 50%, 50% 50%, 0% 50%;
+    background-position:
+      0% 50%,
+      50% 50%,
+      50% 50%,
+      0% 50%;
   }
   50% {
-    background-position: 0% 50%, 100% 100%, 100% 100%, 100% 50%;
+    background-position:
+      0% 50%,
+      100% 100%,
+      100% 100%,
+      100% 50%;
   }
   100% {
-    background-position: 0% 50%, 50% 50%, 50% 50%, 0% 50%;
+    background-position:
+      0% 50%,
+      50% 50%,
+      50% 50%,
+      0% 50%;
   }
 }
 

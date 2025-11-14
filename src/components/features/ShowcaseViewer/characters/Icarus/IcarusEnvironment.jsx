@@ -23,7 +23,7 @@ export default function IcarusEnvironment() {
     canvas.width = 2048;
     canvas.height = 1024;
     const ctx = canvas.getContext('2d');
-    
+
     // Fill with base gradient that goes horizontally (wraps better on sphere)
     const gradient = ctx.createLinearGradient(0, 0, canvas.width, 0);
     gradient.addColorStop(0, '#1a0f2e');
@@ -31,47 +31,47 @@ export default function IcarusEnvironment() {
     gradient.addColorStop(0.5, '#1a0f2e');
     gradient.addColorStop(0.75, '#2b1a4a');
     gradient.addColorStop(1, '#1a0f2e');
-    
+
     ctx.fillStyle = gradient;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
-    
+
     // Add vertical gradient overlay for depth
     const vertGradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
     vertGradient.addColorStop(0, 'rgba(11, 19, 43, 0.8)');
     vertGradient.addColorStop(0.5, 'rgba(45, 25, 75, 0.6)');
     vertGradient.addColorStop(1, 'rgba(11, 19, 43, 0.8)');
-    
+
     ctx.fillStyle = vertGradient;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
-    
+
     // Add nebula clouds with blur
     ctx.filter = 'blur(40px)';
     ctx.globalAlpha = 0.4;
-    
+
     for (let i = 0; i < 150; i++) {
       const x = Math.random() * canvas.width;
       const y = Math.random() * canvas.height;
       const radius = 50 + Math.random() * 150;
       const nebulaGrad = ctx.createRadialGradient(x, y, 0, x, y, radius);
-      
+
       // Alternate between purple and blue tones
       const colors = [
         ['#aa1c5cff', '#9b22dcff'],
         ['#3a5fbf', '#1a2f5f'],
-        ['#aa1c7a', '#6a0e4a']
+        ['#aa1c7a', '#6a0e4a'],
       ];
       const colorSet = colors[i % colors.length];
-      
+
       nebulaGrad.addColorStop(0, colorSet[0]);
       nebulaGrad.addColorStop(1, 'transparent');
       ctx.fillStyle = nebulaGrad;
       ctx.fillRect(x - radius, y - radius, radius * 2, radius * 2);
     }
-    
+
     const texture = new THREE.CanvasTexture(canvas);
     texture.wrapS = THREE.RepeatWrapping;
     texture.wrapT = THREE.ClampToEdgeWrapping;
-    
+
     return texture;
   }, []);
 
@@ -86,12 +86,14 @@ export default function IcarusEnvironment() {
 
     for (let i = 0; i < 150; i++) {
       const geometry = geometries[i % geometries.length];
-      
+
       // Distribute particles in 3 depth layers
       const layer = i % 3;
       let z;
-      if (layer === 0) z = -15 - Math.random() * 10; // Far back
-      else if (layer === 1) z = -8 - Math.random() * 5; // Middle
+      if (layer === 0)
+        z = -15 - Math.random() * 10; // Far back
+      else if (layer === 1)
+        z = -8 - Math.random() * 5; // Middle
       else z = -3 - Math.random() * 2; // Close to camera
 
       const particle = {
@@ -99,28 +101,24 @@ export default function IcarusEnvironment() {
         position: [
           (Math.random() - 0.5) * 30, // X spread
           (Math.random() - 0.5) * 20, // Y spread
-          z
+          z,
         ],
-        rotation: [
-          Math.random() * Math.PI,
-          Math.random() * Math.PI,
-          Math.random() * Math.PI
-        ],
+        rotation: [Math.random() * Math.PI, Math.random() * Math.PI, Math.random() * Math.PI],
         rotationSpeed: [
           (Math.random() - 0.5) * 0.2,
           (Math.random() - 0.5) * 0.02,
-          (Math.random() - 0.5) * 0.02
+          (Math.random() - 0.5) * 0.02,
         ],
         driftSpeed: [
           (Math.random() - 0.5) * 0.01,
           (Math.random() - 0.5) * 0.008,
-          (Math.random() - 0.5) * 0.005
+          (Math.random() - 0.5) * 0.005,
         ],
         scale: 0.5 + Math.random() * 1.2,
         color: layer === 0 ? '#12f3e4ff' : layer === 1 ? '#ff8c00' : '#88c5e9',
         initialPos: null,
       };
-      
+
       particle.initialPos = [...particle.position];
       temp.push(particle);
     }
@@ -162,12 +160,7 @@ export default function IcarusEnvironment() {
       {/* Nebula Gradient Background Sphere */}
       <mesh position={[0, 0, 0]} scale={[-1, 1, 1]}>
         <sphereGeometry args={[50, 64, 64]} />
-        <meshBasicMaterial
-          map={nebulaTexture}
-          side={THREE.BackSide}
-          transparent
-          opacity={0.8}
-        />
+        <meshBasicMaterial map={nebulaTexture} side={THREE.BackSide} transparent opacity={0.8} />
       </mesh>
 
       {/* Ambient particles */}
@@ -192,11 +185,7 @@ export default function IcarusEnvironment() {
       </group>
 
       {/* Grid floor - creates depth perception */}
-      <mesh
-        ref={gridRef}
-        rotation={[-Math.PI / 2, 0, 0]}
-        position={[0, -5, -8]}
-      >
+      <mesh ref={gridRef} rotation={[-Math.PI / 2, 0, 0]} position={[0, -5, -8]}>
         <planeGeometry args={[50, 50, 25, 25]} />
         <meshBasicMaterial
           color="#4ecdc4"
@@ -210,12 +199,7 @@ export default function IcarusEnvironment() {
       {/* Large background wireframe sphere - creates boundary */}
       <mesh position={[0, 0, -25]}>
         <sphereGeometry args={[15, 32, 32]} />
-        <meshBasicMaterial
-          color="#4ecdc4"
-          wireframe
-          transparent
-          opacity={0.08}
-        />
+        <meshBasicMaterial color="#4ecdc4" wireframe transparent opacity={0.08} />
       </mesh>
 
       {/* Glowing point lights matching Icarus colors */}

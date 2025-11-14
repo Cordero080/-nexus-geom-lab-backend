@@ -1,4 +1,4 @@
-import * as THREE from "three";
+import * as THREE from 'three';
 
 /**
  * Create hyperframe for compound icosahedron (merkaba) with dual inner icosahedrons and vertex connections
@@ -8,12 +8,8 @@ import * as THREE from "three";
  * @param {string} hyperframeLineColor - Color for connections
  * @returns {Object} { centerLines, centerLinesMaterial, curvedLines, curvedLinesMaterial }
  */
-export function createIcosahedronHyperframe(
-  geometry,
-  hyperframeColor,
-  hyperframeLineColor
-) {
-  console.log("Creating compound icosahedron (merkaba) hyperframe");
+export function createIcosahedronHyperframe(geometry, hyperframeColor, hyperframeLineColor) {
+  console.log('Creating compound icosahedron (merkaba) hyperframe');
 
   // Golden ratio for icosahedron construction
   const phi = (1 + Math.sqrt(5)) / 2;
@@ -150,9 +146,7 @@ export function createIcosahedronHyperframe(
   const actualVertices = [];
   for (let i = 0; i < vertexCount; i++) {
     const idx = i * 3;
-    actualVertices.push(
-      new THREE.Vector3(positions[idx], positions[idx + 1], positions[idx + 2])
-    );
+    actualVertices.push(new THREE.Vector3(positions[idx], positions[idx + 1], positions[idx + 2]));
   }
 
   // Match each canonical outer vertex to its closest actual vertex
@@ -203,9 +197,7 @@ export function createIcosahedronHyperframe(
     icosahedronConnectionGroup.add(cylinderMesh);
   }
 
-  console.log(
-    `Created compound icosahedron connections: 24 vertex-to-core connections`
-  );
+  console.log(`Created compound icosahedron connections: 24 vertex-to-core connections`);
 
   return {
     centerLines: innerIcosahedronGroup,

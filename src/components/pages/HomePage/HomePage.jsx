@@ -1,4 +1,3 @@
-
 import React, { useEffect, useRef, useState } from 'react';
 
 // Components
@@ -30,26 +29,17 @@ import { useAuth } from '../../../features/auth/context/AuthContext';
 
 export default function HomePage() {
   const { isAuthenticated, logout } = useAuth();
-  
+
   // Custom Hooks
   const { portalState, glyphState, handleQuantumCollapse } = useQuantumState();
-  const {
-    parallaxRef,
-    fgRef,
-    bgRef,
-    layer1Ref,
-    layer2Ref,
-    layer3Ref,
-    layer4Ref,
-    layer5Ref,
-  } = useParallax();
+  const { parallaxRef, fgRef, bgRef, layer1Ref, layer2Ref, layer3Ref, layer4Ref, layer5Ref } =
+    useParallax();
 
   // Local state
   const [activeScene, setActiveScene] = useState(0);
   const [navScrolled, setNavScrolled] = useState(false);
   const [probabilityFlipped, setProbabilityFlipped] = useState(false);
   const [superpositionDisassembled, setSuperpositionDisassembled] = useState(false);
-
 
   // Scene fade/scroll logic
   useEffect(() => {
@@ -67,7 +57,7 @@ export default function HomePage() {
         }
       }
       setActiveScene(found);
-      
+
       // Check if we've scrolled past the probability description text itself
       const probabilityDescription = document.querySelector('#probability .scene-description');
       if (probabilityDescription) {
@@ -75,7 +65,7 @@ export default function HomePage() {
         // Flip when the description itself passes the middle of viewport
         setProbabilityFlipped(descRect.top < window.innerHeight / 3);
       }
-      
+
       // Check if we've entered the superposition section
       const superpositionSection = document.querySelector('#superposition');
       if (superpositionSection) {
@@ -106,7 +96,7 @@ export default function HomePage() {
   return (
     <>
       {/* VINE-INSPIRED QUANTUM NAVIGATION */}
-      <QuantumNav 
+      <QuantumNav
         portalState={portalState}
         glyphState={glyphState}
         navScrolled={navScrolled}
@@ -116,21 +106,18 @@ export default function HomePage() {
       />
 
       {/* Background Layers */}
-      <BackgroundLayers 
-        portalState={portalState}
-        bgRef={bgRef}
-        fgRef={fgRef}
-      />
+      <BackgroundLayers portalState={portalState} bgRef={bgRef} fgRef={fgRef} />
 
       {/* Parallax Container */}
       <div className={styles.parallaxContainer} id="parallax-container" ref={parallaxRef}>
         {/* Scene 1: Reality Layer */}
         {/* Scene 1: Reality Layer */}
-        <section className={`quantum-scene reality-scene-section${activeScene === 0 ? ' active' : ''}`} id="reality" data-scene="0">
-          <div 
-            className={`${styles.bgReality} bg-reality-position`}
-            aria-hidden="true"
-          ></div>
+        <section
+          className={`quantum-scene reality-scene-section${activeScene === 0 ? ' active' : ''}`}
+          id="reality"
+          data-scene="0"
+        >
+          <div className={`${styles.bgReality} bg-reality-position`} aria-hidden="true"></div>
           <div className="scene-content scene-content-wrapper">
             <div className="particles particles-wrapper">
               <div className="particle"></div>
@@ -141,7 +128,7 @@ export default function HomePage() {
               <div className="particle"></div>
             </div>
             <div className="terminal-header">
-              <span className="coordinates">φ-SPACE_MANIFOLD: 1.618033988749</span> 
+              <span className="coordinates">φ-SPACE_MANIFOLD: 1.618033988749</span>
 
               {/* φ (Phi): The golden ratio constant (1.618...)
 SPACE: Mathematical/geometric term for a set of points with structure
@@ -153,10 +140,12 @@ MANIFOLD: A mathematical surface or multi-dimensional space that can be curved o
               <h1 className={`quantum-title ${styles.quantumTitle} quantum-title-h1`}>
                 <span className="title-word title-word-span" data-word="N3XUS">
                   <ScrambleOnHover originalText="N3XUS" finalText="アトリエ" delay={3000} />
-                </span><br></br>
+                </span>
+                <br></br>
                 <span className="title-word title-word-span" data-word="GE0M">
                   GE<span className="slashed-zero">0</span>M
-                </span><br></br>
+                </span>
+                <br></br>
                 <span className="title-word title-word-span" data-word="LVB">
                   L<span className="title-inverted-v">V</span>B
                 </span>
@@ -168,47 +157,57 @@ MANIFOLD: A mathematical surface or multi-dimensional space that can be curved o
             <div className="hero-stats">
               <div className="stat-item">
                 <span className="stat-label">MODULES LOADED-</span>
-                <span className="stat-value" data-stat="modules">080</span>
+                <span className="stat-value" data-stat="modules">
+                  080
+                </span>
               </div>
               <div className="stat-item">
                 <span className="stat-label">QUANTUM STATE-</span>
-                <span 
-                  className="stat-value stat-value-dynamic" 
+                <span
+                  className="stat-value stat-value-dynamic"
                   data-stat="state"
                   style={{
                     '--stat-color': portalState.colors[0],
-                    '--stat-text-shadow': `0 0 8px ${portalState.colors[1]}, 0 0 2px ${portalState.colors[2]}`
+                    '--stat-text-shadow': `0 0 8px ${portalState.colors[1]}, 0 0 2px ${portalState.colors[2]}`,
                   }}
-                >{portalState.label.toUpperCase()}</span>
+                >
+                  {portalState.label.toUpperCase()}
+                </span>
               </div>
               <div className="stat-item">
-                <span className="stat-label">NETWORK  STATUS</span>
-                <span className="stat-value" data-stat="network">-CONNECTED</span>
+                <span className="stat-label">NETWORK STATUS</span>
+                <span className="stat-value" data-stat="network">
+                  -CONNECTED
+                </span>
               </div>
             </div>
-            
+
             {/* Show Enter Geom Lab only when logged in, Login/Signup when logged out */}
             {isAuthenticated ? (
-              <div 
-                className="button-wrapper-auth"
-              >
+              <div className="button-wrapper-auth">
                 <BeamScanButton
                   onClick={(e) => {
                     window.location.href = '/geom-lab';
                   }}
-                  label={<>ENTER GE0M L<span className="nav-inverted-v">V</span>B</>}
+                  label={
+                    <>
+                      ENTER GE0M L<span className="nav-inverted-v">V</span>B
+                    </>
+                  }
                   className="home-enter-geom-lab-btn"
                 />
               </div>
             ) : (
-              <div 
-                className="button-wrapper-no-auth"
-              >
+              <div className="button-wrapper-no-auth">
                 <BeamScanButton
                   onClick={(e) => {
                     window.location.href = '/login';
                   }}
-                  label={<>LOGI<span className="inverted-n-span">N</span></>}
+                  label={
+                    <>
+                      LOGI<span className="inverted-n-span">N</span>
+                    </>
+                  }
                 />
                 <BeamScanButton
                   onClick={(e) => {
@@ -219,13 +218,17 @@ MANIFOLD: A mathematical surface or multi-dimensional space that can be curved o
                 />
               </div>
             )}
-            
+
             <div className="reality-particles"></div>
           </div>
         </section>
 
         {/* Scene 2: Probability Wave */}
-        <section className={`quantum-scene${activeScene === 1 ? ' active' : ''}`} id="probability" data-scene="1">
+        <section
+          className={`quantum-scene${activeScene === 1 ? ' active' : ''}`}
+          id="probability"
+          data-scene="1"
+        >
           <div className="scene-background bg-probability" aria-hidden="true"></div>
           <div className="scene-content">
             <h2 className="scene-title">PROBABILITY CLOUD</h2>
@@ -238,15 +241,16 @@ MANIFOLD: A mathematical surface or multi-dimensional space that can be curved o
               <div className="floating-code">console.future(identity);</div>
               <div className="floating-code">PABLO D C0RDER0</div> */}
               <Quote />
-              
-      
             </div>
           </div>
-          
         </section>
 
         {/* Scene 3: Quantum Entanglement */}
-        <section className={`quantum-scene${activeScene === 2 ? ' active' : ''}`} id="entanglement" data-scene="2">
+        <section
+          className={`quantum-scene${activeScene === 2 ? ' active' : ''}`}
+          id="entanglement"
+          data-scene="2"
+        >
           <div className="scene-background bg-entanglement" aria-hidden="true"></div>
           <HessianPolychoronAnimation isActive={activeScene === 2} />
           <div className="scene-content entanglement-scene-content">
@@ -255,7 +259,6 @@ MANIFOLD: A mathematical surface or multi-dimensional space that can be curved o
               <div className="quantum-bridge"></div>
             </div>
           </div>
-          
         </section>
 
         <Scene

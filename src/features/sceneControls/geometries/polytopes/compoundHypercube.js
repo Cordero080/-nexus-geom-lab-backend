@@ -1,5 +1,5 @@
-import * as THREE from "three";
-import { mergeGeometries } from "three/examples/jsm/utils/BufferGeometryUtils";
+import * as THREE from 'three';
+import { mergeGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils';
 
 /**
  * Helper function to create a single hypercube with frustum faces
@@ -12,11 +12,7 @@ function createHypercubeWithFaces(outerScale, innerScale, rotation = null) {
   const parts = [];
 
   // Create outer cube
-  const outerCube = new THREE.BoxGeometry(
-    outerScale * 2,
-    outerScale * 2,
-    outerScale * 2
-  );
+  const outerCube = new THREE.BoxGeometry(outerScale * 2, outerScale * 2, outerScale * 2);
   if (rotation) {
     outerCube.rotateX(rotation.x);
     outerCube.rotateY(rotation.y);
@@ -25,11 +21,7 @@ function createHypercubeWithFaces(outerScale, innerScale, rotation = null) {
   parts.push(outerCube);
 
   // Create inner cube
-  const innerCube = new THREE.BoxGeometry(
-    innerScale * 2,
-    innerScale * 2,
-    innerScale * 2
-  );
+  const innerCube = new THREE.BoxGeometry(innerScale * 2, innerScale * 2, innerScale * 2);
   if (rotation) {
     innerCube.rotateX(rotation.x);
     innerCube.rotateY(rotation.y);
@@ -52,7 +44,7 @@ function createHypercubeWithFaces(outerScale, innerScale, rotation = null) {
     // Define the 4 corner vertices for outer and inner square faces
     let outerVerts, innerVerts;
 
-    if (axis === "z") {
+    if (axis === 'z') {
       const zo = isPositive ? halfOuter : -halfOuter;
       const zi = isPositive ? halfInner : -halfInner;
       outerVerts = [
@@ -67,7 +59,7 @@ function createHypercubeWithFaces(outerScale, innerScale, rotation = null) {
         new THREE.Vector3(halfInner, halfInner, zi),
         new THREE.Vector3(-halfInner, halfInner, zi),
       ];
-    } else if (axis === "x") {
+    } else if (axis === 'x') {
       const xo = isPositive ? halfOuter : -halfOuter;
       const xi = isPositive ? halfInner : -halfInner;
       outerVerts = [
@@ -126,18 +118,9 @@ function createHypercubeWithFaces(outerScale, innerScale, rotation = null) {
       indices.push(o2, i2, i1);
     }
 
-    geometry.setAttribute(
-      "position",
-      new THREE.BufferAttribute(new Float32Array(positions), 3)
-    );
-    geometry.setAttribute(
-      "normal",
-      new THREE.BufferAttribute(new Float32Array(normals), 3)
-    );
-    geometry.setAttribute(
-      "uv",
-      new THREE.BufferAttribute(new Float32Array(uvs), 2)
-    );
+    geometry.setAttribute('position', new THREE.BufferAttribute(new Float32Array(positions), 3));
+    geometry.setAttribute('normal', new THREE.BufferAttribute(new Float32Array(normals), 3));
+    geometry.setAttribute('uv', new THREE.BufferAttribute(new Float32Array(uvs), 2));
     geometry.setIndex(indices);
     geometry.computeVertexNormals();
 
@@ -146,12 +129,12 @@ function createHypercubeWithFaces(outerScale, innerScale, rotation = null) {
 
   // Create all 6 frustum faces
   const frustums = [
-    createFrustumBetweenFaces("z", true), // Front (Z+)
-    createFrustumBetweenFaces("z", false), // Back (Z-)
-    createFrustumBetweenFaces("x", true), // Right (X+)
-    createFrustumBetweenFaces("x", false), // Left (X-)
-    createFrustumBetweenFaces("y", true), // Top (Y+)
-    createFrustumBetweenFaces("y", false), // Bottom (Y-)
+    createFrustumBetweenFaces('z', true), // Front (Z+)
+    createFrustumBetweenFaces('z', false), // Back (Z-)
+    createFrustumBetweenFaces('x', true), // Right (X+)
+    createFrustumBetweenFaces('x', false), // Left (X-)
+    createFrustumBetweenFaces('y', true), // Top (Y+)
+    createFrustumBetweenFaces('y', false), // Bottom (Y-)
   ];
 
   // Apply rotation to frustums if specified
@@ -207,31 +190,27 @@ export function createCompoundHypercube(options = {}) {
 
   // Create all 9 hypercubes
   rotations.forEach((rotation) => {
-    const hypercube = createHypercubeWithFaces(
-      outerScale,
-      innerScale,
-      rotation
-    );
+    const hypercube = createHypercubeWithFaces(outerScale, innerScale, rotation);
     hypercubes.push(hypercube);
   });
 
   // Merge all 9 hypercubes
-  console.log("Attempting to merge 9-compound hypercube parts");
+  console.log('Attempting to merge 9-compound hypercube parts');
   const mergedCpdHypercube = mergeGeometries(hypercubes);
 
   if (!mergedCpdHypercube) {
-    console.error("Failed to merge 9-compound hypercube geometries!");
+    console.error('Failed to merge 9-compound hypercube geometries!');
     return hypercubes[0];
   }
 
-  console.log("Successfully merged 9-compound hypercube");
+  console.log('Successfully merged 9-compound hypercube');
 
   // Recompute normals for proper lighting
   mergedCpdHypercube.computeVertexNormals();
 
   // Mark it as compound hypercube for wireframe builders
   mergedCpdHypercube.userData.isCompound = true;
-  mergedCpdHypercube.userData.baseType = "HypercubeGeometry";
+  mergedCpdHypercube.userData.baseType = 'HypercubeGeometry';
   mergedCpdHypercube.userData.isCpdHypercube = true;
   mergedCpdHypercube.userData.outerScale = outerScale;
   mergedCpdHypercube.userData.innerScale = innerScale;
@@ -245,10 +224,10 @@ export function createCompoundHypercube(options = {}) {
  * Metadata for the compound hypercube geometry
  */
 export const metadata = {
-  name: "compoundHypercube",
-  displayName: "◻◻ Hypercube",
-  category: "polytopes",
-  description: "Two 4D hypercubes interpenetrating - simulates 4D rotation",
+  name: 'compoundHypercube',
+  displayName: '◻◻ Hypercube',
+  category: 'polytopes',
+  description: 'Two 4D hypercubes interpenetrating - simulates 4D rotation',
   isCompound: true,
   defaultOptions: {},
 };

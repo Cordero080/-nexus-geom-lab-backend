@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect } from 'react';
 
 /**
  * PROPERTY UPDATE HOOK - Controls camera position based on view mode
@@ -26,14 +26,14 @@ export function useCameraController(cameraRef, cameraView) {
 
     // POSITION CAMERA based on cameraView prop
     switch (cameraView) {
-      case "free":
+      case 'free':
         camera.position.set(0, 0, 6); // Standard front view
         break;
-      case "orbit":
+      case 'orbit':
         camera.position.set(0, 3, 6); // Elevated view for orbiting
         camera.lookAt(0, 0, 0); // Look at center
         break;
-      case "top":
+      case 'top':
         camera.position.set(0, 10, 0); // Directly above
         camera.lookAt(0, 0, 0); // Look down at center
         break;

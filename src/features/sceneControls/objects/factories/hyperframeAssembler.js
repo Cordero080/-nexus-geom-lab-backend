@@ -5,24 +5,24 @@
  * Adds visual depth by showing internal dimensional structure within complex geometries.
  */
 
-import * as THREE from "three";
-import { getHyperframeKey, getHyperframeFromCache } from "./materialCache";
-import { createTetrahedronHyperframe } from "./hyperframeBuilders/tetrahedronHyperframe";
-import { createBoxHyperframe } from "./hyperframeBuilders/boxHyperframe";
-import { createOctahedronHyperframe } from "./hyperframeBuilders/octahedronHyperframe";
-import { createIcosahedronHyperframe } from "./hyperframeBuilders/icosahedronHyperframe";
-import { createHypercubeHyperframe } from "./hyperframeBuilders/hypercubeHyperframe";
-import { createSimpleCompoundHypercubeHyperframe } from "./hyperframeBuilders/simpleCompoundHypercubeHyperframe";
-import { createCompoundHypercubeHyperframe } from "./hyperframeBuilders/compoundHypercubeHyperframe";
-import { create120CellHyperframe } from "./hyperframeBuilders/cell120Hyperframe";
-import { createCompound120CellHyperframe } from "./hyperframeBuilders/compoundCell120Hyperframe";
-import { create24CellHyperframe } from "./hyperframeBuilders/cell24Hyperframe";
-import { createCompound24CellHyperframe } from "./hyperframeBuilders/compoundCell24Hyperframe";
-import { create16CellHyperframe } from "./hyperframeBuilders/cell16Hyperframe";
-import { create600CellHyperframe } from "./hyperframeBuilders/cell600Hyperframe";
-import { createCompound600CellHyperframe } from "./hyperframeBuilders/compoundCell600Hyperframe";
-import { createMegaTesseractCenterline } from "./hyperframeBuilders/megaTesseractCenterline";
-import { createCpdTesseractCenterline } from "./hyperframeBuilders/cpdTesseractCenterline";
+import * as THREE from 'three';
+import { getHyperframeKey, getHyperframeFromCache } from './materialCache';
+import { createTetrahedronHyperframe } from './hyperframeBuilders/tetrahedronHyperframe';
+import { createBoxHyperframe } from './hyperframeBuilders/boxHyperframe';
+import { createOctahedronHyperframe } from './hyperframeBuilders/octahedronHyperframe';
+import { createIcosahedronHyperframe } from './hyperframeBuilders/icosahedronHyperframe';
+import { createHypercubeHyperframe } from './hyperframeBuilders/hypercubeHyperframe';
+import { createSimpleCompoundHypercubeHyperframe } from './hyperframeBuilders/simpleCompoundHypercubeHyperframe';
+import { createCompoundHypercubeHyperframe } from './hyperframeBuilders/compoundHypercubeHyperframe';
+import { create120CellHyperframe } from './hyperframeBuilders/cell120Hyperframe';
+import { createCompound120CellHyperframe } from './hyperframeBuilders/compoundCell120Hyperframe';
+import { create24CellHyperframe } from './hyperframeBuilders/cell24Hyperframe';
+import { createCompound24CellHyperframe } from './hyperframeBuilders/compoundCell24Hyperframe';
+import { create16CellHyperframe } from './hyperframeBuilders/cell16Hyperframe';
+import { create600CellHyperframe } from './hyperframeBuilders/cell600Hyperframe';
+import { createCompound600CellHyperframe } from './hyperframeBuilders/compoundCell600Hyperframe';
+import { createMegaTesseractCenterline } from './hyperframeBuilders/megaTesseractCenterline';
+import { createCpdTesseractCenterline } from './hyperframeBuilders/cpdTesseractCenterline';
 
 /**
  * Assembles hyperframe based on geometry type
@@ -34,41 +34,27 @@ import { createCpdTesseractCenterline } from "./hyperframeBuilders/cpdTesseractC
  * @param {string} hyperframeLineColor - Color for edge connections
  * @returns {Object} { centerLines, centerLinesMaterial, curvedLines, curvedLinesMaterial }
  */
-export function assembleHyperframe(
-  geometry,
-  hyperframeColor,
-  hyperframeLineColor
-) {
+export function assembleHyperframe(geometry, hyperframeColor, hyperframeLineColor) {
   let centerLines, centerLinesMaterial, curvedLines, curvedLinesMaterial;
 
   if (
-    geometry.type === "TetrahedronGeometry" ||
-    geometry.constructor.name === "TetrahedronGeometry" ||
-    (geometry.userData && geometry.userData.baseType === "TetrahedronGeometry")
+    geometry.type === 'TetrahedronGeometry' ||
+    geometry.constructor.name === 'TetrahedronGeometry' ||
+    (geometry.userData && geometry.userData.baseType === 'TetrahedronGeometry')
   ) {
     // Check if it's a 16-cell
     if (geometry.userData && geometry.userData.is16Cell) {
-      const result = create16CellHyperframe(
-        geometry,
-        hyperframeColor,
-        hyperframeLineColor
-      );
-      ({ centerLines, centerLinesMaterial, curvedLines, curvedLinesMaterial } =
-        result);
+      const result = create16CellHyperframe(geometry, hyperframeColor, hyperframeLineColor);
+      ({ centerLines, centerLinesMaterial, curvedLines, curvedLinesMaterial } = result);
     } else {
       // Regular compound tetrahedron
-      const result = createTetrahedronHyperframe(
-        geometry,
-        hyperframeColor,
-        hyperframeLineColor
-      );
-      ({ centerLines, centerLinesMaterial, curvedLines, curvedLinesMaterial } =
-        result);
+      const result = createTetrahedronHyperframe(geometry, hyperframeColor, hyperframeLineColor);
+      ({ centerLines, centerLinesMaterial, curvedLines, curvedLinesMaterial } = result);
     }
   } else if (
-    geometry.type === "BoxGeometry" ||
-    (geometry.userData && geometry.userData.baseType === "BoxGeometry") ||
-    (geometry.userData && geometry.userData.baseType === "HypercubeGeometry")
+    geometry.type === 'BoxGeometry' ||
+    (geometry.userData && geometry.userData.baseType === 'BoxGeometry') ||
+    (geometry.userData && geometry.userData.baseType === 'HypercubeGeometry')
   ) {
     // Check if it's the compound hypercube (9 hypercubes interpenetrating)
     if (
@@ -81,8 +67,7 @@ export function assembleHyperframe(
         hyperframeColor,
         hyperframeLineColor
       );
-      ({ centerLines, centerLinesMaterial, curvedLines, curvedLinesMaterial } =
-        result);
+      ({ centerLines, centerLinesMaterial, curvedLines, curvedLinesMaterial } = result);
     }
     // Check if it's the simple compound hypercube (2 hypercubes interpenetrating)
     else if (
@@ -95,8 +80,7 @@ export function assembleHyperframe(
         hyperframeColor,
         hyperframeLineColor
       );
-      ({ centerLines, centerLinesMaterial, curvedLines, curvedLinesMaterial } =
-        result);
+      ({ centerLines, centerLinesMaterial, curvedLines, curvedLinesMaterial } = result);
     }
     // Check if it's the new hypercube (tesseract with hyperframe)
     else if (
@@ -104,63 +88,30 @@ export function assembleHyperframe(
       geometry.userData.isHypercube &&
       !geometry.userData.isCpdTesseract
     ) {
-      const result = createHypercubeHyperframe(
-        geometry,
-        hyperframeColor,
-        hyperframeLineColor
-      );
-      ({ centerLines, centerLinesMaterial, curvedLines, curvedLinesMaterial } =
-        result);
+      const result = createHypercubeHyperframe(geometry, hyperframeColor, hyperframeLineColor);
+      ({ centerLines, centerLinesMaterial, curvedLines, curvedLinesMaterial } = result);
     }
     // Check if it's a compound tesseract (two interpenetrating 4D hypercubes) or regular tesseract (single 4D hypercube)
     else if (geometry.userData && geometry.userData.isCpdTesseract) {
       const isMega = geometry.userData.isMegaTesseract;
       const isCompoundMega = geometry.userData.isCompoundMegaTesseract;
-      const hyperframeKey = getHyperframeKey(
-        geometry,
-        hyperframeColor,
-        hyperframeLineColor
-      );
+      const hyperframeKey = getHyperframeKey(geometry, hyperframeColor, hyperframeLineColor);
 
       if (isCompoundMega) {
-        ({
-          centerLines,
-          centerLinesMaterial,
-          curvedLines,
-          curvedLinesMaterial,
-        } = getHyperframeFromCache(hyperframeKey, () =>
-          createCpdTesseractCenterline(
-            geometry,
-            hyperframeColor,
-            hyperframeLineColor
-          )
-        ));
+        ({ centerLines, centerLinesMaterial, curvedLines, curvedLinesMaterial } =
+          getHyperframeFromCache(hyperframeKey, () =>
+            createCpdTesseractCenterline(geometry, hyperframeColor, hyperframeLineColor)
+          ));
       } else if (isMega && !isCompoundMega) {
-        ({
-          centerLines,
-          centerLinesMaterial,
-          curvedLines,
-          curvedLinesMaterial,
-        } = getHyperframeFromCache(hyperframeKey, () =>
-          createMegaTesseractCenterline(
-            geometry,
-            hyperframeColor,
-            hyperframeLineColor
-          )
-        ));
+        ({ centerLines, centerLinesMaterial, curvedLines, curvedLinesMaterial } =
+          getHyperframeFromCache(hyperframeKey, () =>
+            createMegaTesseractCenterline(geometry, hyperframeColor, hyperframeLineColor)
+          ));
       } else if (!isMega && !isCompoundMega) {
-        ({
-          centerLines,
-          centerLinesMaterial,
-          curvedLines,
-          curvedLinesMaterial,
-        } = getHyperframeFromCache(hyperframeKey, () =>
-          createCpdTesseractCenterline(
-            geometry,
-            hyperframeColor,
-            hyperframeLineColor
-          )
-        ));
+        ({ centerLines, centerLinesMaterial, curvedLines, curvedLinesMaterial } =
+          getHyperframeFromCache(hyperframeKey, () =>
+            createCpdTesseractCenterline(geometry, hyperframeColor, hyperframeLineColor)
+          ));
       } else {
         // For other tesseract-based geometries, keep hyperframe disabled
         centerLines = new THREE.Group();
@@ -169,50 +120,30 @@ export function assembleHyperframe(
         curvedLinesMaterial = null;
       }
     } else {
-      const result = createBoxHyperframe(
-        geometry,
-        hyperframeColor,
-        hyperframeLineColor
-      );
-      ({ centerLines, centerLinesMaterial, curvedLines, curvedLinesMaterial } =
-        result);
+      const result = createBoxHyperframe(geometry, hyperframeColor, hyperframeLineColor);
+      ({ centerLines, centerLinesMaterial, curvedLines, curvedLinesMaterial } = result);
     }
   } else if (
-    geometry.type === "OctahedronGeometry" ||
-    (geometry.userData && geometry.userData.baseType === "OctahedronGeometry")
+    geometry.type === 'OctahedronGeometry' ||
+    (geometry.userData && geometry.userData.baseType === 'OctahedronGeometry')
   ) {
     // Check if it's a compound 24-cell
     if (geometry.userData && geometry.userData.isCompound24Cell) {
-      const result = createCompound24CellHyperframe(
-        geometry,
-        hyperframeColor,
-        hyperframeLineColor
-      );
-      ({ centerLines, centerLinesMaterial, curvedLines, curvedLinesMaterial } =
-        result);
+      const result = createCompound24CellHyperframe(geometry, hyperframeColor, hyperframeLineColor);
+      ({ centerLines, centerLinesMaterial, curvedLines, curvedLinesMaterial } = result);
     }
     // Check if it's a 24-cell
     else if (geometry.userData && geometry.userData.is24Cell) {
-      const result = create24CellHyperframe(
-        geometry,
-        hyperframeColor,
-        hyperframeLineColor
-      );
-      ({ centerLines, centerLinesMaterial, curvedLines, curvedLinesMaterial } =
-        result);
+      const result = create24CellHyperframe(geometry, hyperframeColor, hyperframeLineColor);
+      ({ centerLines, centerLinesMaterial, curvedLines, curvedLinesMaterial } = result);
     } else {
       // Regular compound octahedron
-      const result = createOctahedronHyperframe(
-        geometry,
-        hyperframeColor,
-        hyperframeLineColor
-      );
-      ({ centerLines, centerLinesMaterial, curvedLines, curvedLinesMaterial } =
-        result);
+      const result = createOctahedronHyperframe(geometry, hyperframeColor, hyperframeLineColor);
+      ({ centerLines, centerLinesMaterial, curvedLines, curvedLinesMaterial } = result);
     }
   } else if (
-    geometry.type === "IcosahedronGeometry" ||
-    (geometry.userData && geometry.userData.baseType === "IcosahedronGeometry")
+    geometry.type === 'IcosahedronGeometry' ||
+    (geometry.userData && geometry.userData.baseType === 'IcosahedronGeometry')
   ) {
     // Check if it's a compound 600-cell
     if (geometry.userData && geometry.userData.isCompound600Cell) {
@@ -221,31 +152,20 @@ export function assembleHyperframe(
         hyperframeColor,
         hyperframeLineColor
       );
-      ({ centerLines, centerLinesMaterial, curvedLines, curvedLinesMaterial } =
-        result);
+      ({ centerLines, centerLinesMaterial, curvedLines, curvedLinesMaterial } = result);
     }
     // Check if it's a 600-cell
     else if (geometry.userData && geometry.userData.is600Cell) {
-      const result = create600CellHyperframe(
-        geometry,
-        hyperframeColor,
-        hyperframeLineColor
-      );
-      ({ centerLines, centerLinesMaterial, curvedLines, curvedLinesMaterial } =
-        result);
+      const result = create600CellHyperframe(geometry, hyperframeColor, hyperframeLineColor);
+      ({ centerLines, centerLinesMaterial, curvedLines, curvedLinesMaterial } = result);
     } else {
       // Regular compound icosahedron
-      const result = createIcosahedronHyperframe(
-        geometry,
-        hyperframeColor,
-        hyperframeLineColor
-      );
-      ({ centerLines, centerLinesMaterial, curvedLines, curvedLinesMaterial } =
-        result);
+      const result = createIcosahedronHyperframe(geometry, hyperframeColor, hyperframeLineColor);
+      ({ centerLines, centerLinesMaterial, curvedLines, curvedLinesMaterial } = result);
     }
   } else if (
-    geometry.type === "DodecahedronGeometry" ||
-    (geometry.userData && geometry.userData.baseType === "DodecahedronGeometry")
+    geometry.type === 'DodecahedronGeometry' ||
+    (geometry.userData && geometry.userData.baseType === 'DodecahedronGeometry')
   ) {
     // Check if it's a compound 120-cell
     if (geometry.userData && geometry.userData.isCompound120Cell) {
@@ -254,17 +174,11 @@ export function assembleHyperframe(
         hyperframeColor,
         hyperframeLineColor
       );
-      ({ centerLines, centerLinesMaterial, curvedLines, curvedLinesMaterial } =
-        result);
+      ({ centerLines, centerLinesMaterial, curvedLines, curvedLinesMaterial } = result);
     } else {
       // Regular 120-cell
-      const result = create120CellHyperframe(
-        geometry,
-        hyperframeColor,
-        hyperframeLineColor
-      );
-      ({ centerLines, centerLinesMaterial, curvedLines, curvedLinesMaterial } =
-        result);
+      const result = create120CellHyperframe(geometry, hyperframeColor, hyperframeLineColor);
+      ({ centerLines, centerLinesMaterial, curvedLines, curvedLinesMaterial } = result);
     }
   } else {
     // OTHER GEOMETRIES: Create generic hyperframes
@@ -274,8 +188,7 @@ export function assembleHyperframe(
       hyperframeLineColor,
       geometry.userData.isFloatingCity // Pass floating city flag
     );
-    ({ centerLines, centerLinesMaterial, curvedLines, curvedLinesMaterial } =
-      result);
+    ({ centerLines, centerLinesMaterial, curvedLines, curvedLinesMaterial } = result);
   }
 
   return { centerLines, centerLinesMaterial, curvedLines, curvedLinesMaterial };
@@ -285,12 +198,7 @@ export function assembleHyperframe(
  * Creates generic hyperframes for non-standard geometries (TorusKnot, Manifolds, etc.)
  * Includes spiral center lines and edge connections
  */
-function createGenericHyperframe(
-  geometry,
-  spiralColor,
-  edgeColor,
-  isFloatingCity = false
-) {
+function createGenericHyperframe(geometry, spiralColor, edgeColor, isFloatingCity = false) {
   const edgesGeometry = new THREE.EdgesGeometry(geometry);
   const edgeVertices = edgesGeometry.attributes.position.array;
 
@@ -340,7 +248,7 @@ function createGenericHyperframe(
   let centerLines, centerLinesMaterial;
   if (centerLinesPositions.length > 0) {
     centerLinesGeometry.setAttribute(
-      "position",
+      'position',
       new THREE.Float32BufferAttribute(centerLinesPositions, 3)
     );
 
@@ -355,10 +263,7 @@ function createGenericHyperframe(
     // Store base opacity for material updates
     centerLinesMaterial.userData = { baseOpacity };
 
-    centerLines = new THREE.LineSegments(
-      centerLinesGeometry,
-      centerLinesMaterial
-    );
+    centerLines = new THREE.LineSegments(centerLinesGeometry, centerLinesMaterial);
   } else {
     centerLines = new THREE.Object3D();
     centerLinesMaterial = null;
@@ -372,29 +277,13 @@ function createGenericHyperframe(
 
   // Connect wireframe edges to create enhanced patterns
   for (let j = 0; j < edgeVertices.length; j += 6) {
-    const edge1Start = [
-      edgeVertices[j],
-      edgeVertices[j + 1],
-      edgeVertices[j + 2],
-    ];
-    const edge1End = [
-      edgeVertices[j + 3],
-      edgeVertices[j + 4],
-      edgeVertices[j + 5],
-    ];
+    const edge1Start = [edgeVertices[j], edgeVertices[j + 1], edgeVertices[j + 2]];
+    const edge1End = [edgeVertices[j + 3], edgeVertices[j + 4], edgeVertices[j + 5]];
 
     // Find nearby edges to connect to
     for (let k = j + 6; k < edgeVertices.length && k < j + 36; k += 6) {
-      const edge2Start = [
-        edgeVertices[k],
-        edgeVertices[k + 1],
-        edgeVertices[k + 2],
-      ];
-      const edge2End = [
-        edgeVertices[k + 3],
-        edgeVertices[k + 4],
-        edgeVertices[k + 5],
-      ];
+      const edge2Start = [edgeVertices[k], edgeVertices[k + 1], edgeVertices[k + 2]];
+      const edge2End = [edgeVertices[k + 3], edgeVertices[k + 4], edgeVertices[k + 5]];
 
       // Calculate distance between edge endpoints
       const dist1 = Math.sqrt(
@@ -424,7 +313,7 @@ function createGenericHyperframe(
   let curvedLines, curvedLinesMaterial;
   if (curvedLinesPositions.length > 0) {
     curvedLinesGeometry.setAttribute(
-      "position",
+      'position',
       new THREE.Float32BufferAttribute(curvedLinesPositions, 3)
     );
 
@@ -439,10 +328,7 @@ function createGenericHyperframe(
     // Store base opacity for material updates
     curvedLinesMaterial.userData = { baseOpacity };
 
-    curvedLines = new THREE.LineSegments(
-      curvedLinesGeometry,
-      curvedLinesMaterial
-    );
+    curvedLines = new THREE.LineSegments(curvedLinesGeometry, curvedLinesMaterial);
   } else {
     curvedLines = new THREE.Object3D();
     curvedLinesMaterial = null;

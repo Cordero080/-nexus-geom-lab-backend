@@ -5,16 +5,16 @@
  * Coordinates between specialized assemblers to build scene-ready objects with all visual components.
  */
 
-import * as THREE from "three";
-import { createGeometry } from "../geometryCreation";
-import { getSolidMaterial, getMaterialPoolKey } from "./materialCache";
-import { assembleWireframe } from "./wireframeAssembler";
-import { assembleHyperframe } from "./hyperframeAssembler";
-import { createQuantumManifoldExtras } from "./decorators/quantumManifoldExtras";
+import * as THREE from 'three';
+import { createGeometry } from '../geometryCreation';
+import { getSolidMaterial, getMaterialPoolKey } from './materialCache';
+import { assembleWireframe } from './wireframeAssembler';
+import { assembleHyperframe } from './hyperframeAssembler';
+import { createQuantumManifoldExtras } from './decorators/quantumManifoldExtras';
 import {
   createCompoundSphereExtras,
   createFloatingCityExtras,
-} from "./decorators/compoundSphereExtras";
+} from './decorators/compoundSphereExtras';
 
 /**
  * Creates a complete 3D object with all components:
@@ -64,16 +64,16 @@ export function createSceneObject(config) {
   } else {
     // Multiple objects: cycle through different types for variety using createGeometry
     const geometryTypes = [
-      "icosahedron", // Uses createGeometry - gets proper material setup
-      "sphere", // Uses createGeometry - gets proper material setup
-      "box", // Maps to basic THREE.BoxGeometry but through createGeometry
-      "octahedron", // Uses createGeometry - gets proper material setup
-      "tetrahedron", // Uses createGeometry - gets proper material setup
+      'icosahedron', // Uses createGeometry - gets proper material setup
+      'sphere', // Uses createGeometry - gets proper material setup
+      'box', // Maps to basic THREE.BoxGeometry but through createGeometry
+      'octahedron', // Uses createGeometry - gets proper material setup
+      'tetrahedron', // Uses createGeometry - gets proper material setup
     ];
     const selectedType = geometryTypes[objectIndex % geometryTypes.length];
 
     // Use createGeometry for all types to ensure consistent material handling
-    if (selectedType === "box") {
+    if (selectedType === 'box') {
       // For box, create standard BoxGeometry since we don't have custom box in createGeometry
       geometry = new THREE.BoxGeometry(1.5, 1.5, 1.5);
     } else {
@@ -108,8 +108,8 @@ export function createSceneObject(config) {
 
   // If this is a standard Box hypercube (not compound tesseract), add a rotated duplicate solid cube
   if (
-    (geometry.type === "BoxGeometry" ||
-      (geometry.userData && geometry.userData.baseType === "BoxGeometry")) &&
+    (geometry.type === 'BoxGeometry' ||
+      (geometry.userData && geometry.userData.baseType === 'BoxGeometry')) &&
     !(geometry.userData && geometry.userData.isCpdTesseract)
   ) {
     const rotatedGeom = geometry.clone();
@@ -167,8 +167,11 @@ export function createSceneObject(config) {
   // ========================================
   // 5. HYPERFRAME CREATION
   // ========================================
-  const { centerLines, centerLinesMaterial, curvedLines, curvedLinesMaterial } =
-    assembleHyperframe(geometry, hyperframeColor, hyperframeLineColor);
+  const { centerLines, centerLinesMaterial, curvedLines, curvedLinesMaterial } = assembleHyperframe(
+    geometry,
+    hyperframeColor,
+    hyperframeLineColor
+  );
 
   // ========================================
   // 6. POSITIONING
@@ -205,10 +208,7 @@ export function createSceneObject(config) {
   // ========================================
   // Klein Attractor extras removed
   // Inject extras for Quantum Manifold (including compound)
-  if (
-    objectType === "quantummanifold" ||
-    objectType === "compoundquantummanifold"
-  ) {
+  if (objectType === 'quantummanifold' || objectType === 'compoundquantummanifold') {
     try {
       const extrasGroup = createQuantumManifoldExtras(geometry);
       if (extrasGroup) {
@@ -223,8 +223,8 @@ export function createSceneObject(config) {
 
   // Inject extras for Compound Sphere (including super-compound and floating city)
   if (
-    objectType === "sphere" ||
-    objectType === "compoundsphere" ||
+    objectType === 'sphere' ||
+    objectType === 'compoundsphere' ||
     (geometry && geometry.userData && geometry.userData.isFloatingCity)
   ) {
     try {
@@ -256,9 +256,7 @@ export function createSceneObject(config) {
         ? wireframeMesh.children.filter((m) => m.isMesh)
         : null,
     edgePairs:
-      wireframeMesh &&
-      wireframeMesh.userData &&
-      wireframeMesh.userData.edgePairs
+      wireframeMesh && wireframeMesh.userData && wireframeMesh.userData.edgePairs
         ? wireframeMesh.userData.edgePairs
         : null,
     // Store original position for animations

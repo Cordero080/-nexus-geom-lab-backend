@@ -18,11 +18,52 @@ export const useTextScramble = (finalText, duration = 2000, trigger = true) => {
     // Atorie (Atelier, it katakana Japanese)
     // What is Chars? its an abbreviation of characters used in the scrambling effect
     const katakanaChars = [
-      'ア', 'イ', 'ウ', 'エ', 'オ', 'カ', 'キ', 'ク', 'ケ', 'コ',
-      'サ', 'シ', 'ス', 'セ', 'ソ', 'タ', 'チ', 'ツ', 'テ', 'ト',
-      'ナ', 'ニ', 'ヌ', 'ネ', 'ノ', 'ハ', 'ヒ', 'フ', 'ヘ', 'ホ',
-      'マ', 'ミ', 'ム', 'メ', 'モ', 'ヤ', 'ユ', 'ヨ', 'ラ', 'リ',
-      'ル', 'レ', 'ロ', 'ワ', 'ヲ', 'ン'
+      'ア',
+      'イ',
+      'ウ',
+      'エ',
+      'オ',
+      'カ',
+      'キ',
+      'ク',
+      'ケ',
+      'コ',
+      'サ',
+      'シ',
+      'ス',
+      'セ',
+      'ソ',
+      'タ',
+      'チ',
+      'ツ',
+      'テ',
+      'ト',
+      'ナ',
+      'ニ',
+      'ヌ',
+      'ネ',
+      'ノ',
+      'ハ',
+      'ヒ',
+      'フ',
+      'ヘ',
+      'ホ',
+      'マ',
+      'ミ',
+      'ム',
+      'メ',
+      'モ',
+      'ヤ',
+      'ユ',
+      'ヨ',
+      'ラ',
+      'リ',
+      'ル',
+      'レ',
+      'ロ',
+      'ワ',
+      'ヲ',
+      'ン',
     ];
 
     const chars = finalText.split(''); // split is used to handle multi-byte characters correctly, simply explained as splitting into an array of characters
@@ -42,12 +83,14 @@ export const useTextScramble = (finalText, duration = 2000, trigger = true) => {
       });
 
       // Generate display text
-      const scrambled = chars.map((char, i) => {
-        if (settled[i]) {
-          return char;
-        }
-        return katakanaChars[Math.floor(Math.random() * katakanaChars.length)];
-      }).join('');
+      const scrambled = chars
+        .map((char, i) => {
+          if (settled[i]) {
+            return char;
+          }
+          return katakanaChars[Math.floor(Math.random() * katakanaChars.length)];
+        })
+        .join('');
 
       setDisplayText(scrambled);
 
@@ -73,15 +116,15 @@ export const useTextScramble = (finalText, duration = 2000, trigger = true) => {
 /**
  * Component that displays scrambling text
  */
-export const ScrambleText = ({ 
-  finalText, 
-  duration = 2000, 
+export const ScrambleText = ({
+  finalText,
+  duration = 2000,
   trigger = true,
   className = '',
-  style = {}
+  style = {},
 }) => {
   const displayText = useTextScramble(finalText, duration, trigger);
-  
+
   return (
     <span className={className} style={style}>
       {displayText}

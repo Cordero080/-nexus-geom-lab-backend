@@ -1,5 +1,5 @@
-import * as THREE from "three";
-import { mergeGeometries } from "three/examples/jsm/utils/BufferGeometryUtils";
+import * as THREE from 'three';
+import { mergeGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils';
 
 /**
  * Creates a super-compound sphere geometry - two complete compound spheres merged
@@ -95,11 +95,7 @@ export function createCompoundSphere(options = {}) {
     const antipodalRadius = 0.12;
     icoVertices.forEach(([x, y, z]) => {
       const s = new THREE.SphereGeometry(antipodalRadius, 16, 16);
-      s.translate(
-        -x * antipodalScale,
-        -y * antipodalScale,
-        -z * antipodalScale
-      );
+      s.translate(-x * antipodalScale, -y * antipodalScale, -z * antipodalScale);
       spheres.push(s);
     });
 
@@ -109,11 +105,7 @@ export function createCompoundSphere(options = {}) {
     for (let i = 0; i < 6; i++) {
       const angle = (i / 6) * Math.PI * 2;
       const s = new THREE.SphereGeometry(steinerRadius, 16, 16);
-      s.translate(
-        Math.cos(angle) * steinerOrbitRadius,
-        0,
-        Math.sin(angle) * steinerOrbitRadius
-      );
+      s.translate(Math.cos(angle) * steinerOrbitRadius, 0, Math.sin(angle) * steinerOrbitRadius);
       spheres.push(s);
     }
 
@@ -126,11 +118,7 @@ export function createCompoundSphere(options = {}) {
     for (let i = 0; i < spheresPerRing; i++) {
       const angle = (i / spheresPerRing) * Math.PI * 2;
       const s = new THREE.SphereGeometry(ringRadius, 12, 12);
-      s.translate(
-        Math.cos(angle) * ringOrbitRadius,
-        Math.sin(angle) * ringOrbitRadius,
-        0
-      );
+      s.translate(Math.cos(angle) * ringOrbitRadius, Math.sin(angle) * ringOrbitRadius, 0);
       spheres.push(s);
     }
 
@@ -138,11 +126,7 @@ export function createCompoundSphere(options = {}) {
     for (let i = 0; i < spheresPerRing; i++) {
       const angle = (i / spheresPerRing) * Math.PI * 2;
       const s = new THREE.SphereGeometry(ringRadius, 12, 12);
-      s.translate(
-        0,
-        Math.cos(angle) * ringOrbitRadius,
-        Math.sin(angle) * ringOrbitRadius
-      );
+      s.translate(0, Math.cos(angle) * ringOrbitRadius, Math.sin(angle) * ringOrbitRadius);
       spheres.push(s);
     }
 
@@ -204,11 +188,7 @@ export function createCompoundSphere(options = {}) {
       const len = Math.sqrt(x * x + y * y + z * z);
       const sizeVar = 1 + Math.sin(i * 0.3) * 0.06;
       const s = new THREE.SphereGeometry(dodecaRadius * sizeVar, 12, 12);
-      s.translate(
-        (x / len) * dodecaScale,
-        (y / len) * dodecaScale,
-        (z / len) * dodecaScale
-      );
+      s.translate((x / len) * dodecaScale, (y / len) * dodecaScale, (z / len) * dodecaScale);
       spheres.push(s);
     });
 
@@ -241,12 +221,8 @@ export function createCompoundSphere(options = {}) {
     connections.forEach(([idx1, idx2]) => {
       const [x1, y1, z1] = icoVertices[idx1];
       const [x2, y2, z2] = icoVertices[idx2];
-      const v1 = new THREE.Vector3(x1, y1, z1)
-        .normalize()
-        .multiplyScalar(outerScale);
-      const v2 = new THREE.Vector3(x2, y2, z2)
-        .normalize()
-        .multiplyScalar(outerScale);
+      const v1 = new THREE.Vector3(x1, y1, z1).normalize().multiplyScalar(outerScale);
+      const v2 = new THREE.Vector3(x2, y2, z2).normalize().multiplyScalar(outerScale);
       for (let step = 1; step < geodesicSteps; step++) {
         const t = step / geodesicSteps;
         const mid = new THREE.Vector3()
@@ -279,16 +255,13 @@ export function createCompoundSphere(options = {}) {
   const compoundSphere2 = createCompoundSphereGeometry(goldenAngle);
 
   // Merge both compound spheres into super-compound
-  const superCompound = mergeGeometries(
-    [compoundSphere1, compoundSphere2],
-    false
-  );
+  const superCompound = mergeGeometries([compoundSphere1, compoundSphere2], false);
   superCompound.computeVertexNormals();
 
   // Mark as super-compound sphere
   superCompound.userData.isCompound = true;
   superCompound.userData.isSuperCompound = true;
-  superCompound.userData.baseType = "SphereGeometry";
+  superCompound.userData.baseType = 'SphereGeometry';
   superCompound.userData.isCompoundSphere = true;
   superCompound.userData.componentCount = 286; // Approximate total spheres
 
@@ -299,10 +272,10 @@ export function createCompoundSphere(options = {}) {
  * Metadata for the compound sphere geometry
  */
 export const metadata = {
-  name: "compoundsphere",
-  displayName: "🌐 Super-Compound Sphere",
-  category: "compound",
-  description: "Two complete compound spheres merged - ~286 spheres total",
+  name: 'compoundsphere',
+  displayName: '🌐 Super-Compound Sphere',
+  category: 'compound',
+  description: 'Two complete compound spheres merged - ~286 spheres total',
   isCompound: true,
   isSuperCompound: true,
   defaultOptions: {},

@@ -5,8 +5,5 @@
  * Compound geometries are built from multiple merged simple geometries.
  */
 
-export { createSphere, metadata as sphereMetadata } from "./sphere.js";
-export {
-  createCompoundSphere,
-  metadata as compoundSphereMetadata,
-} from "./compoundSphere.js";
+export { createSphere, metadata as sphereMetadata } from './sphere.js';
+export { createCompoundSphere, metadata as compoundSphereMetadata } from './compoundSphere.js';

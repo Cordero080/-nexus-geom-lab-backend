@@ -14,25 +14,30 @@
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 @keyframes slideUp {
-  from { 
+  from {
     opacity: 0;
     transform: translateY(30px) scale(0.95);
   }
-  to { 
+  to {
     opacity: 1;
     transform: translateY(0) scale(1);
   }
 }
 
 .modalContainer {
-  background: linear-gradient(135deg, 
-    rgba(0, 20, 40, 0.95) 0%, 
-    rgba(10, 30, 60, 0.95) 50%, 
+  background: linear-gradient(
+    135deg,
+    rgba(0, 20, 40, 0.95) 0%,
+    rgba(10, 30, 60, 0.95) 50%,
     rgba(0, 20, 40, 0.95) 100%
   );
   border: 2px solid rgba(0, 255, 255, 0.3);
@@ -42,7 +47,7 @@
   max-height: 80vh;
   overflow: hidden;
   position: relative;
-  box-shadow: 
+  box-shadow:
     0 10px 40px rgba(0, 255, 255, 0.2),
     0 0 80px rgba(255, 0, 255, 0.1);
   animation: slideUp 0.4s ease-out;
@@ -54,9 +59,10 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background: linear-gradient(45deg, 
-      transparent 0%, 
-      rgba(0, 255, 255, 0.05) 50%, 
+    background: linear-gradient(
+      45deg,
+      transparent 0%,
+      rgba(0, 255, 255, 0.05) 50%,
       transparent 100%
     );
     pointer-events: none;
@@ -69,10 +75,7 @@
   align-items: center;
   padding: 20px 24px;
   border-bottom: 1px solid rgba(0, 255, 255, 0.2);
-  background: linear-gradient(90deg, 
-    rgba(0, 255, 255, 0.1) 0%, 
-    rgba(255, 0, 255, 0.05) 100%
-  );
+  background: linear-gradient(90deg, rgba(0, 255, 255, 0.1) 0%, rgba(255, 0, 255, 0.05) 100%);
 }
 
 .modalTitle {
@@ -91,10 +94,10 @@
 }
 
 @keyframes titleGlow {
-  from { 
+  from {
     filter: brightness(1) saturate(1);
   }
-  to { 
+  to {
     filter: brightness(1.2) saturate(1.3);
   }
 }
@@ -136,10 +139,7 @@
 .unlockedSection {
   margin-top: 24px;
   padding: 20px;
-  background: linear-gradient(135deg, 
-    rgba(0, 255, 100, 0.1) 0%, 
-    rgba(0, 255, 255, 0.05) 100%
-  );
+  background: linear-gradient(135deg, rgba(0, 255, 100, 0.1) 0%, rgba(0, 255, 255, 0.05) 100%);
   border: 1px solid rgba(0, 255, 100, 0.2);
   border-radius: 8px;
   backdrop-filter: blur(5px);
@@ -175,11 +175,12 @@
 }
 
 @keyframes unlockPulse {
-  0%, 100% { 
+  0%,
+  100% {
     box-shadow: 0 2px 8px rgba(0, 255, 136, 0.2);
     transform: scale(1);
   }
-  50% { 
+  50% {
     box-shadow: 0 4px 16px rgba(0, 255, 136, 0.4);
     transform: scale(1.05);
   }
@@ -190,17 +191,11 @@
   border-top: 1px solid rgba(0, 255, 255, 0.2);
   display: flex;
   justify-content: center;
-  background: linear-gradient(90deg, 
-    rgba(0, 255, 255, 0.05) 0%, 
-    rgba(255, 0, 255, 0.02) 100%
-  );
+  background: linear-gradient(90deg, rgba(0, 255, 255, 0.05) 0%, rgba(255, 0, 255, 0.02) 100%);
 }
 
 .confirmButton {
-  background: linear-gradient(135deg, 
-    rgba(0, 255, 255, 0.2) 0%, 
-    rgba(255, 0, 255, 0.2) 100%
-  );
+  background: linear-gradient(135deg, rgba(0, 255, 255, 0.2) 0%, rgba(255, 0, 255, 0.2) 100%);
   border: 2px solid transparent;
   border-image: linear-gradient(135deg, #00ffff, #ff00ff) 1;
   padding: 12px 28px;
@@ -214,12 +209,9 @@
   min-width: 120px;
 
   &:hover {
-    background: linear-gradient(135deg, 
-      rgba(0, 255, 255, 0.3) 0%, 
-      rgba(255, 0, 255, 0.3) 100%
-    );
+    background: linear-gradient(135deg, rgba(0, 255, 255, 0.3) 0%, rgba(255, 0, 255, 0.3) 100%);
     transform: translateY(-2px);
-    box-shadow: 
+    box-shadow:
       0 8px 24px rgba(0, 255, 255, 0.3),
       0 0 30px rgba(255, 0, 255, 0.2);
     text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
@@ -232,19 +224,19 @@
     margin: 20px;
     max-width: none;
   }
-  
+
   .modalHeader {
     padding: 16px 20px;
   }
-  
+
   .modalTitle {
     font-size: 1.2rem;
   }
-  
+
   .modalContent {
     padding: 20px;
   }
-  
+
   .modalFooter {
     padding: 16px 20px;
   }

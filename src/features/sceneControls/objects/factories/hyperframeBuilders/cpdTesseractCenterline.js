@@ -1,5 +1,5 @@
-import * as THREE from "three";
-import { createCpdTesseractWireframe } from "../wireframeBuilders/cpdTesseractWireframe";
+import * as THREE from 'three';
+import { createCpdTesseractWireframe } from '../wireframeBuilders/cpdTesseractWireframe';
 
 const INNER_SIZE = 1.5;
 const CENTERLINE_SCALE = 0.6;
@@ -8,21 +8,14 @@ const CONNECTOR_SEGMENTS = 10;
 const WIREFRAME_BASE_RADIUS = 0.008;
 
 function applyCenterScaling(vertices, center, scale) {
-  return vertices.map((v) =>
-    v.clone().sub(center).multiplyScalar(scale).add(center)
-  );
+  return vertices.map((v) => v.clone().sub(center).multiplyScalar(scale).add(center));
 }
 
 function createCylinderBetweenPoints(start, end, radius, material) {
   const distance = start.distanceTo(end);
   if (distance < 1e-4) return null;
 
-  const cylinderGeom = new THREE.CylinderGeometry(
-    radius,
-    radius,
-    distance,
-    CONNECTOR_SEGMENTS
-  );
+  const cylinderGeom = new THREE.CylinderGeometry(radius, radius, distance, CONNECTOR_SEGMENTS);
   const cylinderMesh = new THREE.Mesh(cylinderGeom, material);
 
   const midpoint = start.clone().add(end).multiplyScalar(0.5);
@@ -43,18 +36,14 @@ function makeConnectionKey(a, b) {
 }
 
 function collectUniqueVertices(bufferGeometry, precision = 4) {
-  const positionsAttr = bufferGeometry.getAttribute("position");
+  const positionsAttr = bufferGeometry.getAttribute('position');
   if (!positionsAttr) return [];
 
   const positions = positionsAttr.array;
   const unique = new Map();
 
   for (let i = 0; i < positions.length; i += 3) {
-    const vertex = new THREE.Vector3(
-      positions[i],
-      positions[i + 1],
-      positions[i + 2]
-    );
+    const vertex = new THREE.Vector3(positions[i], positions[i + 1], positions[i + 2]);
     const key = `${vertex.x.toFixed(precision)}_${vertex.y.toFixed(
       precision
     )}_${vertex.z.toFixed(precision)}`;
@@ -71,11 +60,7 @@ function collectUniqueVertices(bufferGeometry, precision = 4) {
  * mega tesseract implementation. It reuses the compound wireframe, scales it inward,
  * and links the sampled edge vertices forward to the outer shells.
  */
-export function createCpdTesseractCenterline(
-  geometry,
-  hyperframeColor,
-  _hyperframeLineColor
-) {
+export function createCpdTesseractCenterline(geometry, hyperframeColor, _hyperframeLineColor) {
   const workingGeometry = geometry.clone();
   workingGeometry.computeBoundingBox();
 
@@ -90,7 +75,7 @@ export function createCpdTesseractCenterline(
   workingGeometry.computeBoundingSphere();
 
   const centerLinesMaterial = new THREE.MeshBasicMaterial({
-    color: new THREE.Color(hyperframeColor || "#ff003c"),
+    color: new THREE.Color(hyperframeColor || '#ff003c'),
     transparent: false,
     opacity: 1,
   });
@@ -99,28 +84,24 @@ export function createCpdTesseractCenterline(
     ? WIREFRAME_BASE_RADIUS * 0.5 // Compound mega connectors are half the main wireframe thickness
     : CONNECTOR_RADIUS;
 
-  const centerLines = createCpdTesseractWireframe(
-    workingGeometry,
-    centerLinesMaterial,
-    {
-      radiusScale: geometry?.userData?.isCompoundMegaTesseract
-        ? (connectorRadius * 0.5) / WIREFRAME_BASE_RADIUS
-        : 0.5,
-    }
-  );
+  const centerLines = createCpdTesseractWireframe(workingGeometry, centerLinesMaterial, {
+    radiusScale: geometry?.userData?.isCompoundMegaTesseract
+      ? (connectorRadius * 0.5) / WIREFRAME_BASE_RADIUS
+      : 0.5,
+  });
 
   centerLines.userData.edgePairs = null;
   centerLines.userData.skipDynamicUpdates = true;
   centerLines.position.set(0, 0, 0);
 
   const connectorsMaterial = new THREE.MeshBasicMaterial({
-    color: new THREE.Color(_hyperframeLineColor || "#5dff9a"),
+    color: new THREE.Color(_hyperframeLineColor || '#5dff9a'),
     transparent: false,
     opacity: 1,
   });
 
   const curvedLines = new THREE.Group();
-  curvedLines.name = "cpdTesseractConnectors";
+  curvedLines.name = 'cpdTesseractConnectors';
 
   const sourceEdgesGeometry = new THREE.EdgesGeometry(workingGeometry);
   const targetEdgesGeometry = new THREE.EdgesGeometry(geometry);
@@ -154,8 +135,7 @@ export function createCpdTesseractCenterline(
       const radiusDiff = targetRadius - sourceRadius;
       const isBetterAlignment = alignment > bestAlignment + 1e-4;
       const isCloserRadius =
-        Math.abs(alignment - bestAlignment) <= 1e-4 &&
-        radiusDiff < smallestRadiusDiff;
+        Math.abs(alignment - bestAlignment) <= 1e-4 && radiusDiff < smallestRadiusDiff;
 
       if (isBetterAlignment || isCloserRadius) {
         bestAlignment = alignment;

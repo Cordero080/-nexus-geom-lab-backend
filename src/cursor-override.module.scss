@@ -56,7 +56,7 @@
 }
 
 /* Input fields should show text cursor in geom-lab */
-:global(body.geom-lab-page input), 
+:global(body.geom-lab-page input),
 :global(body.geom-lab-page select),
 :global(body.geom-lab-page textarea) {
   cursor: text !important;
@@ -65,7 +65,7 @@
 /* Buttons, links, etc. should show pointer in geom-lab */
 :global(body.geom-lab-page button),
 :global(body.geom-lab-page a),
-:global(body.geom-lab-page [role="button"]),
+:global(body.geom-lab-page [role='button']),
 :global(body.geom-lab-page .section-header) {
   cursor: pointer !important;
 }

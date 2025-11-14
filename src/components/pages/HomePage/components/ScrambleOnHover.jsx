@@ -14,11 +14,52 @@ export default function ScrambleOnHover({ originalText, finalText, delay = 3000 
   const intervalRef = useRef(null);
 
   const katakanaChars = [
-    'ア', 'イ', 'ウ', 'エ', 'オ', 'カ', 'キ', 'ク', 'ケ', 'コ',
-    'サ', 'シ', 'ス', 'セ', 'ソ', 'タ', 'チ', 'ツ', 'テ', 'ト',
-    'ナ', 'ニ', 'ヌ', 'ネ', 'ノ', 'ハ', 'ヒ', 'フ', 'ヘ', 'ホ',
-    'マ', 'ミ', 'ム', 'メ', 'モ', 'ヤ', 'ユ', 'ヨ', 'ラ', 'リ',
-    'ル', 'レ', 'ロ', 'ワ', 'ヲ', 'ン'
+    'ア',
+    'イ',
+    'ウ',
+    'エ',
+    'オ',
+    'カ',
+    'キ',
+    'ク',
+    'ケ',
+    'コ',
+    'サ',
+    'シ',
+    'ス',
+    'セ',
+    'ソ',
+    'タ',
+    'チ',
+    'ツ',
+    'テ',
+    'ト',
+    'ナ',
+    'ニ',
+    'ヌ',
+    'ネ',
+    'ノ',
+    'ハ',
+    'ヒ',
+    'フ',
+    'ヘ',
+    'ホ',
+    'マ',
+    'ミ',
+    'ム',
+    'メ',
+    'モ',
+    'ヤ',
+    'ユ',
+    'ヨ',
+    'ラ',
+    'リ',
+    'ル',
+    'レ',
+    'ロ',
+    'ワ',
+    'ヲ',
+    'ン',
   ];
 
   useEffect(() => {
@@ -35,10 +76,10 @@ export default function ScrambleOnHover({ originalText, finalText, delay = 3000 
         intervalRef.current = setInterval(() => {
           const elapsed = Date.now() - startTime;
           const progress = elapsed / duration;
-          
+
           // Speed up over time (crescendo effect)
-          frameDelay = Math.max(10, 50 - (progress * 40)); // 50ms -> 10ms
-          
+          frameDelay = Math.max(10, 50 - progress * 40); // 50ms -> 10ms
+
           // Settle characters progressively
           chars.forEach((char, i) => {
             if (elapsed > settleInterval * (i + 1)) {
@@ -47,10 +88,12 @@ export default function ScrambleOnHover({ originalText, finalText, delay = 3000 
           });
 
           // Generate scrambled text
-          const scrambled = chars.map((char, i) => {
-            if (settled[i]) return char;
-            return katakanaChars[Math.floor(Math.random() * katakanaChars.length)];
-          }).join('');
+          const scrambled = chars
+            .map((char, i) => {
+              if (settled[i]) return char;
+              return katakanaChars[Math.floor(Math.random() * katakanaChars.length)];
+            })
+            .join('');
 
           setDisplayText(scrambled);
 
@@ -75,7 +118,7 @@ export default function ScrambleOnHover({ originalText, finalText, delay = 3000 
   }, [isHovered, originalText, finalText, delay]);
 
   return (
-    <span 
+    <span
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       className="scramble-hover-span"

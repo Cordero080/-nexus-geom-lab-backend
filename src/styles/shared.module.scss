@@ -11,14 +11,7 @@
 }
 
 .angledCornersSm {
-  clip-path: polygon(
-    8px 0,
-    100% 0,
-    100% calc(100% - 8px),
-    calc(100% - 8px) 100%,
-    0 100%,
-    0 8px
-  );
+  clip-path: polygon(8px 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%, 0 8px);
 }
 
 .angledCornersLg {
@@ -50,14 +43,21 @@
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
-  text-shadow: 0 0 16px rgba(241, 239, 246, 0.06), 0 0 48px rgba(0, 132, 255, 0.5);
+  text-shadow:
+    0 0 16px rgba(241, 239, 246, 0.06),
+    0 0 48px rgba(0, 132, 255, 0.5);
   animation: pageTitleShimmer 5s ease-in-out infinite;
   filter: drop-shadow(0 6px 24px rgba(6, 21, 185, 0.32));
 }
 
 @keyframes pageTitleShimmer {
-  0%, 100% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
+  0%,
+  100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
 }
 
 .pageSubtitle {
@@ -83,7 +83,7 @@
   justify-content: center;
   z-index: 10000;
   animation: fadeIn 0.2s ease-out;
-  
+
   /* Add subtle gradient overlay like nav bar */
   &::before {
     content: '';
@@ -98,8 +98,12 @@
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 /* Save Modal Container */
@@ -109,7 +113,7 @@
   backdrop-filter: blur(16px);
   border: 2px solid #00ffff44;
   border-image: linear-gradient(135deg, #00ffff, #ff00cc, #ffff00) 1;
-  box-shadow: 
+  box-shadow:
     0 0 40px rgba(0, 255, 255, 0.4),
     0 0 80px rgba(255, 0, 204, 0.3),
     0 2px 24px #00ffff22,
@@ -170,8 +174,13 @@
 }
 
 @keyframes gradientShift {
-  0%, 100% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
+  0%,
+  100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
 }
 
 /* Input Group */
@@ -285,36 +294,39 @@
 :global(.unlock-modal__icon) {
   font-size: 80px;
   color: #00ffff;
-  text-shadow: 
+  text-shadow:
     0 0 20px rgba(0, 255, 255, 0.8),
     0 0 40px rgba(0, 255, 255, 0.6),
     0 0 60px rgba(255, 0, 204, 0.4);
-  animation: unlock-bounce 0.6s ease-out, icon-glow 2s ease-in-out infinite;
+  animation:
+    unlock-bounce 0.6s ease-out,
+    icon-glow 2s ease-in-out infinite;
 }
 
 @keyframes unlock-bounce {
-  0% { 
-    transform: scale(0) rotate(-180deg); 
+  0% {
+    transform: scale(0) rotate(-180deg);
     opacity: 0;
   }
-  50% { 
-    transform: scale(1.2) rotate(10deg); 
+  50% {
+    transform: scale(1.2) rotate(10deg);
   }
-  100% { 
-    transform: scale(1) rotate(0deg); 
+  100% {
+    transform: scale(1) rotate(0deg);
     opacity: 1;
   }
 }
 
 @keyframes icon-glow {
-  0%, 100% {
-    text-shadow: 
+  0%,
+  100% {
+    text-shadow:
       0 0 20px rgba(0, 255, 255, 0.8),
       0 0 40px rgba(0, 255, 255, 0.6),
       0 0 60px rgba(255, 0, 204, 0.4);
   }
   50% {
-    text-shadow: 
+    text-shadow:
       0 0 30px rgba(0, 255, 255, 1),
       0 0 60px rgba(0, 255, 255, 0.8),
       0 0 90px rgba(255, 0, 204, 0.6);
@@ -328,7 +340,7 @@
   text-transform: uppercase;
   letter-spacing: 0.1em;
   color: #00ffff;
-  text-shadow: 
+  text-shadow:
     0 0 20px rgba(0, 255, 255, 0.8),
     0 0 40px rgba(0, 255, 255, 0.4);
   margin: 0;
@@ -336,13 +348,14 @@
 }
 
 @keyframes glow-pulse {
-  0%, 100% { 
-    text-shadow: 
+  0%,
+  100% {
+    text-shadow:
       0 0 20px rgba(0, 255, 255, 0.8),
       0 0 40px rgba(0, 255, 255, 0.4);
   }
-  50% { 
-    text-shadow: 
+  50% {
+    text-shadow:
       0 0 30px rgba(0, 255, 255, 1),
       0 0 60px rgba(0, 255, 255, 0.6),
       0 0 90px rgba(255, 0, 204, 0.3);
@@ -362,7 +375,7 @@
   font-weight: 700;
   letter-spacing: 0.15em;
   color: #ff00cc;
-  text-shadow: 
+  text-shadow:
     0 0 15px rgba(255, 0, 204, 0.8),
     0 0 30px rgba(255, 0, 204, 0.4);
   padding: 12px 24px;
@@ -394,19 +407,31 @@
 /* Global Holographic Input Styling */
 @keyframes dark-holographic-shimmer {
   0% {
-    background-position: 0% 50%, 50% 50%, 50% 50%, 0% 50%;
+    background-position:
+      0% 50%,
+      50% 50%,
+      50% 50%,
+      0% 50%;
   }
   50% {
-    background-position: 0% 50%, 100% 100%, 100% 100%, 100% 50%;
+    background-position:
+      0% 50%,
+      100% 100%,
+      100% 100%,
+      100% 50%;
   }
   100% {
-    background-position: 0% 50%, 50% 50%, 50% 50%, 0% 50%;
+    background-position:
+      0% 50%,
+      50% 50%,
+      50% 50%,
+      0% 50%;
   }
 }
 
 /* Global holographic input and textarea styling */
-:global(.holographic-input), 
-:global(input.holographic), 
+:global(.holographic-input),
+:global(input.holographic),
 :global(textarea.holographic) {
   font-family: 'JetBrains Mono', monospace;
   font-size: 16px;
@@ -415,8 +440,17 @@
     linear-gradient(145deg, #0a0a0a, #000000),
     radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.1), transparent 50%),
     radial-gradient(circle at 70% 70%, rgba(0, 0, 0, 0.5), transparent 50%),
-    linear-gradient(45deg, rgba(138, 43, 226, 0.05), rgba(0, 212, 255, 0.05), rgba(138, 43, 226, 0.05));
-  background-size: 100% 100%, 150% 150%, 150% 150%, 200% 200%;
+    linear-gradient(
+      45deg,
+      rgba(138, 43, 226, 0.05),
+      rgba(0, 212, 255, 0.05),
+      rgba(138, 43, 226, 0.05)
+    );
+  background-size:
+    100% 100%,
+    150% 150%,
+    150% 150%,
+    200% 200%;
   background-blend-mode: overlay, multiply, overlay;
   border: 1px solid rgba(0, 212, 255, 0.3);
   border-radius: 8px;
@@ -436,8 +470,8 @@
   cursor: text !important;
 }
 
-:global(.holographic-input:focus), 
-:global(input.holographic:focus), 
+:global(.holographic-input:focus),
+:global(input.holographic:focus),
 :global(textarea.holographic:focus) {
   border-color: rgba(0, 212, 255, 0.6);
   box-shadow:
@@ -448,8 +482,8 @@
   animation: dark-holographic-shimmer 1.5s ease infinite;
 }
 
-:global(.holographic-input::placeholder), 
-:global(input.holographic::placeholder), 
+:global(.holographic-input::placeholder),
+:global(input.holographic::placeholder),
 :global(textarea.holographic::placeholder) {
   color: rgba(255, 255, 255, 0.4);
   text-shadow: 0 0 5px rgba(138, 43, 226, 0.3);
@@ -491,7 +525,7 @@
   font-style: italic;
   letter-spacing: 0.1em;
   color: #00ffff;
-  text-shadow: 
+  text-shadow:
     0 0 10px rgba(0, 255, 255, 0.6),
     0 0 20px rgba(0, 255, 255, 0.3);
   padding: 8px 16px;

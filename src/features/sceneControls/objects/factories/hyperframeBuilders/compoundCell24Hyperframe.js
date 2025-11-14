@@ -1,4 +1,4 @@
-import * as THREE from "three";
+import * as THREE from 'three';
 
 /**
  * Creates a hyperframe for the Compound 24-cell 4D polytope
@@ -18,12 +18,8 @@ import * as THREE from "three";
  * @param {string} hyperframeLineColor - Color for vertex connections
  * @returns {Object} { centerLines, centerLinesMaterial, curvedLines, curvedLinesMaterial }
  */
-export function createCompound24CellHyperframe(
-  geometry,
-  hyperframeColor,
-  hyperframeLineColor
-) {
-  console.log("Creating compound 24-cell hyperframe (dual structure)");
+export function createCompound24CellHyperframe(geometry, hyperframeColor, hyperframeLineColor) {
+  console.log('Creating compound 24-cell hyperframe (dual structure)');
 
   // Get layer sizes from geometry metadata
   const layers = geometry.userData.layers || {
@@ -78,12 +74,7 @@ export function createCompound24CellHyperframe(
   ]);
 
   // Second 24-cell (rotated 45° X, 45° Y, 30° Z)
-  const rotatedOcta = rotateVertices(
-    octaVertices,
-    Math.PI / 4,
-    Math.PI / 4,
-    Math.PI / 6
-  );
+  const rotatedOcta = rotateVertices(octaVertices, Math.PI / 4, Math.PI / 4, Math.PI / 6);
   const outerVertices_B = rotatedOcta.map((v) => [
     v[0] * layers.outer,
     v[1] * layers.outer,
@@ -144,12 +135,7 @@ export function createCompound24CellHyperframe(
       const end = new THREE.Vector3(...vertices[j]);
       const distance = start.distanceTo(end);
 
-      const cylinderGeom = new THREE.CylinderGeometry(
-        radius,
-        radius,
-        distance,
-        6
-      );
+      const cylinderGeom = new THREE.CylinderGeometry(radius, radius, distance, 6);
       const cylinderMesh = new THREE.Mesh(cylinderGeom, material);
 
       cylinderMesh.position.copy(start.clone().add(end).multiplyScalar(0.5));
@@ -174,9 +160,7 @@ export function createCompound24CellHyperframe(
   createEdgeCylinder(layer2Vertices_B, octaEdges, 0.004, centerLinesMaterial);
   createEdgeCylinder(innerVertices_B, octaEdges, 0.003, centerLinesMaterial);
 
-  console.log(
-    `Created compound 24-cell: ${octaEdges.length * 6} edges (both components)`
-  );
+  console.log(`Created compound 24-cell: ${octaEdges.length * 6} edges (both components)`);
 
   // ========================================
   // ADD FACE DIAGONALS (square faces)
@@ -194,12 +178,7 @@ export function createCompound24CellHyperframe(
       const end = new THREE.Vector3(...vertices[j]);
       const distance = start.distanceTo(end);
 
-      const cylinderGeom = new THREE.CylinderGeometry(
-        radius,
-        radius,
-        distance,
-        6
-      );
+      const cylinderGeom = new THREE.CylinderGeometry(radius, radius, distance, 6);
       const cylinderMesh = new THREE.Mesh(cylinderGeom, centerLinesMaterial);
 
       cylinderMesh.position.copy(start.clone().add(end).multiplyScalar(0.5));
@@ -219,7 +198,7 @@ export function createCompound24CellHyperframe(
   addSquareDiagonals(layer2Vertices_B, 0.0025);
   addSquareDiagonals(innerVertices_B, 0.002);
 
-  console.log("Added square diagonals to both 24-cell components");
+  console.log('Added square diagonals to both 24-cell components');
 
   // ========================================
   // VERTEX CONNECTIONS
@@ -230,9 +209,7 @@ export function createCompound24CellHyperframe(
   const actualVertices = [];
   for (let i = 0; i < vertexCount; i++) {
     const idx = i * 3;
-    actualVertices.push(
-      new THREE.Vector3(positions[idx], positions[idx + 1], positions[idx + 2])
-    );
+    actualVertices.push(new THREE.Vector3(positions[idx], positions[idx + 1], positions[idx + 2]));
   }
 
   const matchVertex = (canonical) => {
@@ -290,12 +267,7 @@ export function createCompound24CellHyperframe(
     const endA = new THREE.Vector3(...layer2Vertices_A[i]);
     const distanceA = startA.distanceTo(endA);
 
-    const cylinderGeomA = new THREE.CylinderGeometry(
-      0.005,
-      0.005,
-      distanceA,
-      6
-    );
+    const cylinderGeomA = new THREE.CylinderGeometry(0.005, 0.005, distanceA, 6);
     const cylinderMeshA = new THREE.Mesh(cylinderGeomA, curvedLinesMaterial);
 
     cylinderMeshA.position.copy(startA.clone().add(endA).multiplyScalar(0.5));
@@ -309,12 +281,7 @@ export function createCompound24CellHyperframe(
     const endB = new THREE.Vector3(...layer2Vertices_B[i]);
     const distanceB = startB.distanceTo(endB);
 
-    const cylinderGeomB = new THREE.CylinderGeometry(
-      0.005,
-      0.005,
-      distanceB,
-      6
-    );
+    const cylinderGeomB = new THREE.CylinderGeometry(0.005, 0.005, distanceB, 6);
     const cylinderMeshB = new THREE.Mesh(cylinderGeomB, curvedLinesMaterial);
 
     cylinderMeshB.position.copy(startB.clone().add(endB).multiplyScalar(0.5));
@@ -324,7 +291,7 @@ export function createCompound24CellHyperframe(
     connectionGroup.add(cylinderMeshB);
   }
 
-  console.log("Compound 24-cell hyperframe complete - self-dual structure!");
+  console.log('Compound 24-cell hyperframe complete - self-dual structure!');
 
   return {
     centerLines: innerOctahedraGroup,

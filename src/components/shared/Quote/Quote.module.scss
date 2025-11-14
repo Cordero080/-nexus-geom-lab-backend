@@ -12,7 +12,7 @@
   margin: 120px 0 32px 0;
   padding: 24px 32px;
   border: none;
-  
+
   font-size: 0.7em;
   font-style: italic;
   font-family: 'Future Z', 'Orbitron', 'JetBrains Mono', monospace;
@@ -32,7 +32,8 @@
 }
 
 @keyframes gradientShift {
-  0%, 100% {
+  0%,
+  100% {
     background-position: 0% 50%;
   }
   50% {

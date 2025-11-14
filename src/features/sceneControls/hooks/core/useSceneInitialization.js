@@ -1,6 +1,6 @@
-import { useEffect } from "react";
-import { initializeScene } from "../../threeSetup/sceneSetup";
-import { initializeLighting } from "../../threeSetup/lightingSetup";
+import { useEffect } from 'react';
+import { initializeScene } from '../../threeSetup/sceneSetup';
+import { initializeLighting } from '../../threeSetup/lightingSetup';
 
 /**
  * CORE INFRASTRUCTURE HOOK - Initializes Three.js scene on component mount
@@ -92,11 +92,11 @@ export function useSceneInitialization(refs, lightingProps) {
       camera.updateProjectionMatrix();
       renderer.setSize(window.innerWidth, window.innerHeight);
     };
-    window.addEventListener("resize", handleResize);
+    window.addEventListener('resize', handleResize);
 
     // 4. CLEANUP FUNCTION - Runs when component unmounts
     return () => {
-      window.removeEventListener("resize", handleResize);
+      window.removeEventListener('resize', handleResize);
       if (animationIdRef.current) {
         cancelAnimationFrame(animationIdRef.current);
       }

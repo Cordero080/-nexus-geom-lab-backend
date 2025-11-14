@@ -1,4 +1,4 @@
-import * as THREE from "three";
+import * as THREE from 'three';
 
 /**
  * Create hyperframe for hypercube (tesseract projection) with inner/outer cubes and 8 connecting edges
@@ -8,11 +8,7 @@ import * as THREE from "three";
  * @param {string} hyperframeLineColor - Color for tesseract connections (8 edges)
  * @returns {Object} { centerLines, centerLinesMaterial, curvedLines, curvedLinesMaterial }
  */
-export function createBoxHyperframe(
-  geometry,
-  hyperframeColor,
-  hyperframeLineColor
-) {
+export function createBoxHyperframe(geometry, hyperframeColor, hyperframeLineColor) {
   // Tesseract: Outer cube (1.5 units) and inner cube (0.75 units)
   const outerSize = 0.75; // Half of 1.5
   const innerSize = 0.375; // Half of 0.75
@@ -139,9 +135,7 @@ export function createBoxHyperframe(
   const actualVertices = [];
   for (let i = 0; i < vertexCount; i++) {
     const idx = i * 3;
-    actualVertices.push(
-      new THREE.Vector3(positions[idx], positions[idx + 1], positions[idx + 2])
-    );
+    actualVertices.push(new THREE.Vector3(positions[idx], positions[idx + 1], positions[idx + 2]));
   }
 
   console.log(`Found ${actualVertices.length} vertices in hypercube geometry`);
@@ -172,21 +166,15 @@ export function createBoxHyperframe(
     const cylinderMesh = new THREE.Mesh(cylinderGeom, curvedLinesMaterial);
 
     // Position cylinder between outer and inner vertex
-    cylinderMesh.position.copy(
-      outerVertex.clone().add(innerVertex).multiplyScalar(0.5)
-    );
+    cylinderMesh.position.copy(outerVertex.clone().add(innerVertex).multiplyScalar(0.5));
     cylinderMesh.lookAt(innerVertex);
     cylinderMesh.rotateX(Math.PI / 2);
 
     tesseractConnectionGroup.add(cylinderMesh);
   }
 
-  console.log(
-    `Created tesseract connections: 8 edges connecting outer to inner cube`
-  );
-  console.log(
-    `Total tesseract structure: 12 inner edges + 8 connecting edges = 20 edges`
-  );
+  console.log(`Created tesseract connections: 8 edges connecting outer to inner cube`);
+  console.log(`Total tesseract structure: 12 inner edges + 8 connecting edges = 20 edges`);
 
   // ========================================
   // 2B. CREATE NESTED TESSERACT CONNECTIONS (8 edges: inner → tiny)
@@ -196,17 +184,10 @@ export function createBoxHyperframe(
     const tinyVertex = new THREE.Vector3(...tinyCorners[i]);
     const distance = innerVertex.distanceTo(tinyVertex);
 
-    const cylinderGeom = new THREE.CylinderGeometry(
-      0.0025,
-      0.0025,
-      distance,
-      6
-    );
+    const cylinderGeom = new THREE.CylinderGeometry(0.0025, 0.0025, distance, 6);
     const cylinderMesh = new THREE.Mesh(cylinderGeom, curvedLinesMaterial);
 
-    cylinderMesh.position.copy(
-      innerVertex.clone().add(tinyVertex).multiplyScalar(0.5)
-    );
+    cylinderMesh.position.copy(innerVertex.clone().add(tinyVertex).multiplyScalar(0.5));
     cylinderMesh.lookAt(tinyVertex);
     cylinderMesh.rotateX(Math.PI / 2);
 
@@ -215,8 +196,7 @@ export function createBoxHyperframe(
   console.log(`Created nested tesseract connections: inner → tiny (8 edges)`);
 
   console.log(
-    `Total with nested: ` +
-      `12 inner + 12 tiny + 8 outer→inner + 8 inner→tiny = 40 edges`
+    `Total with nested: ` + `12 inner + 12 tiny + 8 outer→inner + 8 inner→tiny = 40 edges`
   );
 
   // ========================================
@@ -224,8 +204,7 @@ export function createBoxHyperframe(
   // ========================================
   const rot = new THREE.Matrix4().makeRotationY(Math.PI / 4);
   const scale = 0.98;
-  const RS = (x, y, z) =>
-    new THREE.Vector3(x, y, z).applyMatrix4(rot).multiplyScalar(scale);
+  const RS = (x, y, z) => new THREE.Vector3(x, y, z).applyMatrix4(rot).multiplyScalar(scale);
 
   const outerCornersRot = [
     RS(-outerSize, -outerSize, -outerSize),
@@ -316,15 +295,14 @@ export function createBoxHyperframe(
     tesseractConnectionGroup.add(mesh);
   }
 
-  console.log("Added rotated compound hypercube (edges + connections)");
+  console.log('Added rotated compound hypercube (edges + connections)');
 
   // ========================================
   // 3B. DUPLICATE: Symmetric -45° Y-rotated hypercube
   // ========================================
   const rotNeg = new THREE.Matrix4().makeRotationY(-Math.PI / 4);
   const scaleNeg = 0.98;
-  const RSN = (x, y, z) =>
-    new THREE.Vector3(x, y, z).applyMatrix4(rotNeg).multiplyScalar(scaleNeg);
+  const RSN = (x, y, z) => new THREE.Vector3(x, y, z).applyMatrix4(rotNeg).multiplyScalar(scaleNeg);
 
   const outerCornersRotNeg = [
     RSN(-outerSize, -outerSize, -outerSize),
@@ -416,15 +394,14 @@ export function createBoxHyperframe(
     tesseractConnectionGroup.add(mesh);
   }
 
-  console.log("Added symmetric -45° rotated hypercube (edges + connections)");
+  console.log('Added symmetric -45° rotated hypercube (edges + connections)');
 
   // ========================================
   // 3C. DUPLICATE: +45° X-rotated hypercube
   // ========================================
   const rotX = new THREE.Matrix4().makeRotationX(Math.PI / 4);
   const scaleX = 0.98;
-  const RSX = (x, y, z) =>
-    new THREE.Vector3(x, y, z).applyMatrix4(rotX).multiplyScalar(scaleX);
+  const RSX = (x, y, z) => new THREE.Vector3(x, y, z).applyMatrix4(rotX).multiplyScalar(scaleX);
 
   const outerCornersRotX = [
     RSX(-outerSize, -outerSize, -outerSize),
@@ -511,15 +488,14 @@ export function createBoxHyperframe(
     tesseractConnectionGroup.add(mesh);
   }
 
-  console.log("Added +45° X rotated hypercube (edges + connections)");
+  console.log('Added +45° X rotated hypercube (edges + connections)');
 
   // ========================================
   // 3D. DUPLICATE: +45° Z-rotated hypercube
   // ========================================
   const rotZ = new THREE.Matrix4().makeRotationZ(Math.PI / 4);
   const scaleZ = 0.98;
-  const RSZ = (x, y, z) =>
-    new THREE.Vector3(x, y, z).applyMatrix4(rotZ).multiplyScalar(scaleZ);
+  const RSZ = (x, y, z) => new THREE.Vector3(x, y, z).applyMatrix4(rotZ).multiplyScalar(scaleZ);
 
   const outerCornersRotZ = [
     RSZ(-outerSize, -outerSize, -outerSize),
@@ -606,7 +582,7 @@ export function createBoxHyperframe(
     tesseractConnectionGroup.add(mesh);
   }
 
-  console.log("Added +45° Z rotated hypercube (edges + connections)");
+  console.log('Added +45° Z rotated hypercube (edges + connections)');
 
   return {
     centerLines: innerCubeGroup,

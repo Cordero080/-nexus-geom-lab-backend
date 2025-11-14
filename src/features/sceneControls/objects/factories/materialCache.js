@@ -5,11 +5,8 @@
  * Keeps performance smooth when users adjust colors or properties in real-time.
  */
 
-import * as THREE from "three";
-import {
-  createSolidMaterial,
-  createWireframeMaterial,
-} from "./materialFactory";
+import * as THREE from 'three';
+import { createSolidMaterial, createWireframeMaterial } from './materialFactory';
 
 // Shared caches - persist across multiple object creations
 const solidMaterialPool = new Map();
@@ -22,8 +19,7 @@ const hyperframeCache = new Map();
  */
 function ensureSolidMaterialConfig(material, config) {
   if (!material) return null;
-  const { baseColor, metalness, emissiveIntensity, wireframeIntensity } =
-    config;
+  const { baseColor, metalness, emissiveIntensity, wireframeIntensity } = config;
   // Use RGB part only for Three.js Color (strip alpha if present)
   const rgbColor = baseColor.slice(0, 7);
   const color = new THREE.Color(rgbColor);
@@ -44,8 +40,7 @@ function ensureSolidMaterialConfig(material, config) {
  */
 function ensureWireframeMaterialConfig(material, config) {
   if (!material) return null;
-  const { baseColor, metalness, emissiveIntensity, wireframeIntensity } =
-    config;
+  const { baseColor, metalness, emissiveIntensity, wireframeIntensity } = config;
   // Use RGB part only for Three.js Color (strip alpha if present)
   const rgbColor = baseColor.slice(0, 7);
   const color = new THREE.Color(rgbColor);
@@ -66,12 +61,10 @@ function ensureWireframeMaterialConfig(material, config) {
  */
 function getMaterialPoolKey(geometry, objectType) {
   if (!geometry || !geometry.userData) return null;
-  const { isMegaTesseract, isCompoundMegaTesseract, isCpdTesseract, variant } =
-    geometry.userData;
-  const isMegaFamily =
-    isMegaTesseract || isCompoundMegaTesseract || isCpdTesseract;
+  const { isMegaTesseract, isCompoundMegaTesseract, isCpdTesseract, variant } = geometry.userData;
+  const isMegaFamily = isMegaTesseract || isCompoundMegaTesseract || isCpdTesseract;
   if (!isMegaFamily) return null;
-  const variantKey = variant ? `-${variant}` : "";
+  const variantKey = variant ? `-${variant}` : '';
   return `${objectType || geometry.type}${variantKey}`;
 }
 
@@ -86,21 +79,14 @@ export function getSolidMaterial(materialKey, materialConfig) {
   if (!solidMaterialPool.has(materialKey)) {
     solidMaterialPool.set(materialKey, createSolidMaterial(materialConfig));
   }
-  return ensureSolidMaterialConfig(
-    solidMaterialPool.get(materialKey),
-    materialConfig
-  );
+  return ensureSolidMaterialConfig(solidMaterialPool.get(materialKey), materialConfig);
 }
 
 /**
  * Retrieves or creates wireframe material from cache
  * Uses pooling for mega-tesseract variants, fresh materials for others
  */
-export function getWireframeMaterial(
-  materialKey,
-  materialConfig,
-  overrides = {}
-) {
+export function getWireframeMaterial(materialKey, materialConfig, overrides = {}) {
   if (!materialKey || overrides.isStandardWireframe) {
     return ensureWireframeMaterialConfig(
       createWireframeMaterial({ ...materialConfig, ...overrides }),
@@ -108,15 +94,9 @@ export function getWireframeMaterial(
     );
   }
   if (!wireframeMaterialPool.has(materialKey)) {
-    wireframeMaterialPool.set(
-      materialKey,
-      createWireframeMaterial(materialConfig)
-    );
+    wireframeMaterialPool.set(materialKey, createWireframeMaterial(materialConfig));
   }
-  return ensureWireframeMaterialConfig(
-    wireframeMaterialPool.get(materialKey),
-    materialConfig
-  );
+  return ensureWireframeMaterialConfig(wireframeMaterialPool.get(materialKey), materialConfig);
 }
 
 /**
@@ -141,36 +121,35 @@ function cloneGroupWithUserData(group) {
  */
 function getHyperframeKey(geometry, hyperframeColor, hyperframeLineColor) {
   if (!geometry || !geometry.userData) return null;
-  const { isMegaTesseract, isCompoundMegaTesseract, isCpdTesseract, variant } =
-    geometry.userData;
+  const { isMegaTesseract, isCompoundMegaTesseract, isCpdTesseract, variant } = geometry.userData;
   if (!isMegaTesseract && !isCompoundMegaTesseract && !isCpdTesseract) {
     return null;
   }
-  let prefix = "cpd";
-  if (isCompoundMegaTesseract) prefix = "compoundMega";
-  else if (isMegaTesseract) prefix = "mega";
+  let prefix = 'cpd';
+  if (isCompoundMegaTesseract) prefix = 'compoundMega';
+  else if (isMegaTesseract) prefix = 'mega';
 
   const signatureFields = [
-    "translationStep",
-    "layerGap",
-    "baseOffset",
-    "translationAxis",
-    "sweepScales",
-    "sweepOffsets",
-    "radialStep",
-    "twistStep",
-    "duplicateScale",
-    "duplicateRotation",
-    "duplicateOffset",
-    "mirrorEnabled",
-    "baseTranslationStep",
-    "baseLayerGap",
-    "baseSweepScales",
-    "baseTranslationAxis",
-    "componentCount",
+    'translationStep',
+    'layerGap',
+    'baseOffset',
+    'translationAxis',
+    'sweepScales',
+    'sweepOffsets',
+    'radialStep',
+    'twistStep',
+    'duplicateScale',
+    'duplicateRotation',
+    'duplicateOffset',
+    'mirrorEnabled',
+    'baseTranslationStep',
+    'baseLayerGap',
+    'baseSweepScales',
+    'baseTranslationAxis',
+    'componentCount',
   ];
 
-  const signature = { variant: variant || "baseline" };
+  const signature = { variant: variant || 'baseline' };
   signatureFields.forEach((field) => {
     if (field in geometry.userData && geometry.userData[field] !== undefined) {
       signature[field] = geometry.userData[field];
@@ -178,10 +157,8 @@ function getHyperframeKey(geometry, hyperframeColor, hyperframeLineColor) {
   });
 
   // Include colors in cache key so hyperframe updates when colors change
-  if (hyperframeColor !== undefined)
-    signature.hyperframeColor = hyperframeColor;
-  if (hyperframeLineColor !== undefined)
-    signature.hyperframeLineColor = hyperframeLineColor;
+  if (hyperframeColor !== undefined) signature.hyperframeColor = hyperframeColor;
+  if (hyperframeLineColor !== undefined) signature.hyperframeLineColor = hyperframeLineColor;
 
   return `${prefix}:${JSON.stringify(signature)}`;
 }

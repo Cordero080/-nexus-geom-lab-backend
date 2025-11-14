@@ -1,432 +1,435 @@
 /* Controls Side Panel Styles (CSS Modules version) */
 .controls * {
-    font-size: 14px; /* Adjusted font size for all elements inside the controls panel */
-    cursor: auto !important; /* Ensure controls always show cursor and override any global settings */
+  font-size: 14px; /* Adjusted font size for all elements inside the controls panel */
+  cursor: auto !important; /* Ensure controls always show cursor and override any global settings */
 }
 
 /* Simple control panel for Step 1 */
 .controls {
-    position: absolute;
-    top: 140px; /* Reduced from 220px */
-    left: 20px;
-    width: 280px; /* Increased from 220px for less congestion */
-    max-height: 75vh;
-    background: rgba(0, 0, 0, 0.25); /* Slightly darker to compensate for less blur */
-    color: rgba(255, 255, 255, 0.9);
-    padding: 24px 20px; /* Increased vertical padding */
-    backdrop-filter: blur(6px); /* Reduced from 12px for better scroll performance */
-    border: 2px solid rgba(0, 255, 255, 0.3);
-    /* Gentler geometric shape - more subtle corner cuts */
-    clip-path: polygon(
-        0% 10%, 
-        10% 0%, 
-        90% 0%, 
-        100% 10%, 
-        100% 90%, 
-        90% 100%, 
-        10% 100%, 
-        0% 90%
-    );
-    border-radius: 0;
-    z-index: 1000;
-    overflow-y: auto;
-    overflow-x: visible; /* Changed from hidden to visible to allow dropdowns */
-    box-shadow: 
-        0 8px 32px rgba(0, 255, 255, 0.15),
-        0 0 60px rgba(255, 0, 255, 0.1),
-        inset 0 1px 0 rgba(255, 255, 255, 0.1);
-    /* Smooth transition for hide/show */
-    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease, all 0.3s ease;
-    /* Performance optimization for scrolling */
-    will-change: scroll-position;
-    transform: translateZ(0); /* Force GPU acceleration */
+  position: absolute;
+  top: 140px; /* Reduced from 220px */
+  left: 20px;
+  width: 280px; /* Increased from 220px for less congestion */
+  max-height: 75vh;
+  background: rgba(0, 0, 0, 0.25); /* Slightly darker to compensate for less blur */
+  color: rgba(255, 255, 255, 0.9);
+  padding: 24px 20px; /* Increased vertical padding */
+  backdrop-filter: blur(6px); /* Reduced from 12px for better scroll performance */
+  border: 2px solid rgba(0, 255, 255, 0.3);
+  /* Gentler geometric shape - more subtle corner cuts */
+  clip-path: polygon(0% 10%, 10% 0%, 90% 0%, 100% 10%, 100% 90%, 90% 100%, 10% 100%, 0% 90%);
+  border-radius: 0;
+  z-index: 1000;
+  overflow-y: auto;
+  overflow-x: visible; /* Changed from hidden to visible to allow dropdowns */
+  box-shadow:
+    0 8px 32px rgba(0, 255, 255, 0.15),
+    0 0 60px rgba(255, 0, 255, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  /* Smooth transition for hide/show */
+  transition:
+    transform 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+    opacity 0.3s ease,
+    all 0.3s ease;
+  /* Performance optimization for scrolling */
+  will-change: scroll-position;
+  transform: translateZ(0); /* Force GPU acceleration */
 }
 
 .controls:hover {
-    border-color: rgba(0, 255, 255, 0.6);
-    box-shadow: 
-        0 12px 48px rgba(0, 255, 255, 0.25),
-        0 0 80px rgba(255, 0, 255, 0.2),
-        inset 0 1px 0 rgba(255, 255, 255, 0.15);
+  border-color: rgba(0, 255, 255, 0.6);
+  box-shadow:
+    0 12px 48px rgba(0, 255, 255, 0.25),
+    0 0 80px rgba(255, 0, 255, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.15);
 }
 
 /* Hidden state - slide out to the left */
 .controlsHidden {
-    transform: translateX(-100%);
-    opacity: 0;
-    pointer-events: none;
+  transform: translateX(-100%);
+  opacity: 0;
+  pointer-events: none;
 }
 
 /* Toggle Button Styles */
 .controlsToggleBtn {
-    position: absolute;
-    top: 150px;
-    background: rgba(0, 0, 0, 0.15);
-    backdrop-filter: blur(12px);
-    border: 2px solid rgba(0, 255, 255, 0.3);
-    color: rgba(255, 255, 255, 0.9);
-    font-size: 0.9rem;
-    padding: 0.5rem 1.25rem;
-    cursor: pointer;
-    z-index: 1001;
-    box-shadow: 
-        0 8px 32px rgba(0, 255, 255, 0.15),
-        0 0 60px rgba(255, 0, 255, 0.1),
-        inset 0 1px 0 rgba(255, 255, 255, 0.1);
-    transition: all 0.3s ease;
-    font-family: 'Orbitron', monospace;
-    font-weight: 600;
-    line-height: 1;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    min-width: 130px;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    /* Angled corners clip-path matching Save/Edit buttons */
-    clip-path: polygon(
-        14px 0,
-        100% 0,
-        100% calc(100% - 14px),
-        calc(100% - 14px) 100%,
-        0 100%,
-        0 14px
-    );
-    border-radius: 0;
+  position: absolute;
+  top: 150px;
+  background: rgba(0, 0, 0, 0.15);
+  backdrop-filter: blur(12px);
+  border: 2px solid rgba(0, 255, 255, 0.3);
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 0.9rem;
+  padding: 0.5rem 1.25rem;
+  cursor: pointer;
+  z-index: 1001;
+  box-shadow:
+    0 8px 32px rgba(0, 255, 255, 0.15),
+    0 0 60px rgba(255, 0, 255, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  transition: all 0.3s ease;
+  font-family: 'Orbitron', monospace;
+  font-weight: 600;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 130px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  /* Angled corners clip-path matching Save/Edit buttons */
+  clip-path: polygon(
+    14px 0,
+    100% 0,
+    100% calc(100% - 14px),
+    calc(100% - 14px) 100%,
+    0 100%,
+    0 14px
+  );
+  border-radius: 0;
 }
 
 .controlsToggleBtn:hover {
-    border-color: rgba(0, 255, 255, 0.6);
-    box-shadow: 
-        0 12px 48px rgba(0, 255, 255, 0.25),
-        0 0 80px rgba(255, 0, 255, 0.2),
-        inset 0 1px 0 rgba(255, 255, 255, 0.15);
-    transform: translateX(2px);
+  border-color: rgba(0, 255, 255, 0.6);
+  box-shadow:
+    0 12px 48px rgba(0, 255, 255, 0.25),
+    0 0 80px rgba(255, 0, 255, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.15);
+  transform: translateX(2px);
 }
 
 /* Hide button (inside panel, left side) */
 .controlsToggleBtnHide {
-    position: absolute;
-    top: 4px;
-    left: 40px;
-    padding: 6px 10px;
-    font-size: 16px;
-    background: rgba(0, 0, 0, 0.2);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    border-radius: 4px;
+  position: absolute;
+  top: 4px;
+  left: 40px;
+  padding: 6px 10px;
+  font-size: 16px;
+  background: rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  border-radius: 4px;
 }
 
 .controlsToggleText {
-    font-size: 12px;
-    font-weight: 600;
-    letter-spacing: 0.05em;
-    text-transform: uppercase;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
 }
 
 .controlsToggleBtnHide:hover {
-    background: rgba(255, 0, 100, 0.3);
-    border-color: rgba(255, 0, 100, 0.4);
-    color: #ff3366;
-    text-shadow: 0 0 8px rgba(255, 0, 100, 0.6);
-    transform: translateX(0);
+  background: rgba(255, 0, 100, 0.3);
+  border-color: rgba(255, 0, 100, 0.4);
+  color: #ff3366;
+  text-shadow: 0 0 8px rgba(255, 0, 100, 0.6);
+  transform: translateX(0);
 }
 
 /* Show button (floating on left side when hidden) */
 .controlsToggleBtnShow {
-    left: 20px;
-    border-radius: 4px;
+  left: 20px;
+  border-radius: 4px;
 }
 
 .controlsToggleBtnShow:hover {
-    transform: translateX(4px);
+  transform: translateX(4px);
 }
 
-.controls label, .controls .sectionHeader {
-    font-size: 16px; /* Adjusted font size for labels and section headers */
+.controls label,
+.controls .sectionHeader {
+  font-size: 16px; /* Adjusted font size for labels and section headers */
 }
 
 .controls label {
-    display: block;
-    margin-top: 16px;
-    margin-bottom: 8px;
-    font-size: 13px;
-    text-transform: uppercase;
-    letter-spacing: 0.8px;
-    font-weight: 600;
-    color: rgba(255, 255, 255, 0.85);
+  display: block;
+  margin-top: 16px;
+  margin-bottom: 8px;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.85);
 }
 
 /* First label in section - reduce top margin */
 .sectionContent > label:first-child {
-    margin-top: 12px;
+  margin-top: 12px;
 }
 
 /* Value display styling */
 .valueDisplay {
-    color: #00ffff;
-    font-weight: 700;
-    font-size: 14px;
-    margin-left: 8px;
-    text-shadow: 0 0 4px rgba(0, 255, 255, 0.4);
+  color: #00ffff;
+  font-weight: 700;
+  font-size: 14px;
+  margin-left: 8px;
+  text-shadow: 0 0 4px rgba(0, 255, 255, 0.4);
 }
 
-.controls input[type="range"] {
-    width: 100%;
-    height: 6px;
-    background: linear-gradient(90deg, 
-        rgba(0, 255, 255, 0.2) 0%, 
-        rgba(0, 255, 255, 0.4) 50%, 
-        rgba(255, 0, 255, 0.4) 100%);
-    border-radius: 3px;
-    outline: none;
-    -webkit-appearance: none;
-    appearance: none;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    margin-bottom: 12px;
+.controls input[type='range'] {
+  width: 100%;
+  height: 6px;
+  background: linear-gradient(
+    90deg,
+    rgba(0, 255, 255, 0.2) 0%,
+    rgba(0, 255, 255, 0.4) 50%,
+    rgba(255, 0, 255, 0.4) 100%
+  );
+  border-radius: 3px;
+  outline: none;
+  -webkit-appearance: none;
+  appearance: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-bottom: 12px;
 }
 
-.controls input[type="range"]:hover {
-    background: linear-gradient(90deg, 
-        rgba(0, 255, 255, 0.3) 0%, 
-        rgba(0, 255, 255, 0.5) 50%, 
-        rgba(255, 0, 255, 0.5) 100%);
+.controls input[type='range']:hover {
+  background: linear-gradient(
+    90deg,
+    rgba(0, 255, 255, 0.3) 0%,
+    rgba(0, 255, 255, 0.5) 50%,
+    rgba(255, 0, 255, 0.5) 100%
+  );
 }
 
-.controls input[type="range"]::-webkit-slider-thumb {
-    -webkit-appearance: none;
-    appearance: none;
-    width: 10px;
-    height: 14px;
-    background: linear-gradient(135deg, #00ffff, #ff00ff);
-    border-radius: 10%;
-    cursor: pointer;
-    box-shadow: 
-        0 0 10px rgba(0, 255, 255, 0.8),
-        0 0 20px rgba(255, 0, 255, 0.6);
-    transition: all 0.2s ease;
+.controls input[type='range']::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 10px;
+  height: 14px;
+  background: linear-gradient(135deg, #00ffff, #ff00ff);
+  border-radius: 10%;
+  cursor: pointer;
+  box-shadow:
+    0 0 10px rgba(0, 255, 255, 0.8),
+    0 0 20px rgba(255, 0, 255, 0.6);
+  transition: all 0.2s ease;
 }
 
-.controls input[type="range"]::-webkit-slider-thumb:hover {
-    transform: scale(1.2);
-    box-shadow: 
-        0 0 15px rgba(0, 255, 255, 1),
-        0 0 30px rgba(255, 0, 255, 0.8);
+.controls input[type='range']::-webkit-slider-thumb:hover {
+  transform: scale(1.2);
+  box-shadow:
+    0 0 15px rgba(0, 255, 255, 1),
+    0 0 30px rgba(255, 0, 255, 0.8);
 }
 
-.controls input[type="range"]::-webkit-slider-thumb:active {
-    transform: scale(1.1);
-    box-shadow: 
-        0 0 20px rgba(0, 255, 255, 1),
-        0 0 35px rgba(255, 0, 255, 0.9);
+.controls input[type='range']::-webkit-slider-thumb:active {
+  transform: scale(1.1);
+  box-shadow:
+    0 0 20px rgba(0, 255, 255, 1),
+    0 0 35px rgba(255, 0, 255, 0.9);
 }
 
-.controls input[type="range"]::-moz-range-thumb {
-    width: 10px;
-    height: 14px;
-    background: linear-gradient(135deg, #00ffff, #ff00ff);
-    border: none;
-    border-radius: 10%;
-    cursor: pointer;
-    box-shadow: 
-        0 0 10px rgba(0, 255, 255, 0.8),
-        0 0 20px rgba(255, 0, 255, 0.6);
-    transition: all 0.2s ease;
+.controls input[type='range']::-moz-range-thumb {
+  width: 10px;
+  height: 14px;
+  background: linear-gradient(135deg, #00ffff, #ff00ff);
+  border: none;
+  border-radius: 10%;
+  cursor: pointer;
+  box-shadow:
+    0 0 10px rgba(0, 255, 255, 0.8),
+    0 0 20px rgba(255, 0, 255, 0.6);
+  transition: all 0.2s ease;
 }
 
-.controls input[type="range"]::-moz-range-thumb:hover {
-    transform: scale(1.2);
-    box-shadow: 
-        0 0 15px rgba(0, 255, 255, 1),
-        0 0 30px rgba(255, 0, 255, 0.8);
+.controls input[type='range']::-moz-range-thumb:hover {
+  transform: scale(1.2);
+  box-shadow:
+    0 0 15px rgba(0, 255, 255, 1),
+    0 0 30px rgba(255, 0, 255, 0.8);
 }
 
-.controls input[type="range"]::-moz-range-thumb:active {
-    transform: scale(1.1);
-    box-shadow: 
-        0 0 20px rgba(0, 255, 255, 1),
-        0 0 35px rgba(255, 0, 255, 0.9);
+.controls input[type='range']::-moz-range-thumb:active {
+  transform: scale(1.1);
+  box-shadow:
+    0 0 20px rgba(0, 255, 255, 1),
+    0 0 35px rgba(255, 0, 255, 0.9);
 }
 
-.controls input[type="range"]::-moz-range-track {
-    height: 6px;
-    background: linear-gradient(90deg, 
-        rgba(0, 255, 255, 0.2) 0%, 
-        rgba(0, 255, 255, 0.4) 50%, 
-        rgba(255, 0, 255, 0.4) 100%);
-    border-radius: 3px;
-    transition: all 0.3s ease;
+.controls input[type='range']::-moz-range-track {
+  height: 6px;
+  background: linear-gradient(
+    90deg,
+    rgba(0, 255, 255, 0.2) 0%,
+    rgba(0, 255, 255, 0.4) 50%,
+    rgba(255, 0, 255, 0.4) 100%
+  );
+  border-radius: 3px;
+  transition: all 0.3s ease;
 }
 
 /* ThreeScene container styles */
 .threeSceneContainer {
-    width: 100vw;
-    height: 100vh;
+  width: 100vw;
+  height: 100vh;
 }
 
 /* Controls styling for collapsible sections */
 .controls hr {
-    margin: 20px 0;
-    border: none;
-    height: 1px;
-    background: linear-gradient(90deg, 
-        transparent 0%, 
-        rgba(78, 205, 196, 0.5) 50%, 
-        transparent 100%);
+  margin: 20px 0;
+  border: none;
+  height: 1px;
+  background: linear-gradient(90deg, transparent 0%, rgba(78, 205, 196, 0.5) 50%, transparent 100%);
 }
 
 .sectionHeader {
-    padding: 12px 16px;
-    margin: 32px 0 8px 0; /* Increased top margin from 16px to 32px to create space above section headers */
-    font-size: 13px;
-    font-weight: 700;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    cursor: pointer;
-    border-radius: 6px;
-    user-select: none;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    position: relative;
-    overflow: hidden;
-    z-index: 1; /* Lower z-index so dropdowns from previous section appear on top */
+  padding: 12px 16px;
+  margin: 32px 0 8px 0; /* Increased top margin from 16px to 32px to create space above section headers */
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  cursor: pointer;
+  border-radius: 6px;
+  user-select: none;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+  z-index: 1; /* Lower z-index so dropdowns from previous section appear on top */
 }
 
 /* Add subtle shine effect on hover */
 .sectionHeader::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, 
-        transparent 0%, 
-        rgba(255, 255, 255, 0.1) 50%, 
-        transparent 100%);
-    transition: left 0.5s ease;
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.1) 50%,
+    transparent 100%
+  );
+  transition: left 0.5s ease;
 }
 
 .sectionHeader:hover::before {
-    left: 100%;
+  left: 100%;
 }
 
 .sectionHeader:hover {
-    transform: translateX(2px);
+  transform: translateX(2px);
 }
 
 .sectionHeaderMaterialOpen {
-    background: rgba(0, 0, 0, 0.093);
-    backdrop-filter: blur(30px);
-    color: #00ffff;
-    border: 1px solid rgba(0, 255, 255, 0.4);
-    clip-path: polygon(
-        14px 0,
-        100% 0,
-        100% calc(100% - 14px),
-        calc(100% - 14px) 100%,
-        0 100%,
-        0 14px
-    );
+  background: rgba(0, 0, 0, 0.093);
+  backdrop-filter: blur(30px);
+  color: #00ffff;
+  border: 1px solid rgba(0, 255, 255, 0.4);
+  clip-path: polygon(
+    14px 0,
+    100% 0,
+    100% calc(100% - 14px),
+    calc(100% - 14px) 100%,
+    0 100%,
+    0 14px
+  );
 }
 
 .sectionHeaderMaterialClosed {
-    background: rgba(0, 0, 0, 0.05);
-    backdrop-filter: blur(20px);
-    color: rgba(0, 255, 255, 0.7);
-    border: 1px solid rgba(0, 255, 255, 0.25);
-    clip-path: polygon(
-        14px 0,
-        100% 0,
-        100% calc(100% - 14px),
-        calc(100% - 14px) 100%,
-        0 100%,
-        0 14px
-    );
+  background: rgba(0, 0, 0, 0.05);
+  backdrop-filter: blur(20px);
+  color: rgba(0, 255, 255, 0.7);
+  border: 1px solid rgba(0, 255, 255, 0.25);
+  clip-path: polygon(
+    14px 0,
+    100% 0,
+    100% calc(100% - 14px),
+    calc(100% - 14px) 100%,
+    0 100%,
+    0 14px
+  );
 }
 
 .sectionHeaderSceneOpen {
-    background: rgba(0, 0, 0, 0.093);
-    backdrop-filter: blur(30px);
-    color: #00ffff;
-    border: 1px solid rgba(0, 255, 255, 0.4);
-    clip-path: polygon(
-        14px 0,
-        100% 0,
-        100% calc(100% - 14px),
-        calc(100% - 14px) 100%,
-        0 100%,
-        0 14px
-    );
+  background: rgba(0, 0, 0, 0.093);
+  backdrop-filter: blur(30px);
+  color: #00ffff;
+  border: 1px solid rgba(0, 255, 255, 0.4);
+  clip-path: polygon(
+    14px 0,
+    100% 0,
+    100% calc(100% - 14px),
+    calc(100% - 14px) 100%,
+    0 100%,
+    0 14px
+  );
 }
 
 .sectionHeaderSceneClosed {
-    background: rgba(0, 0, 0, 0.05);
-    backdrop-filter: blur(20px);
-    color: rgba(0, 255, 255, 0.7);
-    border: 1px solid rgba(0, 255, 255, 0.25);
-    clip-path: polygon(
-        14px 0,
-        100% 0,
-        100% calc(100% - 14px),
-        calc(100% - 14px) 100%,
-        0 100%,
-        0 14px
-    );
+  background: rgba(0, 0, 0, 0.05);
+  backdrop-filter: blur(20px);
+  color: rgba(0, 255, 255, 0.7);
+  border: 1px solid rgba(0, 255, 255, 0.25);
+  clip-path: polygon(
+    14px 0,
+    100% 0,
+    100% calc(100% - 14px),
+    calc(100% - 14px) 100%,
+    0 100%,
+    0 14px
+  );
 }
 
 .sectionHeaderLightingOpen {
-    background: rgba(0, 0, 0, 0.093);
-    backdrop-filter: blur(30px);
-    color: #00ffff;
-    border: 1px solid rgba(0, 255, 255, 0.4);
-    clip-path: polygon(
-        14px 0,
-        100% 0,
-        100% calc(100% - 14px),
-        calc(100% - 14px) 100%,
-        0 100%,
-        0 14px
-    );
+  background: rgba(0, 0, 0, 0.093);
+  backdrop-filter: blur(30px);
+  color: #00ffff;
+  border: 1px solid rgba(0, 255, 255, 0.4);
+  clip-path: polygon(
+    14px 0,
+    100% 0,
+    100% calc(100% - 14px),
+    calc(100% - 14px) 100%,
+    0 100%,
+    0 14px
+  );
 }
 
 .sectionHeaderLightingClosed {
-    background: rgba(0, 0, 0, 0.05);
-    backdrop-filter: blur(20px);
-    color: rgba(0, 255, 255, 0.7);
-    border: 1px solid rgba(0, 255, 255, 0.25);
-    clip-path: polygon(
-        14px 0,
-        100% 0,
-        100% calc(100% - 14px),
-        calc(100% - 14px) 100%,
-        0 100%,
-        0 14px
-    );
+  background: rgba(0, 0, 0, 0.05);
+  backdrop-filter: blur(20px);
+  color: rgba(0, 255, 255, 0.7);
+  border: 1px solid rgba(0, 255, 255, 0.25);
+  clip-path: polygon(
+    14px 0,
+    100% 0,
+    100% calc(100% - 14px),
+    calc(100% - 14px) 100%,
+    0 100%,
+    0 14px
+  );
 }
 
 .sectionContent {
-    overflow: hidden;
-    transition: max-height 0.3s ease, opacity 0.3s ease, padding 0.3s ease;
-    padding-left: 12px;
-    padding-right: 8px;
+  overflow: hidden;
+  transition:
+    max-height 0.3s ease,
+    opacity 0.3s ease,
+    padding 0.3s ease;
+  padding-left: 12px;
+  padding-right: 8px;
 }
 
 .sectionContentOpen {
-    opacity: 1;
-    padding-top: 8px;
-    padding-bottom: 8px;
+  opacity: 1;
+  padding-top: 8px;
+  padding-bottom: 8px;
 }
 
 .sectionContentClosed {
-    opacity: 0;
-    padding-top: 0;
-    padding-bottom: 0;
+  opacity: 0;
+  padding-top: 0;
+  padding-bottom: 0;
 }
 
 /* Section-specific max-heights */
@@ -437,169 +440,172 @@
    Camera/Scene: Contains Animation Style dropdown + Orb Speed + Object Speed sliders
    Both set to 1200px to ensure all controls visible when expanded - panel itself scrolls via overflow-y: auto */
 .sectionContentMaterialOpen {
-    max-height: 1200px;
+  max-height: 1200px;
 }
 
 .sectionContentSceneOpen {
-    max-height: 1200px;
+  max-height: 1200px;
 }
 
 .sectionContentLightingOpen {
-    max-height: 800px;
+  max-height: 800px;
 }
 
 .sectionContentClosed {
-    max-height: 0px;
+  max-height: 0px;
 }
 
 /* Subsection Headers (nested within main sections) */
 .subSectionHeader {
-    padding: 8px 12px;
-    margin: 12px 0 4px 0;
-    font-size: 11px;
-    font-weight: 600;
-    letter-spacing: 0.8px;
-    text-transform: uppercase;
-    cursor: pointer;
-    border-radius: 4px;
-    user-select: none;
-    transition: all 0.2s ease;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+  padding: 8px 12px;
+  margin: 12px 0 4px 0;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  cursor: pointer;
+  border-radius: 4px;
+  user-select: none;
+  transition: all 0.2s ease;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .subSectionHeaderOpen {
-    background: rgba(0, 255, 255, 0.1);
-    color: rgba(0, 255, 255, 0.9);
-    border-left: 2px solid rgba(0, 255, 255, 0.5);
+  background: rgba(0, 255, 255, 0.1);
+  color: rgba(0, 255, 255, 0.9);
+  border-left: 2px solid rgba(0, 255, 255, 0.5);
 }
 
 .subSectionHeaderClosed {
-    background: rgba(0, 0, 0, 0.2);
-    color: rgba(255, 255, 255, 0.6);
-    border-left: 2px solid rgba(255, 255, 255, 0.2);
+  background: rgba(0, 0, 0, 0.2);
+  color: rgba(255, 255, 255, 0.6);
+  border-left: 2px solid rgba(255, 255, 255, 0.2);
 }
 
 .subSectionHeaderOpen:hover,
 .subSectionHeaderClosed:hover {
-    background: rgba(0, 255, 255, 0.15);
-    color: rgba(0, 255, 255, 1);
-    border-left-color: rgba(0, 255, 255, 0.7);
+  background: rgba(0, 255, 255, 0.15);
+  color: rgba(0, 255, 255, 1);
+  border-left-color: rgba(0, 255, 255, 0.7);
 }
 
 /* Subsection Content */
 .subSectionContent {
-    overflow: hidden;
-    transition: max-height 0.3s ease, opacity 0.3s ease, padding 0.3s ease;
-    padding-left: 8px;
+  overflow: hidden;
+  transition:
+    max-height 0.3s ease,
+    opacity 0.3s ease,
+    padding 0.3s ease;
+  padding-left: 8px;
 }
 
 .subSectionContentOpen {
-    max-height: 600px;
-    opacity: 1;
-    padding-top: 4px;
-    padding-bottom: 8px;
+  max-height: 600px;
+  opacity: 1;
+  padding-top: 4px;
+  padding-bottom: 8px;
 }
 
 .subSectionContentClosed {
-    max-height: 0px;
-    opacity: 0;
-    padding-top: 0;
-    padding-bottom: 0;
+  max-height: 0px;
+  opacity: 0;
+  padding-top: 0;
+  padding-bottom: 0;
 }
 
 /* Select dropdown styling - now using CustomSelect component */
 /* Styles removed as CustomSelect component has its own module styles */
 
 /* Color input styling */
-.controls input[type="color"] {
-    width: 40px;
-    height: 40px;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    padding: 0;
-    border: 2px solid rgba(78, 205, 196, 0.4);
-    transition: all 0.3s ease;
-    overflow: hidden;
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    appearance: none;
-    margin-bottom: 12px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+.controls input[type='color'] {
+  width: 40px;
+  height: 40px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  padding: 0;
+  border: 2px solid rgba(78, 205, 196, 0.4);
+  transition: all 0.3s ease;
+  overflow: hidden;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  margin-bottom: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
 }
 
-.controls input[type="color"]:hover {
-    border-color: rgba(0, 255, 255, 0.6);
-    box-shadow: 0 0 16px rgba(0, 255, 255, 0.3);
-    transform: scale(1.05);
+.controls input[type='color']:hover {
+  border-color: rgba(0, 255, 255, 0.6);
+  box-shadow: 0 0 16px rgba(0, 255, 255, 0.3);
+  transform: scale(1.05);
 }
 
-.controls input[type="color"]::-webkit-color-swatch-wrapper {
-    padding: 0;
-    border: none;
-    border-radius: 6px;
+.controls input[type='color']::-webkit-color-swatch-wrapper {
+  padding: 0;
+  border: none;
+  border-radius: 6px;
 }
 
-.controls input[type="color"]::-webkit-color-swatch {
-    border: none;
-    border-radius: 6px;
+.controls input[type='color']::-webkit-color-swatch {
+  border: none;
+  border-radius: 6px;
 }
 
-.controls input[type="color"]::-moz-color-swatch {
-    border: none;
-    border-radius: 6px;
+.controls input[type='color']::-moz-color-swatch {
+  border: none;
+  border-radius: 6px;
 }
 
-.controls input[type="color"]:active {
-    transform: scale(0.95);
-    border: 3px solid rgba(78, 205, 196, 0.8);
-    box-shadow: 
-        0 0 0 3px rgba(78, 205, 196, 0.3),
-        0 0 20px rgba(78, 205, 196, 0.5),
-        inset 0 0 10px rgba(0, 0, 0, 0.2);
+.controls input[type='color']:active {
+  transform: scale(0.95);
+  border: 3px solid rgba(78, 205, 196, 0.8);
+  box-shadow:
+    0 0 0 3px rgba(78, 205, 196, 0.3),
+    0 0 20px rgba(78, 205, 196, 0.5),
+    inset 0 0 10px rgba(0, 0, 0, 0.2);
 }
 
-.controls input[type="color"]:focus {
-    outline: none;
-    border: 2px solid rgba(78, 205, 196, 0.6);
-    box-shadow: 0 0 15px rgba(78, 205, 196, 0.4);
+.controls input[type='color']:focus {
+  outline: none;
+  border: 2px solid rgba(78, 205, 196, 0.6);
+  box-shadow: 0 0 15px rgba(78, 205, 196, 0.4);
 }
 
 /* Modern futuristic scrollbar styling */
 :global(.controls)::-webkit-scrollbar {
-    width: 4px;
+  width: 4px;
 }
 
 :global(.controls)::-webkit-scrollbar-track {
-    background: rgba(0, 0, 0, 0.2);
-    border-radius: 2px;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 2px;
 }
 
 :global(.controls)::-webkit-scrollbar-thumb {
-    background: linear-gradient(135deg, #00ffff, #ff00ff);
-    border-radius: 2px;
-    border: none;
-    transition: all 0.3s ease;
+  background: linear-gradient(135deg, #00ffff, #ff00ff);
+  border-radius: 2px;
+  border: none;
+  transition: all 0.3s ease;
 }
 
 :global(.controls)::-webkit-scrollbar-thumb:hover {
-    box-shadow: 
-        0 0 15px rgba(0, 255, 255, 1),
-        0 0 30px rgba(255, 0, 255, 0.8);
+  box-shadow:
+    0 0 15px rgba(0, 255, 255, 1),
+    0 0 30px rgba(255, 0, 255, 0.8);
 }
 
 :global(.controls)::-webkit-scrollbar-thumb:active {
-    box-shadow: 
-        0 0 20px rgba(0, 255, 255, 1),
-        0 0 35px rgba(255, 0, 255, 0.9);
+  box-shadow:
+    0 0 20px rgba(0, 255, 255, 1),
+    0 0 35px rgba(255, 0, 255, 0.9);
 }
 
 /* Firefox scrollbar styling */
 .controls {
-    scrollbar-width: auto;
-    scrollbar-color: #5f74eddd rgba(0, 0, 0, 0.2);
+  scrollbar-width: auto;
+  scrollbar-color: #5f74eddd rgba(0, 0, 0, 0.2);
 }
 
 .futuristicCheckboxLabel {
@@ -607,7 +613,7 @@
   align-items: center;
   gap: 10px;
   font-size: 1.1em;
-  margin: 40px 0 ;
+  margin: 40px 0;
   cursor: pointer;
   padding-bottom: 20px;
   justify-content: center;
@@ -620,8 +626,10 @@
   border-radius: 50%;
   border: 2px solid #7fdfff;
   background: linear-gradient(135deg, #1b4ac0 60%, #7fdfff 100%);
-  box-shadow: 0 2px 8px rgba(127,223,255,0.15);
-  transition: border-color 0.2s, background 0.2s;
+  box-shadow: 0 2px 8px rgba(127, 223, 255, 0.15);
+  transition:
+    border-color 0.2s,
+    background 0.2s;
   position: relative;
 }
 
@@ -644,10 +652,10 @@
 }
 
 .futuristicCheckboxText {
-    position: relative;
-    top: -8px;
-    color: #7fdfff;
-    font-weight: bold;
+  position: relative;
+  top: -8px;
+  color: #7fdfff;
+  font-weight: bold;
 }
 
 /* Apply default colors to material property swatches */
@@ -693,11 +701,11 @@
     padding: 20px 16px;
     left: 15px;
   }
-  
+
   .controls * {
     font-size: 13px;
   }
-  
+
   .sectionHeader {
     font-size: 14px;
   }
@@ -712,21 +720,21 @@
     left: 10px;
     top: 120px;
   }
-  
+
   .controls * {
     font-size: 12px;
   }
-  
+
   .sectionHeader {
     font-size: 13px;
     padding: 10px;
   }
-  
+
   .sectionContentMaterialOpen,
   .sectionContentSceneOpen {
     max-height: 1000px;
   }
-  
+
   .subSectionContentOpen {
     max-height: 500px;
   }
@@ -751,29 +759,29 @@
     overflow-y: auto;
     background: rgba(0, 0, 0, 0.95);
   }
-  
+
   .controlsHidden {
     transform: translateY(100%);
   }
-  
+
   .controls * {
     font-size: 11px;
   }
-  
+
   .sectionHeader {
     font-size: 12px;
     padding: 8px;
   }
-  
+
   .sectionContentMaterialOpen,
   .sectionContentSceneOpen {
     max-height: 800px;
   }
-  
+
   .subSectionContentOpen {
     max-height: 400px;
   }
-  
+
   /* Make control rows stack vertically on very small screens */
   .controlRow {
     flex-direction: column;

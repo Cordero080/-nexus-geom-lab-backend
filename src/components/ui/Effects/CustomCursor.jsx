@@ -20,7 +20,11 @@ const CustomCursor = () => {
 
   return (
     <div id="custom-cursor">
-      <svg width="40" height="40" style={{ position: 'absolute', left: '-20px', top: '-20px', pointerEvents: 'none' }}>
+      <svg
+        width="40"
+        height="40"
+        style={{ position: 'absolute', left: '-20px', top: '-20px', pointerEvents: 'none' }}
+      >
         {/* Draw triangle above the circle, solid color, on top */}
         <polygon points="20,5 35,35 5,35" fill="#ff3366" stroke="#222" strokeWidth="2" />
         {/* Center circle */}

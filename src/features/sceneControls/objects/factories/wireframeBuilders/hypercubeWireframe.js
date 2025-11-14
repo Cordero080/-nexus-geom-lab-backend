@@ -1,5 +1,5 @@
-import * as THREE from "three";
-import { nearestVertexIndex } from "../../../utils/geometryHelpers";
+import * as THREE from 'three';
+import { nearestVertexIndex } from '../../../utils/geometryHelpers';
 
 /**
  * Create a thick wireframe for Hypercube (Tesseract) using cylinders
@@ -21,26 +21,13 @@ export function createHypercubeWireframe(geometry, wireframeMaterial) {
   const MAIN_RADIUS = 0.01728;
 
   for (let j = 0; j < edgeVertices.length; j += 6) {
-    const start = new THREE.Vector3(
-      edgeVertices[j],
-      edgeVertices[j + 1],
-      edgeVertices[j + 2]
-    );
-    const end = new THREE.Vector3(
-      edgeVertices[j + 3],
-      edgeVertices[j + 4],
-      edgeVertices[j + 5]
-    );
+    const start = new THREE.Vector3(edgeVertices[j], edgeVertices[j + 1], edgeVertices[j + 2]);
+    const end = new THREE.Vector3(edgeVertices[j + 3], edgeVertices[j + 4], edgeVertices[j + 5]);
     const direction = end.clone().sub(start);
     const distance = direction.length();
 
     // Create thick cylinder for edge
-    const cylinderGeom = new THREE.CylinderGeometry(
-      MAIN_RADIUS,
-      MAIN_RADIUS,
-      distance,
-      8
-    );
+    const cylinderGeom = new THREE.CylinderGeometry(MAIN_RADIUS, MAIN_RADIUS, distance, 8);
     const cylinderMesh = new THREE.Mesh(cylinderGeom, wireframeMaterial);
 
     // Position cylinder at midpoint
@@ -61,9 +48,9 @@ export function createHypercubeWireframe(geometry, wireframeMaterial) {
   hypercubeWireframeGroup.userData.edgePairs = edgePairs;
 
   console.log(
-    "Created thick wireframe for hypercube with",
+    'Created thick wireframe for hypercube with',
     edgeVertices.length / 6,
-    "cylinder edges"
+    'cylinder edges'
   );
 
   return hypercubeWireframeGroup;

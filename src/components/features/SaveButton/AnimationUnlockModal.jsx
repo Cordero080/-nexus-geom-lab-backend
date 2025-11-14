@@ -1,12 +1,12 @@
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import ScrambleButton from "../../ui/ScrambleButton/ScrambleButton";
+import ScrambleButton from '../../ui/ScrambleButton/ScrambleButton';
 
 export default function AnimationUnlockModal({
   isOpen,
   onClose,
   unlockedAnimations,
-  savedSceneId
+  savedSceneId,
 }) {
   const navigate = useNavigate();
 
@@ -15,7 +15,7 @@ export default function AnimationUnlockModal({
     if (isOpen) {
       const audio = new Audio('/soundEffects/unlock.wav');
       audio.volume = 0.5; // Set volume to 50%
-      audio.play().catch(err => console.log('Audio play failed:', err));
+      audio.play().catch((err) => console.log('Audio play failed:', err));
     }
   }, [isOpen]);
 

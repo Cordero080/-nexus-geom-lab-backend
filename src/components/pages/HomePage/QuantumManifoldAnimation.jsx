@@ -28,9 +28,9 @@ export default function QuantumManifoldAnimation({ isActive = false }) {
     camera.position.z = 3.3;
 
     // Renderer
-    const renderer = new THREE.WebGLRenderer({ 
-      alpha: true, 
-      antialias: true 
+    const renderer = new THREE.WebGLRenderer({
+      alpha: true,
+      antialias: true,
     });
     renderer.setSize(containerRef.current.clientWidth, containerRef.current.clientHeight);
     renderer.setClearColor(0x000000, 0);
@@ -39,10 +39,10 @@ export default function QuantumManifoldAnimation({ isActive = false }) {
 
     // Create outer Quantum Manifold geometry with color gradient shader
     const geometry = createQuantumManifold();
-    
+
     // Create edges geometry for wireframe
     const edges = new THREE.EdgesGeometry(geometry);
-    
+
     // Animated gradient material using ShaderMaterial
     const material = new THREE.ShaderMaterial({
       transparent: true,
@@ -52,7 +52,7 @@ export default function QuantumManifoldAnimation({ isActive = false }) {
         color1: { value: new THREE.Color(0xaa00ff) }, // Purple
         color2: { value: new THREE.Color(0x00ffff) }, // Cyan
         color3: { value: new THREE.Color(0xff00aa) }, // Pink-purple
-        opacity: { value: 0.65 }
+        opacity: { value: 0.65 },
       },
       vertexShader: `
         varying vec3 vPosition;
@@ -80,17 +80,17 @@ export default function QuantumManifoldAnimation({ isActive = false }) {
           
           gl_FragColor = vec4(color, opacity);
         }
-      `
+      `,
     });
-    
+
     const mesh = new THREE.LineSegments(edges, material);
     scene.add(mesh);
     meshRef.current = mesh;
-    
+
     // Create inner manifold (counter-rotating, smaller, different color)
     const innerGeometry = createQuantumManifold({ scale: 0.35 });
     const innerEdges = new THREE.EdgesGeometry(innerGeometry);
-    
+
     // Animated color-shifting material for inner manifold
     const innerMaterial = new THREE.ShaderMaterial({
       transparent: true,
@@ -100,7 +100,7 @@ export default function QuantumManifoldAnimation({ isActive = false }) {
         color2: { value: new THREE.Color(0xdd88ff) }, // Light purple
         color3: { value: new THREE.Color(0xffaaff) }, // Pale purple-pink
         color4: { value: new THREE.Color(0x66ffff) }, // Bright turquoise
-        opacity: { value: 0.25 }
+        opacity: { value: 0.25 },
       },
       vertexShader: `
         void main() {
@@ -132,9 +132,9 @@ export default function QuantumManifoldAnimation({ isActive = false }) {
           
           gl_FragColor = vec4(color, opacity);
         }
-      `
+      `,
     });
-    
+
     const innerMesh = new THREE.LineSegments(innerEdges, innerMaterial);
     scene.add(innerMesh);
     innerMeshRef.current = innerMesh;
@@ -142,41 +142,41 @@ export default function QuantumManifoldAnimation({ isActive = false }) {
     // Animation loop
     function animate() {
       frameIdRef.current = requestAnimationFrame(animate);
-      
+
       timeRef.current += 0.016; // ~60fps
-      
+
       if (meshRef.current) {
         // Outer manifold: smooth, flowing rotation
         meshRef.current.rotation.x += 0.003;
         meshRef.current.rotation.y += 0.005;
         meshRef.current.rotation.z += 0.002;
-        
+
         // Update shader time uniform for color flow
         if (meshRef.current.material.uniforms) {
           meshRef.current.material.uniforms.time.value = timeRef.current;
         }
-        
+
         // Add subtle breathing/pulsing scale
         const breathe = 1 + Math.sin(timeRef.current * 0.5) * 0.05;
         meshRef.current.scale.setScalar(breathe);
       }
-      
+
       if (innerMeshRef.current) {
         // Inner manifold: counter-rotate on different axes
         innerMeshRef.current.rotation.x -= 0.004;
         innerMeshRef.current.rotation.y -= 0.006;
         innerMeshRef.current.rotation.z += 0.003;
-        
+
         // Independent breathing for inner layer
         const innerBreathe = 1 + Math.sin(timeRef.current * 0.7 + Math.PI) * 0.08;
         innerMeshRef.current.scale.setScalar(innerBreathe);
-        
+
         // Update inner shader time for color cycling
         if (innerMeshRef.current.material.uniforms) {
           innerMeshRef.current.material.uniforms.time.value = timeRef.current;
         }
       }
-      
+
       renderer.render(scene, camera);
     }
     animate();
@@ -205,7 +205,11 @@ export default function QuantumManifoldAnimation({ isActive = false }) {
     if (meshRef.current && meshRef.current.material && meshRef.current.material.uniforms) {
       meshRef.current.material.uniforms.opacity.value = isActive ? 0.1 : 0.1;
     }
-    if (innerMeshRef.current && innerMeshRef.current.material && innerMeshRef.current.material.uniforms) {
+    if (
+      innerMeshRef.current &&
+      innerMeshRef.current.material &&
+      innerMeshRef.current.material.uniforms
+    ) {
       innerMeshRef.current.material.uniforms.opacity.value = isActive ? 0.25 : 0.25;
     }
   }, [isActive]);

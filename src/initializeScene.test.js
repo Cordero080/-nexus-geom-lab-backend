@@ -1,9 +1,9 @@
-import { jest } from "@jest/globals";
-import * as THREE from "three";
-import { initializeScene } from "./features/sceneControls/threeSetup/sceneSetup";
+import { jest } from '@jest/globals';
+import * as THREE from 'three';
+import { initializeScene } from './features/sceneControls/threeSetup/sceneSetup';
 
 // Mock Three.js classes and methods
-jest.mock("three", () => ({
+jest.mock('three', () => ({
   WebGLRenderer: jest.fn(() => ({
     domElement: {
       getContext: jest.fn(),
@@ -42,12 +42,12 @@ jest.mock("three", () => ({
   ACESFilmicToneMapping: 1,
 }));
 
-describe("initializeScene", () => {
+describe('initializeScene', () => {
   afterEach(() => {
     jest.clearAllMocks();
   });
 
-  it("should create a scene, camera, and renderer", () => {
+  it('should create a scene, camera, and renderer', () => {
     const result = initializeScene();
 
     // Verify WebGLRenderer was instantiated (called twice: once for PMREMGenerator, once for main renderer)
@@ -79,17 +79,14 @@ describe("initializeScene", () => {
 
     // Verify renderer configuration
     const rendererInstance = THREE.WebGLRenderer.mock.results[1].value; // Second call is main renderer
-    expect(rendererInstance.setSize).toHaveBeenCalledWith(
-      window.innerWidth,
-      window.innerHeight
-    );
+    expect(rendererInstance.setSize).toHaveBeenCalledWith(window.innerWidth, window.innerHeight);
     expect(rendererInstance.setClearColor).toHaveBeenCalledWith(0x000000, 0);
     expect(rendererInstance.shadowMap.enabled).toBe(true);
     expect(rendererInstance.toneMappingExposure).toBe(1.0);
 
     // Verify the returned objects
-    expect(result).toHaveProperty("scene");
-    expect(result).toHaveProperty("camera");
-    expect(result).toHaveProperty("renderer");
+    expect(result).toHaveProperty('scene');
+    expect(result).toHaveProperty('camera');
+    expect(result).toHaveProperty('renderer');
   });
 });

@@ -35,39 +35,57 @@ import {
  */
 
 // PROPS RECEIVED FROM App.jsx - These are the data connections
-function Controls({ 
+function Controls({
   // MATERIAL PROPERTIES (current values FROM App.jsx + setter functions FROM App.jsx)
-  scale, onScaleChange,                            // Current scale value + function to update it
-  objectSpeed, onObjectSpeedChange,                // Current object animation speed + function to update it
-  orbSpeed, onOrbSpeedChange,                      // Current orb animation speed + function to update it
-  metalness, onMetalnessChange,                    // Current metalness value + function to update it
-  emissiveIntensity, onEmissiveIntensityChange,    // Current emissive intensity + function to update it
-  baseColor, onBaseColorChange,                    // Current base color + function to update it
-  wireframeIntensity, onWireframeIntensityChange,  // Current wireframe intensity + function to update it
-  
+  scale,
+  onScaleChange, // Current scale value + function to update it
+  objectSpeed,
+  onObjectSpeedChange, // Current object animation speed + function to update it
+  orbSpeed,
+  onOrbSpeedChange, // Current orb animation speed + function to update it
+  metalness,
+  onMetalnessChange, // Current metalness value + function to update it
+  emissiveIntensity,
+  onEmissiveIntensityChange, // Current emissive intensity + function to update it
+  baseColor,
+  onBaseColorChange, // Current base color + function to update it
+  wireframeIntensity,
+  onWireframeIntensityChange, // Current wireframe intensity + function to update it
+
   // HYPERFRAME PROPERTIES (current values FROM App.jsx + setter functions FROM App.jsx)
-  hyperframeColor, onHyperframeColorChange,    // Current spiral color + function to update it
-  hyperframeLineColor, onHyperframeLineColorChange,        // Current edge color + function to update it
-  
+  hyperframeColor,
+  onHyperframeColorChange, // Current spiral color + function to update it
+  hyperframeLineColor,
+  onHyperframeLineColorChange, // Current edge color + function to update it
+
   // SCENE PROPERTIES (current values FROM App.jsx + setter functions FROM App.jsx)
-  cameraView, onCameraViewChange,                  // Current camera view mode + function to update it
-  environment, onEnvironmentChange,                // Current environment setting + function to update it
-  environmentHue, onEnvironmentHueChange,          // Current environment hue shift + function to update it
-  objectCount, onObjectCountChange,                // Current object count + function to update it
-  animationStyle, onAnimationStyleChange,          // Current animation style + function to update it
-  objectType, onObjectTypeChange,                  // Current object type + function to update it
-  
+  cameraView,
+  onCameraViewChange, // Current camera view mode + function to update it
+  environment,
+  onEnvironmentChange, // Current environment setting + function to update it
+  environmentHue,
+  onEnvironmentHueChange, // Current environment hue shift + function to update it
+  objectCount,
+  onObjectCountChange, // Current object count + function to update it
+  animationStyle,
+  onAnimationStyleChange, // Current animation style + function to update it
+  objectType,
+  onObjectTypeChange, // Current object type + function to update it
+
   // LIGHTING PROPERTIES (current values FROM App.jsx + setter functions FROM App.jsx)
-  ambientLightColor, onAmbientLightColorChange,
-  ambientLightIntensity, onAmbientLightIntensityChange,
-  directionalLightColor, onDirectionalLightColorChange,
-  directionalLightIntensity, onDirectionalLightIntensityChange
+  ambientLightColor,
+  onAmbientLightColorChange,
+  ambientLightIntensity,
+  onAmbientLightIntensityChange,
+  directionalLightColor,
+  onDirectionalLightColorChange,
+  directionalLightIntensity,
+  onDirectionalLightIntensityChange,
 }) {
-  
   // LOCAL STATE - These are managed by Controls component itself (NOT from App.jsx)
   // These control whether each section is expanded or collapsed in the UI
-  const [lightingOpen, setLightingOpen] = useState(false)   // Lighting Controls section closed by default
-  const [isHidden, setIsHidden] = useState(true)            // Controls panel hidden by default on page load
+  const [lightingOpen, setLightingOpen] = useState(false); // Lighting Controls section closed by default
+  const [isHidden, setIsHidden] = useState(true); // Controls panel hidden by default on page load
   // Note: materialOpen, surfaceOpen, geometryOpen, sceneOpen are now managed in their respective section components
 
   /*
@@ -88,13 +106,13 @@ function Controls({
    * These functions are now imported from handlers/controlHandlers.js
    * Each handler is a higher-order function that takes a setter function and returns an event handler
    */
-  
+
   // Create handler functions using factories from controlsHandlers.js
 
   // example to track the flow for metalness:
 
-  // handleMetalnessChange(event) → 
-  // onMetalnessChange(newValue) → 
+  // handleMetalnessChange(event) →
+  // onMetalnessChange(newValue) →
   // setMetalness(newValue)
   const handleMetalnessChange = createMetalnessHandler(onMetalnessChange);
   const handleScaleChange = createScaleHandler(onScaleChange);
@@ -102,22 +120,25 @@ function Controls({
   const handleOrbSpeedChange = (e) => onOrbSpeedChange(parseFloat(e.target.value));
   const handleEmissiveIntensityChange = createEmissiveIntensityHandler(onEmissiveIntensityChange);
   const handleBaseColorChange = createBaseColorHandler(onBaseColorChange);
-  const handleWireframeIntensityChange = createWireframeIntensityHandler(onWireframeIntensityChange);
+  const handleWireframeIntensityChange = createWireframeIntensityHandler(
+    onWireframeIntensityChange
+  );
   const handleWireframeToggle = createWireframeToggleHandler(onWireframeIntensityChange);
   const handleHyperframeColorChange = createHyperframeColorHandler(onHyperframeColorChange);
-  const handleHyperframeLineColorChange = createHyperframeLineColorHandler(onHyperframeLineColorChange);
+  const handleHyperframeLineColorChange = createHyperframeLineColorHandler(
+    onHyperframeLineColorChange
+  );
   const handleEnvironmentHueChange = createEnvironmentHueHandler(onEnvironmentHueChange);
   const handleObjectCountChange = createObjectCountHandler(onObjectCountChange);
   const handleAnimationStyleChange = createAnimationStyleHandler(onAnimationStyleChange);
   const handleObjectTypeChange = createObjectTypeHandler(onObjectTypeChange);
-
 
   // Lighting event handlers are now handled in LightingControls
 
   // ====================================
   // GROUPED PROPS FOR CHILD COMPONENTS
   // ====================================
-  
+
   // GROUP 1: Surface Properties (colors, metalness, emissive)
   const surfaceProps = {
     baseColor,
@@ -189,7 +210,7 @@ function Controls({
     <>
       {/* Toggle Button - Shows when controls are hidden */}
       {isHidden && (
-        <button 
+        <button
           className={`${styles.controlsToggleBtn} ${styles.controlsToggleBtnShow}`}
           onClick={() => setIsHidden(false)}
           title="Show Controls"
@@ -201,7 +222,7 @@ function Controls({
 
       <div className={`${styles.controls} ${isHidden ? styles.controlsHidden : ''}`}>
         {/* Hide Button - Shows when controls are visible */}
-        <button 
+        <button
           className={`${styles.controlsToggleBtn} ${styles.controlsToggleBtnHide}`}
           onClick={() => setIsHidden(true)}
           title="Hide Controls"
@@ -210,41 +231,39 @@ function Controls({
           <span className={styles.controlsToggleText}>Hide</span>
         </button>
 
-      {/* 
-       * DISPLAY SECTION
-       * Shows current values FROM App.jsx - these update automatically when state changes
-       * These are NOT interactive - they just display the current values
-       */}
-      
-      <hr />
+        {/*
+         * DISPLAY SECTION
+         * Shows current values FROM App.jsx - these update automatically when state changes
+         * These are NOT interactive - they just display the current values
+         */}
 
-      {/* MATERIAL PROPERTIES SECTION - Now modularized with grouped props */}
-      <MaterialPropertiesSection
-        {...surfaceProps}      // Base color, emissive, metalness
-        {...geometryProps}     // Wireframe, hyperframe, object type, animation style
-        {...speedProps}        // Object speed, orb speed
-      />
+        <hr />
 
-      {/* SCENE CONTROLS SECTION - Now modularized with grouped props */}
-      <SceneControlsSection
-        {...sceneProps}        // Scale, camera, environment, object count
-      />
+        {/* MATERIAL PROPERTIES SECTION - Now modularized with grouped props */}
+        <MaterialPropertiesSection
+          {...surfaceProps} // Base color, emissive, metalness
+          {...geometryProps} // Wireframe, hyperframe, object type, animation style
+          {...speedProps} // Object speed, orb speed
+        />
 
-      {/* LIGHTING CONTROLS SECTION */}
-      <div 
-        className={`${styles.sectionHeader} ${lightingOpen ? styles.sectionHeaderLightingOpen : styles.sectionHeaderLightingClosed}`}
-        onClick={() => setLightingOpen(!lightingOpen)}
-      >
-        <span>💡 LIGHTING CONTROLS</span>
-        <span>{lightingOpen ? '▼' : '▶'}</span>
-      </div>
-      
-      {lightingOpen && (
-        <LightingControls {...lightingProps} />
-      )}
+        {/* SCENE CONTROLS SECTION - Now modularized with grouped props */}
+        <SceneControlsSection
+          {...sceneProps} // Scale, camera, environment, object count
+        />
+
+        {/* LIGHTING CONTROLS SECTION */}
+        <div
+          className={`${styles.sectionHeader} ${lightingOpen ? styles.sectionHeaderLightingOpen : styles.sectionHeaderLightingClosed}`}
+          onClick={() => setLightingOpen(!lightingOpen)}
+        >
+          <span>💡 LIGHTING CONTROLS</span>
+          <span>{lightingOpen ? '▼' : '▶'}</span>
+        </div>
+
+        {lightingOpen && <LightingControls {...lightingProps} />}
       </div>
     </>
-  )
+  );
 }
 
 export default Controls;

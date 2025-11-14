@@ -1,18 +1,14 @@
-import { useState, useEffect } from "react";
-import quantumCollapse from "../utils/quantumCollapse";
-import { portalWorlds, glyphSets } from "../utils/portalWorlds";
+import { useState, useEffect } from 'react';
+import quantumCollapse from '../utils/quantumCollapse';
+import { portalWorlds, glyphSets } from '../utils/portalWorlds';
 
 /**
  * Custom hook for managing quantum state (portal colors and glyphs)
  * Collapses state on scroll or click events
  */
 export default function useQuantumState() {
-  const [portalState, setPortalState] = useState(() =>
-    quantumCollapse(portalWorlds)
-  );
-  const [glyphState, setGlyphState] = useState(() =>
-    quantumCollapse(glyphSets)
-  );
+  const [portalState, setPortalState] = useState(() => quantumCollapse(portalWorlds));
+  const [glyphState, setGlyphState] = useState(() => quantumCollapse(glyphSets));
 
   // Collapse state on scroll or click
   useEffect(() => {
@@ -20,11 +16,11 @@ export default function useQuantumState() {
       setPortalState(quantumCollapse(portalWorlds));
       setGlyphState(quantumCollapse(glyphSets));
     };
-    window.addEventListener("scroll", handle);
-    window.addEventListener("click", handle);
+    window.addEventListener('scroll', handle);
+    window.addEventListener('click', handle);
     return () => {
-      window.removeEventListener("scroll", handle);
-      window.removeEventListener("click", handle);
+      window.removeEventListener('scroll', handle);
+      window.removeEventListener('click', handle);
     };
   }, []);
 

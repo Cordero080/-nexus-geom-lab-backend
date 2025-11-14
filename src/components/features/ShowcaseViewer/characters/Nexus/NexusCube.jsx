@@ -10,14 +10,9 @@ export default function NexusCube({ size }) {
     <>
       {/* Vectra's Compound Tesseract - 5 asymmetric nested cubes */}
       <CompoundTesseractGeometry size={size} />
-      
+
       {/* Green reflective lighting - unique to Nexus Prime */}
-      <pointLight 
-        position={[4, 12, 4]} 
-        color="#10c22e" 
-        intensity={1} 
-        distance={size} 
-      />
+      <pointLight position={[4, 12, 4]} color="#10c22e" intensity={1} distance={size} />
     </>
   );
 }

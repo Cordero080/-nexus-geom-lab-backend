@@ -1,4 +1,4 @@
-import * as THREE from "three";
+import * as THREE from 'three';
 
 /**
  * Create hyperframe for compound octahedron with dual inner octahedrons and vertex connections
@@ -8,12 +8,8 @@ import * as THREE from "three";
  * @param {string} hyperframeLineColor - Color for connections
  * @returns {Object} { centerLines, centerLinesMaterial, curvedLines, curvedLinesMaterial }
  */
-export function createOctahedronHyperframe(
-  geometry,
-  hyperframeColor,
-  hyperframeLineColor
-) {
-  console.log("Creating compound octahedron hyperframe");
+export function createOctahedronHyperframe(geometry, hyperframeColor, hyperframeLineColor) {
+  console.log('Creating compound octahedron hyperframe');
 
   // Canonical vertices for octahedron (6 vertices: ±1 on each axis)
   const rawVertices = [
@@ -140,9 +136,7 @@ export function createOctahedronHyperframe(
   const actualVertices = [];
   for (let i = 0; i < vertexCount; i++) {
     const idx = i * 3;
-    actualVertices.push(
-      new THREE.Vector3(positions[idx], positions[idx + 1], positions[idx + 2])
-    );
+    actualVertices.push(new THREE.Vector3(positions[idx], positions[idx + 1], positions[idx + 2]));
   }
 
   // Match each canonical outer vertex to its closest actual vertex

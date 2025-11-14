@@ -9,22 +9,18 @@ const SuccessModal = ({ isOpen, onClose, title, message, unlockedNoetechs = [] }
     <div className={styles.modalBackdrop} onClick={onClose}>
       <div className={styles.modalContainer} onClick={(e) => e.stopPropagation()}>
         <div className={styles.modalHeader}>
-          <h2 className={styles.modalTitle}>
-            "{title}" Saved Successfully!
-          </h2>
-          <button 
-            className={`${styles.closeButton} ${sharedStyles.angledCorners}`} 
+          <h2 className={styles.modalTitle}>"{title}" Saved Successfully!</h2>
+          <button
+            className={`${styles.closeButton} ${sharedStyles.angledCorners}`}
             onClick={onClose}
           >
             ✕
           </button>
         </div>
-        
+
         <div className={styles.modalContent}>
-          {message && (
-            <p className={styles.modalMessage}>{message}</p>
-          )}
-          
+          {message && <p className={styles.modalMessage}>{message}</p>}
+
           {unlockedNoetechs.length > 0 && (
             <div className={styles.unlockedSection}>
               <h3 className={styles.unlockedTitle}>🎉 New Noetechs Unlocked!</h3>
@@ -38,9 +34,9 @@ const SuccessModal = ({ isOpen, onClose, title, message, unlockedNoetechs = [] }
             </div>
           )}
         </div>
-        
+
         <div className={styles.modalFooter}>
-          <button 
+          <button
             className={`${styles.confirmButton} ${sharedStyles.angledCorners}`}
             onClick={onClose}
           >

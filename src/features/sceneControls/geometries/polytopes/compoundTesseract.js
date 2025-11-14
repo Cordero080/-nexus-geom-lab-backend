@@ -1,5 +1,5 @@
-import * as THREE from "three";
-import { mergeGeometries } from "three/examples/jsm/utils/BufferGeometryUtils";
+import * as THREE from 'three';
+import { mergeGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils';
 
 /**
  * Helper function to create a tesseract with connecting frustum faces between outer and inner cubes
@@ -36,24 +36,14 @@ function createTesseractWithFaces(outerSize, innerSize, rotation = null) {
   geometries.push(topFrustum);
 
   // Bottom face frustum (Y-)
-  const bottomFrustum = new THREE.CylinderGeometry(
-    halfOuter,
-    halfInner,
-    depth,
-    4
-  );
+  const bottomFrustum = new THREE.CylinderGeometry(halfOuter, halfInner, depth, 4);
   bottomFrustum.rotateY(Math.PI / 4);
   bottomFrustum.translate(0, -(halfOuter + depth / 2), 0);
   if (rotation) bottomFrustum.rotateY(rotation);
   geometries.push(bottomFrustum);
 
   // Front face frustum (Z+)
-  const frontFrustum = new THREE.CylinderGeometry(
-    halfInner,
-    halfOuter,
-    depth,
-    4
-  );
+  const frontFrustum = new THREE.CylinderGeometry(halfInner, halfOuter, depth, 4);
   frontFrustum.rotateY(Math.PI / 4);
   frontFrustum.rotateX(Math.PI / 2);
   frontFrustum.translate(0, 0, halfOuter + depth / 2);
@@ -61,12 +51,7 @@ function createTesseractWithFaces(outerSize, innerSize, rotation = null) {
   geometries.push(frontFrustum);
 
   // Back face frustum (Z-)
-  const backFrustum = new THREE.CylinderGeometry(
-    halfOuter,
-    halfInner,
-    depth,
-    4
-  );
+  const backFrustum = new THREE.CylinderGeometry(halfOuter, halfInner, depth, 4);
   backFrustum.rotateY(Math.PI / 4);
   backFrustum.rotateX(Math.PI / 2);
   backFrustum.translate(0, 0, -(halfOuter + depth / 2));
@@ -74,12 +59,7 @@ function createTesseractWithFaces(outerSize, innerSize, rotation = null) {
   geometries.push(backFrustum);
 
   // Right face frustum (X+)
-  const rightFrustum = new THREE.CylinderGeometry(
-    halfInner,
-    halfOuter,
-    depth,
-    4
-  );
+  const rightFrustum = new THREE.CylinderGeometry(halfInner, halfOuter, depth, 4);
   rightFrustum.rotateY(Math.PI / 4);
   rightFrustum.rotateZ(Math.PI / 2);
   rightFrustum.translate(halfOuter + depth / 2, 0, 0);
@@ -87,12 +67,7 @@ function createTesseractWithFaces(outerSize, innerSize, rotation = null) {
   geometries.push(rightFrustum);
 
   // Left face frustum (X-)
-  const leftFrustum = new THREE.CylinderGeometry(
-    halfOuter,
-    halfInner,
-    depth,
-    4
-  );
+  const leftFrustum = new THREE.CylinderGeometry(halfOuter, halfInner, depth, 4);
   leftFrustum.rotateY(Math.PI / 4);
   leftFrustum.rotateZ(Math.PI / 2);
   leftFrustum.translate(-(halfOuter + depth / 2), 0, 0);
@@ -127,11 +102,7 @@ export function createCompoundTesseract(options = {}) {
   const tesseract1 = createTesseractWithFaces(outerSize, innerSize, null);
 
   // Second tesseract rotated 45° on Y axis (simulates 4D rotation)
-  const tesseract2 = createTesseractWithFaces(
-    outerSize,
-    innerSize,
-    Math.PI / 4
-  );
+  const tesseract2 = createTesseractWithFaces(outerSize, innerSize, Math.PI / 4);
   tesseract2.translate(0, 0.02, 0); // Slight offset to prevent z-fighting
 
   // Merge both complete tesseracts
@@ -142,7 +113,7 @@ export function createCompoundTesseract(options = {}) {
 
   // Mark it as compound tesseract for wireframe builders
   mergedCpdTesseract.userData.isCompound = true;
-  mergedCpdTesseract.userData.baseType = "BoxGeometry";
+  mergedCpdTesseract.userData.baseType = 'BoxGeometry';
   mergedCpdTesseract.userData.isCpdTesseract = true; // Flag for compound tesseract
 
   return mergedCpdTesseract;
@@ -152,10 +123,10 @@ export function createCompoundTesseract(options = {}) {
  * Metadata for the compound tesseract geometry
  */
 export const metadata = {
-  name: "box",
-  displayName: "📦 Compound Tesseract",
-  category: "polytopes",
-  description: "Two 4D hypercubes interpenetrating - simulates 4D rotation",
+  name: 'box',
+  displayName: '📦 Compound Tesseract',
+  category: 'polytopes',
+  description: 'Two 4D hypercubes interpenetrating - simulates 4D rotation',
   isCompound: true,
   defaultOptions: {},
 };

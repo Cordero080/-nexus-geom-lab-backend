@@ -1,10 +1,10 @@
-import * as THREE from "three";
-import { RectAreaLightUniformsLib } from "three/addons/lights/RectAreaLightUniformsLib.js";
+import * as THREE from 'three';
+import { RectAreaLightUniformsLib } from 'three/addons/lights/RectAreaLightUniformsLib.js';
 
 export function initializeLighting({
-  ambientLightColor = "#ffffff",
+  ambientLightColor = '#ffffff',
   ambientLightIntensity = 1.2,
-  directionalLightColor = "#ffffff",
+  directionalLightColor = '#ffffff',
   directionalLightIntensity = 1,
   directionalLightPosition = { x: 0, y: 10, z: 10 },
 }) {
@@ -12,17 +12,11 @@ export function initializeLighting({
   RectAreaLightUniformsLib.init();
 
   // Convert hex color strings to Three.js color numbers
-  const ambientLightColorHex = parseInt(ambientLightColor.replace("#", ""), 16);
-  const directionalLightColorHex = parseInt(
-    directionalLightColor.replace("#", ""),
-    16
-  );
+  const ambientLightColorHex = parseInt(ambientLightColor.replace('#', ''), 16);
+  const directionalLightColorHex = parseInt(directionalLightColor.replace('#', ''), 16);
 
   // Create ambient light - uniform illumination from all directions
-  const ambientLight = new THREE.AmbientLight(
-    ambientLightColorHex,
-    ambientLightIntensity
-  );
+  const ambientLight = new THREE.AmbientLight(ambientLightColorHex, ambientLightIntensity);
 
   // Create directional light - sun-like parallel rays with shadows
   const directionalLight = new THREE.DirectionalLight(

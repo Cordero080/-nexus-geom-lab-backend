@@ -1,6 +1,6 @@
 .audioToggleContainer {
   position: fixed;
-  top:150px;
+  top: 150px;
   right: 30px;
   display: flex;
   flex-direction: column;
@@ -27,7 +27,7 @@
   letter-spacing: 0.1em;
   line-height: 1;
   min-width: 130px;
-  box-shadow: 
+  box-shadow:
     0 8px 32px rgba(0, 255, 255, 0.15),
     0 0 60px rgba(255, 0, 255, 0.1),
     inset 0 1px 0 rgba(255, 255, 255, 0.1);
@@ -45,7 +45,7 @@
 
 .toggleButton:hover {
   border-color: rgba(0, 255, 255, 0.6);
-  box-shadow: 
+  box-shadow:
     0 12px 48px rgba(0, 255, 255, 0.25),
     0 0 80px rgba(255, 0, 255, 0.2),
     inset 0 1px 0 rgba(255, 255, 255, 0.15);
@@ -57,7 +57,7 @@
   border-color: rgba(0, 255, 255, 0.8);
   background: rgba(0, 255, 255, 0.1);
   color: #00ffff;
-  box-shadow: 
+  box-shadow:
     0 12px 48px rgba(0, 255, 255, 0.35),
     0 0 80px rgba(0, 255, 255, 0.3),
     inset 0 1px 0 rgba(255, 255, 255, 0.15);
@@ -70,7 +70,8 @@
 }
 
 @keyframes pulse {
-  0%, 100% {
+  0%,
+  100% {
     box-shadow: 0 0 20px rgba(0, 255, 100, 0.5);
   }
   50% {
@@ -96,7 +97,7 @@
   backdrop-filter: blur(12px);
   border: 2px solid rgba(0, 255, 255, 0.3);
   min-width: 180px;
-  box-shadow: 
+  box-shadow:
     0 8px 32px rgba(0, 255, 255, 0.15),
     0 0 60px rgba(255, 0, 255, 0.1),
     inset 0 1px 0 rgba(255, 255, 255, 0.1);

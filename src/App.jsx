@@ -13,7 +13,7 @@ import SignUpPage from './features/auth/pages/SignUpPage/SignUpPage';
 import LoginPage from './features/auth/pages/LoginPage/LoginPage';
 import { SceneProvider, useScene } from './context/SceneContext';
 import { AuthProvider, useAuth } from './features/auth/context/AuthContext';
-import { QuantumCursor } from "./components/ui/Effects";
+import { QuantumCursor } from './components/ui/Effects';
 import Footer from './components/pages/HomePage/Footer/Footer';
 import './cursor-override.module.scss';
 import sharedStyles from './styles/shared.module.scss';
@@ -26,9 +26,9 @@ const defaultHyperframeLineColor = '#00ff41'; // Electric lime green
 function GeomLab() {
   const { loadedConfig, resetScene } = useScene(); // CUSTOM HOOK: Get loaded config from context
   const { token } = useAuth(); // CUSTOM HOOK: Get auth for save functionality
-  const navigate = useNavigate(); // For navigation is usNavigate 
+  const navigate = useNavigate(); // For navigation is usNavigate
   const location = useLocation(); // Current location
-  
+
   // Save prompt modal state
   const [showSavePrompt, setShowSavePrompt] = useState(false);
   const [showNameInput, setShowNameInput] = useState(false);
@@ -36,60 +36,77 @@ function GeomLab() {
   const [nextPath, setNextPath] = useState(null);
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
   const [allowNavigation, setAllowNavigation] = useState(false);
-  
-  // MATERIAL PROPERTIES STATE
-  const [metalness, setMetalness] = useState(0.5) // 0 = plastic, 1 = full metal
-  const [emissiveIntensity, setEmissiveIntensity] = useState(0) // 0 = no glow, 2 = bright glow
-  
-  const [baseColor, setBaseColor] = useState(defaultBaseColor)
 
-  const [wireframeIntensity, setWireframeIntensity] = useState(50)
-  
+  // MATERIAL PROPERTIES STATE
+  const [metalness, setMetalness] = useState(0.5); // 0 = plastic, 1 = full metal
+  const [emissiveIntensity, setEmissiveIntensity] = useState(0); // 0 = no glow, 2 = bright glow
+
+  const [baseColor, setBaseColor] = useState(defaultBaseColor);
+
+  const [wireframeIntensity, setWireframeIntensity] = useState(50);
+
   // HYPERFRAME STATE
-  const [hyperframeColor, setHyperframeColor] = useState(defaultHyperframeColor)
-  const [hyperframeLineColor, setHyperframeLineColor] = useState(defaultHyperframeLineColor)
-  
+  const [hyperframeColor, setHyperframeColor] = useState(defaultHyperframeColor);
+  const [hyperframeLineColor, setHyperframeLineColor] = useState(defaultHyperframeLineColor);
+
   // SCENE BEHAVIOR STATE
-  const [cameraView, setCameraView] = useState('free')
-  const [environment, setEnvironment] = useState('matrix')
-  const [environmentHue, setEnvironmentHue] = useState(0) // Hue rotation for environment (0-360)
-  const [objectCount, setObjectCount] = useState(1)
-  const [animationStyle, setAnimationStyle] = useState('rotate')
-  const [objectType, setObjectType] = useState('icosahedron')
+  const [cameraView, setCameraView] = useState('free');
+  const [environment, setEnvironment] = useState('matrix');
+  const [environmentHue, setEnvironmentHue] = useState(0); // Hue rotation for environment (0-360)
+  const [objectCount, setObjectCount] = useState(1);
+  const [animationStyle, setAnimationStyle] = useState('rotate');
+  const [objectType, setObjectType] = useState('icosahedron');
 
   // LIGHTING STATE
-  const [ambientLightColor, setAmbientLightColor] = useState('#ffffff')
-  const [ambientLightIntensity, setAmbientLightIntensity] = useState(1.2)
-  const [directionalLightColor, setDirectionalLightColor] = useState('#ffffff')
-  const [directionalLightIntensity, setDirectionalLightIntensity] = useState(1.0)
-  const [directionalLightX, setDirectionalLightX] = useState(10)
-  const [directionalLightY, setDirectionalLightY] = useState(10)
-  const [directionalLightZ, setDirectionalLightZ] = useState(5)
-  const [scale, setScale] = useState(1)
-  const [objectSpeed, setObjectSpeed] = useState(1.0)
-  const [orbSpeed, setOrbSpeed] = useState(1.0)
-
-
+  const [ambientLightColor, setAmbientLightColor] = useState('#ffffff');
+  const [ambientLightIntensity, setAmbientLightIntensity] = useState(1.2);
+  const [directionalLightColor, setDirectionalLightColor] = useState('#ffffff');
+  const [directionalLightIntensity, setDirectionalLightIntensity] = useState(1.0);
+  const [directionalLightX, setDirectionalLightX] = useState(10);
+  const [directionalLightY, setDirectionalLightY] = useState(10);
+  const [directionalLightZ, setDirectionalLightZ] = useState(5);
+  const [scale, setScale] = useState(1);
+  const [objectSpeed, setObjectSpeed] = useState(1.0);
+  const [orbSpeed, setOrbSpeed] = useState(1.0);
 
   // Track changes to mark as unsaved
   useEffect(() => {
     setHasUnsavedChanges(true);
-  }, [metalness, emissiveIntensity, baseColor, wireframeIntensity, hyperframeColor,
-      hyperframeLineColor, cameraView, environment, environmentHue, objectCount,
-  animationStyle, objectType, ambientLightColor, ambientLightIntensity,
-  directionalLightColor, directionalLightIntensity, directionalLightX,
-  directionalLightY, directionalLightZ, scale, objectSpeed, orbSpeed]);
+  }, [
+    metalness,
+    emissiveIntensity,
+    baseColor,
+    wireframeIntensity,
+    hyperframeColor,
+    hyperframeLineColor,
+    cameraView,
+    environment,
+    environmentHue,
+    objectCount,
+    animationStyle,
+    objectType,
+    ambientLightColor,
+    ambientLightIntensity,
+    directionalLightColor,
+    directionalLightIntensity,
+    directionalLightX,
+    directionalLightY,
+    directionalLightZ,
+    scale,
+    objectSpeed,
+    orbSpeed,
+  ]);
 
   // Intercept link clicks for navigation blocking
   useEffect(() => {
     const handleClick = (e) => {
       if (!hasUnsavedChanges || allowNavigation) return;
-      
+
       const link = e.target.closest('a');
       if (link && link.href) {
         const url = new URL(link.href);
         const targetPath = url.pathname;
-        
+
         // Only block internal navigation to different routes
         if (targetPath !== location.pathname && url.origin === window.location.origin) {
           e.preventDefault();
@@ -119,14 +136,17 @@ function GeomLab() {
     if (loadedConfig) {
       // Apply material properties
       if (loadedConfig.metalness !== undefined) setMetalness(loadedConfig.metalness);
-      if (loadedConfig.emissiveIntensity !== undefined) setEmissiveIntensity(loadedConfig.emissiveIntensity);
+      if (loadedConfig.emissiveIntensity !== undefined)
+        setEmissiveIntensity(loadedConfig.emissiveIntensity);
       if (loadedConfig.baseColor) setBaseColor(loadedConfig.baseColor);
-      if (loadedConfig.wireframeIntensity !== undefined) setWireframeIntensity(loadedConfig.wireframeIntensity);
-      
+      if (loadedConfig.wireframeIntensity !== undefined)
+        setWireframeIntensity(loadedConfig.wireframeIntensity);
+
       // Apply hyperframe
       if (loadedConfig.hyperframeColor) setHyperframeColor(loadedConfig.hyperframeColor);
-      if (loadedConfig.hyperframeLineColor) setHyperframeLineColor(loadedConfig.hyperframeLineColor);
-      
+      if (loadedConfig.hyperframeLineColor)
+        setHyperframeLineColor(loadedConfig.hyperframeLineColor);
+
       // Apply scene behavior
       if (loadedConfig.cameraView) setCameraView(loadedConfig.cameraView);
       if (loadedConfig.environment) setEnvironment(loadedConfig.environment);
@@ -134,17 +154,23 @@ function GeomLab() {
       if (loadedConfig.objectCount !== undefined) setObjectCount(loadedConfig.objectCount);
       if (loadedConfig.animationStyle) setAnimationStyle(loadedConfig.animationStyle);
       if (loadedConfig.objectType) setObjectType(loadedConfig.objectType);
-      
+
       // Apply lighting
       if (loadedConfig.ambientLightColor) setAmbientLightColor(loadedConfig.ambientLightColor);
-      if (loadedConfig.ambientLightIntensity !== undefined) setAmbientLightIntensity(loadedConfig.ambientLightIntensity);
-      if (loadedConfig.directionalLightColor) setDirectionalLightColor(loadedConfig.directionalLightColor);
-      if (loadedConfig.directionalLightIntensity !== undefined) setDirectionalLightIntensity(loadedConfig.directionalLightIntensity);
-      if (loadedConfig.directionalLightX !== undefined) setDirectionalLightX(loadedConfig.directionalLightX);
-      if (loadedConfig.directionalLightY !== undefined) setDirectionalLightY(loadedConfig.directionalLightY);
-      if (loadedConfig.directionalLightZ !== undefined) setDirectionalLightZ(loadedConfig.directionalLightZ);
+      if (loadedConfig.ambientLightIntensity !== undefined)
+        setAmbientLightIntensity(loadedConfig.ambientLightIntensity);
+      if (loadedConfig.directionalLightColor)
+        setDirectionalLightColor(loadedConfig.directionalLightColor);
+      if (loadedConfig.directionalLightIntensity !== undefined)
+        setDirectionalLightIntensity(loadedConfig.directionalLightIntensity);
+      if (loadedConfig.directionalLightX !== undefined)
+        setDirectionalLightX(loadedConfig.directionalLightX);
+      if (loadedConfig.directionalLightY !== undefined)
+        setDirectionalLightY(loadedConfig.directionalLightY);
+      if (loadedConfig.directionalLightZ !== undefined)
+        setDirectionalLightZ(loadedConfig.directionalLightZ);
       if (loadedConfig.scale !== undefined) setScale(loadedConfig.scale);
-      
+
       // Clear the loaded config so it doesn't re-apply
       // We'll do this after a short delay to ensure it's applied
       setTimeout(() => resetScene, 100);
@@ -164,7 +190,6 @@ function GeomLab() {
     return () => window.removeEventListener('beforeunload', handleBeforeUnload);
   }, [hasUnsavedChanges, allowNavigation]);
 
-  
   // Handle save from modal
   const handleSaveFromModal = () => {
     setShowSavePrompt(false);
@@ -176,13 +201,13 @@ function GeomLab() {
     if (sceneName && sceneName.trim() !== '') {
       try {
         const { saveScene } = await import('./services/sceneApi');
-        
+
         const sceneData = {
           name: sceneName.trim(),
           description: '',
-          config: sceneConfig
+          config: sceneConfig,
         };
-        
+
         await saveScene(sceneData, token);
         alert(`"${sceneName}" saved successfully!`);
         setHasUnsavedChanges(false); // Mark as saved
@@ -202,7 +227,6 @@ function GeomLab() {
     setShowSavePrompt(true); // Go back to save prompt
   };
 
-
   // Handle exit without saving from modal
   const handleExitWithoutSaving = () => {
     setShowSavePrompt(false);
@@ -217,7 +241,7 @@ function GeomLab() {
   };
 
   // Handle exit button click
-// these are 20 states passed down to ThreeScene as props
+  // these are 20 states passed down to ThreeScene as props
   // Create sceneConfig object for SaveButton
   const sceneConfig = {
     metalness,
@@ -241,7 +265,7 @@ function GeomLab() {
     directionalLightZ,
     scale,
     objectSpeed,
-    orbSpeed
+    orbSpeed,
   };
 
   // Handle exit with save prompt
@@ -255,7 +279,6 @@ function GeomLab() {
       <NavBar />
       <SaveControls sceneConfig={sceneConfig} />
       <ExitButton onClick={handleExit} />
-      
       {/* Save Prompt Modal */}
       {showSavePrompt && (
         <div className="save-modal-overlay" onClick={handleCancelExit}>
@@ -263,13 +286,11 @@ function GeomLab() {
             <button className="save-modal__close" onClick={handleCancelExit}>
               ✕
             </button>
-            
+
             <h2 className="save-modal__title">Save Scene?</h2>
-            
-            <p className="save-modal__message">
-              Your creation hasn't been saved yet.
-            </p>
-            
+
+            <p className="save-modal__message">Your creation hasn't been saved yet.</p>
+
             <div className="save-modal__actions">
               <ScrambleButton
                 onClick={handleSaveFromModal}
@@ -278,7 +299,7 @@ function GeomLab() {
               >
                 Save & Exit
               </ScrambleButton>
-              
+
               <ScrambleButton
                 onClick={handleExitWithoutSaving}
                 variant="danger"
@@ -286,7 +307,7 @@ function GeomLab() {
               >
                 Exit Without Saving
               </ScrambleButton>
-              
+
               <ScrambleButton
                 onClick={handleCancelExit}
                 variant="secondary"
@@ -298,7 +319,6 @@ function GeomLab() {
           </div>
         </div>
       )}
-
       {/* Name Input Modal */}
       {showNameInput && (
         <div className="save-modal-overlay" onClick={handleCancelNameInput}>
@@ -306,9 +326,9 @@ function GeomLab() {
             <button className="save-modal__close" onClick={handleCancelNameInput}>
               ✕
             </button>
-            
+
             <h2 className="save-modal__title">Name Your Masterpiece</h2>
-            
+
             <input
               type="text"
               className={`save-modal__input holographic-input ${sharedStyles.angledCorners}`}
@@ -322,7 +342,7 @@ function GeomLab() {
               }}
               autoFocus
             />
-            
+
             <div className="save-modal__actions">
               <ScrambleButton
                 onClick={handleSaveScene}
@@ -332,7 +352,7 @@ function GeomLab() {
               >
                 Save
               </ScrambleButton>
-              
+
               <ScrambleButton
                 onClick={handleCancelNameInput}
                 variant="secondary"
@@ -344,8 +364,8 @@ function GeomLab() {
           </div>
         </div>
       )}
-      
-      // App.jsx says to ThreeScene: Hey kid, here are 21 props I want you to know about. But u know what ain't one. 
+      // App.jsx says to ThreeScene: Hey kid, here are 21 props I want you to know about. But u know
+      what ain't one.
       <ThreeScene
         scale={scale}
         objectSpeed={objectSpeed}
@@ -422,12 +442,12 @@ function GeomLab() {
 
 function HomePageWithNav() {
   const navigate = useNavigate();
-  
+
   // Direct navigation handler
   const handleEnter = () => {
     navigate('/geom-lab');
   };
-  
+
   return (
     <>
       <HomePage onEnter={handleEnter} />
@@ -436,14 +456,14 @@ function HomePageWithNav() {
 }
 
 function AppContent() {
-  // Get authentication status from AuthContext 
+  // Get authentication status from AuthContext
   const { isAuthenticated, isLoading } = useAuth();
   const location = useLocation();
 
   const currentPath = location.pathname;
   const isHomePage = currentPath === '/' || currentPath === '';
   const isGeomLabPage = currentPath === '/geom-lab' || currentPath === '/geometry-lab';
-  
+
   // Set cursor style and body class based on current route
   useEffect(() => {
     if (isGeomLabPage) {
@@ -454,54 +474,65 @@ function AppContent() {
       document.body.classList.remove('geom-lab-page');
     }
   }, [currentPath, isHomePage, isGeomLabPage]);
-  
+
   // Show loading screen while checking authentication
   if (isLoading) {
     return (
-      <div style={{ 
-        display: 'flex', 
-        justifyContent: 'center', 
-        alignItems: 'center', 
-        height: '100vh',
-        background: '#000',
-        color: '#fff',
-        fontSize: '24px'
-      }}>
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          height: '100vh',
+          background: '#000',
+          color: '#fff',
+          fontSize: '24px',
+        }}
+      >
         Loading...
       </div>
     );
   }
-  
+
   return (
     <SceneProvider>
       {/* Render QuantumCursor on all pages EXCEPT geom-lab */}
       {!isGeomLabPage && <QuantumCursor />}
-      
+
       {/* Footer only on homepage bottom */}
       {currentPath === '/' && <Footer />}
-      
+
       <Routes>
         {/* PUBLIC ROUTE - anyone can access */}
         <Route path="/" element={<HomePageWithNav />} />
-        
+
         {/* PROTECTED ROUTES - redirect to login if not authenticated */}
-        <Route 
-          path="/geom-lab" 
+        <Route
+          path="/geom-lab"
           element={isAuthenticated ? <GeomLab /> : <Navigate to="/login" />}
         />
-        <Route 
-          path="/geometry-lab" 
+        <Route
+          path="/geometry-lab"
           element={isAuthenticated ? <GeomLab /> : <Navigate to="/login" />}
         />
-        <Route 
-          path="/showcase" 
-          element={isAuthenticated ? <><NavBar /><ShowcaseGallery /></> : <Navigate to="/login" />} 
+        <Route
+          path="/showcase"
+          element={
+            isAuthenticated ? (
+              <>
+                <NavBar />
+                <ShowcaseGallery />
+              </>
+            ) : (
+              <Navigate to="/login" />
+            )
+          }
         />
-        <Route 
-          path="/scenes" 
-          element={isAuthenticated ? <MyScenesPage /> : <Navigate to="/login" />} 
+        <Route
+          path="/scenes"
+          element={isAuthenticated ? <MyScenesPage /> : <Navigate to="/login" />}
         />
-        
+
         {/* PUBLIC AUTH ROUTES - anyone can access */}
         <Route path="/signup" element={<SignUpPage />} />
         <Route path="/login" element={<LoginPage />} />

@@ -1,17 +1,34 @@
 /* Scene Card Styles */
 
 @keyframes darkHolographicShimmer {
-  0%, 100% {
-    background-position: 0% 50%, 0% 0%, 100% 100%, 0% 50%;
+  0%,
+  100% {
+    background-position:
+      0% 50%,
+      0% 0%,
+      100% 100%,
+      0% 50%;
   }
   25% {
-    background-position: 25% 25%, 20% 20%, 80% 80%, 25% 75%;
+    background-position:
+      25% 25%,
+      20% 20%,
+      80% 80%,
+      25% 75%;
   }
   50% {
-    background-position: 50% 0%, 40% 40%, 60% 60%, 50% 100%;
+    background-position:
+      50% 0%,
+      40% 40%,
+      60% 60%,
+      50% 100%;
   }
   75% {
-    background-position: 75% 75%, 60% 60%, 40% 40%, 75% 25%;
+    background-position:
+      75% 75%,
+      60% 60%,
+      40% 40%,
+      75% 25%;
   }
 }
 
@@ -20,8 +37,17 @@
     linear-gradient(145deg, #0a0a0a, #000000),
     radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.1), transparent 50%),
     radial-gradient(circle at 70% 70%, rgba(0, 0, 0, 0.5), transparent 50%),
-    linear-gradient(45deg, rgba(138, 43, 226, 0.05), rgba(0, 212, 255, 0.05), rgba(138, 43, 226, 0.05)) !important;
-  background-size: 100% 100%, 150% 150%, 150% 150%, 200% 200% !important;
+    linear-gradient(
+      45deg,
+      rgba(138, 43, 226, 0.05),
+      rgba(0, 212, 255, 0.05),
+      rgba(138, 43, 226, 0.05)
+    ) !important;
+  background-size:
+    100% 100%,
+    150% 150%,
+    150% 150%,
+    200% 200% !important;
   background-blend-mode: overlay, multiply, overlay !important;
   backdrop-filter: blur(10px) !important;
   border: 1px solid rgba(0, 212, 255, 0.3) !important;
@@ -48,21 +74,22 @@
 /* Highlighted state for newly saved scenes */
 .sceneCardHighlighted {
   border: 4px solid #00ffff !important;
-  box-shadow: 
+  box-shadow:
     0 0 30px rgba(0, 255, 255, 0.8),
     0 0 60px rgba(0, 255, 255, 0.6),
     0 0 90px rgba(0, 255, 255, 0.4),
     0 4px 8px rgba(0, 0, 0, 0.8),
     inset 0 0 40px rgba(0, 255, 255, 0.3) !important;
-  animation: 
+  animation:
     darkHolographicShimmer 3s ease infinite,
     highlightPulse 1.5s ease-in-out infinite !important;
   transform: scale(1.02) !important;
 }
 
 @keyframes highlightPulse {
-  0%, 100% {
-    box-shadow: 
+  0%,
+  100% {
+    box-shadow:
       0 0 30px rgba(0, 255, 255, 0.8),
       0 0 60px rgba(0, 255, 255, 0.6),
       0 0 90px rgba(0, 255, 255, 0.4),
@@ -70,7 +97,7 @@
       inset 0 0 40px rgba(0, 255, 255, 0.3);
   }
   50% {
-    box-shadow: 
+    box-shadow:
       0 0 40px rgba(0, 255, 255, 1),
       0 0 80px rgba(0, 255, 255, 0.8),
       0 0 120px rgba(0, 255, 255, 0.6),
@@ -119,7 +146,8 @@
   width: 100%;
   height: 100%;
   opacity: 0.95;
-  filter: drop-shadow(0 0 10px rgba(0, 255, 255, 0.25)) drop-shadow(0 0 18px rgba(255, 0, 255, 0.12));
+  filter: drop-shadow(0 0 10px rgba(0, 255, 255, 0.25))
+    drop-shadow(0 0 18px rgba(255, 0, 255, 0.12));
   animation: geoFloat 6s ease-in-out infinite;
   /* Ensure full visibility of SVG content */
   overflow: visible;
@@ -144,12 +172,19 @@
 }
 
 @keyframes dashMove {
-  to { stroke-dashoffset: -200; }
+  to {
+    stroke-dashoffset: -200;
+  }
 }
 
 @keyframes geoFloat {
-  0%, 100% { transform: translateY(0px); }
-  50% { transform: translateY(-6px); }
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
 }
 
 /* Info Section */
@@ -222,13 +257,13 @@
   border-top: 1px solid rgba(255, 255, 255, 0.1);
   flex-wrap: nowrap; /* Keep buttons inline, no wrapping */
   min-height: 52px; /* Increased from 48px to 52px for better button size */
-  
+
   /* Override ScrambleButton font to use Orbitron */
   button {
     font-family: 'Orbitron', monospace !important;
     flex: 1; /* Equal width buttons */
     min-width: 0; /* Allow flex to work properly */
-    
+
     span {
       font-family: 'Orbitron', monospace !important;
     }

@@ -12,7 +12,7 @@ export default function HolographicCube({ size }) {
 
   useFrame((state) => {
     const time = state.clock.elapsedTime;
-    
+
     // Animate edge wireframe color - cycle through cyan, magenta, yellow
     if (edgeMaterialRef.current) {
       const r = Math.sin(time * 0.5) * 0.5 + 0.5;
@@ -20,7 +20,7 @@ export default function HolographicCube({ size }) {
       const b = Math.sin(time * 0.5 + 4) * 0.5 + 0.5;
       edgeMaterialRef.current.color.setRGB(r, g, b);
     }
-    
+
     // Cube material shimmer effect - rainbow iridescence
     if (cubeMaterialRef.current) {
       const shimmerTime = time * 0.8;
@@ -53,7 +53,7 @@ export default function HolographicCube({ size }) {
           clearcoatRoughness={0.0}
         />
       </mesh>
-      
+
       {/* Middle shimmering layer */}
       <mesh>
         <boxGeometry args={[size, size, size]} />
@@ -76,7 +76,7 @@ export default function HolographicCube({ size }) {
           iridescenceThicknessRange={[200, 1200]}
         />
       </mesh>
-      
+
       {/* Inner holographic core */}
       <mesh>
         <boxGeometry args={[size * 0.98, size * 0.98, size * 0.98]} />
@@ -93,7 +93,7 @@ export default function HolographicCube({ size }) {
           iridescenceThicknessRange={[100, 600]}
         />
       </mesh>
-      
+
       {/* Cube edges (wireframe) */}
       <lineSegments>
         <edgesGeometry args={[new THREE.BoxGeometry(size, size, size)]} />

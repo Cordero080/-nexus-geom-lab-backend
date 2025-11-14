@@ -26,10 +26,10 @@ export function quantumCollapse(states) {
  */
 export function formatDate(dateString) {
   const date = new Date(dateString);
-  return date.toLocaleDateString("en-US", {
-    month: "short",
-    day: "numeric",
-    year: "numeric",
+  return date.toLocaleDateString('en-US', {
+    month: 'short',
+    day: 'numeric',
+    year: 'numeric',
   });
 }
 
@@ -40,17 +40,16 @@ export function formatDate(dateString) {
  */
 export function getPlaceholderGradient(id) {
   const colors = [
-    ["#667eea", "#764ba2"], // Purple
-    ["#f093fb", "#f5576c"], // Pink
-    ["#4facfe", "#00f2fe"], // Blue
-    ["#43e97b", "#38f9d7"], // Green
-    ["#fa709a", "#fee140"], // Orange/Pink
-    ["#30cfd0", "#330867"], // Teal/Purple
+    ['#667eea', '#764ba2'], // Purple
+    ['#f093fb', '#f5576c'], // Pink
+    ['#4facfe', '#00f2fe'], // Blue
+    ['#43e97b', '#38f9d7'], // Green
+    ['#fa709a', '#fee140'], // Orange/Pink
+    ['#30cfd0', '#330867'], // Teal/Purple
   ];
 
   // Simple hash to pick consistent color
-  const hash =
-    id?.split("").reduce((acc, char) => acc + char.charCodeAt(0), 0) || 0;
+  const hash = id?.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0) || 0;
   const [color1, color2] = colors[hash % colors.length];
 
   return `linear-gradient(135deg, ${color1} 0%, ${color2} 100%)`;
@@ -132,5 +131,5 @@ export function capitalize(str) {
  */
 export function truncateText(text, maxLength) {
   if (text.length <= maxLength) return text;
-  return text.slice(0, maxLength - 3) + "...";
+  return text.slice(0, maxLength - 3) + '...';
 }

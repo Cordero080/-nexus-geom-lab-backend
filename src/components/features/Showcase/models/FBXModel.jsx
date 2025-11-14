@@ -7,7 +7,19 @@ import * as THREE from 'three';
 // Configure allowNaturalYMovement in: src/Showcase/data/mockAnimations.js
 // Used by: src/Showcase/components/ShowcaseViewer/ShowcaseViewer.jsx
 
-export default function FBXModel({ url, scale = 0.01, rotation = [0, 0, 0], positionY = -1.8, offsetX = 0, offsetZ = 0, isPlaying = true, onModelLoaded, allowNaturalYMovement = false, onAnimationTimeUpdate = null, speed = 1.0 }) {
+export default function FBXModel({
+  url,
+  scale = 0.01,
+  rotation = [0, 0, 0],
+  positionY = -1.8,
+  offsetX = 0,
+  offsetZ = 0,
+  isPlaying = true,
+  onModelLoaded,
+  allowNaturalYMovement = false,
+  onAnimationTimeUpdate = null,
+  speed = 1.0,
+}) {
   const groupRef = useRef();
   const mixerRef = useRef();
   const modelRef = useRef();
@@ -15,7 +27,7 @@ export default function FBXModel({ url, scale = 0.01, rotation = [0, 0, 0], posi
 
   useEffect(() => {
     const loader = new FBXLoader();
-    
+
     loader.load(
       url,
       (fbx) => {
@@ -35,8 +47,8 @@ export default function FBXModel({ url, scale = 0.01, rotation = [0, 0, 0], posi
         const size = box.getSize(new THREE.Vector3());
 
         // Center horizontally, place at bottom of cube
-        fbx.position.x = -center.x;  // Center on X-axis
-        fbx.position.z = -center.z;  // Center on Z-axis
+        fbx.position.x = -center.x; // Center on X-axis
+        fbx.position.z = -center.z; // Center on Z-axis
         fbx.position.y = -box.min.y; // Y-ANCHOR: Put feet at y=0 (initial ground position)
         // NOTE: If allowNaturalYMovement=true, animation can move model up/down from this base
 
@@ -47,7 +59,7 @@ export default function FBXModel({ url, scale = 0.01, rotation = [0, 0, 0], posi
 
           // Clone the animation and remove root position tracks to prevent position drift
           const clip = fbx.animations[0].clone();
-          
+
           // ANIMATION Y-AXIS CONTROL SYSTEM:
           // This filter controls whether models can move naturally in Y-axis or stay grounded
           // Remove only the root translation so characters stay centered while limb motion persists
@@ -59,8 +71,9 @@ export default function FBXModel({ url, scale = 0.01, rotation = [0, 0, 0], posi
             }
 
             const nodePath = parts.slice(0, -1).join('.').toLowerCase();
-            const isRootPosition = nodePath.endsWith('hips') || nodePath.endsWith('root') || nodePath.endsWith('pelvis');
-            
+            const isRootPosition =
+              nodePath.endsWith('hips') || nodePath.endsWith('root') || nodePath.endsWith('pelvis');
+
             // Y-AXIS MOVEMENT DECISION POINT:
             // Configure this setting in: src/Showcase/data/mockAnimations.js
             // If allowNaturalYMovement is true, preserve Y-axis animation for acrobatic moves
@@ -68,7 +81,7 @@ export default function FBXModel({ url, scale = 0.01, rotation = [0, 0, 0], posi
               // Keep only Y-axis movement, remove X and Z to prevent drifting
               return track.name.includes('.position');
             }
-            
+
             // Default: Remove all root position tracks to keep model grounded
             return !isRootPosition;
           });
@@ -102,8 +115,6 @@ export default function FBXModel({ url, scale = 0.01, rotation = [0, 0, 0], posi
                 mat.map.minFilter = THREE.LinearFilter;
                 mat.map.generateMipmaps = false;
               }
-              
-
             });
           }
         });
@@ -121,7 +132,7 @@ export default function FBXModel({ url, scale = 0.01, rotation = [0, 0, 0], posi
         mixerRef.current.stopAllAction();
         mixerRef.current = null;
       }
-      
+
       // Dispose of the model and its resources
       if (modelRef.current) {
         modelRef.current.traverse((child) => {
@@ -130,7 +141,7 @@ export default function FBXModel({ url, scale = 0.01, rotation = [0, 0, 0], posi
             if (child.geometry) {
               child.geometry.dispose();
             }
-            
+
             // Dispose materials and textures
             if (child.material) {
               const materials = Array.isArray(child.material) ? child.material : [child.material];
@@ -149,15 +160,15 @@ export default function FBXModel({ url, scale = 0.01, rotation = [0, 0, 0], posi
             }
           }
         });
-        
+
         // Remove from scene
         if (groupRef.current) {
           groupRef.current.remove(modelRef.current);
         }
-        
+
         modelRef.current = null;
       }
-      
+
       actionRef.current = null;
     };
   }, [url, scale]);
@@ -178,7 +189,7 @@ export default function FBXModel({ url, scale = 0.01, rotation = [0, 0, 0], posi
     if (mixerRef.current && isPlaying) {
       // Apply speed multiplier to animation
       mixerRef.current.update(delta * speed);
-      
+
       // Call onAnimationTimeUpdate callback with current animation time
       if (onAnimationTimeUpdate && actionRef.current) {
         const currentTime = actionRef.current.time;

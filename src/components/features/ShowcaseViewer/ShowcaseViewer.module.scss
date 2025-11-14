@@ -9,11 +9,7 @@
   min-height: 100vh;
   max-height: 100vh;
   background: #0050cc; /* Default fallback background */
-  background: linear-gradient(135deg, 
-    #03398b 0%, 
-    #00c8ff 50%, 
-    #0050cc 100%
-  );
+  background: linear-gradient(135deg, #03398b 0%, #00c8ff 50%, #0050cc 100%);
   z-index: 9999; /* Higher z-index to ensure it's above everything */
   display: flex;
   flex-direction: column;
@@ -37,8 +33,9 @@
 }
 
 @keyframes cosmicGlow {
-  0%, 100% {
-    filter: brightness(1.0) saturate(2.2);
+  0%,
+  100% {
+    filter: brightness(1) saturate(2.2);
   }
   50% {
     filter: brightness(1.3) saturate(1.5) hue-rotate(10deg);
@@ -46,25 +43,26 @@
 }
 /* Animation 2 - Vectra #002 (Dark Radial with Contained Glow) */
 :global(.viewer-overlay-2) {
-  background: 
-    radial-gradient(circle at center, 
-      #2a2a2a 0%, 
-      #6a00fffc 12%, 
-       #02213427 25%,
-       #061a19af 20%,  
-      #092cc8b1 17.5%, 
-      #1a1a1a 35%,
-      #ff00ff5a 60%,
-      #03021e6a 65%,
-      #3c526bab 70%,
-      #080809a7 75%,
-      #ff0088 105%,
-      #040114 100%
-    );
+  background: radial-gradient(
+    circle at center,
+    #2a2a2a 0%,
+    #6a00fffc 12%,
+    #02213427 25%,
+    #061a19af 20%,
+    #092cc8b1 17.5%,
+    #1a1a1a 35%,
+    #ff00ff5a 60%,
+    #03021e6a 65%,
+    #3c526bab 70%,
+    #080809a7 75%,
+    #ff0088 105%,
+    #040114 100%
+  );
 }
 
 @keyframes cosmicPulse {
-  0%, 100% {
+  0%,
+  100% {
     filter: brightness(1.2) saturate(1.2);
   }
   50% {
@@ -73,14 +71,33 @@
 }
 
 @keyframes nebulaDrift {
-  0%, 100% {
-    background-position: 0% 0%, 100% 100%, 50% 50%, 0% 100%, 100% 0%, 0% 0%;
+  0%,
+  100% {
+    background-position:
+      0% 0%,
+      100% 100%,
+      50% 50%,
+      0% 100%,
+      100% 0%,
+      0% 0%;
   }
   33% {
-    background-position: 50% 50%, 0% 0%, 100% 100%, 100% 0%, 0% 100%, 0% 0%;
+    background-position:
+      50% 50%,
+      0% 0%,
+      100% 100%,
+      100% 0%,
+      0% 100%,
+      0% 0%;
   }
   66% {
-    background-position: 100% 100%, 50% 50%, 0% 0%, 50% 50%, 50% 50%, 0% 0%;
+    background-position:
+      100% 100%,
+      50% 50%,
+      0% 0%,
+      50% 50%,
+      50% 50%,
+      0% 0%;
   }
 }
 
@@ -94,30 +111,30 @@
 @keyframes matrixPulse {
   0% {
     filter: brightness(1.6) contrast(1.2) saturate(1.2);
-    background-position: 
-      center center,    /* Core energy */
-      center center,    /* Concentric rings */
-      0 0,             /* Grid vertical */
-      0 0,             /* Grid horizontal */
-      center center;    /* Horizon glow */
+    background-position:
+      center center,
+      /* Core energy */ center center,
+      /* Concentric rings */ 0 0,
+      /* Grid vertical */ 0 0,
+      /* Grid horizontal */ center center; /* Horizon glow */
   }
   50% {
     filter: brightness(1.3) contrast(1.4) saturate(1.5) hue-rotate(10deg);
-    background-position: 
-      center center,    /* Core energy */
-      center center,    /* Concentric rings */
-      3px 3px,         /* Grid vertical shift */
-      -30px 3px,        /* Grid horizontal shift */
-      center center;    /* Horizon glow */
+    background-position:
+      center center,
+      /* Core energy */ center center,
+      /* Concentric rings */ 3px 3px,
+      /* Grid vertical shift */ -30px 3px,
+      /* Grid horizontal shift */ center center; /* Horizon glow */
   }
   100% {
-    filter: brightness(1.0) contrast(1.3) saturate(1.3) hue-rotate(-5deg);
-    background-position: 
-      center center,    /* Core energy */
-      center center,    /* Concentric rings */
-      0 0,             /* Grid vertical */
-      0 0,             /* Grid horizontal */
-      center center;    /* Horizon glow */
+    filter: brightness(1) contrast(1.3) saturate(1.3) hue-rotate(-5deg);
+    background-position:
+      center center,
+      /* Core energy */ center center,
+      /* Concentric rings */ 0 0,
+      /* Grid vertical */ 0 0,
+      /* Grid horizontal */ center center; /* Horizon glow */
   }
 }
 
@@ -125,7 +142,7 @@
   content: '';
   position: absolute;
   inset: 0;
-  background: 
+  background:
     radial-gradient(circle at 25% 25%, rgba(0, 255, 127, 0.2) 0%, transparent 10%),
     radial-gradient(circle at 75% 25%, rgba(0, 255, 127, 0.2) 0%, transparent 10%),
     radial-gradient(circle at 25% 75%, rgba(0, 255, 127, 0.2) 0%, transparent 10%),
@@ -171,9 +188,15 @@
 }
 
 @keyframes instantAppear {
-  0% { opacity: 0; }
-  1% { opacity: 1; }
-  100% { opacity: 1; }
+  0% {
+    opacity: 0;
+  }
+  1% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 1;
+  }
 }
 
 @keyframes fadeIn {
@@ -291,13 +314,13 @@
   gap: 10px;
   box-shadow: none;
   clip-path: polygon(
-    8px 0, 
-    calc(100% - 8px) 0, 
-    100% 8px, 
-    100% calc(100% - 8px), 
-    calc(100% - 8px) 100%, 
-    8px 100%, 
-    0 calc(100% - 8px), 
+    8px 0,
+    calc(100% - 8px) 0,
+    100% 8px,
+    100% calc(100% - 8px),
+    calc(100% - 8px) 100%,
+    8px 100%,
+    0 calc(100% - 8px),
     0 8px
   );
 }
@@ -364,17 +387,19 @@
   text-align: center;
   position: relative;
   z-index: 10;
-  box-shadow: 
+  box-shadow:
     0 8px 32px rgba(0, 0, 0, 0.5),
     0 4px 16px rgba(0, 0, 0, 0.4),
     0 2px 8px rgba(0, 0, 0, 0.3),
     inset 0 1px 0 rgba(255, 255, 255, 0.1);
-  transition: box-shadow 0.3s ease, transform 0.3s ease;
+  transition:
+    box-shadow 0.3s ease,
+    transform 0.3s ease;
   border-top: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 :global(.viewer-info):hover {
-  box-shadow: 
+  box-shadow:
     0 12px 48px rgba(0, 0, 0, 0.6),
     0 8px 24px rgba(0, 0, 0, 0.5),
     0 4px 12px rgba(0, 0, 0, 0.4),
@@ -386,13 +411,18 @@
 /* Icarus-X #001 - Code Breaker Theme */
 :global(.viewer-overlay-1) {
   :global(.viewer-info) {
-    background: 
+    background:
       radial-gradient(ellipse at top left, rgba(4, 57, 63, 0.282) 0%, transparent 50%),
       radial-gradient(ellipse at bottom right, rgba(17, 19, 73, 0.153) 0%, transparent 50%),
-      linear-gradient(135deg, rgba(81, 68, 124, 0.099) 0%, rgba(64, 81, 149, 0.119) 50%, rgba(81, 68, 124, 0.153) 100%);
+      linear-gradient(
+        135deg,
+        rgba(81, 68, 124, 0.099) 0%,
+        rgba(64, 81, 149, 0.119) 50%,
+        rgba(81, 68, 124, 0.153) 100%
+      );
     border-top: 1px solid rgba(157, 124, 7, 0.469);
     backdrop-filter: blur(12px) saturate(180%);
-    box-shadow: 
+    box-shadow:
       0 -2px 32px rgba(84, 78, 205, 0.25),
       0 -4px 16px rgba(136, 197, 233, 0.2),
       inset 0 1px 0 rgba(255, 255, 255, 0.2),
@@ -428,13 +458,19 @@
 /* Vectra APEX #002 - Holographic Spectral Theme */
 :global(.viewer-overlay-2) {
   :global(.viewer-info) {
-    background: 
+    background:
       radial-gradient(ellipse at top center, rgba(1, 42, 31, 0.781) 0%, transparent 50%),
       radial-gradient(ellipse at bottom center, rgba(214, 67, 243, 0.1) 0%, transparent 50%),
-      linear-gradient(180deg, rgba(0, 102, 255, 0.2) 0%, rgba(7, 79, 101, 0.236) 30%, rgba(111, 10, 131, 0.598) 70%, rgba(0, 255, 255, 0.15) 100%);
+      linear-gradient(
+        180deg,
+        rgba(0, 102, 255, 0.2) 0%,
+        rgba(7, 79, 101, 0.236) 30%,
+        rgba(111, 10, 131, 0.598) 70%,
+        rgba(0, 255, 255, 0.15) 100%
+      );
     border-top: 2px solid rgba(95, 208, 253, 0.944);
     backdrop-filter: blur(15px) saturate(200%);
-    box-shadow: 
+    box-shadow:
       0 -8px 22px rgba(3, 107, 72, 0.3),
       0 -4px 16px rgba(214, 67, 243, 0.2),
       inset 0 1px 0 rgba(255, 255, 255, 0.15),
@@ -470,13 +506,18 @@
 /* Nexus-Prime #003 - Dark Glassmorphic Quantum Theme */
 :global(.viewer-overlay-3) {
   :global(.viewer-info) {
-    background: 
+    background:
       radial-gradient(ellipse at top left, rgba(40, 0, 40, 0.28) 0%, transparent 50%),
       radial-gradient(ellipse at bottom right, rgba(0, 30, 20, 0.25) 0%, transparent 50%),
-      linear-gradient(135deg, rgba(50, 20, 60, 0.12) 0%, rgba(20, 40, 30, 0.15) 50%, rgba(30, 15, 40, 0.18) 100%);
+      linear-gradient(
+        135deg,
+        rgba(50, 20, 60, 0.12) 0%,
+        rgba(20, 40, 30, 0.15) 50%,
+        rgba(30, 15, 40, 0.18) 100%
+      );
     border-top: 1px solid rgba(180, 100, 200, 0.35);
     backdrop-filter: blur(12px) saturate(180%);
-    box-shadow: 
+    box-shadow:
       0 -2px 32px rgba(150, 50, 180, 0.15),
       0 -4px 16px rgba(50, 180, 100, 0.1),
       inset 0 1px 0 rgba(255, 255, 255, 0.08),
@@ -586,13 +627,13 @@
   text-transform: uppercase;
   letter-spacing: 1px;
   clip-path: polygon(
-    8px 0, 
-    calc(100% - 8px) 0, 
-    100% 8px, 
-    100% calc(100% - 8px), 
-    calc(100% - 8px) 100%, 
-    8px 100%, 
-    0 calc(100% - 8px), 
+    8px 0,
+    calc(100% - 8px) 0,
+    100% 8px,
+    100% calc(100% - 8px),
+    calc(100% - 8px) 100%,
+    8px 100%,
+    0 calc(100% - 8px),
     0 8px
   );
 }
@@ -652,7 +693,7 @@
     padding: 10px 16px;
     font-size: 0.9rem;
   }
-  
+
   .viewer-close {
     top: 10px;
     right: 10px;
@@ -660,23 +701,22 @@
     height: 40px;
     font-size: 24px;
   }
-  
+
   .viewer-info {
     padding: 20px;
   }
-  
+
   .viewer-title {
     font-size: 1.8rem;
     letter-spacing: 2px;
   }
-  
+
   .viewer-description {
     font-size: 1rem;
   }
-  
+
   .meta-tag {
     font-size: 0.8rem;
     padding: 6px 16px;
   }
 }
-

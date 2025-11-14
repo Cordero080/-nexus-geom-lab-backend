@@ -1,5 +1,5 @@
-import { useEffect, useRef } from "react";
-import * as THREE from "three";
+import { useEffect, useRef } from 'react';
+import * as THREE from 'three';
 
 /**
  * VISUAL EFFECTS HOOK - Creates environment-specific particle systems
@@ -21,12 +21,7 @@ import * as THREE from "three";
  * @param {number} environmentHue - Hue shift for particle colors
  * @param {Object} orbSpeedRef - Speed reference for animation
  */
-export function useNebulaParticles(
-  sceneRef,
-  environment,
-  environmentHue = 0,
-  orbSpeedRef
-) {
+export function useNebulaParticles(sceneRef, environment, environmentHue = 0, orbSpeedRef) {
   const nebulaSystemRef = useRef(null);
   const timeRef = useRef(0);
 
@@ -36,24 +31,21 @@ export function useNebulaParticles(
     // Clean up existing system if switching environments
     if (nebulaSystemRef.current) {
       sceneRef.current.remove(nebulaSystemRef.current.system);
-      if (nebulaSystemRef.current.geometry)
-        nebulaSystemRef.current.geometry.dispose();
-      if (nebulaSystemRef.current.material)
-        nebulaSystemRef.current.material.dispose();
-      if (nebulaSystemRef.current.texture)
-        nebulaSystemRef.current.texture.dispose();
+      if (nebulaSystemRef.current.geometry) nebulaSystemRef.current.geometry.dispose();
+      if (nebulaSystemRef.current.material) nebulaSystemRef.current.material.dispose();
+      if (nebulaSystemRef.current.texture) nebulaSystemRef.current.texture.dispose();
       nebulaSystemRef.current = null;
       sceneRef.current.userData.animateNebula = null;
     }
 
     // Handle sunset environment - floating geometric dust
-    if (environment === "sunset") {
+    if (environment === 'sunset') {
       createSunsetDust();
       return;
     }
 
     // Only create nebula for 'space' environment
-    if (environment !== "space") {
+    if (environment !== 'space') {
       return;
     }
 
@@ -127,10 +119,8 @@ export function useNebulaParticles(
         }
 
         // Randomize starting positions in 3D space to avoid lines
-        mesh.position.x =
-          radius * Math.sin(phi) * Math.cos(theta) + (Math.random() - 0.5) * 10;
-        mesh.position.y =
-          radius * Math.sin(phi) * Math.sin(theta) + (Math.random() - 0.5) * 10;
+        mesh.position.x = radius * Math.sin(phi) * Math.cos(theta) + (Math.random() - 0.5) * 10;
+        mesh.position.y = radius * Math.sin(phi) * Math.sin(theta) + (Math.random() - 0.5) * 10;
         mesh.position.z = radius * Math.cos(phi) + (Math.random() - 0.5) * 10;
 
         // Random rotation
@@ -171,14 +161,7 @@ export function useNebulaParticles(
         const { dustParticles } = nebulaSystemRef.current;
 
         dustParticles.forEach((particle) => {
-          const {
-            mesh,
-            orbitGroup,
-            rotationSpeed,
-            initialPos,
-            phase,
-            baseOpacity,
-          } = particle;
+          const { mesh, orbitGroup, rotationSpeed, initialPos, phase, baseOpacity } = particle;
 
           // Gentle rotation
           mesh.rotation.x += rotationSpeed.x * speed;
@@ -205,8 +188,7 @@ export function useNebulaParticles(
               Math.sin(melodicPhrase * 2) * 6 + // Harmonic interval (octave)
               Math.sin(melodicPhrase * 0.5) * 3 +
               spreadY; // Slower phrase breathing
-            mesh.position.z =
-              Math.cos(melodicPhrase) * orbitRadius * 0.8 + spreadZ;
+            mesh.position.z = Math.cos(melodicPhrase) * orbitRadius * 0.8 + spreadZ;
           } else if (orbitGroup === 1) {
             // BRASS (Horns/Trumpets): Bold punctuated phrases
             // Stronger articulation with held notes and dramatic swells
@@ -333,8 +315,7 @@ export function useNebulaParticles(
       // Group 1: Counter-clockwise (negative)
       // Group 2: Clockwise (positive)
       const direction = group === 1 ? -1 : 1;
-      orbitSpeeds[i] =
-        (0.0008 + Math.random() * 0.001) * speedMultiplier * direction;
+      orbitSpeeds[i] = (0.0008 + Math.random() * 0.001) * speedMultiplier * direction;
 
       // Add Fibonacci spiral influence
       const phi = 1.618033988749895; // Golden ratio
@@ -383,22 +364,22 @@ export function useNebulaParticles(
       colors[i3 + 2] = color.b;
     }
 
-    geometry.setAttribute("position", new THREE.BufferAttribute(positions, 3));
-    geometry.setAttribute("color", new THREE.BufferAttribute(colors, 3));
-    geometry.setAttribute("size", new THREE.BufferAttribute(sizes, 1));
+    geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+    geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+    geometry.setAttribute('size', new THREE.BufferAttribute(sizes, 1));
 
     // Create a circular texture for particles (this fixes the square issue)
-    const canvas = document.createElement("canvas");
+    const canvas = document.createElement('canvas');
     canvas.width = 64;
     canvas.height = 64;
-    const ctx = canvas.getContext("2d");
+    const ctx = canvas.getContext('2d');
 
     // Create radial gradient for soft circular particle
     const gradient = ctx.createRadialGradient(3, 35, 0, 35, 35, 35);
-    gradient.addColorStop(0, "rgba(221, 35, 218, 1)");
-    gradient.addColorStop(0.3, "rgba(83, 242, 10, 0.83)");
-    gradient.addColorStop(0.6, "rgba(221, 8, 186, 0.58)");
-    gradient.addColorStop(1, "rgba(255, 255, 255, 0)");
+    gradient.addColorStop(0, 'rgba(221, 35, 218, 1)');
+    gradient.addColorStop(0.3, 'rgba(83, 242, 10, 0.83)');
+    gradient.addColorStop(0.6, 'rgba(221, 8, 186, 0.58)');
+    gradient.addColorStop(1, 'rgba(255, 255, 255, 0)');
 
     ctx.fillStyle = gradient;
     ctx.fillRect(0, 0, 64, 64);
@@ -503,12 +484,10 @@ export function useNebulaParticles(
           // Cell becomes alive if it has 2-4 alive neighbors, dies otherwise
           if (cellStates[i] === 1) {
             // Alive cell: survive with 2-5 neighbors
-            newCellStates[i] =
-              aliveNeighbors >= 2 && aliveNeighbors <= 5 ? 1 : 0;
+            newCellStates[i] = aliveNeighbors >= 2 && aliveNeighbors <= 5 ? 1 : 0;
           } else {
             // Dead cell: born with 3-4 neighbors
-            newCellStates[i] =
-              aliveNeighbors >= 3 && aliveNeighbors <= 8 ? 1 : 0;
+            newCellStates[i] = aliveNeighbors >= 3 && aliveNeighbors <= 8 ? 1 : 0;
           }
 
           // Energy spreads from neighbors
@@ -546,8 +525,7 @@ export function useNebulaParticles(
 
         // MORPHING: Add pattern variation based on morph cycle
         // Morph between tight spiral and loose cloud
-        const morphOffset =
-          Math.sin(morphCycle + morphPhases[i]) * 5 * morphIntensity;
+        const morphOffset = Math.sin(morphCycle + morphPhases[i]) * 5 * morphIntensity;
         const morphedRadius = currentRadius + morphOffset;
 
         // Calculate new position based on orbit - SMOOTH continuous circular motion
@@ -594,14 +572,11 @@ export function useNebulaParticles(
           const colorPhase = timeRef.current * 0.5 + phases[i];
 
           // Cycle through full rainbow spectrum based on morph cycle
-          const baseHue =
-            (Math.sin(colorPhase) * 0.1 + 0.6 + environmentHue / 360) % 1;
+          const baseHue = (Math.sin(colorPhase) * 0.1 + 0.6 + environmentHue / 360) % 1;
           const morphHue = (spiralFactors[i] + morphCycle * 0.1) % 1; // Rainbow shift
 
           // Blend between base color and morphing rainbow
-          let hue =
-            baseHue * (1 - morphIntensity * 1) +
-            morphHue * (morphIntensity * 0.3);
+          let hue = baseHue * (1 - morphIntensity * 1) + morphHue * (morphIntensity * 0.3);
 
           // CELLULAR AUTOMATA EFFECT: Alive cells glow brighter and shift color
           if (cellStates[i] === 1) {
@@ -609,8 +584,7 @@ export function useNebulaParticles(
           }
 
           // FRACTAL EFFECT: Color based on iteration depth
-          const fractalHue =
-            (fractalIterations[i] + timeRef.current * 0.01) % 1;
+          const fractalHue = (fractalIterations[i] + timeRef.current * 0.01) % 1;
           hue = hue * 0.7 + fractalHue * 0.3; // Blend fractal influence
 
           let saturation = 1.7 + morphIntensity * 0.2; // More saturated during morph
@@ -668,12 +642,9 @@ export function useNebulaParticles(
           }
 
           // Clean up space nebula
-          if (nebulaSystemRef.current.geometry)
-            nebulaSystemRef.current.geometry.dispose();
-          if (nebulaSystemRef.current.material)
-            nebulaSystemRef.current.material.dispose();
-          if (nebulaSystemRef.current.texture)
-            nebulaSystemRef.current.texture.dispose();
+          if (nebulaSystemRef.current.geometry) nebulaSystemRef.current.geometry.dispose();
+          if (nebulaSystemRef.current.material) nebulaSystemRef.current.material.dispose();
+          if (nebulaSystemRef.current.texture) nebulaSystemRef.current.texture.dispose();
 
           nebulaSystemRef.current = null;
         }

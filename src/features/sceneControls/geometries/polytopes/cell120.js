@@ -1,5 +1,5 @@
-import * as THREE from "three";
-import { mergeGeometries } from "three/examples/jsm/utils/BufferGeometryUtils";
+import * as THREE from 'three';
+import { mergeGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils';
 
 /**
  * Creates a 120-cell (4D polytope) projection
@@ -41,7 +41,7 @@ export function create120Cell(options = {}) {
 
   // Mark as 120-cell for wireframe/hyperframe builders
   merged120Cell.userData.is120Cell = true;
-  merged120Cell.userData.baseType = "DodecahedronGeometry";
+  merged120Cell.userData.baseType = 'DodecahedronGeometry';
   merged120Cell.userData.layers = {
     outer: outerSize,
     layer1: layer1Size,
@@ -57,10 +57,10 @@ export function create120Cell(options = {}) {
  * Metadata for the 120-cell geometry
  */
 export const metadata = {
-  name: "120cell",
-  displayName: "⬢ 120-Cell",
-  category: "polytopes",
-  description: "4D polytope with 120 dodecahedral cells - 5 nested layers",
+  name: '120cell',
+  displayName: '⬢ 120-Cell',
+  category: 'polytopes',
+  description: '4D polytope with 120 dodecahedral cells - 5 nested layers',
   isCompound: false,
   defaultOptions: {},
 };

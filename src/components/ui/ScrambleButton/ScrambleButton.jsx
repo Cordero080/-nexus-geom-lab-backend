@@ -8,12 +8,12 @@ import {
 import styles from './ScrambleButton.module.scss';
 import sharedStyles from '../../../styles/shared.module.scss';
 
-const ScrambleButton = ({ 
-  children, 
-  className = '', 
-  onClick, 
-  type = 'button', 
-  variant = 'primary' 
+const ScrambleButton = ({
+  children,
+  className = '',
+  onClick,
+  type = 'button',
+  variant = 'primary',
 }) => {
   const [isHovering, setIsHovering] = useState(false);
   const [displayText, setDisplayText] = useState(children);
@@ -36,27 +36,27 @@ const ScrambleButton = ({
       let scrambleCount = 0;
       let showingCode = false;
       let codeTimer = null;
-      
+
       scrambleInterval.current = setInterval(() => {
         scrambleCount++;
-        
+
         // After a few scrambles, show a code snippet
         if (scrambleCount > 5 && !showingCode) {
           const codeSnippet = getScrambledText();
           setDisplayText(codeSnippet);
           showingCode = true;
-          
+
           // Set a timer to start scrambling again
           codeTimer = setTimeout(() => {
             showingCode = false;
           }, codeDisplayTime);
-        } 
+        }
         // If we're not showing a code snippet, scramble the text
         else if (!showingCode) {
           setDisplayText(scrambleText(originalText.current.toString()));
         }
       }, scrambleSpeed);
-      
+
       return () => {
         clearInterval(scrambleInterval.current);
         if (codeTimer) clearTimeout(codeTimer);
@@ -88,7 +88,7 @@ const ScrambleButton = ({
       type={type}
     >
       {/* Render ripple effects */}
-      {ripples.map(ripple => (
+      {ripples.map((ripple) => (
         <span
           key={ripple.id}
           className={`${styles.ripple} ${styles[`${variant}Ripple`]}`}

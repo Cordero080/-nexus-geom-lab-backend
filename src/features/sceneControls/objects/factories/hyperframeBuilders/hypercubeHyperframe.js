@@ -1,4 +1,4 @@
-import * as THREE from "three";
+import * as THREE from 'three';
 
 /**
  * Create hyperframe for hypercube (tesseract) with inner cube wireframe and vertex connections
@@ -8,12 +8,8 @@ import * as THREE from "three";
  * @param {string} hyperframeLineColor - Color for connections
  * @returns {Object} { centerLines, centerLinesMaterial, curvedLines, curvedLinesMaterial }
  */
-export function createHypercubeHyperframe(
-  geometry,
-  hyperframeColor,
-  hyperframeLineColor
-) {
-  console.log("Creating hypercube (tesseract) hyperframe");
+export function createHypercubeHyperframe(geometry, hyperframeColor, hyperframeLineColor) {
+  console.log('Creating hypercube (tesseract) hyperframe');
 
   const outerScale = geometry.userData.outerScale || 1.0;
   const innerScale = geometry.userData.innerScale || 0.5;
@@ -87,9 +83,7 @@ export function createHypercubeHyperframe(
     innerCubeGroup.add(cylinderMesh);
   });
 
-  console.log(
-    `Created hypercube inner wireframe with ${cubeEdges.length} cylinder edges`
-  );
+  console.log(`Created hypercube inner wireframe with ${cubeEdges.length} cylinder edges`);
 
   // 2. Create vertex-to-vertex connections (outer to inner)
   const curvedLinesMaterial = new THREE.MeshBasicMaterial({
@@ -108,9 +102,7 @@ export function createHypercubeHyperframe(
   const actualVertices = [];
   for (let i = 0; i < vertexCount; i++) {
     const idx = i * 3;
-    actualVertices.push(
-      new THREE.Vector3(positions[idx], positions[idx + 1], positions[idx + 2])
-    );
+    actualVertices.push(new THREE.Vector3(positions[idx], positions[idx + 1], positions[idx + 2]));
   }
 
   // Match each canonical outer vertex to its closest actual vertex

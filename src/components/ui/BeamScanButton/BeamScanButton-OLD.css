@@ -12,7 +12,10 @@
   overflow: visible;
   z-index: 1;
   isolation: isolate;
-  transition: background 0.2s, box-shadow 0.2s, color 0.2s;
+  transition:
+    background 0.2s,
+    box-shadow 0.2s,
+    color 0.2s;
 }
 
 .beam-btn {

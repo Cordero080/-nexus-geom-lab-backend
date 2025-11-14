@@ -1,5 +1,5 @@
-import * as THREE from "three";
-import { mergeGeometries } from "three/examples/jsm/utils/BufferGeometryUtils";
+import * as THREE from 'three';
+import { mergeGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils';
 
 /**
  * Creates a stella octangula (compound tetrahedron)
@@ -35,7 +35,7 @@ export function createTetrahedron(options = {}) {
 
   // Mark it as compound for wireframe builders
   mergedTet.userData.isCompound = true;
-  mergedTet.userData.baseType = "TetrahedronGeometry";
+  mergedTet.userData.baseType = 'TetrahedronGeometry';
 
   return mergedTet;
 }
@@ -44,11 +44,10 @@ export function createTetrahedron(options = {}) {
  * Metadata for the tetrahedron geometry
  */
 export const metadata = {
-  name: "tetrahedron",
-  displayName: "▲ Stella Octangula",
-  category: "polytopes",
-  description:
-    "Two interpenetrating tetrahedra (Star of David in 3D) - classical compound",
+  name: 'tetrahedron',
+  displayName: '▲ Stella Octangula',
+  category: 'polytopes',
+  description: 'Two interpenetrating tetrahedra (Star of David in 3D) - classical compound',
   isCompound: true,
   defaultOptions: {
     size: 1.2,

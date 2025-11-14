@@ -14,8 +14,12 @@
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 .modalContainer {
@@ -24,9 +28,17 @@
     radial-gradient(circle at 30% 30%, rgba(80, 20, 20, 0.064), transparent 60%),
     radial-gradient(circle at 70% 70%, rgba(40, 5, 5, 0.12), transparent 70%),
     linear-gradient(45deg, rgba(60, 10, 10, 0.024), rgba(50, 0, 0, 0.016), rgba(60, 10, 10, 0.024));
-  background-size: 100% 100%, 200% 200%, 180% 180%, 300% 300%;
+  background-size:
+    100% 100%,
+    200% 200%,
+    180% 180%,
+    300% 300%;
   background-blend-mode: overlay, multiply, screen, overlay;
-  background-position: 0% 50%, 20% 20%, 80% 80%, 50% 50%;
+  background-position:
+    0% 50%,
+    20% 20%,
+    80% 80%,
+    50% 50%;
   border: 2px solid transparent;
   background-clip: padding-box;
   border-radius: 12px;
@@ -36,13 +48,13 @@
   max-height: 80vh;
   overflow: hidden;
   position: relative;
-  box-shadow: 
+  box-shadow:
     0 25px 60px rgba(0, 0, 0, 0.8),
     0 0 80px rgba(60, 10, 10, 0.12),
     inset 0 1px 4px rgba(80, 20, 20, 0.08),
     inset 0 -1px 6px rgba(0, 0, 0, 0.6),
     0 0 120px rgba(20, 5, 5, 0.15);
-  
+
   /* Gradient outline */
   &::after {
     content: '';
@@ -51,18 +63,19 @@
     left: -2px;
     right: -2px;
     bottom: -2px;
-    background: linear-gradient(45deg, 
-      #ffaa00 0%, 
-      #ff6600 25%, 
-      #ff0000 50%, 
-      #ff6600 75%, 
+    background: linear-gradient(
+      45deg,
+      #ffaa00 0%,
+      #ff6600 25%,
+      #ff0000 50%,
+      #ff6600 75%,
       #ffaa00 100%
     );
     border-radius: 14px;
     z-index: -1;
     animation: gradientPulse 3s ease-in-out infinite;
   }
-  
+
   /* Void-like holographic shimmer */
   &::before {
     content: '';
@@ -71,7 +84,7 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background: 
+    background:
       linear-gradient(45deg, transparent 30%, rgba(80, 20, 20, 0.04) 50%, transparent 70%),
       linear-gradient(-45deg, transparent 30%, rgba(60, 15, 15, 0.03) 50%, transparent 70%);
     animation: voidShimmer 8s infinite ease-in-out;
@@ -81,22 +94,24 @@
 }
 
 @keyframes voidShimmer {
-  0%, 100% { 
+  0%,
+  100% {
     opacity: 0.3;
     transform: translateX(-100%);
   }
-  50% { 
+  50% {
     opacity: 0.6;
     transform: translateX(100%);
   }
 }
 
 @keyframes gradientPulse {
-  0%, 100% { 
+  0%,
+  100% {
     opacity: 0.25;
     filter: brightness(0.6);
   }
-  50% { 
+  50% {
     opacity: 0.4;
     filter: brightness(0.85);
   }
@@ -108,10 +123,7 @@
   align-items: center;
   padding: 12px 18px;
   border-bottom: 1px solid rgba(80, 20, 20, 0.12);
-  background: linear-gradient(90deg, 
-    rgba(40, 10, 10, 0.08) 0%, 
-    rgba(60, 15, 15, 0.04) 100%
-  );
+  background: linear-gradient(90deg, rgba(40, 10, 10, 0.08) 0%, rgba(60, 15, 15, 0.04) 100%);
   position: relative;
   backdrop-filter: blur(10px);
 }
@@ -190,10 +202,7 @@
   border-top: 1px solid rgba(80, 20, 20, 0.12);
   display: flex;
   justify-content: center;
-  background: linear-gradient(90deg, 
-    rgba(40, 10, 10, 0.06) 0%, 
-    rgba(60, 15, 15, 0.03) 100%
-  );
+  background: linear-gradient(90deg, rgba(40, 10, 10, 0.06) 0%, rgba(60, 15, 15, 0.03) 100%);
   backdrop-filter: blur(8px);
 }
 
@@ -211,7 +220,7 @@
   text-transform: uppercase !important;
   letter-spacing: 1.5px !important;
   min-width: 160px !important;
-  text-shadow: 
+  text-shadow:
     0 0 10px rgba(255, 0, 0, 0.8),
     0 0 20px rgba(255, 0, 0, 0.4),
     0 0 30px rgba(255, 0, 0, 0.2) !important;
@@ -219,12 +228,12 @@
   position: relative;
   overflow: hidden;
   clip-path: none !important;
-  
+
   /* Override ScrambleButton text styling */
   span {
     font-family: 'Orbitron', monospace !important;
     color: #ff0000 !important;
-    text-shadow: 
+    text-shadow:
       0 0 10px rgba(255, 0, 0, 0.8),
       0 0 20px rgba(255, 0, 0, 0.4),
       0 0 30px rgba(255, 0, 0, 0.2) !important;
@@ -238,11 +247,7 @@
     left: -100%;
     width: 100%;
     height: 100%;
-    background: linear-gradient(90deg, 
-      transparent, 
-      rgba(255, 0, 0, 0.2), 
-      transparent
-    );
+    background: linear-gradient(90deg, transparent, rgba(255, 0, 0, 0.2), transparent);
     transition: left 0.5s ease;
   }
 
@@ -251,11 +256,11 @@
     border-color: rgba(255, 0, 0, 0.6) !important;
     color: #ff3333 !important;
     transform: translateY(-2px);
-    box-shadow: 
+    box-shadow:
       0 8px 25px rgba(0, 0, 0, 0.6),
       0 0 30px rgba(255, 0, 0, 0.3),
       inset 0 0 20px rgba(255, 0, 0, 0.1) !important;
-    text-shadow: 
+    text-shadow:
       0 0 15px rgba(255, 0, 0, 1),
       0 0 25px rgba(255, 0, 0, 0.6),
       0 0 35px rgba(255, 0, 0, 0.3) !important;
@@ -263,11 +268,11 @@
     &::before {
       left: 100%;
     }
-    
+
     /* Override ScrambleButton hover text styling */
     span {
       color: #ff3333 !important;
-      text-shadow: 
+      text-shadow:
         0 0 15px rgba(255, 0, 0, 1),
         0 0 25px rgba(255, 0, 0, 0.6),
         0 0 35px rgba(255, 0, 0, 0.3) !important;
@@ -281,23 +286,23 @@
     margin: 20px;
     max-width: none;
   }
-  
+
   .modalHeader {
     padding: 16px 20px;
   }
-  
+
   .modalTitle {
     font-size: 1.4rem;
   }
-  
+
   .modalContent {
     padding: 16px 20px;
   }
-  
+
   .destructionEffect {
     font-size: 2.6rem;
   }
-  
+
   .modalFooter {
     padding: 12px 20px;
   }

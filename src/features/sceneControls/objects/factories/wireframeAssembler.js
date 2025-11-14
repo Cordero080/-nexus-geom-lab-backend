@@ -5,18 +5,18 @@
  * Determines which wireframe style based on geometry type (sphere, box, tesseract, etc.).
  */
 
-import { getWireframeMaterial } from "./materialCache";
-import { createSphereWireframe } from "./wireframeBuilders/sphereWireframe";
-import { createBoxWireframe } from "./wireframeBuilders/boxWireframe";
-import { createHypercubeWireframe } from "./wireframeBuilders/hypercubeWireframe";
-import { createCpdTesseractWireframe } from "./wireframeBuilders/cpdTesseractWireframe";
-import { createOctahedronWireframe } from "./wireframeBuilders/octahedronWireframe";
+import { getWireframeMaterial } from './materialCache';
+import { createSphereWireframe } from './wireframeBuilders/sphereWireframe';
+import { createBoxWireframe } from './wireframeBuilders/boxWireframe';
+import { createHypercubeWireframe } from './wireframeBuilders/hypercubeWireframe';
+import { createCpdTesseractWireframe } from './wireframeBuilders/cpdTesseractWireframe';
+import { createOctahedronWireframe } from './wireframeBuilders/octahedronWireframe';
 import {
   createTetrahedronWireframe,
   createIcosahedronWireframe,
   createDodecahedronWireframe,
   createCommonWireframe,
-} from "./wireframeBuilders/commonWireframe";
+} from './wireframeBuilders/commonWireframe';
 
 /**
  * Assembles wireframe mesh based on geometry type
@@ -32,13 +32,13 @@ export function assembleWireframe(geometry, materialConfig, materialKey) {
   let wireframeMaterial;
 
   // Create appropriate wireframe based on geometry type
-  if (geometry.type === "SphereGeometry") {
+  if (geometry.type === 'SphereGeometry') {
     wireframeMaterial = getWireframeMaterial(null, materialConfig);
     wireframeMesh = createSphereWireframe(geometry, wireframeMaterial);
   } else if (
-    geometry.type === "BoxGeometry" ||
-    (geometry.userData && geometry.userData.baseType === "BoxGeometry") ||
-    (geometry.userData && geometry.userData.baseType === "HypercubeGeometry")
+    geometry.type === 'BoxGeometry' ||
+    (geometry.userData && geometry.userData.baseType === 'BoxGeometry') ||
+    (geometry.userData && geometry.userData.baseType === 'HypercubeGeometry')
   ) {
     // Check if it's the compound hypercube (2 hypercubes interpenetrating)
     if (geometry.userData && geometry.userData.isCpdHypercube) {
@@ -73,27 +73,27 @@ export function assembleWireframe(geometry, materialConfig, materialKey) {
       wireframeMesh = createBoxWireframe(geometry, wireframeMaterial);
     }
   } else if (
-    geometry.type === "OctahedronGeometry" ||
-    (geometry.userData && geometry.userData.baseType === "OctahedronGeometry")
+    geometry.type === 'OctahedronGeometry' ||
+    (geometry.userData && geometry.userData.baseType === 'OctahedronGeometry')
   ) {
     wireframeMaterial = getWireframeMaterial(null, materialConfig);
     wireframeMesh = createOctahedronWireframe(geometry, wireframeMaterial);
   } else if (
-    geometry.type === "TetrahedronGeometry" ||
-    (geometry.userData && geometry.userData.baseType === "TetrahedronGeometry")
+    geometry.type === 'TetrahedronGeometry' ||
+    (geometry.userData && geometry.userData.baseType === 'TetrahedronGeometry')
   ) {
     wireframeMaterial = getWireframeMaterial(null, materialConfig);
     wireframeMesh = createTetrahedronWireframe(geometry, wireframeMaterial);
   } else if (
-    geometry.type === "IcosahedronGeometry" ||
-    (geometry.userData && geometry.userData.baseType === "IcosahedronGeometry")
+    geometry.type === 'IcosahedronGeometry' ||
+    (geometry.userData && geometry.userData.baseType === 'IcosahedronGeometry')
   ) {
     wireframeMaterial = getWireframeMaterial(null, materialConfig);
     // 600-cell uses same icosahedron wireframe as compound icosahedron
     wireframeMesh = createIcosahedronWireframe(geometry, wireframeMaterial);
   } else if (
-    geometry.type === "DodecahedronGeometry" ||
-    (geometry.userData && geometry.userData.baseType === "DodecahedronGeometry")
+    geometry.type === 'DodecahedronGeometry' ||
+    (geometry.userData && geometry.userData.baseType === 'DodecahedronGeometry')
   ) {
     wireframeMaterial = getWireframeMaterial(null, materialConfig);
     wireframeMesh = createDodecahedronWireframe(geometry, wireframeMaterial);

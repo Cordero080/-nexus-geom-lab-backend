@@ -1,6 +1,6 @@
-import React, { useEffect, useRef } from "react";
-import QuantumCursorUniverse from "./QuantumCursorUniverse";
-import styles from "./QuantumCursor.module.scss";
+import React, { useEffect, useRef } from 'react';
+import QuantumCursorUniverse from './QuantumCursorUniverse';
+import styles from './QuantumCursor.module.scss';
 
 /**
  * QuantumCursor component creates an interactive, particle-based cursor
@@ -8,39 +8,39 @@ import styles from "./QuantumCursor.module.scss";
  */
 export default function QuantumCursor() {
   const universeRef = useRef(null);
-  
+
   useEffect(() => {
     // Ensure proper body classes for homepage cursor styling
     document.body.classList.remove('geom-lab-page');
-    
+
     // Force cursor to be hidden with !important
     document.documentElement.style.setProperty('cursor', 'none', 'important');
     document.body.style.setProperty('cursor', 'none', 'important');
-    
+
     // Initialize the quantum cursor system after mount
     const universe = new QuantumCursorUniverse();
     universeRef.current = universe;
-    
+
     // Cleanup function to remove particles and restore cursor
     return () => {
       // Remove any created particles when component unmounts
       if (universeRef.current) {
         // Clean up particles
-        universeRef.current.particles.forEach(particle => {
+        universeRef.current.particles.forEach((particle) => {
           if (particle.element && particle.element.parentNode) {
             particle.element.parentNode.removeChild(particle.element);
           }
         });
-        
+
         // Clean up trail particles
-        universeRef.current.trailParticles.forEach(particle => {
+        universeRef.current.trailParticles.forEach((particle) => {
           if (particle.element && particle.element.parentNode) {
             particle.element.parentNode.removeChild(particle.element);
           }
         });
-        
+
         // Clean up energy waves
-        universeRef.current.energyWaves.forEach(wave => {
+        universeRef.current.energyWaves.forEach((wave) => {
           if (wave.element && wave.element.parentNode) {
             wave.element.parentNode.removeChild(wave.element);
           }
@@ -48,7 +48,7 @@ export default function QuantumCursor() {
       }
     };
   }, []);
-  
+
   return (
     <div className="quantum-cursor-container">
       <div id="cursor" className={styles.cursor}></div>

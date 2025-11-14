@@ -1,5 +1,5 @@
-import * as THREE from "three";
-import { nearestVertexIndex } from "../../../utils/geometryHelpers";
+import * as THREE from 'three';
+import { nearestVertexIndex } from '../../../utils/geometryHelpers';
 
 /**
  * Create a thick wireframe for SphereGeometry using cylinders
@@ -15,16 +15,8 @@ export function createSphereWireframe(geometry, wireframeMaterial) {
   const sphereEdgePairs = [];
 
   for (let j = 0; j < edgeVertices.length; j += 6) {
-    const start = new THREE.Vector3(
-      edgeVertices[j],
-      edgeVertices[j + 1],
-      edgeVertices[j + 2]
-    );
-    const end = new THREE.Vector3(
-      edgeVertices[j + 3],
-      edgeVertices[j + 4],
-      edgeVertices[j + 5]
-    );
+    const start = new THREE.Vector3(edgeVertices[j], edgeVertices[j + 1], edgeVertices[j + 2]);
+    const end = new THREE.Vector3(edgeVertices[j + 3], edgeVertices[j + 4], edgeVertices[j + 5]);
     const distance = start.distanceTo(end);
 
     // Create thick cylinder for sphere edge - ADJUST 0.005 TO CHANGE THICKNESS
@@ -43,11 +35,7 @@ export function createSphereWireframe(geometry, wireframeMaterial) {
 
   sphereWireframeGroup.userData.edgePairs = sphereEdgePairs;
 
-  console.log(
-    "Created thick wireframe for sphere with",
-    edgeVertices.length / 6,
-    "cylinder edges"
-  );
+  console.log('Created thick wireframe for sphere with', edgeVertices.length / 6, 'cylinder edges');
 
   return sphereWireframeGroup;
 }

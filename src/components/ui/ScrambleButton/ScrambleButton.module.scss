@@ -8,48 +8,50 @@ $danger-color: #ff0044;
 
 // Mixins
 @mixin button-variant($color, $opacity-base: 0.2) {
-  background: linear-gradient(135deg, 
-    rgba($color, $opacity-base) 0%, 
-    rgba($color, $opacity-base * 0.5) 100%);
+  background: linear-gradient(
+    135deg,
+    rgba($color, $opacity-base) 0%,
+    rgba($color, $opacity-base * 0.5) 100%
+  );
   border-color: rgba($color, 0.5);
   color: $color;
   box-shadow: 0 0 20px rgba($color, $opacity-base);
 
   &:hover {
-    background: linear-gradient(135deg, 
-      rgba($color, $opacity-base * 1.5) 0%, 
-      rgba($color, $opacity-base) 100%);
+    background: linear-gradient(
+      135deg,
+      rgba($color, $opacity-base * 1.5) 0%,
+      rgba($color, $opacity-base) 100%
+    );
     transform: translateY(-3px);
     box-shadow: 0 0 30px rgba($color, $opacity-base * 2);
   }
 
   &::before {
-    background: radial-gradient(
-      circle closest-side,
-      rgba($color, 0.5),
-      transparent
-    );
+    background: radial-gradient(circle closest-side, rgba($color, 0.5), transparent);
   }
 }
 
 @mixin ripple-variant($color) {
-  background: radial-gradient(
-    circle,
-    rgba($color, 0.6) 0%,
-    rgba($color, 0) 70%
-  );
+  background: radial-gradient(circle, rgba($color, 0.6) 0%, rgba($color, 0) 70%);
 }
 
 .scrambleButton {
   padding: 0.5rem 1.25rem;
   border: 1px solid var(--primary-glow);
   border-radius: 0;
-  font-family: 'Orbitron', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-family:
+    'Orbitron',
+    'Inter',
+    -apple-system,
+    BlinkMacSystemFont,
+    'Segoe UI',
+    sans-serif;
   font-weight: 600;
   font-size: 0.9rem;
   text-transform: uppercase;
   text-align: center;
-  
+
   // Angled corners clip-path (matching shared.css)
   clip-path: polygon(
     14px 0,
@@ -78,11 +80,7 @@ $danger-color: #ff0044;
     transform: translate(-50%, -50%);
     width: 0;
     height: 400%;
-    background: radial-gradient(
-      circle closest-side,
-      rgba(255, 255, 255, 0.3),
-      transparent
-    );
+    background: radial-gradient(circle closest-side, rgba(255, 255, 255, 0.3), transparent);
     transition: width 0.15s ease;
     z-index: -1;
   }
@@ -227,7 +225,8 @@ $danger-color: #ff0044;
 }
 
 @keyframes particlesGlow {
-  0%, 100% {
+  0%,
+  100% {
     opacity: 0;
   }
   50% {
@@ -259,13 +258,16 @@ $danger-color: #ff0044;
 }
 
 @keyframes edgeGlow {
-  0%, 100% {
-    box-shadow: 0 0 15px rgba(255, 255, 255, 0.3),
-                0 0 30px currentColor;
+  0%,
+  100% {
+    box-shadow:
+      0 0 15px rgba(255, 255, 255, 0.3),
+      0 0 30px currentColor;
   }
   50% {
-    box-shadow: 0 0 20px rgba(255, 255, 255, 0.4),
-                0 0 40px currentColor;
+    box-shadow:
+      0 0 20px rgba(255, 255, 255, 0.4),
+      0 0 40px currentColor;
   }
 }
 

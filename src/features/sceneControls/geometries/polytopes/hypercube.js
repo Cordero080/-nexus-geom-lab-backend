@@ -1,5 +1,5 @@
-import * as THREE from "three";
-import { mergeGeometries } from "three/examples/jsm/utils/BufferGeometryUtils";
+import * as THREE from 'three';
+import { mergeGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils';
 
 /**
  * Creates a hypercube (tesseract) - 4D cube projected into 3D
@@ -33,19 +33,11 @@ export function createHypercube(options = {}) {
   const innerScale = 0.5;
 
   // Create outer cube
-  const outerCube = new THREE.BoxGeometry(
-    outerScale * 2,
-    outerScale * 2,
-    outerScale * 2
-  );
+  const outerCube = new THREE.BoxGeometry(outerScale * 2, outerScale * 2, outerScale * 2);
   parts.push(outerCube);
 
   // Create inner cube (representing 4D projection)
-  const innerCube = new THREE.BoxGeometry(
-    innerScale * 2,
-    innerScale * 2,
-    innerScale * 2
-  );
+  const innerCube = new THREE.BoxGeometry(innerScale * 2, innerScale * 2, innerScale * 2);
   parts.push(innerCube);
 
   // Create 6 connecting frustum faces (one for each cube face)
@@ -64,7 +56,7 @@ export function createHypercube(options = {}) {
     // Define the 4 corner vertices for outer and inner square faces
     let outerVerts, innerVerts;
 
-    if (axis === "z") {
+    if (axis === 'z') {
       const zo = isPositive ? halfOuter : -halfOuter;
       const zi = isPositive ? halfInner : -halfInner;
       outerVerts = [
@@ -79,7 +71,7 @@ export function createHypercube(options = {}) {
         new THREE.Vector3(halfInner, halfInner, zi),
         new THREE.Vector3(-halfInner, halfInner, zi),
       ];
-    } else if (axis === "x") {
+    } else if (axis === 'x') {
       const xo = isPositive ? halfOuter : -halfOuter;
       const xi = isPositive ? halfInner : -halfInner;
       outerVerts = [
@@ -145,18 +137,9 @@ export function createHypercube(options = {}) {
       indices.push(o2, i2, i1);
     }
 
-    geometry.setAttribute(
-      "position",
-      new THREE.BufferAttribute(new Float32Array(positions), 3)
-    );
-    geometry.setAttribute(
-      "normal",
-      new THREE.BufferAttribute(new Float32Array(normals), 3)
-    );
-    geometry.setAttribute(
-      "uv",
-      new THREE.BufferAttribute(new Float32Array(uvs), 2)
-    );
+    geometry.setAttribute('position', new THREE.BufferAttribute(new Float32Array(positions), 3));
+    geometry.setAttribute('normal', new THREE.BufferAttribute(new Float32Array(normals), 3));
+    geometry.setAttribute('uv', new THREE.BufferAttribute(new Float32Array(uvs), 2));
     geometry.setIndex(indices);
     geometry.computeVertexNormals();
 
@@ -164,15 +147,15 @@ export function createHypercube(options = {}) {
   };
 
   // Create all 6 frustum faces
-  parts.push(createFrustumBetweenFaces("z", true)); // Front (Z+)
-  parts.push(createFrustumBetweenFaces("z", false)); // Back (Z-)
-  parts.push(createFrustumBetweenFaces("x", true)); // Right (X+)
-  parts.push(createFrustumBetweenFaces("x", false)); // Left (X-)
-  parts.push(createFrustumBetweenFaces("y", true)); // Top (Y+)
-  parts.push(createFrustumBetweenFaces("y", false)); // Bottom (Y-)
+  parts.push(createFrustumBetweenFaces('z', true)); // Front (Z+)
+  parts.push(createFrustumBetweenFaces('z', false)); // Back (Z-)
+  parts.push(createFrustumBetweenFaces('x', true)); // Right (X+)
+  parts.push(createFrustumBetweenFaces('x', false)); // Left (X-)
+  parts.push(createFrustumBetweenFaces('y', true)); // Top (Y+)
+  parts.push(createFrustumBetweenFaces('y', false)); // Bottom (Y-)
 
   // Merge all geometries
-  console.log("Attempting to merge hypercube parts:", parts.length);
+  console.log('Attempting to merge hypercube parts:', parts.length);
   parts.forEach((part, i) => {
     console.log(`Part ${i} attributes:`, Object.keys(part.attributes));
   });
@@ -180,16 +163,16 @@ export function createHypercube(options = {}) {
   const mergedHypercube = mergeGeometries(parts);
 
   if (!mergedHypercube) {
-    console.error("Failed to merge hypercube geometries!");
+    console.error('Failed to merge hypercube geometries!');
     // Return just the outer cube as fallback
     return parts[0];
   }
 
-  console.log("Successfully merged hypercube");
+  console.log('Successfully merged hypercube');
 
   // Mark it as compound for wireframe builders
   mergedHypercube.userData.isCompound = true;
-  mergedHypercube.userData.baseType = "HypercubeGeometry";
+  mergedHypercube.userData.baseType = 'HypercubeGeometry';
   mergedHypercube.userData.isHypercube = true;
   mergedHypercube.userData.outerScale = outerScale;
   mergedHypercube.userData.innerScale = innerScale;
@@ -201,10 +184,10 @@ export function createHypercube(options = {}) {
  * Metadata for the hypercube geometry
  */
 export const metadata = {
-  name: "hypercube",
-  displayName: "◻ Hypercube (Tesseract)",
-  category: "polytopes",
-  description: "4D hypercube (tesseract) projected into 3D space",
+  name: 'hypercube',
+  displayName: '◻ Hypercube (Tesseract)',
+  category: 'polytopes',
+  description: '4D hypercube (tesseract) projected into 3D space',
   isCompound: true,
   defaultOptions: {},
 };

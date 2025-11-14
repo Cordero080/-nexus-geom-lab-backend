@@ -1,5 +1,5 @@
-import * as THREE from "three";
-import { mergeGeometries } from "three/examples/jsm/utils/BufferGeometryUtils";
+import * as THREE from 'three';
+import { mergeGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils';
 
 /**
  * Creates a 600-cell (4D polytope) projection
@@ -30,17 +30,11 @@ export function create600Cell(options = {}) {
   const innerIco = new THREE.IcosahedronGeometry(innerSize, 0);
 
   // Merge all five layers
-  const merged600Cell = mergeGeometries([
-    outerIco,
-    layer1Ico,
-    layer2Ico,
-    layer3Ico,
-    innerIco,
-  ]);
+  const merged600Cell = mergeGeometries([outerIco, layer1Ico, layer2Ico, layer3Ico, innerIco]);
 
   // Mark as 600-cell for wireframe/hyperframe builders
   merged600Cell.userData.is600Cell = true;
-  merged600Cell.userData.baseType = "IcosahedronGeometry";
+  merged600Cell.userData.baseType = 'IcosahedronGeometry';
   merged600Cell.userData.layers = {
     outer: outerSize,
     layer1: layer1Size,
@@ -56,11 +50,10 @@ export function create600Cell(options = {}) {
  * Metadata for the 600-cell geometry
  */
 export const metadata = {
-  name: "600cell",
-  displayName: "⬡ 600-Cell",
-  category: "polytopes",
-  description:
-    "Most complex 4D polytope - 600 tetrahedral cells, 120 vertices, dual of 120-cell",
+  name: '600cell',
+  displayName: '⬡ 600-Cell',
+  category: 'polytopes',
+  description: 'Most complex 4D polytope - 600 tetrahedral cells, 120 vertices, dual of 120-cell',
   isCompound: false,
   defaultOptions: {},
 };

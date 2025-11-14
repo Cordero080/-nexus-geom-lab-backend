@@ -73,10 +73,23 @@
     linear-gradient(145deg, rgba(10, 10, 10, 0.7), rgba(0, 0, 0, 0.55)),
     radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.1), transparent 50%),
     radial-gradient(circle at 70% 70%, rgba(0, 0, 0, 0.5), transparent 50%),
-    linear-gradient(45deg, rgba(138, 43, 226, 0.05), rgba(0, 212, 255, 0.05), rgba(138, 43, 226, 0.05));
-  background-size: 100% 100%, 150% 150%, 150% 150%, 200% 200%;
+    linear-gradient(
+      45deg,
+      rgba(138, 43, 226, 0.05),
+      rgba(0, 212, 255, 0.05),
+      rgba(138, 43, 226, 0.05)
+    );
+  background-size:
+    100% 100%,
+    150% 150%,
+    150% 150%,
+    200% 200%;
   background-blend-mode: overlay, multiply, overlay;
-  background-position: 0% 50%, 75% 75%, 75% 75%, 50% 50%;
+  background-position:
+    0% 50%,
+    75% 75%,
+    75% 75%,
+    50% 50%;
   border: 1px solid rgba(0, 212, 255, 0.25);
   backdrop-filter: blur(10px);
   color: #ffffff;
@@ -86,7 +99,7 @@
   cursor: pointer;
   transition: all 0.2s ease;
   position: relative;
-  box-shadow: 
+  box-shadow:
     0 2px 8px rgba(0, 0, 0, 0.8),
     inset 0 1px 3px rgba(255, 255, 255, 0.2),
     inset 0 -1px 3px rgba(0, 0, 0, 0.5);
@@ -94,7 +107,7 @@
 
 .my-scenes-page__select:hover {
   border-color: rgba(0, 212, 255, 0.5);
-  box-shadow: 
+  box-shadow:
     0 4px 16px rgba(0, 255, 255, 0.3),
     inset 0 1px 3px rgba(255, 255, 255, 0.3),
     inset 0 -1px 3px rgba(0, 0, 0, 0.5);
@@ -103,7 +116,7 @@
 .my-scenes-page__select:focus {
   outline: none;
   border-color: rgba(0, 212, 255, 0.8);
-  box-shadow: 
+  box-shadow:
     0 0 0 3px rgba(0, 212, 255, 0.2),
     0 4px 16px rgba(0, 255, 255, 0.4),
     inset 0 1px 3px rgba(255, 255, 255, 0.3),
@@ -122,16 +135,12 @@
 }
 
 .my-scenes-page__select option:hover {
-  background: linear-gradient(90deg, 
-    rgba(0, 255, 255, 0.15) 0%, 
-    rgba(255, 0, 255, 0.1) 100%);
+  background: linear-gradient(90deg, rgba(0, 255, 255, 0.15) 0%, rgba(255, 0, 255, 0.1) 100%);
   color: #00ffff;
 }
 
 .my-scenes-page__select option:checked {
-  background: linear-gradient(90deg, 
-    rgba(0, 255, 255, 0.2) 0%, 
-    rgba(255, 0, 255, 0.15) 100%);
+  background: linear-gradient(90deg, rgba(0, 255, 255, 0.2) 0%, rgba(255, 0, 255, 0.15) 100%);
   color: #00ffff;
   font-weight: 600;
 }
@@ -186,10 +195,23 @@
     linear-gradient(145deg, rgba(10, 10, 10, 0.7), rgba(0, 0, 0, 0.55)),
     radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.1), transparent 50%),
     radial-gradient(circle at 70% 70%, rgba(0, 0, 0, 0.5), transparent 50%),
-    linear-gradient(45deg, rgba(138, 43, 226, 0.05), rgba(0, 212, 255, 0.05), rgba(138, 43, 226, 0.05));
-  background-size: 100% 100%, 150% 150%, 150% 150%, 200% 200%;
+    linear-gradient(
+      45deg,
+      rgba(138, 43, 226, 0.05),
+      rgba(0, 212, 255, 0.05),
+      rgba(138, 43, 226, 0.05)
+    );
+  background-size:
+    100% 100%,
+    150% 150%,
+    150% 150%,
+    200% 200%;
   background-blend-mode: overlay, multiply, overlay;
-  background-position: 0% 50%, 75% 75%, 75% 75%, 50% 50%;
+  background-position:
+    0% 50%,
+    75% 75%,
+    75% 75%,
+    50% 50%;
   backdrop-filter: blur(10px);
   border: 1px solid rgba(0, 212, 255, 0.25);
   border-radius: 24px;
@@ -203,13 +225,25 @@
 /* Holographic shimmer animation for empty state */
 @keyframes dark-holographic-shimmer {
   0% {
-    background-position: 0% 50%, 50% 50%, 50% 50%, 0% 50%;
+    background-position:
+      0% 50%,
+      50% 50%,
+      50% 50%,
+      0% 50%;
   }
   50% {
-    background-position: 0% 50%, 100% 100%, 100% 100%, 100% 50%;
+    background-position:
+      0% 50%,
+      100% 100%,
+      100% 100%,
+      100% 50%;
   }
   100% {
-    background-position: 0% 50%, 50% 50%, 50% 50%, 0% 50%;
+    background-position:
+      0% 50%,
+      50% 50%,
+      50% 50%,
+      0% 50%;
   }
 }
 
@@ -298,16 +332,21 @@
   bottom: 0;
   border-radius: 16px;
   padding: 2px;
-  background: linear-gradient(45deg, 
-    var(--portal-color-0, #ff00cc), 
-    var(--portal-color-1, #00fff7), 
+  background: linear-gradient(
+    45deg,
+    var(--portal-color-0, #ff00cc),
+    var(--portal-color-1, #00fff7),
     var(--portal-color-2, #1a003a),
     var(--portal-color-0, #ff00cc)
   );
   background-size: 300% 300%;
-  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
   -webkit-mask-composite: xor;
-  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
   mask-composite: exclude;
   animation: borderRotate 4s linear infinite;
   pointer-events: none;
@@ -419,7 +458,11 @@
     radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.1), transparent 50%),
     radial-gradient(circle at 70% 70%, rgba(0, 0, 0, 0.5), transparent 50%),
     linear-gradient(45deg, rgba(255, 68, 68, 0.05), rgba(255, 0, 0, 0.05), rgba(255, 68, 68, 0.05));
-  background-size: 100% 100%, 150% 150%, 150% 150%, 200% 200%;
+  background-size:
+    100% 100%,
+    150% 150%,
+    150% 150%,
+    200% 200%;
   background-blend-mode: overlay, multiply, overlay;
   backdrop-filter: blur(20px);
   border: 1px solid rgba(255, 68, 68, 0.4);
@@ -443,23 +486,38 @@
 }
 
 @keyframes deleteIconPulse {
-  0%, 100% {
+  0%,
+  100% {
     text-shadow: 0 0 20px rgba(255, 68, 68, 0.5);
   }
   50% {
-    text-shadow: 0 0 30px rgba(255, 68, 68, 0.8), 0 0 40px rgba(255, 68, 68, 0.3);
+    text-shadow:
+      0 0 30px rgba(255, 68, 68, 0.8),
+      0 0 40px rgba(255, 68, 68, 0.3);
   }
 }
 
 @keyframes dark-holographic-shimmer {
   0% {
-    background-position: 0% 50%, 50% 50%, 50% 50%, 0% 50%;
+    background-position:
+      0% 50%,
+      50% 50%,
+      50% 50%,
+      0% 50%;
   }
   50% {
-    background-position: 0% 50%, 100% 100%, 100% 100%, 100% 50%;
+    background-position:
+      0% 50%,
+      100% 100%,
+      100% 100%,
+      100% 50%;
   }
   100% {
-    background-position: 0% 50%, 50% 50%, 50% 50%, 0% 50%;
+    background-position:
+      0% 50%,
+      50% 50%,
+      50% 50%,
+      0% 50%;
   }
 }
 
@@ -477,7 +535,9 @@
   margin: 0 0 32px;
   line-height: 1.6;
   font-family: 'Orbitron', 'JetBrains Mono', monospace !important;
-  text-shadow: 0 0 5px rgba(255, 68, 68, 0.3), 0 0 10px rgba(255, 255, 255, 0.2);
+  text-shadow:
+    0 0 5px rgba(255, 68, 68, 0.3),
+    0 0 10px rgba(255, 255, 255, 0.2);
 }
 
 .delete-modal__message strong {

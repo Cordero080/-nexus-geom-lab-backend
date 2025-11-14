@@ -1,21 +1,22 @@
-import { useState, useRef, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState, useRef, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../../features/auth/context/AuthContext';
-import { useScene } from "../../../context/SceneContext";
-import { saveScene, updateScene } from "../../../services/sceneApi";
-import ScrambleButton from "../../ui/ScrambleButton/ScrambleButton";
-import SaveModal from "./SaveModal";
-import UnlockModal from "./UnlockModal";
-import AnimationUnlockModal from "./AnimationUnlockModal";
-import SuccessSaveModal from "./SuccessSaveModal";
-import styles from "./SaveButton.module.scss";
+import { useScene } from '../../../context/SceneContext';
+import { saveScene, updateScene } from '../../../services/sceneApi';
+import ScrambleButton from '../../ui/ScrambleButton/ScrambleButton';
+import SaveModal from './SaveModal';
+import UnlockModal from './UnlockModal';
+import AnimationUnlockModal from './AnimationUnlockModal';
+import SuccessSaveModal from './SuccessSaveModal';
+import styles from './SaveButton.module.scss';
 
 /**
  * SaveControls Component - Handles saving scenes
  * Modes: 1) Save - Update existing, 2) Save As New - Create copy
  */
 function SaveControls({ sceneConfig }) {
-  const { token, isAuthenticated, addUnlockedNoetechs, addUnlockedAnimations, user, isLoading } = useAuth();
+  const { token, isAuthenticated, addUnlockedNoetechs, addUnlockedAnimations, user, isLoading } =
+    useAuth();
   const navigate = useNavigate();
   const { currentSceneId, sceneName, isOwnScene } = useScene();
   const unlockAudioRef = useRef(null);
@@ -43,7 +44,7 @@ function SaveControls({ sceneConfig }) {
     try {
       if (unlockAudioRef.current) {
         unlockAudioRef.current.currentTime = 0;
-        unlockAudioRef.current.play().catch(err => console.log('Audio play failed:', err));
+        unlockAudioRef.current.play().catch((err) => console.log('Audio play failed:', err));
       }
     } catch (err) {
       console.log('Audio play error:', err);
@@ -59,7 +60,7 @@ function SaveControls({ sceneConfig }) {
       alert('Brilliant work! but... you must log in (To save)');
       return;
     }
-    
+
     // Pre-fill with current scene name if editing
     setNewSceneName(canUpdate ? sceneName : '');
     setShowModal(true);
@@ -100,12 +101,12 @@ function SaveControls({ sceneConfig }) {
       const sceneData = {
         name: sceneName, // Keep existing name
         description: '', // Could expand to include description editing
-        config: sceneConfig
+        config: sceneConfig,
       };
 
       // Call API to update existing scene
       const response = await updateScene(currentSceneId, sceneData, token);
-      
+
       // Handle unlocked animations if any
       if (response.unlockedAnimations && response.unlockedAnimations.length > 0) {
         try {
@@ -125,10 +126,10 @@ function SaveControls({ sceneConfig }) {
           // Silently handle noetech unlock errors
         }
       }
-      
+
       // Close save modal
       handleCloseModal();
-      
+
       // Show animation unlock modal if animations were unlocked
       if (response.unlockedAnimations && response.unlockedAnimations.length > 0) {
         setUnlockedAnimations(response.unlockedAnimations);
@@ -146,7 +147,6 @@ function SaveControls({ sceneConfig }) {
         setSavedSceneId(currentSceneId);
         setShowSuccessSaveModal(true);
       }
-
     } catch (error) {
       alert(`Failed to update scene: ${error.message}`);
     } finally {
@@ -181,12 +181,11 @@ function SaveControls({ sceneConfig }) {
     setIsSaving(true);
 
     try {
-      
       // Prepare scene data for new scene
       const sceneData = {
         name: name,
         description: '',
-        config: sceneConfig
+        config: sceneConfig,
       };
 
       // Call API to save as new scene
@@ -211,10 +210,10 @@ function SaveControls({ sceneConfig }) {
           // Silently handle noetech unlock errors
         }
       }
-      
+
       // Close save modal
       handleCloseModal();
-      
+
       // Show animation unlock modal if animations were unlocked
       if (response.unlockedAnimations && response.unlockedAnimations.length > 0) {
         setUnlockedAnimations(response.unlockedAnimations);
@@ -235,7 +234,6 @@ function SaveControls({ sceneConfig }) {
         setSavedSceneId(newSceneId);
         setShowSuccessSaveModal(true);
       }
-
     } catch (error) {
       alert(`Failed to save scene: ${error.message}`);
     } finally {

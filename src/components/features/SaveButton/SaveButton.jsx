@@ -11,7 +11,7 @@ import { createSaveHandler } from './saveButtonHandlers';
 import ScrambleButton from '../../ui/ScrambleButton/ScrambleButton';
 import styles from './SaveButton.module.scss';
 
-function SaveButton ({ sceneConfig }) {
+function SaveButton({ sceneConfig }) {
   const { token, addUnlockedNoetechs } = useAuth();
   const navigate = useNavigate();
   const [isSaving, setIsSaving] = useState(false);
@@ -41,7 +41,7 @@ function SaveButton ({ sceneConfig }) {
 
 export default SaveButton;
 
-// 1. ------This component's ONLY job:  
+// 1. ------This component's ONLY job:
 // Render a button and trigger save flow
 
 // 2. ------It doesn't do the actual saving:
@@ -52,7 +52,6 @@ export default SaveButton;
 
 // 4. ------It manages button loading state:** `isSaving` toggles button text
 
-
 // ----------🔴 WHAT HAPPENS WHEN USER CLICKS:**
 // ```
 // User clicks button
@@ -61,4 +60,4 @@ export default SaveButton;
 //     ↓
 // handleSave() function executes
 //     ↓
-// [NEXT FILE: saveButtonHandlers.js 
+// [NEXT FILE: saveButtonHandlers.js

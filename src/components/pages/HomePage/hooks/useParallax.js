@@ -1,4 +1,4 @@
-import { useRef, useEffect } from "react";
+import { useRef, useEffect } from 'react';
 
 /**
  //Creates multi-layered 3D parallax scrolling effects on the HomePage by transforming background layers, scenes, and text elements based on scroll position and mouse movement.
@@ -86,7 +86,7 @@ export default function useParallax() {
       }
 
       // Layer 3 (Fast): Apply depth to quantum scenes
-      const scenes = document.querySelectorAll(".quantum-scene");
+      const scenes = document.querySelectorAll('.quantum-scene');
       scenes.forEach((scene, index) => {
         if (!scene) return;
 
@@ -112,15 +112,13 @@ export default function useParallax() {
           scene.style.opacity = String(1 - normalizedDist * 0.3);
         } else {
           // Keep entanglement and superposition scenes flat to show parallax layers
-          scene.style.transform = "none";
-          scene.style.opacity = "1";
+          scene.style.transform = 'none';
+          scene.style.opacity = '1';
         }
       });
 
       // Layer 4 (Fastest): N3XUS Title Enhancement
-      const titleElement = document.querySelector(
-        ".n3xus-title, .scramble-title"
-      );
+      const titleElement = document.querySelector('.n3xus-title, .scramble-title');
       if (titleElement) {
         const titleDepth = 300 - scrollY * 0.5;
         const titleGlow = Math.max(0, 1 - progress * 2);
@@ -142,11 +140,11 @@ export default function useParallax() {
       }
 
       // Layer 5: Ensure "Be the defiance" is always visible
-      const defianceText = document.querySelector(".floating-code");
+      const defianceText = document.querySelector('.floating-code');
       if (defianceText) {
         // Ensure it stays on top and visible
-        defianceText.style.zIndex = "100";
-        defianceText.style.position = "relative";
+        defianceText.style.zIndex = '100';
+        defianceText.style.position = 'relative';
 
         // Add slight parallax but keep it visible
         const defianceGlow = Math.max(0.5, 1 - progress * 0.5);
@@ -163,13 +161,13 @@ export default function useParallax() {
       my = (e.clientY / window.innerHeight - 0.5) * 2;
     };
 
-    window.addEventListener("scroll", handleParallax);
-    window.addEventListener("mousemove", handleMouseMove);
+    window.addEventListener('scroll', handleParallax);
+    window.addEventListener('mousemove', handleMouseMove);
     handleParallax();
 
     return () => {
-      window.removeEventListener("scroll", handleParallax);
-      window.removeEventListener("mousemove", handleMouseMove);
+      window.removeEventListener('scroll', handleParallax);
+      window.removeEventListener('mousemove', handleMouseMove);
     };
   }, []);
 

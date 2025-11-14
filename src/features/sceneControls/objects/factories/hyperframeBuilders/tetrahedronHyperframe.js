@@ -1,4 +1,4 @@
-import * as THREE from "three";
+import * as THREE from 'three';
 
 /**
  * Create hyperframe for compound tetrahedron with dual inner tetrahedrons and vertex connections
@@ -8,11 +8,7 @@ import * as THREE from "three";
  * @param {string} hyperframeLineColor - Color for connections
  * @returns {Object} { centerLines, centerLinesMaterial, curvedLines, curvedLinesMaterial }
  */
-export function createTetrahedronHyperframe(
-  geometry,
-  hyperframeColor,
-  hyperframeLineColor
-) {
+export function createTetrahedronHyperframe(geometry, hyperframeColor, hyperframeLineColor) {
   // Canonical vertices for tetrahedron (4 vertices forming a pyramid)
   // Use Three.js standard tetrahedron vertex calculation
   const a = 1.2 / Math.sqrt(3); // radius 1.2 to match geometry size
@@ -25,11 +21,7 @@ export function createTetrahedronHyperframe(
   ];
 
   // Create rotated second set for compound geometry (scale inversion for dual tetrahedron)
-  const cmpTetrahedronOuter2 = cmpTetrahedronOuter1.map((v) => [
-    -v[0],
-    -v[1],
-    -v[2],
-  ]);
+  const cmpTetrahedronOuter2 = cmpTetrahedronOuter1.map((v) => [-v[0], -v[1], -v[2]]);
 
   // Create inner tetrahedrons (scaled down)
   const innerScale = 0.5;
@@ -117,14 +109,10 @@ export function createTetrahedronHyperframe(
   const actualVertices = [];
   for (let i = 0; i < vertexCount; i++) {
     const idx = i * 3;
-    actualVertices.push(
-      new THREE.Vector3(positions[idx], positions[idx + 1], positions[idx + 2])
-    );
+    actualVertices.push(new THREE.Vector3(positions[idx], positions[idx + 1], positions[idx + 2]));
   }
 
-  console.log(
-    `Found ${actualVertices.length} vertices in compound tetrahedron`
-  );
+  console.log(`Found ${actualVertices.length} vertices in compound tetrahedron`);
 
   // Match each canonical outer vertex to its closest actual vertex (nearest-vertex matching)
   const matchVertex = (canonical) => {

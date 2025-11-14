@@ -1,5 +1,5 @@
-import * as THREE from "three";
-import { mergeGeometries } from "three/examples/jsm/utils/BufferGeometryUtils";
+import * as THREE from 'three';
+import { mergeGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils';
 
 /**
  * Creates a compound floating city geometry - two floating cities merged at cross-axis
@@ -44,11 +44,7 @@ export function createCompoundFloatingCity(options = {}) {
       for (let i = 0; i < nodesPerLevel; i++) {
         const angle = (i / nodesPerLevel) * Math.PI * 2;
         const node = new THREE.SphereGeometry(0.04 * scale, 12, 12);
-        node.translate(
-          Math.cos(angle) * radius,
-          yPos,
-          Math.sin(angle) * radius
-        );
+        node.translate(Math.cos(angle) * radius, yPos, Math.sin(angle) * radius);
         parts.push(node);
       }
     }
@@ -59,18 +55,9 @@ export function createCompoundFloatingCity(options = {}) {
       const angle = (i / connectorCount) * Math.PI * 2;
       const offset = 0.8 * scale;
 
-      const connector = new THREE.TorusGeometry(
-        0.08 * scale,
-        0.015 * scale,
-        6,
-        24
-      );
+      const connector = new THREE.TorusGeometry(0.08 * scale, 0.015 * scale, 6, 24);
       connector.rotateX(Math.PI / 2);
-      connector.translate(
-        Math.cos(angle) * offset,
-        0,
-        Math.sin(angle) * offset
-      );
+      connector.translate(Math.cos(angle) * offset, 0, Math.sin(angle) * offset);
       parts.push(connector);
 
       for (let j = 0; j < 4; j++) {
@@ -179,11 +166,7 @@ export function createCompoundFloatingCity(options = {}) {
       const yPos = (Math.random() - 0.5) * 2.0 * scale;
 
       const accent = new THREE.SphereGeometry(0.015 * scale, 8, 8);
-      accent.translate(
-        Math.cos(angle) * radius,
-        yPos,
-        Math.sin(angle) * radius
-      );
+      accent.translate(Math.cos(angle) * radius, yPos, Math.sin(angle) * radius);
       parts.push(accent);
     }
 
@@ -193,17 +176,8 @@ export function createCompoundFloatingCity(options = {}) {
 
       for (let ring = 0; ring < 3; ring++) {
         const ringRadius = (0.3 + ring * 0.15) * scale;
-        const spireRing = new THREE.TorusGeometry(
-          ringRadius,
-          0.012 * scale,
-          6,
-          20
-        );
-        spireRing.translate(
-          0,
-          yPos - ring * 0.2 * scale * (pole === 0 ? 1 : -1),
-          0
-        );
+        const spireRing = new THREE.TorusGeometry(ringRadius, 0.012 * scale, 6, 20);
+        spireRing.translate(0, yPos - ring * 0.2 * scale * (pole === 0 ? 1 : -1), 0);
         parts.push(spireRing);
 
         const nodesOnSpire = 6 + ring * 2;
@@ -248,7 +222,7 @@ export function createCompoundFloatingCity(options = {}) {
   // Mark as compound floating city
   compoundCity.userData.isCompound = true;
   compoundCity.userData.isSuperCompound = true;
-  compoundCity.userData.baseType = "SphereGeometry";
+  compoundCity.userData.baseType = 'SphereGeometry';
   compoundCity.userData.isFloatingCity = true;
   compoundCity.userData.componentCount = 2;
 
@@ -259,10 +233,10 @@ export function createCompoundFloatingCity(options = {}) {
  * Metadata for the compound floating city geometry
  */
 export const metadata = {
-  name: "compoundfloatingcity",
-  displayName: "🌆 Compound Curves",
-  category: "curved",
-  description: "Two floating cities merged at perpendicular cross-axis",
+  name: 'compoundfloatingcity',
+  displayName: '🌆 Compound Curves',
+  category: 'curved',
+  description: 'Two floating cities merged at perpendicular cross-axis',
   isCompound: true,
   isSuperCompound: true,
   defaultOptions: {

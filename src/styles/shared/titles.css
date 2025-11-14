@@ -40,34 +40,38 @@ h1.quantum-title {
   isolation: isolate;
   overflow: visible;
   opacity: 0;
-  filter: saturate(3.0) brightness(1.4) contrast(1.2);
+  filter: saturate(3) brightness(1.4) contrast(1.2);
   -webkit-font-smoothing: antialiased;
 }
 
 /* HomePage-specific animations moved to HomeIndex.module.scss */
 /* .title-word[data-word="N3XUS"], GE0M, LVB now in HomePage folder */
 
-.title-word[data-word="MY"] {
-  animation: pageTitleShimmer 5s ease-in-out infinite, simpleFadeIn 1s ease-out forwards;
+.title-word[data-word='MY'] {
+  animation:
+    pageTitleShimmer 5s ease-in-out infinite,
+    simpleFadeIn 1s ease-out forwards;
   animation-delay: 0s, 0s;
 }
 
-.title-word[data-word="SCENES"] {
-  animation: pageTitleShimmer 5s ease-in-out infinite, simpleFadeIn 1s ease-out forwards;
+.title-word[data-word='SCENES'] {
+  animation:
+    pageTitleShimmer 5s ease-in-out infinite,
+    simpleFadeIn 1s ease-out forwards;
   animation-delay: 0s, 0.2s;
 }
 
 /* Apply 3D effect to all title words */
-.title-word[data-word="N3XUS"]::before,
-.title-word[data-word="N3XUS"]::after,
-.title-word[data-word="GE0M"]::before,
-.title-word[data-word="GE0M"]::after,
-.title-word[data-word="LVB"]::before,
-.title-word[data-word="LVB"]::after,
-.title-word[data-word="MY"]::before,
-.title-word[data-word="MY"]::after,
-.title-word[data-word="SCENES"]::before,
-.title-word[data-word="SCENES"]::after {
+.title-word[data-word='N3XUS']::before,
+.title-word[data-word='N3XUS']::after,
+.title-word[data-word='GE0M']::before,
+.title-word[data-word='GE0M']::after,
+.title-word[data-word='LVB']::before,
+.title-word[data-word='LVB']::after,
+.title-word[data-word='MY']::before,
+.title-word[data-word='MY']::after,
+.title-word[data-word='SCENES']::before,
+.title-word[data-word='SCENES']::after {
   content: attr(data-word);
   position: absolute;
   left: 50%;
@@ -87,26 +91,28 @@ h1.quantum-title {
   -webkit-text-fill-color: inherit;
 }
 
-.title-word[data-word="N3XUS"]::before,
-.title-word[data-word="GE0M"]::before,
-.title-word[data-word="LVB"]::before,
-.title-word[data-word="MY"]::before,
-.title-word[data-word="SCENES"]::before {
+.title-word[data-word='N3XUS']::before,
+.title-word[data-word='GE0M']::before,
+.title-word[data-word='LVB']::before,
+.title-word[data-word='MY']::before,
+.title-word[data-word='SCENES']::before {
   z-index: -2;
   filter: blur(18px);
   opacity: 0.45;
   transform: translate(-50%, -50%) translateY(6px) translateX(-2px) scale(1.05);
 }
 
-.title-word[data-word="N3XUS"]::after,
-.title-word[data-word="GE0M"]::after,
-.title-word[data-word="LVB"]::after,
-.title-word[data-word="MY"]::after,
-.title-word[data-word="SCENES"]::after {
+.title-word[data-word='N3XUS']::after,
+.title-word[data-word='GE0M']::after,
+.title-word[data-word='LVB']::after,
+.title-word[data-word='MY']::after,
+.title-word[data-word='SCENES']::after {
   z-index: -2;
   opacity: 0.4;
   transform: translate(-50%, -50%) translateY(10px) translateX(0px);
-  text-shadow: 0 0 20px rgba(22, 10, 27, 0.146), 0 0 60px rgba(5, 1, 49, 0.89);
+  text-shadow:
+    0 0 20px rgba(22, 10, 27, 0.146),
+    0 0 60px rgba(5, 1, 49, 0.89);
 }
 
 .title-char {
@@ -137,13 +143,12 @@ h1.quantum-title {
   transform: translate(-65%, -90%) rotate(-30deg);
   z-index: 2;
   pointer-events: none;
-  
 }
 
 .title-inverted-v {
   display: inline-block;
   position: relative;
-  transform: scaleY(-1.10) translateY(0.0em);
+  transform: scaleY(-1.1) translateY(0em);
   transform-origin: center;
   font-family: 'Future Z', 'Orbitron', 'Rajdhani', sans-serif !important;
   line-height: 1;
@@ -169,7 +174,7 @@ h1.quantum-title {
 .quote-inverted-a,
 .orbitron-inverted-a {
   display: inline-block !important;
-  transform: scaleY(-1) translateY(0.0em) !important;
+  transform: scaleY(-1) translateY(0em) !important;
   transform-origin: center !important;
   line-height: 1 !important;
   font-family: inherit !important;
@@ -227,5 +232,7 @@ h1.quantum-title {
   z-index: -2;
   opacity: 0.4;
   transform: translate(-50%, -50%) translateY(10px) translateX(0px);
-  text-shadow: 0 0 20px rgba(22, 10, 27, 0.146), 0 0 60px rgba(5, 1, 49, 0.89);
+  text-shadow:
+    0 0 20px rgba(22, 10, 27, 0.146),
+    0 0 60px rgba(5, 1, 49, 0.89);
 }

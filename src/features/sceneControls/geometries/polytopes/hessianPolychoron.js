@@ -1,5 +1,5 @@
-import * as THREE from "three";
-import { mergeGeometries } from "three/examples/jsm/utils/BufferGeometryUtils";
+import * as THREE from 'three';
+import { mergeGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils';
 
 /**
  * Creates a Hessian polychoron with icosahedral 5-fold symmetry
@@ -52,9 +52,9 @@ export function createHessianPolychoron(options = {}) {
   merged.userData.isHessianPolychoron = true;
   merged.userData.isCompound = true;
   merged.userData.isSuperCompound = true;
-  merged.userData.baseType = "IcosahedronGeometry";
+  merged.userData.baseType = 'IcosahedronGeometry';
   merged.userData.componentCount = 15; // 5 compounds × 3 layers
-  merged.userData.symmetry = "icosahedral-5-fold";
+  merged.userData.symmetry = 'icosahedral-5-fold';
   merged.userData.layers = {
     compounds: 5,
     layersPerCompound: 3,
@@ -65,11 +65,11 @@ export function createHessianPolychoron(options = {}) {
 }
 
 export const metadata = {
-  name: "hessianpolychoron",
-  displayName: "✦ Hessian Polychoron",
-  category: "polytopes",
+  name: 'hessianpolychoron',
+  displayName: '✦ Hessian Polychoron',
+  category: 'polytopes',
   description:
-    "5-compound with icosahedral symmetry: 15 nested shells (5 × 3) rotated by 72° pentagonal symmetry.",
+    '5-compound with icosahedral symmetry: 15 nested shells (5 × 3) rotated by 72° pentagonal symmetry.',
   isCompound: true,
   isSuperCompound: true,
   defaultOptions: {},

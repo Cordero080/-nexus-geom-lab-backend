@@ -1,5 +1,5 @@
-import * as THREE from "three";
-import { mergeGeometries } from "three/examples/jsm/utils/BufferGeometryUtils";
+import * as THREE from 'three';
+import { mergeGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils';
 
 /**
  * Creates a compound torus geometry with multiple nested and intersecting tori
@@ -40,22 +40,12 @@ export function createTorus(options = {}) {
   tori.push(orthoTorus);
 
   // Orthogonal inner torus
-  const orthoInnerTorus = new THREE.TorusGeometry(
-    innerRadius,
-    innerTube,
-    20,
-    40
-  );
+  const orthoInnerTorus = new THREE.TorusGeometry(innerRadius, innerTube, 20, 40);
   orthoInnerTorus.rotateX(Math.PI / 2);
   tori.push(orthoInnerTorus);
 
   // Diagonal torus (45° on both X and Y) - third axis
-  const diagTorus = new THREE.TorusGeometry(
-    mainRadius * 0.85,
-    mainTube * 0.85,
-    24,
-    48
-  );
+  const diagTorus = new THREE.TorusGeometry(mainRadius * 0.85, mainTube * 0.85, 24, 48);
   diagTorus.rotateX(Math.PI / 4);
   diagTorus.rotateY(Math.PI / 4);
   tori.push(diagTorus);
@@ -70,11 +60,7 @@ export function createTorus(options = {}) {
     // Rotate and position
     miniTorus.rotateY(angle);
     miniTorus.rotateX(Math.PI / 3);
-    miniTorus.translate(
-      Math.cos(angle) * mainRadius * 0.6,
-      0,
-      Math.sin(angle) * mainRadius * 0.6
-    );
+    miniTorus.translate(Math.cos(angle) * mainRadius * 0.6, 0, Math.sin(angle) * mainRadius * 0.6);
     tori.push(miniTorus);
   }
 
@@ -85,11 +71,7 @@ export function createTorus(options = {}) {
     const angle = (i / 4) * Math.PI * 2;
     const villTorus = new THREE.TorusGeometry(villRadius, villTube, 12, 24);
     villTorus.rotateZ(Math.PI / 6);
-    villTorus.translate(
-      Math.cos(angle) * mainRadius * 0.7,
-      Math.sin(angle) * mainRadius * 0.7,
-      0
-    );
+    villTorus.translate(Math.cos(angle) * mainRadius * 0.7, Math.sin(angle) * mainRadius * 0.7, 0);
     tori.push(villTorus);
   }
 
@@ -99,7 +81,7 @@ export function createTorus(options = {}) {
 
   // Mark as compound torus
   mergedTorus.userData.isCompound = true;
-  mergedTorus.userData.baseType = "TorusGeometry";
+  mergedTorus.userData.baseType = 'TorusGeometry';
   mergedTorus.userData.componentCount = tori.length;
 
   return mergedTorus;
@@ -109,11 +91,10 @@ export function createTorus(options = {}) {
  * Metadata for the torus geometry
  */
 export const metadata = {
-  name: "torus",
-  displayName: "🔮 Compound Torus",
-  category: "curved",
-  description:
-    "Multiple nested and intersecting tori - 12 tori with toroidal symmetry",
+  name: 'torus',
+  displayName: '🔮 Compound Torus',
+  category: 'curved',
+  description: 'Multiple nested and intersecting tori - 12 tori with toroidal symmetry',
   isCompound: true,
   defaultOptions: {},
 };

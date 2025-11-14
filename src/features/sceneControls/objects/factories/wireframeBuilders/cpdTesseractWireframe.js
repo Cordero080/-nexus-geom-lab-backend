@@ -1,5 +1,5 @@
-import * as THREE from "three";
-import { nearestVertexIndex } from "../../../utils/geometryHelpers";
+import * as THREE from 'three';
+import { nearestVertexIndex } from '../../../utils/geometryHelpers';
 
 /**
  * Create a wireframe for compound tesseract that shows all edges
@@ -10,14 +10,8 @@ import { nearestVertexIndex } from "../../../utils/geometryHelpers";
  * @param {THREE.Material} wireframeMaterial - Material for the wireframe
  * @returns {THREE.Group} The wireframe group
  */
-export function createCpdTesseractWireframe(
-  geometry,
-  wireframeMaterial,
-  options = {}
-) {
-  console.log(
-    "Creating compound tesseract wireframe from actual geometry edges"
-  );
+export function createCpdTesseractWireframe(geometry, wireframeMaterial, options = {}) {
+  console.log('Creating compound tesseract wireframe from actual geometry edges');
 
   const wireframeGroup = new THREE.Group();
   const edgePairs = [];
@@ -41,7 +35,7 @@ export function createCpdTesseractWireframe(
   const MAIN_RADIUS = BASE_RADIUS * radiusScale;
   const HALO_RADIUS_FACTOR = 1.35; // slightly slimmer halo
   const haloMaterial = new THREE.MeshBasicMaterial({
-    color: wireframeMaterial.color?.clone?.() || new THREE.Color("#ffffff"),
+    color: wireframeMaterial.color?.clone?.() || new THREE.Color('#ffffff'),
     transparent: true,
     opacity: 0.25,
     blending: THREE.AdditiveBlending,
@@ -50,21 +44,13 @@ export function createCpdTesseractWireframe(
 
   // Subgroup for vertex nodes (kept out of top-level for update compatibility)
   const nodesGroup = new THREE.Group();
-  nodesGroup.name = "wireframeVertexNodes";
+  nodesGroup.name = 'wireframeVertexNodes';
   wireframeGroup.add(nodesGroup);
 
   // Create cylinders for each edge
   for (let i = 0; i < positions.length; i += 6) {
-    const start = new THREE.Vector3(
-      positions[i],
-      positions[i + 1],
-      positions[i + 2]
-    );
-    const end = new THREE.Vector3(
-      positions[i + 3],
-      positions[i + 4],
-      positions[i + 5]
-    );
+    const start = new THREE.Vector3(positions[i], positions[i + 1], positions[i + 2]);
+    const end = new THREE.Vector3(positions[i + 3], positions[i + 4], positions[i + 5]);
 
     const distance = start.distanceTo(end);
 
@@ -72,12 +58,7 @@ export function createCpdTesseractWireframe(
     if (distance < 0.001) continue;
 
     // Create cylinder for this edge
-    const cylinderGeom = new THREE.CylinderGeometry(
-      MAIN_RADIUS,
-      MAIN_RADIUS,
-      distance,
-      8
-    );
+    const cylinderGeom = new THREE.CylinderGeometry(MAIN_RADIUS, MAIN_RADIUS, distance, 8);
     const cylinderMesh = new THREE.Mesh(cylinderGeom, edgeMaterial);
 
     // Position cylinder between start and end points
@@ -100,7 +81,7 @@ export function createCpdTesseractWireframe(
       8
     );
     const haloMesh = new THREE.Mesh(haloGeom, haloMaterial);
-    haloMesh.name = "edgeHalo";
+    haloMesh.name = 'edgeHalo';
     haloMesh.position.set(0, 0, 0);
     haloMesh.rotation.set(0, 0, 0);
     cylinderMesh.add(haloMesh);
@@ -111,11 +92,7 @@ export function createCpdTesseractWireframe(
   const key = (v) => `${v.x.toFixed(3)}_${v.y.toFixed(3)}_${v.z.toFixed(3)}`;
   const uniq = new Map();
   for (let i = 0; i < positions.length; i += 3) {
-    const v = new THREE.Vector3(
-      positions[i],
-      positions[i + 1],
-      positions[i + 2]
-    );
+    const v = new THREE.Vector3(positions[i], positions[i + 1], positions[i + 2]);
     const k = key(v);
     if (!uniq.has(k)) uniq.set(k, v);
   }
@@ -124,9 +101,9 @@ export function createCpdTesseractWireframe(
     const NODE_RADIUS = MAIN_RADIUS * 1.5;
     const nodeGeom = new THREE.SphereGeometry(NODE_RADIUS, 10, 10);
     const nodeMat = new THREE.MeshStandardMaterial({
-      color: wireframeMaterial.color?.clone?.() || new THREE.Color("#ffffff"),
+      color: wireframeMaterial.color?.clone?.() || new THREE.Color('#ffffff'),
       emissive: (
-        wireframeMaterial.emissive?.clone?.() || new THREE.Color("#ffffff")
+        wireframeMaterial.emissive?.clone?.() || new THREE.Color('#ffffff')
       ).multiplyScalar(0.5),
       emissiveIntensity: 1,
       metalness: 0.0,
@@ -135,7 +112,7 @@ export function createCpdTesseractWireframe(
       opacity: Math.min(1, (wireframeMaterial.opacity ?? 0.6) + 0.2),
     });
     const inst = new THREE.InstancedMesh(nodeGeom, nodeMat, verts.length);
-    inst.name = "vertexNodes";
+    inst.name = 'vertexNodes';
     const m = new THREE.Matrix4();
     for (let i = 0; i < verts.length; i++) {
       m.makeTranslation(verts[i].x, verts[i].y, verts[i].z);

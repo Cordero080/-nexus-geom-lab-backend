@@ -13,7 +13,7 @@
  * Includes special handling for Floating City geometries (reduced density)
  */
 
-import * as THREE from "three";
+import * as THREE from 'three';
 
 /**
  * Creates animated extras for Compound Sphere
@@ -93,20 +93,8 @@ export function createCompoundSphereExtras(geometry) {
   }
 
   const ring1 = createOrbitalRing(2.5, { x: 0, y: 0, z: 0 }, 12, 0x00ffff, 1.0);
-  const ring2 = createOrbitalRing(
-    2.8,
-    { x: Math.PI / 3, y: 0, z: 0 },
-    10,
-    0xff00ff,
-    0.8
-  );
-  const ring3 = createOrbitalRing(
-    3.1,
-    { x: 0, y: Math.PI / 4, z: Math.PI / 4 },
-    8,
-    0xffff00,
-    1.2
-  );
+  const ring2 = createOrbitalRing(2.8, { x: Math.PI / 3, y: 0, z: 0 }, 10, 0xff00ff, 0.8);
+  const ring3 = createOrbitalRing(3.1, { x: 0, y: Math.PI / 4, z: Math.PI / 4 }, 8, 0xffff00, 1.2);
 
   group.add(ring1, ring2, ring3);
 
@@ -178,11 +166,7 @@ export function createCompoundSphereExtras(geometry) {
   streamConnections.forEach(([idx1, idx2], streamIdx) => {
     const particles = [];
     const particlesPerStream = 8;
-    const streamColor = new THREE.Color().setHSL(
-      streamIdx / streamConnections.length,
-      1.0,
-      0.5
-    );
+    const streamColor = new THREE.Color().setHSL(streamIdx / streamConnections.length, 1.0, 0.5);
 
     for (let i = 0; i < particlesPerStream; i++) {
       const particleGeom = new THREE.SphereGeometry(0.03, 6, 6);
@@ -231,9 +215,7 @@ export function createCompoundSphereExtras(geometry) {
       const y = y1 * (1 - t) + y2 * t;
       const z = z1 * (1 - t) + z2 * t;
       const len = Math.sqrt(x * x + y * y + z * z);
-      points.push(
-        new THREE.Vector3((x / len) * 0.88, (y / len) * 0.88, (z / len) * 0.88)
-      );
+      points.push(new THREE.Vector3((x / len) * 0.88, (y / len) * 0.88, (z / len) * 0.88));
     }
 
     const arcGeom = new THREE.BufferGeometry().setFromPoints(points);
@@ -302,7 +284,7 @@ export function createCompoundSphereExtras(geometry) {
       positions[j * 3 + 2] = 0;
     }
 
-    waveGeom.setAttribute("position", new THREE.BufferAttribute(positions, 3));
+    waveGeom.setAttribute('position', new THREE.BufferAttribute(positions, 3));
     const waveMat = new THREE.LineBasicMaterial({
       color: 0xffffff,
       transparent: true,
@@ -387,8 +369,7 @@ export function createCompoundSphereExtras(geometry) {
         particle.position.set(x, 0, z);
 
         // Pulse opacity
-        particle.material.opacity =
-          0.6 + Math.sin(t * 3 + particle.userData.angle) * 0.3;
+        particle.material.opacity = 0.6 + Math.sin(t * 3 + particle.userData.angle) * 0.3;
       });
     });
 
@@ -398,20 +379,15 @@ export function createCompoundSphereExtras(geometry) {
       const orbitPhase = t * data.orbitSpeed + data.phaseOffset;
 
       const x =
-        Math.sin(data.baseInclination) *
-        Math.cos(data.baseAzimuth + orbitPhase) *
-        data.orbitRadius;
+        Math.sin(data.baseInclination) * Math.cos(data.baseAzimuth + orbitPhase) * data.orbitRadius;
       const y =
-        Math.sin(data.baseInclination) *
-        Math.sin(data.baseAzimuth + orbitPhase) *
-        data.orbitRadius;
+        Math.sin(data.baseInclination) * Math.sin(data.baseAzimuth + orbitPhase) * data.orbitRadius;
       const z = Math.cos(data.baseInclination) * data.orbitRadius;
 
       orb.position.set(x, y, z);
 
       // Pulsing scale and opacity
-      const pulse =
-        Math.sin(t * data.pulseSpeed + data.phaseOffset) * 0.5 + 0.5;
+      const pulse = Math.sin(t * data.pulseSpeed + data.phaseOffset) * 0.5 + 0.5;
       const scale = 1 + pulse * 0.3;
       orb.scale.setScalar(scale);
       orb.material.opacity = 0.7 + pulse * 0.3;
@@ -424,24 +400,18 @@ export function createCompoundSphereExtras(geometry) {
 
       // Fibonacci spiral motion (inside the main sphere)
       const x =
-        Math.sin(data.baseInclination) *
-        Math.cos(data.baseAzimuth + orbitPhase) *
-        data.orbitRadius;
+        Math.sin(data.baseInclination) * Math.cos(data.baseAzimuth + orbitPhase) * data.orbitRadius;
       const y =
-        Math.sin(data.baseInclination) *
-        Math.sin(data.baseAzimuth + orbitPhase) *
-        data.orbitRadius;
+        Math.sin(data.baseInclination) * Math.sin(data.baseAzimuth + orbitPhase) * data.orbitRadius;
       const z = Math.cos(data.baseInclination) * data.orbitRadius;
 
       // Add gentle bobbing motion
-      const bob =
-        Math.sin(t * data.bobSpeed + data.phaseOffset) * data.bobAmplitude;
+      const bob = Math.sin(t * data.bobSpeed + data.phaseOffset) * data.bobAmplitude;
 
       orb.position.set(x, y + bob, z);
 
       // Pulsing scale and glow
-      const pulse =
-        Math.sin(t * data.pulseSpeed + data.phaseOffset) * 0.5 + 0.5;
+      const pulse = Math.sin(t * data.pulseSpeed + data.phaseOffset) * 0.5 + 0.5;
       const scale = 0.8 + pulse * 0.4;
       orb.scale.setScalar(scale);
       orb.material.opacity = 0.6 + pulse * 0.4;
@@ -471,8 +441,7 @@ export function createCompoundSphereExtras(geometry) {
     lightningArcs.forEach((arc) => {
       const pulse = Math.sin(t * arc.userData.pulseSpeed) * 0.5 + 0.5;
       const flash = Math.random() > 0.97 ? 1.0 : 0;
-      arc.material.opacity =
-        pulse * arc.userData.baseOpacity * 0.3 + flash * 0.8;
+      arc.material.opacity = pulse * arc.userData.baseOpacity * 0.3 + flash * 0.8;
     });
 
     // Animate Hopf flow lines
@@ -561,13 +530,7 @@ export function createFloatingCityExtras(geometry) {
 
   // Only 2 rings, fewer particles
   const ring1 = createOrbitalRing(2.8, { x: 0, y: 0, z: 0 }, 8, 0x00ccff, 1.0);
-  const ring2 = createOrbitalRing(
-    3.2,
-    { x: Math.PI / 3, y: 0, z: 0 },
-    6,
-    0xff66ff,
-    0.8
-  );
+  const ring2 = createOrbitalRing(3.2, { x: Math.PI / 3, y: 0, z: 0 }, 6, 0xff66ff, 0.8);
 
   group.add(ring1, ring2);
 
@@ -635,7 +598,7 @@ export function createFloatingCityExtras(geometry) {
 
     // Animate waves
     group.children.forEach((child) => {
-      if (child.userData.speed && child.geometry.type === "TorusGeometry") {
+      if (child.userData.speed && child.geometry.type === 'TorusGeometry') {
         const data = child.userData;
         data.currentRadius += deltaTime * data.speed;
 

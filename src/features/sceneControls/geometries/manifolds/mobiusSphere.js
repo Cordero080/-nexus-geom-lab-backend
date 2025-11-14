@@ -1,6 +1,6 @@
-import * as THREE from "three";
-import { mergeGeometries } from "three/examples/jsm/utils/BufferGeometryUtils";
-import { ParametricGeometry } from "three/examples/jsm/geometries/ParametricGeometry.js";
+import * as THREE from 'three';
+import { mergeGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils';
+import { ParametricGeometry } from 'three/examples/jsm/geometries/ParametricGeometry.js';
 
 /**
  * createMobiusSphere
@@ -83,8 +83,7 @@ export function createMobiusSphere(options = {}) {
 
       // Möbius transformation with enhanced twist
       const halfTwist = U / 2;
-      const radius =
-        mobiusMajor + adjustedV * Math.cos(halfTwist) + kleinInfluence;
+      const radius = mobiusMajor + adjustedV * Math.cos(halfTwist) + kleinInfluence;
 
       // Add subtle helical component for 3D interest
       const helixPhase = U * 0.5;
@@ -203,10 +202,7 @@ export function createMobiusSphere(options = {}) {
     const y = Math.sin(t) * radiusMod + twist * 0.3;
 
     // Z follows Lissajous-like curve
-    const z =
-      0.35 * Math.sin(t * 2 + Math.PI / 4) +
-      0.15 * Math.cos(t * 3) +
-      twist * 0.2;
+    const z = 0.35 * Math.sin(t * 2 + Math.PI / 4) + 0.15 * Math.cos(t * 3) + twist * 0.2;
 
     // Variable size for visual rhythm
     const size = orbSize * (1 + 0.3 * Math.sin(t * 4));
@@ -304,12 +300,7 @@ export function createMobiusSphere(options = {}) {
     const r2 = 1.3 - i * 0.08;
 
     // Create thread as small cylinders
-    const threadGeom = new THREE.CylinderGeometry(
-      torusTube * 0.3,
-      torusTube * 0.3,
-      r2 - r1,
-      8
-    );
+    const threadGeom = new THREE.CylinderGeometry(torusTube * 0.3, torusTube * 0.3, r2 - r1, 8);
 
     threadGeom.rotateZ(Math.PI / 2);
     threadGeom.translate(
@@ -341,11 +332,7 @@ export function createMobiusSphere(options = {}) {
         const sin = Math.sin(angle);
         const radius = 1.0;
 
-        target.set(
-          x * cos - y * sin + radius * cos,
-          x * sin + y * cos + radius * sin,
-          z
-        );
+        target.set(x * cos - y * sin + radius * cos, x * sin + y * cos + radius * sin, z);
       },
       16,
       16
@@ -389,49 +376,49 @@ export function createMobiusSphere(options = {}) {
       uvs[i * 2 + 1] = phi / Math.PI;
     }
 
-    merged.setAttribute("uv", new THREE.BufferAttribute(uvs, 2));
+    merged.setAttribute('uv', new THREE.BufferAttribute(uvs, 2));
   }
 
   // Ultra-detailed metadata
   merged.userData = {
     isMobiusSphere: true,
-    version: "4.0-ULTIMATE",
+    version: '4.0-ULTIMATE',
     componentCount: parts.length,
-    symmetry: "icosahedral / Fibonacci / golden-ratio / Hopf-fibration",
-    topology: "Klein-Möbius hybrid non-orientable manifold",
-    harmonics: "multi-frequency chaotic attractor resonance",
-    knots: "trefoil topology integration",
-    geometry: "hyperbolic saddle points / geodesic distribution",
+    symmetry: 'icosahedral / Fibonacci / golden-ratio / Hopf-fibration',
+    topology: 'Klein-Möbius hybrid non-orientable manifold',
+    harmonics: 'multi-frequency chaotic attractor resonance',
+    knots: 'trefoil topology integration',
+    geometry: 'hyperbolic saddle points / geodesic distribution',
     description:
-      "Ultimate mathematical manifold combining Klein bottle topology, Möbius strips, " +
-      "Fibonacci spirals, Lorenz attractors, trefoil knots, Hopf fibrations, hyperbolic geometry, " +
-      "and golden ratio harmonics in a unified coherent structure.",
+      'Ultimate mathematical manifold combining Klein bottle topology, Möbius strips, ' +
+      'Fibonacci spirals, Lorenz attractors, trefoil knots, Hopf fibrations, hyperbolic geometry, ' +
+      'and golden ratio harmonics in a unified coherent structure.',
     features: [
-      "Klein-Möbius hybrid double-twisted surface",
-      "Dual counter-rotating Möbius bands",
-      "Multi-scale nested core structure",
-      "Fibonacci spiral anchor constellation (33 points)",
-      "Lorenz strange attractor orbital paths",
-      "4-harmonic chaotic wave functions",
-      "Trefoil knot energy conduits",
-      "Multi-layer toroidal field harmonics (7 tori)",
-      "Golden spiral energy threads",
-      "Hyperbolic saddle point manifolds",
-      "Fractal micro-detail orbits (36 particles)",
-      "Advanced spherical UV mapping",
-      "Optimized bounding volume hierarchy",
+      'Klein-Möbius hybrid double-twisted surface',
+      'Dual counter-rotating Möbius bands',
+      'Multi-scale nested core structure',
+      'Fibonacci spiral anchor constellation (33 points)',
+      'Lorenz strange attractor orbital paths',
+      '4-harmonic chaotic wave functions',
+      'Trefoil knot energy conduits',
+      'Multi-layer toroidal field harmonics (7 tori)',
+      'Golden spiral energy threads',
+      'Hyperbolic saddle point manifolds',
+      'Fractal micro-detail orbits (36 particles)',
+      'Advanced spherical UV mapping',
+      'Optimized bounding volume hierarchy',
     ],
     mathematics: {
       goldenRatio: phi,
-      goldenAngle: (goldenAngle * 180) / Math.PI + " degrees",
-      topology: "genus-1 non-orientable surface",
-      symmetryGroup: "Ih (icosahedral)",
-      dimensions: "3D embedding of 4D manifold projection",
-      attractors: "Lorenz-type chaotic dynamics",
-      knotTheory: "trefoil (3₁) integration",
+      goldenAngle: (goldenAngle * 180) / Math.PI + ' degrees',
+      topology: 'genus-1 non-orientable surface',
+      symmetryGroup: 'Ih (icosahedral)',
+      dimensions: '3D embedding of 4D manifold projection',
+      attractors: 'Lorenz-type chaotic dynamics',
+      knotTheory: 'trefoil (3₁) integration',
     },
     rendering: {
-      vertexCount: "~" + merged.attributes.position.count,
+      vertexCount: '~' + merged.attributes.position.count,
       hasUVs: true,
       hasNormals: true,
       optimized: true,
@@ -445,36 +432,36 @@ export function createMobiusSphere(options = {}) {
  * Ultimate metadata
  */
 export const metadata = {
-  name: "mobiussphere",
-  displayName: "∞ Möbius Sphere Ultimate",
-  category: "manifolds",
+  name: 'mobiussphere',
+  displayName: '∞ Möbius Sphere Ultimate',
+  category: 'manifolds',
   description:
-    "Revolutionary Möbius-based manifold integrating Klein bottle topology, Fibonacci spirals, " +
-    "Lorenz attractors, trefoil knots, Hopf fibrations, hyperbolic geometry, and multi-scale " +
-    "fractal detail in golden ratio harmony. A mathematically rigorous yet visually stunning " +
-    "exploration of non-orientable surfaces and strange attractors.",
+    'Revolutionary Möbius-based manifold integrating Klein bottle topology, Fibonacci spirals, ' +
+    'Lorenz attractors, trefoil knots, Hopf fibrations, hyperbolic geometry, and multi-scale ' +
+    'fractal detail in golden ratio harmony. A mathematically rigorous yet visually stunning ' +
+    'exploration of non-orientable surfaces and strange attractors.',
   isCompound: true,
   defaultOptions: {},
   features: [
-    "Klein-Möbius hybrid topology",
-    "Dual counter-rotating surfaces",
-    "Fibonacci spiral distribution",
-    "Lorenz chaotic attractors",
-    "Trefoil knot elements",
-    "Hyperbolic geometry",
-    "Multi-scale fractal detail",
-    "Golden ratio everywhere",
-    "Advanced UV mapping",
-    "7-layer toroidal fields",
+    'Klein-Möbius hybrid topology',
+    'Dual counter-rotating surfaces',
+    'Fibonacci spiral distribution',
+    'Lorenz chaotic attractors',
+    'Trefoil knot elements',
+    'Hyperbolic geometry',
+    'Multi-scale fractal detail',
+    'Golden ratio everywhere',
+    'Advanced UV mapping',
+    '7-layer toroidal fields',
   ],
   technicalHighlights: [
-    "Multi-frequency fractal modulation",
-    "Strange attractor orbital dynamics",
-    "Geodesic icosahedral + Fibonacci hybrid",
-    "Lissajous curve Z-motion",
-    "Hopf fibration-inspired rotations",
-    "Hyperbolic paraboloid saddle points",
-    "Spherical UV coordinate generation",
-    "Multi-pass normal computation",
+    'Multi-frequency fractal modulation',
+    'Strange attractor orbital dynamics',
+    'Geodesic icosahedral + Fibonacci hybrid',
+    'Lissajous curve Z-motion',
+    'Hopf fibration-inspired rotations',
+    'Hyperbolic paraboloid saddle points',
+    'Spherical UV coordinate generation',
+    'Multi-pass normal computation',
   ],
 };

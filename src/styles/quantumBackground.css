@@ -11,11 +11,13 @@
   min-height: 100vh;
   pointer-events: none;
   z-index: -3; /* Behind parallax layers, below content */
-  background: linear-gradient(120deg, #0a0f1a 60%, #1a2a3a 100%),
+  background:
+    linear-gradient(120deg, #0a0f1a 60%, #1a2a3a 100%),
     repeating-linear-gradient(-30deg, #00f0ff22 0 2px, transparent 2px 40px);
   opacity: 0.68;
   will-change: transform, opacity, filter;
-  transition: transform 1.2s cubic-bezier(0.4, 0, 0.2, 1),
+  transition:
+    transform 1.2s cubic-bezier(0.4, 0, 0.2, 1),
     opacity 0.9s ease,
     filter 0.9s ease;
   transform-origin: center;
@@ -46,8 +48,8 @@
   z-index: -1;
   pointer-events: none;
   /* Fade the bottom edge to avoid a hard horizontal line */
-  -webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 85%);
-  mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 85%);
+  -webkit-mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 0) 85%);
+  mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 0) 85%);
 }
 
 .parallax-bg-layer {
@@ -69,12 +71,23 @@
   height: 100%;
   z-index: 0;
   pointer-events: none;
-  background: linear-gradient(120deg, #0a0f1a 60%, #1a2a3a 100%),
+  background:
+    linear-gradient(120deg, #0a0f1a 60%, #1a2a3a 100%),
     repeating-linear-gradient(-30deg, #00f0ff22 0 2px, transparent 2px 40px);
   opacity: 1.88;
   /* Fade mask at top to blend into quantum SVG gradients above */
-  -webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,0.3) 15%, rgba(0,0,0,1) 35%);
-  mask-image: linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,0.3) 5%, rgba(0,0,0,1) 35%);
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0) 0%,
+    rgba(0, 0, 0, 0.3) 15%,
+    rgba(0, 0, 0, 1) 35%
+  );
+  mask-image: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0) 0%,
+    rgba(0, 0, 0, 0.3) 5%,
+    rgba(0, 0, 0, 1) 35%
+  );
 }
 
 /* Clip-path variants for scrolling backgrounds */

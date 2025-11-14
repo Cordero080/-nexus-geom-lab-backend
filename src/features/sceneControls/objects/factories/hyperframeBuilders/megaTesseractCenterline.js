@@ -1,5 +1,5 @@
-import * as THREE from "three";
-import { createCpdTesseractWireframe } from "../wireframeBuilders/cpdTesseractWireframe";
+import * as THREE from 'three';
+import { createCpdTesseractWireframe } from '../wireframeBuilders/cpdTesseractWireframe';
 
 const INNER_SIZE = 1.5;
 const CENTERLINE_SCALE = 0.6;
@@ -7,21 +7,14 @@ const CONNECTOR_RADIUS = 0.0055;
 const CONNECTOR_SEGMENTS = 10;
 
 function applyCenterScaling(vertices, center, scale) {
-  return vertices.map((v) =>
-    v.clone().sub(center).multiplyScalar(scale).add(center)
-  );
+  return vertices.map((v) => v.clone().sub(center).multiplyScalar(scale).add(center));
 }
 
 function createCylinderBetweenPoints(start, end, radius, material) {
   const distance = start.distanceTo(end);
   if (distance < 1e-4) return null;
 
-  const cylinderGeom = new THREE.CylinderGeometry(
-    radius,
-    radius,
-    distance,
-    CONNECTOR_SEGMENTS
-  );
+  const cylinderGeom = new THREE.CylinderGeometry(radius, radius, distance, CONNECTOR_SEGMENTS);
   const cylinderMesh = new THREE.Mesh(cylinderGeom, material);
 
   const midpoint = start.clone().add(end).multiplyScalar(0.5);
@@ -42,18 +35,14 @@ function makeConnectionKey(a, b) {
 }
 
 function collectUniqueVertices(bufferGeometry, precision = 4) {
-  const positionsAttr = bufferGeometry.getAttribute("position");
+  const positionsAttr = bufferGeometry.getAttribute('position');
   if (!positionsAttr) return [];
 
   const positions = positionsAttr.array;
   const unique = new Map();
 
   for (let i = 0; i < positions.length; i += 3) {
-    const vertex = new THREE.Vector3(
-      positions[i],
-      positions[i + 1],
-      positions[i + 2]
-    );
+    const vertex = new THREE.Vector3(positions[i], positions[i + 1], positions[i + 2]);
     const key = `${vertex.x.toFixed(precision)}_${vertex.y.toFixed(
       precision
     )}_${vertex.z.toFixed(precision)}`;
@@ -70,11 +59,7 @@ function collectUniqueVertices(bufferGeometry, precision = 4) {
  * tesseract wireframe and scales it so the duplicate sits inside the large pair,
  * keeping the look consistent while removing any outer connectors.
  */
-export function createMegaTesseractCenterline(
-  geometry,
-  hyperframeColor,
-  _hyperframeLineColor
-) {
+export function createMegaTesseractCenterline(geometry, hyperframeColor, _hyperframeLineColor) {
   const workingGeometry = geometry.clone();
   workingGeometry.computeBoundingBox();
 
@@ -89,16 +74,14 @@ export function createMegaTesseractCenterline(
   workingGeometry.computeBoundingSphere();
 
   const centerLinesMaterial = new THREE.MeshBasicMaterial({
-    color: new THREE.Color(hyperframeColor || "#ff003c"),
+    color: new THREE.Color(hyperframeColor || '#ff003c'),
     transparent: false,
     opacity: 1,
   });
 
-  const centerLines = createCpdTesseractWireframe(
-    workingGeometry,
-    centerLinesMaterial,
-    { radiusScale: 0.5 }
-  );
+  const centerLines = createCpdTesseractWireframe(workingGeometry, centerLinesMaterial, {
+    radiusScale: 0.5,
+  });
 
   // Prevent downstream deformation utilities from trying to sync against the parent geometry
   centerLines.userData.edgePairs = null;
@@ -108,13 +91,13 @@ export function createMegaTesseractCenterline(
   centerLines.position.set(0, 0, 0);
 
   const connectorsMaterial = new THREE.MeshBasicMaterial({
-    color: new THREE.Color(_hyperframeLineColor || "#5dff9a"),
+    color: new THREE.Color(_hyperframeLineColor || '#5dff9a'),
     transparent: false,
     opacity: 1,
   });
 
   const curvedLines = new THREE.Group();
-  curvedLines.name = "megaTesseractConnectors";
+  curvedLines.name = 'megaTesseractConnectors';
 
   const sourceEdgesGeometry = new THREE.EdgesGeometry(workingGeometry);
   const targetEdgesGeometry = new THREE.EdgesGeometry(geometry);
@@ -148,8 +131,7 @@ export function createMegaTesseractCenterline(
       const radiusDiff = targetRadius - sourceRadius;
       const isBetterAlignment = alignment > bestAlignment + 1e-4;
       const isCloserRadius =
-        Math.abs(alignment - bestAlignment) <= 1e-4 &&
-        radiusDiff < smallestRadiusDiff;
+        Math.abs(alignment - bestAlignment) <= 1e-4 && radiusDiff < smallestRadiusDiff;
 
       if (isBetterAlignment || isCloserRadius) {
         bestAlignment = alignment;

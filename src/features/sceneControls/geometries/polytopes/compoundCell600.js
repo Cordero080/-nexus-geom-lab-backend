@@ -1,5 +1,5 @@
-import * as THREE from "three";
-import { mergeGeometries } from "three/examples/jsm/utils/BufferGeometryUtils";
+import * as THREE from 'three';
+import { mergeGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils';
 
 /**
  * Creates a compound 600-cell - two 600-cells merged at cross-axes
@@ -59,7 +59,7 @@ export function createCompound600Cell(options = {}) {
 
   // Mark as compound 600-cell
   mergedCompound600Cell.userData.isCompound600Cell = true;
-  mergedCompound600Cell.userData.baseType = "IcosahedronGeometry";
+  mergedCompound600Cell.userData.baseType = 'IcosahedronGeometry';
   mergedCompound600Cell.userData.layers = {
     outer: outerSize,
     layer1: layer1Size,
@@ -75,11 +75,10 @@ export function createCompound600Cell(options = {}) {
  * Metadata for the compound 600-cell geometry
  */
 export const metadata = {
-  name: "compound600cell",
-  displayName: "⬡⬡ Compound 600-Cell",
-  category: "polytopes",
-  description:
-    "Two 600-cells merged - 1200 tetrahedral cells, ultimate tetrahedral complexity",
+  name: 'compound600cell',
+  displayName: '⬡⬡ Compound 600-Cell',
+  category: 'polytopes',
+  description: 'Two 600-cells merged - 1200 tetrahedral cells, ultimate tetrahedral complexity',
   isCompound: true,
   isSuperCompound: true,
   defaultOptions: {},

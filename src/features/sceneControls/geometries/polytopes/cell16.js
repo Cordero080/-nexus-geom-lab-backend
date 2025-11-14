@@ -1,5 +1,5 @@
-import * as THREE from "three";
-import { mergeGeometries } from "three/examples/jsm/utils/BufferGeometryUtils";
+import * as THREE from 'three';
+import { mergeGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils';
 
 /**
  * Creates a 16-cell (4D polytope) projection
@@ -30,7 +30,7 @@ export function create16Cell(options = {}) {
 
   // Mark as 16-cell for wireframe/hyperframe builders
   merged16Cell.userData.is16Cell = true;
-  merged16Cell.userData.baseType = "TetrahedronGeometry";
+  merged16Cell.userData.baseType = 'TetrahedronGeometry';
   merged16Cell.userData.layers = {
     outer: outerSize,
     middle: middleSize,
@@ -44,11 +44,10 @@ export function create16Cell(options = {}) {
  * Metadata for the 16-cell geometry
  */
 export const metadata = {
-  name: "16cell",
-  displayName: "▲ 16-Cell",
-  category: "polytopes",
-  description:
-    "Simplest 4D polytope (hyperdiamond) - 16 tetrahedral cells, dual of 24-cell",
+  name: '16cell',
+  displayName: '▲ 16-Cell',
+  category: 'polytopes',
+  description: 'Simplest 4D polytope (hyperdiamond) - 16 tetrahedral cells, dual of 24-cell',
   isCompound: false,
   defaultOptions: {},
 };

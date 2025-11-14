@@ -1,5 +1,5 @@
-import * as THREE from "three";
-import { mergeGeometries } from "three/examples/jsm/utils/BufferGeometryUtils";
+import * as THREE from 'three';
+import { mergeGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils';
 
 /**
  * Creates a 24-cell (4D polytope) projection
@@ -30,16 +30,11 @@ export function create24Cell(options = {}) {
   const innerOct = new THREE.OctahedronGeometry(innerSize);
 
   // Merge all four layers
-  const merged24Cell = mergeGeometries([
-    outerOct,
-    layer1Oct,
-    layer2Oct,
-    innerOct,
-  ]);
+  const merged24Cell = mergeGeometries([outerOct, layer1Oct, layer2Oct, innerOct]);
 
   // Mark as 24-cell for wireframe/hyperframe builders
   merged24Cell.userData.is24Cell = true;
-  merged24Cell.userData.baseType = "OctahedronGeometry";
+  merged24Cell.userData.baseType = 'OctahedronGeometry';
   merged24Cell.userData.layers = {
     outer: outerSize,
     layer1: layer1Size,
@@ -54,11 +49,10 @@ export function create24Cell(options = {}) {
  * Metadata for the 24-cell geometry
  */
 export const metadata = {
-  name: "24cell",
-  displayName: "◆ 24-Cell",
-  category: "polytopes",
-  description:
-    "Self-dual 4D polytope with 24 octahedral cells - unique to 4D space",
+  name: '24cell',
+  displayName: '◆ 24-Cell',
+  category: 'polytopes',
+  description: 'Self-dual 4D polytope with 24 octahedral cells - unique to 4D space',
   isCompound: false,
   defaultOptions: {},
 };

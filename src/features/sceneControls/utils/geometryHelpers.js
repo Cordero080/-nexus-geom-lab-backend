@@ -1,4 +1,4 @@
-import * as THREE from "three";
+import * as THREE from 'three';
 // Helper functions and constants for wireframe conformance
 const __UP = new THREE.Vector3(0, 1, 0);
 const __Q = new THREE.Quaternion();
@@ -64,8 +64,7 @@ function updateThickWireframeCylinders(objData) {
     cyl.quaternion.copy(__Q);
 
     // scale Y to length
-    const base =
-      cyl.userData.baseLength ?? (cyl.geometry?.parameters?.height || len);
+    const base = cyl.userData.baseLength ?? (cyl.geometry?.parameters?.height || len);
     cyl.userData.baseLength = base;
     cyl.scale.set(1, len / base, 1);
   }

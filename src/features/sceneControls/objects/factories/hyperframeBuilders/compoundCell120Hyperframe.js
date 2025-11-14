@@ -1,4 +1,4 @@
-import * as THREE from "three";
+import * as THREE from 'three';
 
 /**
  * Creates a hyperframe for the Compound 120-cell 4D polytope
@@ -18,14 +18,8 @@ import * as THREE from "three";
  * @param {string} hyperframeLineColor - Color for vertex connections
  * @returns {Object} { centerLines, centerLinesMaterial, curvedLines, curvedLinesMaterial }
  */
-export function createCompound120CellHyperframe(
-  geometry,
-  hyperframeColor,
-  hyperframeLineColor
-) {
-  console.log(
-    "Creating compound 120-cell hyperframe (ULTIMATE dual structure)"
-  );
+export function createCompound120CellHyperframe(geometry, hyperframeColor, hyperframeLineColor) {
+  console.log('Creating compound 120-cell hyperframe (ULTIMATE dual structure)');
 
   // Get layer sizes from geometry metadata
   const layers = geometry.userData.layers || {
@@ -175,12 +169,7 @@ export function createCompound120CellHyperframe(
       const end = new THREE.Vector3(...vertices[j]);
       const distance = start.distanceTo(end);
 
-      const cylinderGeom = new THREE.CylinderGeometry(
-        radius,
-        radius,
-        distance,
-        6
-      );
+      const cylinderGeom = new THREE.CylinderGeometry(radius, radius, distance, 6);
       const cylinderMesh = new THREE.Mesh(cylinderGeom, material);
 
       cylinderMesh.position.copy(start.clone().add(end).multiplyScalar(0.5));
@@ -195,79 +184,35 @@ export function createCompound120CellHyperframe(
   // BUILD FIRST 120-CELL HYPERFRAME (A)
   // ========================================
   const layer1Edges_A = findEdges(layer1Vertices_A);
-  createEdgeCylinder(
-    layer1Vertices_A,
-    layer1Edges_A,
-    0.0015,
-    centerLinesMaterial
-  );
+  createEdgeCylinder(layer1Vertices_A, layer1Edges_A, 0.0015, centerLinesMaterial);
 
   const layer2Edges_A = findEdges(layer2Vertices_A);
-  createEdgeCylinder(
-    layer2Vertices_A,
-    layer2Edges_A,
-    0.0012,
-    centerLinesMaterial
-  );
+  createEdgeCylinder(layer2Vertices_A, layer2Edges_A, 0.0012, centerLinesMaterial);
 
   const layer3Edges_A = findEdges(layer3Vertices_A);
-  createEdgeCylinder(
-    layer3Vertices_A,
-    layer3Edges_A,
-    0.001,
-    centerLinesMaterial
-  );
+  createEdgeCylinder(layer3Vertices_A, layer3Edges_A, 0.001, centerLinesMaterial);
 
   const innerEdges_A = findEdges(innerVertices_A);
-  createEdgeCylinder(
-    innerVertices_A,
-    innerEdges_A,
-    0.0008,
-    centerLinesMaterial
-  );
+  createEdgeCylinder(innerVertices_A, innerEdges_A, 0.0008, centerLinesMaterial);
 
   // ========================================
   // BUILD SECOND 120-CELL HYPERFRAME (B)
   // ========================================
   const layer1Edges_B = findEdges(layer1Vertices_B);
-  createEdgeCylinder(
-    layer1Vertices_B,
-    layer1Edges_B,
-    0.0015,
-    centerLinesMaterial
-  );
+  createEdgeCylinder(layer1Vertices_B, layer1Edges_B, 0.0015, centerLinesMaterial);
 
   const layer2Edges_B = findEdges(layer2Vertices_B);
-  createEdgeCylinder(
-    layer2Vertices_B,
-    layer2Edges_B,
-    0.0012,
-    centerLinesMaterial
-  );
+  createEdgeCylinder(layer2Vertices_B, layer2Edges_B, 0.0012, centerLinesMaterial);
 
   const layer3Edges_B = findEdges(layer3Vertices_B);
-  createEdgeCylinder(
-    layer3Vertices_B,
-    layer3Edges_B,
-    0.001,
-    centerLinesMaterial
-  );
+  createEdgeCylinder(layer3Vertices_B, layer3Edges_B, 0.001, centerLinesMaterial);
 
   const innerEdges_B = findEdges(innerVertices_B);
-  createEdgeCylinder(
-    innerVertices_B,
-    innerEdges_B,
-    0.0008,
-    centerLinesMaterial
-  );
+  createEdgeCylinder(innerVertices_B, innerEdges_B, 0.0008, centerLinesMaterial);
 
   console.log(
     `Created compound 120-cell: ${
-      (layer1Edges_A.length +
-        layer2Edges_A.length +
-        layer3Edges_A.length +
-        innerEdges_A.length) *
-      2
+      (layer1Edges_A.length + layer2Edges_A.length + layer3Edges_A.length + innerEdges_A.length) * 2
     } edges total (both components)`
   );
 
@@ -292,12 +237,7 @@ export function createCompound120CellHyperframe(
           dist < diagonalThreshold * Math.max(1, vertices[i][0])
         ) {
           const distance = v1.distanceTo(v2);
-          const cylinderGeom = new THREE.CylinderGeometry(
-            radius,
-            radius,
-            distance,
-            6
-          );
+          const cylinderGeom = new THREE.CylinderGeometry(radius, radius, distance, 6);
           const cylinderMesh = new THREE.Mesh(cylinderGeom, material);
 
           cylinderMesh.position.copy(v1.clone().add(v2).multiplyScalar(0.5));
@@ -321,7 +261,7 @@ export function createCompound120CellHyperframe(
   addFaceDiagonals(layer2Vertices_B, 0.001, centerLinesMaterial);
   addFaceDiagonals(layer3Vertices_B, 0.0008, centerLinesMaterial);
 
-  console.log("Added sampled face diagonals to both 120-cell components");
+  console.log('Added sampled face diagonals to both 120-cell components');
 
   // ========================================
   // VERTEX CONNECTIONS (sampled for performance)
@@ -332,9 +272,7 @@ export function createCompound120CellHyperframe(
   const actualVertices = [];
   for (let i = 0; i < vertexCount; i++) {
     const idx = i * 3;
-    actualVertices.push(
-      new THREE.Vector3(positions[idx], positions[idx + 1], positions[idx + 2])
-    );
+    actualVertices.push(new THREE.Vector3(positions[idx], positions[idx + 1], positions[idx + 2]));
   }
 
   const matchVertex = (canonical) => {
@@ -371,12 +309,7 @@ export function createCompound120CellHyperframe(
     const endA = matchVertex(outerVertices_A[i]);
     const distanceA = startA.distanceTo(endA);
 
-    const cylinderGeomA = new THREE.CylinderGeometry(
-      0.002,
-      0.002,
-      distanceA,
-      6
-    );
+    const cylinderGeomA = new THREE.CylinderGeometry(0.002, 0.002, distanceA, 6);
     const cylinderMeshA = new THREE.Mesh(cylinderGeomA, curvedLinesMaterial);
 
     cylinderMeshA.position.copy(startA.clone().add(endA).multiplyScalar(0.5));
@@ -390,12 +323,7 @@ export function createCompound120CellHyperframe(
     const endB = matchVertex(outerVertices_B[i]);
     const distanceB = startB.distanceTo(endB);
 
-    const cylinderGeomB = new THREE.CylinderGeometry(
-      0.002,
-      0.002,
-      distanceB,
-      6
-    );
+    const cylinderGeomB = new THREE.CylinderGeometry(0.002, 0.002, distanceB, 6);
     const cylinderMeshB = new THREE.Mesh(cylinderGeomB, curvedLinesMaterial);
 
     cylinderMeshB.position.copy(startB.clone().add(endB).multiplyScalar(0.5));
@@ -405,9 +333,7 @@ export function createCompound120CellHyperframe(
     connectionGroup.add(cylinderMeshB);
   }
 
-  console.log(
-    "Compound 120-cell hyperframe complete - THE ULTIMATE 4D STRUCTURE!"
-  );
+  console.log('Compound 120-cell hyperframe complete - THE ULTIMATE 4D STRUCTURE!');
 
   return {
     centerLines: innerDodecahedraGroup,

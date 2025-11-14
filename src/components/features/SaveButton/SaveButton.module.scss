@@ -6,21 +6,21 @@
   bottom: 50px;
   right: 30px;
   z-index: 1000;
-  
+
   /* Fade out by default */
   opacity: 0.6;
   transition: opacity 0.3s ease;
-  
+
   &:hover {
     opacity: 1;
   }
-  
+
   /* Override ScrambleButton font to use Orbitron */
   button {
     font-family: 'Orbitron', monospace !important;
     min-width: 130px;
     letter-spacing: 0.1em;
-    
+
     span {
       font-family: 'Orbitron', monospace !important;
       letter-spacing: 0.1em;
@@ -35,11 +35,14 @@
 }
 
 @keyframes savePulse {
-  0%, 100% {
+  0%,
+  100% {
     box-shadow: 0 0 20px rgba(0, 255, 255, 0.4);
   }
   50% {
-    box-shadow: 0 0 40px rgba(0, 255, 255, 0.7), 0 0 20px rgba(255, 0, 204, 0.5);
+    box-shadow:
+      0 0 40px rgba(0, 255, 255, 0.7),
+      0 0 20px rgba(255, 0, 204, 0.5);
   }
 }
 
@@ -54,7 +57,7 @@
   .saveButtonContainer {
     bottom: 40px;
     right: 25px;
-    
+
     button {
       min-width: 120px;
       font-size: 13px;
@@ -67,7 +70,7 @@
   .saveButtonContainer {
     bottom: 30px;
     right: 20px;
-    
+
     button {
       min-width: 110px;
       font-size: 12px;
@@ -81,7 +84,7 @@
   .saveButtonContainer {
     bottom: 20px;
     right: 15px;
-    
+
     button {
       min-width: 90px;
       font-size: 11px;

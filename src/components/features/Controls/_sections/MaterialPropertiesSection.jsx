@@ -4,11 +4,11 @@ import CustomSelect from '../../../ui/CustomSelect/CustomSelect';
 
 /**
  * MaterialPropertiesSection Component
- * 
+ *
  * Handles all material-related controls including:
  * - Surface properties (base color, emissive intensity, metalness)
  * - Geometry & effects (wireframe, hyperframe colors, object type, animation style, speeds)
- * 
+ *
  * Props received from Controls.jsx which come from App.jsx
  */
 function MaterialPropertiesSection({
@@ -16,7 +16,7 @@ function MaterialPropertiesSection({
   baseColor,
   emissiveIntensity,
   metalness,
-  
+
   // Geometry & effects (values only)
   wireframeIntensity,
   hyperframeColor,
@@ -25,7 +25,7 @@ function MaterialPropertiesSection({
   animationStyle,
   objectSpeed,
   orbSpeed,
-  
+
   // Handler functions (already created in Controls.jsx)
   handleBaseColorChange,
   handleEmissiveIntensityChange,
@@ -47,59 +47,64 @@ function MaterialPropertiesSection({
   return (
     <>
       {/* COLLAPSIBLE SECTION: MATERIAL PROPERTIES */}
-      <div 
+      <div
         className={`${styles.sectionHeader} ${materialOpen ? styles.sectionHeaderMaterialOpen : styles.sectionHeaderMaterialClosed}`}
         onClick={() => setMaterialOpen(!materialOpen)}
       >
         <span>🎨 MATERIAL PROPERTIES</span>
         <span>{materialOpen ? '▼' : '▶'}</span>
       </div>
-      
-      <div className={`${styles.sectionContent} ${materialOpen ? `${styles.sectionContentMaterialOpen} ${styles.sectionContentOpen}` : styles.sectionContentClosed}`}>
-        
+
+      <div
+        className={`${styles.sectionContent} ${materialOpen ? `${styles.sectionContentMaterialOpen} ${styles.sectionContentOpen}` : styles.sectionContentClosed}`}
+      >
         {/* NESTED SUBSECTION: SURFACE PROPERTIES */}
-        <div 
+        <div
           className={`${styles.subSectionHeader} ${surfaceOpen ? styles.subSectionHeaderOpen : styles.subSectionHeaderClosed}`}
-          onClick={(e) => { e.stopPropagation(); setSurfaceOpen(!surfaceOpen); }}
+          onClick={(e) => {
+            e.stopPropagation();
+            setSurfaceOpen(!surfaceOpen);
+          }}
         >
           <span>✨ Surface</span>
           <span>{surfaceOpen ? '▼' : '▶'}</span>
         </div>
-        
-        <div className={`${styles.subSectionContent} ${surfaceOpen ? styles.subSectionContentOpen : styles.subSectionContentClosed}`}>
+
+        <div
+          className={`${styles.subSectionContent} ${surfaceOpen ? styles.subSectionContentOpen : styles.subSectionContentClosed}`}
+        >
           {/* BASE COLOR PICKER */}
-          <label>
-            Base Color:
-          </label>
-          <input 
-            type="color" 
-            value={baseColor ? baseColor.slice(0, 7) : '#000000'}                      
+          <label>Base Color:</label>
+          <input
+            type="color"
+            value={baseColor ? baseColor.slice(0, 7) : '#000000'}
             onChange={handleBaseColorChange}
             onMouseDown={(e) => e.stopPropagation()}
             onMouseMove={(e) => e.stopPropagation()} // stop propagation to prevent unwanted side effects like color picker closing
           />
-          
+
           {/* EMISSIVE INTENSITY SLIDER */}
           <label>
-            Emissive Intensity: <span className={styles.valueDisplay}>{emissiveIntensity.toFixed(1)}</span>
+            Emissive Intensity:{' '}
+            <span className={styles.valueDisplay}>{emissiveIntensity.toFixed(1)}</span>
           </label>
-          <input 
-            type="range" 
-            min="0" 
-            max="2" 
+          <input
+            type="range"
+            min="0"
+            max="2"
             step="0.1"
-            value={emissiveIntensity}                   
-            onChange={handleEmissiveIntensityChange}    
+            value={emissiveIntensity}
+            onChange={handleEmissiveIntensityChange}
           />
-          
+
           {/* METALNESS SLIDER */}
           <label>
             Metalness: <span className={styles.valueDisplay}>{metalness.toFixed(2)}</span>
           </label>
-          <input 
-            type="range" 
-            min="0" 
-            max="1" 
+          <input
+            type="range"
+            min="0"
+            max="1"
             step="0.01"
             value={metalness}
             onChange={handleMetalnessChange}
@@ -107,15 +112,20 @@ function MaterialPropertiesSection({
         </div>
 
         {/* NESTED SUBSECTION: GEOMETRY & EFFECTS */}
-        <div 
+        <div
           className={`${styles.subSectionHeader} ${geometryOpen ? styles.subSectionHeaderOpen : styles.subSectionHeaderClosed}`}
-          onClick={(e) => { e.stopPropagation(); setGeometryOpen(!geometryOpen); }}
+          onClick={(e) => {
+            e.stopPropagation();
+            setGeometryOpen(!geometryOpen);
+          }}
         >
           <span>🔷 Geometry & Effects</span>
           <span>{geometryOpen ? '▼' : '▶'}</span>
         </div>
-        
-        <div className={`${styles.subSectionContent} ${geometryOpen ? styles.subSectionContentOpen : styles.subSectionContentClosed}`}>
+
+        <div
+          className={`${styles.subSectionContent} ${geometryOpen ? styles.subSectionContentOpen : styles.subSectionContentClosed}`}
+        >
           {/* Wireframe visibility toggle */}
           <label className={styles.futuristicCheckboxLabel}>
             <input
@@ -127,25 +137,23 @@ function MaterialPropertiesSection({
             <span className={styles.futuristicCustomCheckbox}></span>
             <span className={styles.futuristicCheckboxText}>Wireframe</span>
           </label>
-          
+
           {/* Wireframe intensity slider */}
           <label>
             Wireframe Intensity: <span className={styles.valueDisplay}>{wireframeIntensity}%</span>
           </label>
-          <input 
-            type="range" 
-            min="0" 
-            max="100" 
+          <input
+            type="range"
+            min="0"
+            max="100"
             value={wireframeIntensity}
             onChange={handleWireframeIntensityChange}
           />
 
           {/* Hyperframe color picker */}
-          <label>
-            Hyperframe Color:
-          </label>
-          <input 
-            type="color" 
+          <label>Hyperframe Color:</label>
+          <input
+            type="color"
             value={hyperframeColor.slice(0, 7)}
             onChange={handleHyperframeColorChange}
             onMouseDown={(e) => e.stopPropagation()}
@@ -153,11 +161,9 @@ function MaterialPropertiesSection({
           />
 
           {/* Hyperframe lines color picker */}
-          <label>
-            Hyperframe Lines Color:
-          </label>
-          <input 
-            type="color" 
+          <label>Hyperframe Lines Color:</label>
+          <input
+            type="color"
             value={hyperframeLineColor.slice(0, 7)}
             onChange={handleHyperframeLineColorChange}
             onMouseDown={(e) => e.stopPropagation()}
@@ -165,9 +171,7 @@ function MaterialPropertiesSection({
           />
 
           {/* Object Type Control */}
-          <label>
-            Object Type:
-          </label>
+          <label>Object Type:</label>
           <CustomSelect
             value={objectType}
             onChange={handleObjectTypeChange}
@@ -201,9 +205,7 @@ function MaterialPropertiesSection({
           />
 
           {/* Animation Style Control */}
-          <label>
-            Animation Style:
-          </label>
+          <label>Animation Style:</label>
           <CustomSelect
             value={animationStyle}
             onChange={handleAnimationStyleChange}
@@ -216,7 +218,8 @@ function MaterialPropertiesSection({
 
           {/* Object Speed Control */}
           <label>
-            Object Speed: <span className={styles.valueDisplay}>{(objectSpeed || 1.0).toFixed(1)}x</span>
+            Object Speed:{' '}
+            <span className={styles.valueDisplay}>{(objectSpeed || 1.0).toFixed(1)}x</span>
           </label>
           <input
             type="range"
@@ -229,7 +232,8 @@ function MaterialPropertiesSection({
 
           {/* Particle Speed Control (affects spectral orbs & nebula particles) */}
           <label>
-            Particle Speed: <span className={styles.valueDisplay}>{(orbSpeed || 1.0).toFixed(1)}x</span>
+            Particle Speed:{' '}
+            <span className={styles.valueDisplay}>{(orbSpeed || 1.0).toFixed(1)}x</span>
           </label>
           <input
             type="range"

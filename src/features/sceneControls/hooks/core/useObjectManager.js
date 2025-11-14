@@ -1,5 +1,5 @@
-import { useEffect, useRef } from "react";
-import { createSceneObject } from "../../objects/factories/objectFactory";
+import { useEffect, useRef } from 'react';
+import { createSceneObject } from '../../objects/factories/objectFactory';
 
 /**
  * CORE INFRASTRUCTURE HOOK - Manages 3D object creation and updates

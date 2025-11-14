@@ -11,11 +11,21 @@
   transform-style: preserve-3d;
 }
 
-.parallax-layer-1 { z-index: -5; }
-.parallax-layer-2 { z-index: -4; }
-.parallax-layer-3 { z-index: -3; }
-.parallax-layer-4 { z-index: -2; }
-.parallax-layer-5 { z-index: -1; }
+.parallax-layer-1 {
+  z-index: -5;
+}
+.parallax-layer-2 {
+  z-index: -4;
+}
+.parallax-layer-3 {
+  z-index: -3;
+}
+.parallax-layer-4 {
+  z-index: -2;
+}
+.parallax-layer-5 {
+  z-index: -1;
+}
 
 /* Atmospheric Base Layer */
 .atmospheric-base {
@@ -43,10 +53,23 @@
 }
 
 @keyframes float-particle {
-  0%, 100% { transform: translate(0, 0); opacity: 0; }
-  25% { transform: translate(26px, -40px); opacity: 0.9; }
-  50% { transform: translate(-18px, -80px); opacity: 0.4; }
-  75% { transform: translate(40px, -60px); opacity: 0.8; }
+  0%,
+  100% {
+    transform: translate(0, 0);
+    opacity: 0;
+  }
+  25% {
+    transform: translate(26px, -40px);
+    opacity: 0.9;
+  }
+  50% {
+    transform: translate(-18px, -80px);
+    opacity: 0.4;
+  }
+  75% {
+    transform: translate(40px, -60px);
+    opacity: 0.8;
+  }
 }
 
 /* Gradient veils */
@@ -54,7 +77,9 @@
   position: absolute;
   inset: 0;
   pointer-events: none;
-  transition: background 1.6s cubic-bezier(0.4, 0, 0.2, 1), opacity 1.2s ease;
+  transition:
+    background 1.6s cubic-bezier(0.4, 0, 0.2, 1),
+    opacity 1.2s ease;
   will-change: background, opacity;
 }
 
@@ -104,9 +129,18 @@
 }
 
 @keyframes grid-sweep {
-  0% { transform: translateY(-10%); opacity: 0.05; }
-  50% { transform: translateY(10%); opacity: 0.35; }
-  100% { transform: translateY(30%); opacity: 0.05; }
+  0% {
+    transform: translateY(-10%);
+    opacity: 0.05;
+  }
+  50% {
+    transform: translateY(10%);
+    opacity: 0.35;
+  }
+  100% {
+    transform: translateY(30%);
+    opacity: 0.05;
+  }
 }
 
 /* Surface scan accent */
@@ -119,6 +153,13 @@
 }
 
 @keyframes scan-pulse {
-  0%, 100% { transform: translateY(-10%); opacity: 0.08; }
-  50% { transform: translateY(12%); opacity: 0.4; }
+  0%,
+  100% {
+    transform: translateY(-10%);
+    opacity: 0.08;
+  }
+  50% {
+    transform: translateY(12%);
+    opacity: 0.4;
+  }
 }

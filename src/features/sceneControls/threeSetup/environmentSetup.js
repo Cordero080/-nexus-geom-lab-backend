@@ -1,9 +1,9 @@
-import * as THREE from "three";
+import * as THREE from 'three';
 import {
   createSpectralOrbs,
   removeSpectralOrbs,
   updateSpectralOrbHue,
-} from "../objects/spectralOrbs";
+} from '../objects/spectralOrbs';
 
 // Track current environment and orb state per scene
 const sceneState = new WeakMap();
@@ -24,8 +24,8 @@ export function updateEnvironment(scene, environment, hueShift = 0) {
 
     const createEnvironment = (envType) => {
       switch (envType) {
-        case "nebula":
-        case "matrix": {
+        case 'nebula':
+        case 'matrix': {
           // Don't set scene.background - let CSS background show through
           scene.background = null;
 
@@ -34,7 +34,7 @@ export function updateEnvironment(scene, environment, hueShift = 0) {
           state.orbsCreated = true;
           break;
         }
-        case "space": {
+        case 'space': {
           // Don't set scene.background - let CSS background show through with aurora effects
           scene.background = null;
 
@@ -53,10 +53,7 @@ export function updateEnvironment(scene, environment, hueShift = 0) {
     createEnvironment(environment);
   } else {
     // Same environment, just update hue of existing orbs
-    if (
-      state.orbsCreated &&
-      (environment === "nebula" || environment === "matrix")
-    ) {
+    if (state.orbsCreated && (environment === 'nebula' || environment === 'matrix')) {
       updateSpectralOrbHue(scene, hueShift);
     }
   }

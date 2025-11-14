@@ -1,5 +1,5 @@
-import { useEffect } from "react";
-import { startAnimationLoop } from "../../animation/animationLoop";
+import { useEffect } from 'react';
+import { startAnimationLoop } from '../../animation/animationLoop';
 
 /**
  * USER INTERACTION HOOK - Main animation loop (runs last!)

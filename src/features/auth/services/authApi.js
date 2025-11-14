@@ -2,8 +2,8 @@
 // Handles user authentication operations: signup, login, and fetching current user
 
 const API_BASE_URL = import.meta.env.DEV
-  ? ""
-  : import.meta.env.VITE_API_BASE_URL || "http://localhost:3000";
+  ? ''
+  : import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000';
 
 /**
  * Sign up a new user
@@ -16,9 +16,9 @@ export const signup = async (username, email, password) => {
   try {
     const url = `${API_BASE_URL}/api/auth/signup`;
     const response = await fetch(url, {
-      method: "POST",
+      method: 'POST',
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
       body: JSON.stringify({ username, email, password }),
     });
@@ -30,7 +30,7 @@ export const signup = async (username, email, password) => {
     const data = await response.json();
     return data;
   } catch (error) {
-    throw new Error("Failed to create account. Please try again.");
+    throw new Error('Failed to create account. Please try again.');
   }
 };
 
@@ -44,9 +44,9 @@ export const login = async (email, password) => {
   try {
     const url = `${API_BASE_URL}/api/auth/login`;
     const response = await fetch(url, {
-      method: "POST",
+      method: 'POST',
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
       body: JSON.stringify({ email, password }),
     });
@@ -58,7 +58,7 @@ export const login = async (email, password) => {
     const data = await response.json();
     return data;
   } catch (error) {
-    throw new Error("Failed to log in. Please check your credentials.");
+    throw new Error('Failed to log in. Please check your credentials.');
   }
 };
 
@@ -71,7 +71,7 @@ export const getCurrentUser = async (token) => {
   try {
     const url = `${API_BASE_URL}/api/auth/me`;
     const response = await fetch(url, {
-      method: "GET",
+      method: 'GET',
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -84,6 +84,6 @@ export const getCurrentUser = async (token) => {
     const data = await response.json();
     return data;
   } catch (error) {
-    throw new Error("Failed to fetch user data. Please try again.");
+    throw new Error('Failed to fetch user data. Please try again.');
   }
 };

@@ -6,15 +6,9 @@
  * non-orientable surfaces (Klein bottles, Möbius strips).
  */
 
-export {
-  createQuantumManifold,
-  metadata as quantumManifoldMetadata,
-} from "./quantumManifold.js";
+export { createQuantumManifold, metadata as quantumManifoldMetadata } from './quantumManifold.js';
 export {
   createCompoundQuantumManifold,
   metadata as compoundQuantumManifoldMetadata,
-} from "./compoundQuantumManifold.js";
-export {
-  createMobiusSphere,
-  metadata as mobiusSphereMetadata,
-} from "./mobiusSphere.js";
+} from './compoundQuantumManifold.js';
+export { createMobiusSphere, metadata as mobiusSphereMetadata } from './mobiusSphere.js';

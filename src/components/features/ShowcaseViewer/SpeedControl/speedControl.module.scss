@@ -15,7 +15,7 @@
   min-width: 260px;
   z-index: 1000;
   font-family: 'Orbitron', 'JetBrains Mono', monospace;
-  box-shadow: 
+  box-shadow:
     0 8px 32px rgba(0, 255, 255, 0.15),
     0 0 60px rgba(255, 0, 255, 0.1),
     inset 0 1px 0 rgba(255, 255, 255, 0.1);
@@ -24,7 +24,7 @@
 
 .speed-control-container:hover {
   border-color: rgba(0, 255, 255, 0.6);
-  box-shadow: 
+  box-shadow:
     0 12px 48px rgba(0, 255, 255, 0.25),
     0 0 80px rgba(255, 0, 255, 0.2),
     inset 0 1px 0 rgba(255, 255, 255, 0.15);
@@ -66,10 +66,12 @@
 .speed-control-slider {
   width: 98%;
   height: 6px;
-  background: linear-gradient(90deg, 
-    rgba(0, 255, 255, 0.2) 0%, 
-    rgba(0, 255, 255, 0.4) 50%, 
-    rgba(255, 0, 255, 0.4) 100%);
+  background: linear-gradient(
+    90deg,
+    rgba(0, 255, 255, 0.2) 0%,
+    rgba(0, 255, 255, 0.4) 50%,
+    rgba(255, 0, 255, 0.4) 100%
+  );
   border-radius: 3px;
   outline: none;
   cursor: pointer;
@@ -85,7 +87,7 @@
   background: linear-gradient(135deg, #00ffff, #ff00ff);
   border-radius: 10%;
   cursor: pointer;
-  box-shadow: 
+  box-shadow:
     0 0 10px rgba(0, 255, 255, 0.8),
     0 0 20px rgba(255, 0, 255, 0.6);
   transition: all 0.2s ease;
@@ -93,7 +95,7 @@
 
 .speed-control-slider::-webkit-slider-thumb:hover {
   transform: scale(1.2);
-  box-shadow: 
+  box-shadow:
     0 0 15px rgba(0, 255, 255, 1),
     0 0 30px rgba(255, 0, 255, 0.8);
 }
@@ -105,7 +107,7 @@
   border: none;
   border-radius: 50%;
   cursor: pointer;
-  box-shadow: 
+  box-shadow:
     0 0 10px rgba(0, 255, 255, 0.8),
     0 0 20px rgba(255, 0, 255, 0.6);
   transition: all 0.2s ease;
@@ -113,7 +115,7 @@
 
 .speed-control-slider::-moz-range-thumb:hover {
   transform: scale(1.2);
-  box-shadow: 
+  box-shadow:
     0 0 15px rgba(0, 255, 255, 1),
     0 0 30px rgba(255, 0, 255, 0.8);
 }
@@ -179,12 +181,12 @@
     min-width: 240px;
     right: 20px;
   }
-  
+
   .speed-control-label,
   .speed-control-value {
     font-size: 11px;
   }
-  
+
   .speed-control-slider {
     height: 4px;
   }
@@ -197,12 +199,12 @@
     right: 15px;
     padding: 6px 4px;
   }
-  
+
   .speed-control-label,
   .speed-control-value {
     font-size: 10px;
   }
-  
+
   .speed-control-slider {
     height: 3px;
   }
@@ -220,20 +222,20 @@
     min-width: unset;
     padding: 6px 4px;
   }
-  
+
   .speed-control-label,
   .speed-control-value {
     font-size: 9px;
   }
-  
+
   .speed-control-slider {
     height: 3px;
   }
-  
+
   .speed-control-presets {
     gap: 6px;
   }
-  
+
   .speed-control-presets button {
     padding: 4px 8px;
     font-size: 9px;

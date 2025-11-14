@@ -12,32 +12,32 @@ export default function BackgroundLayers({ portalState, bgRef, fgRef }) {
   return (
     <>
       {/* Three.js Quantum Portal Effect - Top */}
-      <QuantumPortal 
+      <QuantumPortal
         position="top"
         sceneColors={{
           color1: portalState.colors[0],
           color2: portalState.colors[1],
-          color3: portalState.colors[2]
+          color3: portalState.colors[2],
         }}
       />
 
       {/* Three.js Quantum Portal Effect - Bottom */}
-      <QuantumPortal 
+      <QuantumPortal
         position="bottom"
         sceneColors={{
           color1: portalState.colors[0],
           color2: portalState.colors[1],
-          color3: portalState.colors[2]
+          color3: portalState.colors[2],
         }}
       />
 
       {/* Three.js Quantum Portal Effect - Middle */}
-      <QuantumPortal 
+      <QuantumPortal
         position="middle"
         sceneColors={{
           color1: portalState.colors[0],
           color2: portalState.colors[1],
-          color3: portalState.colors[2]
+          color3: portalState.colors[2],
         }}
       />
 
@@ -45,12 +45,12 @@ export default function BackgroundLayers({ portalState, bgRef, fgRef }) {
       <div className={styles.baseDark}></div>
 
       {/* Quantum Portal Background Layer */}
-      <div 
+      <div
         className={styles.quantumPortalLayer}
         style={{
           '--portal-color-0': portalState.colors[0],
           '--portal-color-1': portalState.colors[1],
-          '--portal-color-2': portalState.colors[2]
+          '--portal-color-2': portalState.colors[2],
         }}
       />
 
@@ -62,27 +62,27 @@ export default function BackgroundLayers({ portalState, bgRef, fgRef }) {
 
       {/* Dynamic Portal Background - With fade-out like Showcase */}
       <div className="dynamic-portal-bg" aria-hidden="true">
-        <svg 
-          width="100%" 
-          height="100%" 
-          viewBox="0 0 1920 1080" 
+        <svg
+          width="100%"
+          height="100%"
+          viewBox="0 0 1920 1080"
           className="portal-svg"
           style={{
             '--portal-svg-background': `linear-gradient(120deg, 
               ${portalState.colors[0]} 0%, 
               ${portalState.colors[1]} 60%, 
               ${portalState.colors[2]} 100%
-            )`
+            )`,
           }}
         >
           <defs>
             <linearGradient id="portal-glow" x1="0" y1="0" x2="1" y2="1">
-              <stop offset="0%" stopColor={portalState.colors[0]} stopOpacity="0.6"/>
-              <stop offset="50%" stopColor={portalState.colors[1]} stopOpacity="0.4"/>
-              <stop offset="100%" stopColor={portalState.colors[2]} stopOpacity="0.6"/>
+              <stop offset="0%" stopColor={portalState.colors[0]} stopOpacity="0.6" />
+              <stop offset="50%" stopColor={portalState.colors[1]} stopOpacity="0.4" />
+              <stop offset="100%" stopColor={portalState.colors[2]} stopOpacity="0.6" />
             </linearGradient>
           </defs>
-          <rect x="0" y="0" width="1920" height="1080" fill="url(#portal-glow)"/>
+          <rect x="0" y="0" width="1920" height="1080" fill="url(#portal-glow)" />
         </svg>
       </div>
 
@@ -91,22 +91,22 @@ export default function BackgroundLayers({ portalState, bgRef, fgRef }) {
         <svg width="100%" height="100%" viewBox="0 0 1920 400">
           <defs>
             <linearGradient id="homepage-parallax-bg-grad" x1="0" y1="0" x2="1" y2="1">
-              <stop offset="0%" stopColor="#000000" stopOpacity="1"/>
-              <stop offset="100%" stopColor="#0a0f1a" stopOpacity="1"/>
+              <stop offset="0%" stopColor="#000000" stopOpacity="1" />
+              <stop offset="100%" stopColor="#0a0f1a" stopOpacity="1" />
             </linearGradient>
           </defs>
-          <rect x="0" y="0" width="1920" height="400" fill="url(#homepage-parallax-bg-grad)"/>
+          <rect x="0" y="0" width="1920" height="400" fill="url(#homepage-parallax-bg-grad)" />
         </svg>
       </div>
       <div ref={fgRef} className={styles.parallaxFgLayer} aria-hidden="true">
         <svg width="100%" height="100%" viewBox="0 0 1920 400">
           <defs>
             <linearGradient id="homepage-parallax-fg-grad" x1="0" y1="0" x2="1" y2="1">
-              <stop offset="0%" stopColor="#000000" stopOpacity="1"/>
-              <stop offset="100%" stopColor="#0a0f1a" stopOpacity="1"/>
+              <stop offset="0%" stopColor="#000000" stopOpacity="1" />
+              <stop offset="100%" stopColor="#0a0f1a" stopOpacity="1" />
             </linearGradient>
           </defs>
-          <rect x="0" y="0" width="1920" height="400" fill="url(#homepage-parallax-fg-grad)"/>
+          <rect x="0" y="0" width="1920" height="400" fill="url(#homepage-parallax-fg-grad)" />
         </svg>
       </div>
     </>

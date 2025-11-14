@@ -1,5 +1,5 @@
-import { useRef, useCallback, useEffect } from "react";
-import * as THREE from "three";
+import { useRef, useCallback, useEffect } from 'react';
+import * as THREE from 'three';
 
 /**
  * USER INTERACTION HOOK - Mouse-over rotation interference (no click required!)
@@ -72,7 +72,7 @@ export function useObjectInteraction(refs) {
     }
 
     const canvas = renderer.domElement;
-    canvas.style.pointerEvents = "auto";
+    canvas.style.pointerEvents = 'auto';
 
     const collectInteractiveMeshes = () => {
       const meshes = [];
@@ -129,8 +129,7 @@ export function useObjectInteraction(refs) {
         lastClientX = event.clientX;
         lastClientY = event.clientY;
 
-        const objectId =
-          hoveredObject.current.userData.objectId || hoveredObject.current.uuid;
+        const objectId = hoveredObject.current.userData.objectId || hoveredObject.current.uuid;
         const currentRotation = getUserRotation(objectId);
 
         const newRotation = {
@@ -146,7 +145,7 @@ export function useObjectInteraction(refs) {
       // If outside canvas and no hovered object, reset and return
       if (!insideCanvas) {
         hoveredObject.current = null;
-        currentRenderer.domElement.style.cursor = "default";
+        currentRenderer.domElement.style.cursor = 'default';
         lastClientX = event.clientX;
         lastClientY = event.clientY;
         return;
@@ -158,14 +157,11 @@ export function useObjectInteraction(refs) {
       raycaster.current.setFromCamera(mouse.current, currentCamera);
 
       const interactiveMeshes = collectInteractiveMeshes();
-      const intersects = raycaster.current.intersectObjects(
-        interactiveMeshes,
-        false
-      );
+      const intersects = raycaster.current.intersectObjects(interactiveMeshes, false);
 
       if (intersects.length === 0) {
         hoveredObject.current = null;
-        currentRenderer.domElement.style.cursor = "default";
+        currentRenderer.domElement.style.cursor = 'default';
         lastClientX = event.clientX;
         lastClientY = event.clientY;
         return;
@@ -173,7 +169,7 @@ export function useObjectInteraction(refs) {
 
       const intersectedObject = intersects[0].object;
       hoveredObject.current = intersectedObject;
-      currentRenderer.domElement.style.cursor = "pointer";
+      currentRenderer.domElement.style.cursor = 'pointer';
 
       const rotationSensitivity = 0.001; // ADJUST: How responsive object rotation is to mouse movement (higher = more sensitive)
 
@@ -184,19 +180,14 @@ export function useObjectInteraction(refs) {
       };
 
       const deltaY =
-        lastClientX === null
-          ? 0
-          : clampDelta((event.clientX - lastClientX) * rotationSensitivity);
+        lastClientX === null ? 0 : clampDelta((event.clientX - lastClientX) * rotationSensitivity);
       const deltaX =
-        lastClientY === null
-          ? 0
-          : clampDelta((event.clientY - lastClientY) * rotationSensitivity);
+        lastClientY === null ? 0 : clampDelta((event.clientY - lastClientY) * rotationSensitivity);
 
       lastClientX = event.clientX;
       lastClientY = event.clientY;
 
-      const objectId =
-        intersectedObject.userData.objectId || intersectedObject.uuid;
+      const objectId = intersectedObject.userData.objectId || intersectedObject.uuid;
       const currentRotation = getUserRotation(objectId);
 
       const newRotation = {
@@ -208,10 +199,10 @@ export function useObjectInteraction(refs) {
       setUserRotation(objectId, newRotation);
     };
 
-    window.addEventListener("mousemove", handleMouseMove);
+    window.addEventListener('mousemove', handleMouseMove);
 
     return () => {
-      window.removeEventListener("mousemove", handleMouseMove);
+      window.removeEventListener('mousemove', handleMouseMove);
     };
   }, [sceneRef, cameraRef, rendererRef, getUserRotation, setUserRotation]);
 

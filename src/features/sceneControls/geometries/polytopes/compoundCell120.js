@@ -1,5 +1,5 @@
-import * as THREE from "three";
-import { mergeGeometries } from "three/examples/jsm/utils/BufferGeometryUtils";
+import * as THREE from 'three';
+import { mergeGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils';
 
 /**
  * Creates a compound 120-cell - two 120-cells merged at cross-axes
@@ -42,13 +42,11 @@ export function createCompound120Cell(options = {}) {
   const innerDodec2 = new THREE.DodecahedronGeometry(innerSize);
 
   // Rotate second set using golden angle for optimal compound symmetry
-  [outerDodec2, layer1Dodec2, layer2Dodec2, layer3Dodec2, innerDodec2].forEach(
-    (geo) => {
-      geo.rotateY(goldenAngle);
-      geo.rotateX(Math.PI / 5); // Pentagon angle
-      geo.rotateZ(goldenAngle / 2);
-    }
-  );
+  [outerDodec2, layer1Dodec2, layer2Dodec2, layer3Dodec2, innerDodec2].forEach((geo) => {
+    geo.rotateY(goldenAngle);
+    geo.rotateX(Math.PI / 5); // Pentagon angle
+    geo.rotateZ(goldenAngle / 2);
+  });
 
   // Merge all ten layers (5 from each 120-cell)
   const mergedCompound120Cell = mergeGeometries([
@@ -66,7 +64,7 @@ export function createCompound120Cell(options = {}) {
 
   // Mark as compound 120-cell
   mergedCompound120Cell.userData.isCompound120Cell = true;
-  mergedCompound120Cell.userData.baseType = "DodecahedronGeometry";
+  mergedCompound120Cell.userData.baseType = 'DodecahedronGeometry';
   mergedCompound120Cell.userData.layers = {
     outer: outerSize,
     layer1: layer1Size,
@@ -82,11 +80,10 @@ export function createCompound120Cell(options = {}) {
  * Metadata for the compound 120-cell geometry
  */
 export const metadata = {
-  name: "compound120cell",
-  displayName: "⬢⬢ Compound 120-Cell",
-  category: "polytopes",
-  description:
-    "Two 120-cells merged at golden angle - 240 dodecahedral cells, ultimate complexity",
+  name: 'compound120cell',
+  displayName: '⬢⬢ Compound 120-Cell',
+  category: 'polytopes',
+  description: 'Two 120-cells merged at golden angle - 240 dodecahedral cells, ultimate complexity',
   isCompound: true,
   isSuperCompound: true,
   defaultOptions: {},

@@ -1,4 +1,4 @@
-import * as THREE from "three";
+import * as THREE from 'three';
 
 /**
  * Create intricate compound box (stella octangula) wireframe with dual inner cubes and vertex connections
@@ -8,12 +8,8 @@ import * as THREE from "three";
  * @param {string} hyperframeLineColor - Color for connections
  * @returns {Object} { centerLines, centerLinesMaterial, curvedLines, curvedLinesMaterial }
  */
-export function createBoxIntricateWireframe(
-  geometry,
-  hyperframeColor,
-  hyperframeLineColor
-) {
-  console.log("Creating compound box (stella octangula) wireframe");
+export function createBoxIntricateWireframe(geometry, hyperframeColor, hyperframeLineColor) {
+  console.log('Creating compound box (stella octangula) wireframe');
 
   // Cube vertices for first box (8 corners)
   const size = 0.75; // Half of 1.5
@@ -130,9 +126,7 @@ export function createBoxIntricateWireframe(
   const actualVertices = [];
   for (let i = 0; i < vertexCount; i++) {
     const idx = i * 3;
-    actualVertices.push(
-      new THREE.Vector3(positions[idx], positions[idx + 1], positions[idx + 2])
-    );
+    actualVertices.push(new THREE.Vector3(positions[idx], positions[idx + 1], positions[idx + 2]));
   }
 
   // Match each canonical outer vertex to its closest actual vertex
@@ -183,9 +177,7 @@ export function createBoxIntricateWireframe(
     cmpCubeConnectionGroup.add(cylinderMesh);
   }
 
-  console.log(
-    `Created compound box connections: 16 vertex-to-core connections`
-  );
+  console.log(`Created compound box connections: 16 vertex-to-core connections`);
 
   return {
     centerLines: innerCmpCubeGroup,

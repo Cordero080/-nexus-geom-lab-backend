@@ -37,7 +37,7 @@ export const createBaseColorHandler = (onBaseColorChange) => {
   return (event) => {
     const newColor = event.target.value;
     // Ensure alpha channel is preserved (add 'ff' if not present)
-    const colorWithAlpha = newColor.length === 7 ? newColor + "ff" : newColor;
+    const colorWithAlpha = newColor.length === 7 ? newColor + 'ff' : newColor;
     onBaseColorChange(colorWithAlpha);
   };
 };
@@ -66,9 +66,7 @@ export const createHyperframeColorHandler = (onHyperframeColorChange) => {
 };
 
 // Extracts hex color from color picker and updates hyperframe line/edge color
-export const createHyperframeLineColorHandler = (
-  onHyperframeLineColorChange
-) => {
+export const createHyperframeLineColorHandler = (onHyperframeLineColorChange) => {
   return (event) => {
     const newColor = event.target.value;
     onHyperframeLineColorChange(newColor);

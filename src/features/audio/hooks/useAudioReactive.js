@@ -1,5 +1,5 @@
-import { useEffect, useRef } from "react";
-import * as THREE from "three";
+import { useEffect, useRef } from 'react';
+import * as THREE from 'three';
 
 /**
  * Audio Reactive Animation Hook
@@ -41,8 +41,8 @@ export function useAudioReactive(
   const hexToHSL = (hex) => {
     // Convert number format (0x670d48) to hex string (#670d48)
     let hexString = hex;
-    if (typeof hex === "number") {
-      hexString = "#" + hex.toString(16).padStart(6, "0");
+    if (typeof hex === 'number') {
+      hexString = '#' + hex.toString(16).padStart(6, '0');
     }
 
     const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hexString);
@@ -103,7 +103,7 @@ export function useAudioReactive(
 
     const toHex = (x) => {
       const hex = Math.round(x * 255).toString(16);
-      return hex.length === 1 ? "0" + hex : hex;
+      return hex.length === 1 ? '0' + hex : hex;
     };
 
     return parseInt(`0x${toHex(r)}${toHex(g)}${toHex(b)}`);
@@ -124,16 +124,14 @@ export function useAudioReactive(
   };
 
   // Mesh colors - generated from baseColor (preserving user's saturation and lightness)
-  const meshColorPalette = generateColorPalette(baseColor || "#670d48");
+  const meshColorPalette = generateColorPalette(baseColor || '#670d48');
 
   // Hyperframe colors - generated from hyperframeColor (preserving user's saturation and lightness)
-  const hyperframeColorPalette = generateColorPalette(
-    hyperframeColor || "#ff1a8c"
-  );
+  const hyperframeColorPalette = generateColorPalette(hyperframeColor || '#ff1a8c');
 
   // Hyperframe line colors - generated from hyperframeLineColor (preserving user's saturation and lightness)
   const hyperframeLineColorPalette = generateColorPalette(
-    hyperframeLineColor || hyperframeColor || "#ff1a8c"
+    hyperframeLineColor || hyperframeColor || '#ff1a8c'
   );
 
   useEffect(() => {
@@ -220,14 +218,10 @@ export function useAudioReactive(
           Math.abs(lastMeshRotationRef.current[index]) / (Math.PI * 2)
         );
 
-        if (
-          completedRotations > prevCompleted &&
-          completedRotations % 3 === 0
-        ) {
+        if (completedRotations > prevCompleted && completedRotations % 3 === 0) {
           meshColorIndexRef.current[index] =
             (meshColorIndexRef.current[index] + 1) % meshColorPalette.length;
-          const newColorHex =
-            meshColorPalette[meshColorIndexRef.current[index]];
+          const newColorHex = meshColorPalette[meshColorIndexRef.current[index]];
 
           // Set target color for smooth transition
           meshTargetColorRef.current[index] = new THREE.Color(newColorHex);
@@ -238,16 +232,11 @@ export function useAudioReactive(
           if (obj.material) {
             obj.material.color.lerp(meshTargetColorRef.current[index], 0.1);
             // Emissive should be much more subtle - use a dimmed version of the target color
-            const dimmedEmissive = meshTargetColorRef.current[index]
-              .clone()
-              .multiplyScalar(0.2);
+            const dimmedEmissive = meshTargetColorRef.current[index].clone().multiplyScalar(0.2);
             obj.material.emissive.lerp(dimmedEmissive, 0.1);
           }
           if (obj.wireframeMaterial) {
-            obj.wireframeMaterial.color.lerp(
-              meshTargetColorRef.current[index],
-              0.1
-            );
+            obj.wireframeMaterial.color.lerp(meshTargetColorRef.current[index], 0.1);
           }
         }
 
@@ -265,52 +254,35 @@ export function useAudioReactive(
           Math.abs(lastHyperframeRotationRef.current[index]) / (Math.PI * 2)
         );
 
-        if (
-          completedRotations > prevCompleted &&
-          completedRotations % 3 === 0
-        ) {
+        if (completedRotations > prevCompleted && completedRotations % 3 === 0) {
           // Update hyperframe center lines color
           hyperframeColorIndexRef.current[index] =
-            (hyperframeColorIndexRef.current[index] + 1) %
-            hyperframeColorPalette.length;
+            (hyperframeColorIndexRef.current[index] + 1) % hyperframeColorPalette.length;
           const newHyperframeColorHex =
             hyperframeColorPalette[hyperframeColorIndexRef.current[index]];
 
           // Update hyperframe line color (curved lines) - use separate palette and cycling
           hyperframeLineColorIndexRef.current[index] =
-            (hyperframeLineColorIndexRef.current[index] + 1) %
-            hyperframeLineColorPalette.length;
+            (hyperframeLineColorIndexRef.current[index] + 1) % hyperframeLineColorPalette.length;
           const newHyperframeLineColorHex =
-            hyperframeLineColorPalette[
-              hyperframeLineColorIndexRef.current[index]
-            ];
+            hyperframeLineColorPalette[hyperframeLineColorIndexRef.current[index]];
 
           // Set target colors for smooth transition
-          hyperframeTargetColorRef.current[index] = new THREE.Color(
-            newHyperframeColorHex
-          );
-          hyperframeLineTargetColorRef.current[index] = new THREE.Color(
-            newHyperframeLineColorHex
-          );
+          hyperframeTargetColorRef.current[index] = new THREE.Color(newHyperframeColorHex);
+          hyperframeLineTargetColorRef.current[index] = new THREE.Color(newHyperframeLineColorHex);
         }
 
         // Smoothly lerp hyperframe center lines to target color (10% per frame)
         if (hyperframeTargetColorRef.current[index]) {
           if (obj.centerLinesMaterial) {
-            obj.centerLinesMaterial.color.lerp(
-              hyperframeTargetColorRef.current[index],
-              0.1
-            );
+            obj.centerLinesMaterial.color.lerp(hyperframeTargetColorRef.current[index], 0.1);
           }
         }
 
         // Smoothly lerp hyperframe curved lines to separate target color (10% per frame)
         if (hyperframeLineTargetColorRef.current[index]) {
           if (obj.curvedLinesMaterial) {
-            obj.curvedLinesMaterial.color.lerp(
-              hyperframeLineTargetColorRef.current[index],
-              0.1
-            );
+            obj.curvedLinesMaterial.color.lerp(hyperframeLineTargetColorRef.current[index], 0.1);
           }
         }
 
@@ -366,23 +338,19 @@ export function useAudioReactive(
 
         if (obj.solidMesh) {
           obj.solidMesh.scale.set(1, 1, 1);
-          if (basePos)
-            obj.solidMesh.position.set(basePos.x, basePos.y, basePos.z);
+          if (basePos) obj.solidMesh.position.set(basePos.x, basePos.y, basePos.z);
         }
         if (obj.wireframeMesh) {
           obj.wireframeMesh.scale.set(1, 1, 1);
-          if (basePos)
-            obj.wireframeMesh.position.set(basePos.x, basePos.y, basePos.z);
+          if (basePos) obj.wireframeMesh.position.set(basePos.x, basePos.y, basePos.z);
         }
         if (obj.centerLines) {
           obj.centerLines.scale.set(1, 1, 1);
-          if (basePos)
-            obj.centerLines.position.set(basePos.x, basePos.y, basePos.z);
+          if (basePos) obj.centerLines.position.set(basePos.x, basePos.y, basePos.z);
         }
         if (obj.curvedLines) {
           obj.curvedLines.scale.set(1, 1, 1);
-          if (basePos)
-            obj.curvedLines.position.set(basePos.x, basePos.y, basePos.z);
+          if (basePos) obj.curvedLines.position.set(basePos.x, basePos.y, basePos.z);
         }
       });
     }

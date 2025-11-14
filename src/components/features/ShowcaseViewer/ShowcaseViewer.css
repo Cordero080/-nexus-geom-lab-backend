@@ -9,11 +9,7 @@
   min-height: 100vh;
   max-height: 100vh;
   background: #0050cc; /* Default fallback background */
-  background: linear-gradient(135deg, 
-    #03398b 0%, 
-    #00c8ff 50%, 
-    #0050cc 100%
-  );
+  background: linear-gradient(135deg, #03398b 0%, #00c8ff 50%, #0050cc 100%);
   z-index: 9999; /* Higher z-index to ensure it's above everything */
   display: flex;
   flex-direction: column;
@@ -34,7 +30,6 @@
   background: transparent;
   background-color: #0a0a0a; /* Subtle dark base for fog effect */
 }
-
 
 /* Animation 4 - Icarus-X #004 (Code Breaker - Qi Flow variant) */
 .viewer-overlay-4 {
@@ -71,25 +66,26 @@
 
 /* Animation 2 - Vectra #002 (Dark Radial with Contained Glow) */
 .viewer-overlay-2 {
-  background: 
-    radial-gradient(circle at center, 
-      #2a2a2a 0%, 
-      #6a00fffc 12%, 
-       #02213427 25%,
-       #061a19af 20%,  
-      #092cc8b1 17.5%, 
-      #1a1a1a 35%,
-      #ff00ff5a 60%,
-      #03021e6a 65%,
-      #3c526bab 70%,
-      #080809a7 75%,
-      #ff0088 105%,
-      #040114 100%
-    );
+  background: radial-gradient(
+    circle at center,
+    #2a2a2a 0%,
+    #6a00fffc 12%,
+    #02213427 25%,
+    #061a19af 20%,
+    #092cc8b1 17.5%,
+    #1a1a1a 35%,
+    #ff00ff5a 60%,
+    #03021e6a 65%,
+    #3c526bab 70%,
+    #080809a7 75%,
+    #ff0088 105%,
+    #040114 100%
+  );
 }
 
 @keyframes cosmicPulse {
-  0%, 100% {
+  0%,
+  100% {
     filter: brightness(1.2) saturate(1.2);
   }
   50% {
@@ -98,14 +94,33 @@
 }
 
 @keyframes nebulaDrift {
-  0%, 100% {
-    background-position: 0% 0%, 100% 100%, 50% 50%, 0% 100%, 100% 0%, 0% 0%;
+  0%,
+  100% {
+    background-position:
+      0% 0%,
+      100% 100%,
+      50% 50%,
+      0% 100%,
+      100% 0%,
+      0% 0%;
   }
   33% {
-    background-position: 50% 50%, 0% 0%, 100% 100%, 100% 0%, 0% 100%, 0% 0%;
+    background-position:
+      50% 50%,
+      0% 0%,
+      100% 100%,
+      100% 0%,
+      0% 100%,
+      0% 0%;
   }
   66% {
-    background-position: 100% 100%, 50% 50%, 0% 0%, 50% 50%, 50% 50%, 0% 0%;
+    background-position:
+      100% 100%,
+      50% 50%,
+      0% 0%,
+      50% 50%,
+      50% 50%,
+      0% 0%;
   }
 }
 
@@ -119,87 +134,81 @@
     /* Core energy center */
     radial-gradient(circle at 50% 50%, rgba(0, 255, 127, 0.4) 0%, transparent 20%),
     /* Concentric rings */
-    repeating-radial-gradient(circle at 50% 50%,
-      transparent 0%,
-      transparent 8%,
-      rgba(0, 255, 127, 0.1) 8.5%,
-      transparent 19%
-    ),
+      repeating-radial-gradient(
+        circle at 50% 50%,
+        transparent 0%,
+        transparent 8%,
+        rgba(0, 255, 127, 0.1) 8.5%,
+        transparent 19%
+      ),
     /* Grid lines - vertical */
-    repeating-linear-gradient(
-      90deg,
-      transparent 0px,
-      transparent 48px,
-      rgba(0, 255, 127, 0.15) 48px,
-      rgba(0, 255, 127, 0.15) 50px,
-      transparent 50px,
-      transparent 98px
-    ),
+      repeating-linear-gradient(
+        90deg,
+        transparent 0px,
+        transparent 48px,
+        rgba(0, 255, 127, 0.15) 48px,
+        rgba(0, 255, 127, 0.15) 50px,
+        transparent 50px,
+        transparent 98px
+      ),
     /* Grid lines - horizontal */
-    repeating-linear-gradient(
-      0deg,
-      transparent 0px,
-      transparent 48px,
-      rgba(0, 255, 127, 0.15) 48px,
-      rgba(0, 255, 127, 0.15) 50px,
-      transparent 50px,
-      transparent 98px
-    ),
+      repeating-linear-gradient(
+        0deg,
+        transparent 0px,
+        transparent 48px,
+        rgba(0, 255, 127, 0.15) 48px,
+        rgba(0, 255, 127, 0.15) 50px,
+        transparent 50px,
+        transparent 98px
+      ),
     /* Horizon glow */
-    linear-gradient(
-      to bottom,
-      #000a05 0%,
-      #001a0d 40%,
-      #003d1a 50%,
-      #001a0d 60%,
-      #000a05 100%
-    );
-  
+      linear-gradient(to bottom, #000a05 0%, #001a0d 40%, #003d1a 50%, #001a0d 60%, #000a05 100%);
+
   background-color: #000a05;
-  background-size: 
-    100% 100%,          /* Core energy center - full viewport */
-    1% 10%,          /* Concentric rings - larger for smooth pattern */
-  50px 80px,          /* Grid vertical - smaller for finer detail */
-    80px 80px,          /* Grid horizontal - smaller for finer detail */ 
-    100% 20%;          /* Horizon glow - full viewport */
-  
+  background-size:
+    100% 100%,
+    /* Core energy center - full viewport */ 1% 10%,
+    /* Concentric rings - larger for smooth pattern */ 50px 80px,
+    /* Grid vertical - smaller for finer detail */ 80px 80px,
+    /* Grid horizontal - smaller for finer detail */ 100% 20%; /* Horizon glow - full viewport */
+
   background-position:
-    center center,      /* Core energy center */
-    center center,      /* Concentric rings */
-    0 0,               /* Grid vertical */
-    0 0,               /* Grid horizontal */
-    center center;      /* Horizon glow */
-  
+    center center,
+    /* Core energy center */ center center,
+    /* Concentric rings */ 0 0,
+    /* Grid vertical */ 0 0,
+    /* Grid horizontal */ center center; /* Horizon glow */
+
   animation: matrixPulse 4s ease-in-out infinite alternate;
 }
 
 @keyframes matrixPulse {
   0% {
     filter: brightness(1.6) contrast(1.2) saturate(1.2);
-    background-position: 
-      center center,    /* Core energy */
-      center center,    /* Concentric rings */
-      0 0,             /* Grid vertical */
-      0 0,             /* Grid horizontal */
-      center center;    /* Horizon glow */
+    background-position:
+      center center,
+      /* Core energy */ center center,
+      /* Concentric rings */ 0 0,
+      /* Grid vertical */ 0 0,
+      /* Grid horizontal */ center center; /* Horizon glow */
   }
   50% {
     filter: brightness(1.3) contrast(1.4) saturate(1.5) hue-rotate(10deg);
-    background-position: 
-      center center,    /* Core energy */
-      center center,    /* Concentric rings */
-      3px 3px,         /* Grid vertical shift */
-      -3px 3px,        /* Grid horizontal shift */
-      center center;    /* Horizon glow */
+    background-position:
+      center center,
+      /* Core energy */ center center,
+      /* Concentric rings */ 3px 3px,
+      /* Grid vertical shift */ -3px 3px,
+      /* Grid horizontal shift */ center center; /* Horizon glow */
   }
   100% {
-    filter: brightness(1.0) contrast(1.3) saturate(1.3) hue-rotate(-5deg);
-    background-position: 
-      center center,    /* Core energy */
-      center center,    /* Concentric rings */
-      0 0,             /* Grid vertical */
-      0 0,             /* Grid horizontal */
-      center center;    /* Horizon glow */
+    filter: brightness(1) contrast(1.3) saturate(1.3) hue-rotate(-5deg);
+    background-position:
+      center center,
+      /* Core energy */ center center,
+      /* Concentric rings */ 0 0,
+      /* Grid vertical */ 0 0,
+      /* Grid horizontal */ center center; /* Horizon glow */
   }
 }
 
@@ -207,7 +216,7 @@
   0% {
     /* Stealth mode: dim and mysterious */
     filter: brightness(0.9) contrast(1.1) saturate(1.2);
-    transform: scale(1.0);
+    transform: scale(1);
   }
   50% {
     /* Ninja strike: brief flash of green energy */
@@ -216,17 +225,16 @@
   }
   100% {
     /* Return to shadows: cool and misty */
-    filter: brightness(1.0) contrast(1.2) saturate(1.3) hue-rotate(-5deg);
-    transform: scale(1.0);
+    filter: brightness(1) contrast(1.2) saturate(1.3) hue-rotate(-5deg);
+    transform: scale(1);
   }
 }
-
 
 .viewer-overlay-3::before {
   content: '';
   position: absolute;
   inset: 0;
-  background: 
+  background:
     radial-gradient(circle at 25% 25%, rgba(0, 255, 127, 0.2) 0%, transparent 10%),
     radial-gradient(circle at 75% 25%, rgba(0, 255, 127, 0.2) 0%, transparent 10%),
     radial-gradient(circle at 25% 75%, rgba(0, 255, 127, 0.2) 0%, transparent 10%),
@@ -251,7 +259,7 @@
 }
 /* Animation 5 - Icarus-X #005 (Code Breaker Geometry Matrix) */
 .viewer-overlay-1 {
-  background: 
+  background:
     radial-gradient(ellipse at 55% 25%, rgba(255, 217, 0, 0.2) 0%, transparent 40%),
     radial-gradient(ellipse at 75% 75%, #00ffff26 0%, transparent 35%),
     radial-gradient(ellipse at 60% 20%, rgba(255, 140, 0, 0.18) 0%, transparent 45%),
@@ -260,8 +268,9 @@
 }
 
 @keyframes cosmicGlow {
-  0%, 100% {
-    filter: brightness(1.0) saturate(2.2);
+  0%,
+  100% {
+    filter: brightness(1) saturate(2.2);
   }
   50% {
     filter: brightness(1.3) saturate(1.5) hue-rotate(10deg);
@@ -283,9 +292,15 @@
 }
 
 @keyframes instantAppear {
-  0% { opacity: 0; }
-  1% { opacity: 1; }
-  100% { opacity: 1; }
+  0% {
+    opacity: 0;
+  }
+  1% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 1;
+  }
 }
 
 @keyframes fadeIn {
@@ -358,8 +373,6 @@
   display: flex;
 }
 
-
-
 .viewer-info {
   flex-shrink: 0;
   padding: 20px 30px;
@@ -375,13 +388,18 @@
 
 /* Icarus-X #001 - Golden/Amber Theme */
 .viewer-overlay-1 .viewer-info {
-  background: 
+  background:
     radial-gradient(ellipse at top left, rgba(0, 227, 212, 0.133) 0%, transparent 50%),
     radial-gradient(ellipse at bottom right, rgba(173, 174, 207, 0.153) 0%, transparent 50%),
-    linear-gradient(135deg, rgba(81, 68, 124, 0.3) 0%, rgba(64, 81, 149, 0.4) 50%, rgba(81, 68, 124, 0.5) 100%);
+    linear-gradient(
+      135deg,
+      rgba(81, 68, 124, 0.3) 0%,
+      rgba(64, 81, 149, 0.4) 50%,
+      rgba(81, 68, 124, 0.5) 100%
+    );
   border-top: 1px solid rgba(136, 197, 233, 0.3);
   backdrop-filter: blur(12px) saturate(180%);
-  box-shadow: 
+  box-shadow:
     0 -8px 32px rgba(78, 205, 196, 0.25),
     0 -4px 16px rgba(136, 197, 233, 0.2),
     inset 0 1px 0 rgba(255, 255, 255, 0.2),
@@ -415,8 +433,6 @@
   box-shadow: 0 2px 12px rgba(78, 205, 196, 0.3);
 }
 
-
-
 .viewer-overlay-2 .viewer-title {
   background: linear-gradient(235deg, #21aef9, #ff00b7, #ffcc00);
   -webkit-background-clip: text;
@@ -447,7 +463,7 @@
 
 /* Nexus-Prime #003 - Ninja Green Theme */
 .viewer-overlay-3 .viewer-info {
-  background: 
+  background:
     radial-gradient(ellipse at top center, rgba(0, 255, 127, 0.1) 0%, transparent 50%),
     linear-gradient(180deg, rgba(0, 100, 50, 0.2) 0%, rgba(0, 50, 25, 0.3) 100%);
   border-top: 2px solid rgba(0, 255, 127, 0.4);
@@ -483,12 +499,16 @@
   box-shadow: 0 2px 12px rgba(0, 255, 127, 0.4);
 }
 
-
 .viewer-title {
   font-family: 'Future Z', 'Orbitron', 'Rajdhani', sans-serif !important;
   font-size: 1.8rem;
   font-weight: 700;
-  background: linear-gradient(135deg, #ff6a00, #ff2b00, #ffcc00); /* Orange-red gradient - fits Animation 3 */
+  background: linear-gradient(
+    135deg,
+    #ff6a00,
+    #ff2b00,
+    #ffcc00
+  ); /* Orange-red gradient - fits Animation 3 */
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -544,7 +564,7 @@
     bottom: 10px;
     left: 10px;
   }
-  
+
   .viewer-close {
     top: 10px;
     right: 10px;
@@ -552,20 +572,20 @@
     height: 40px;
     font-size: 24px;
   }
-  
+
   .viewer-info {
     padding: 20px;
   }
-  
+
   .viewer-title {
     font-size: 1.8rem;
     letter-spacing: 2px;
   }
-  
+
   .viewer-description {
     font-size: 1rem;
   }
-  
+
   .meta-tag {
     font-size: 0.8rem;
     padding: 6px 16px;
@@ -608,13 +628,13 @@
   text-transform: uppercase;
   letter-spacing: 1px;
   clip-path: polygon(
-    8px 0, 
-    calc(100% - 8px) 0, 
-    100% 8px, 
-    100% calc(100% - 8px), 
-    calc(100% - 8px) 100%, 
-    8px 100%, 
-    0 calc(100% - 8px), 
+    8px 0,
+    calc(100% - 8px) 0,
+    100% 8px,
+    100% calc(100% - 8px),
+    calc(100% - 8px) 100%,
+    8px 100%,
+    0 calc(100% - 8px),
     0 8px
   );
 }
@@ -663,13 +683,13 @@
     left: 10px;
     justify-content: center;
   }
-  
+
   .animation-buttons {
     gap: 8px;
     flex-wrap: wrap;
     justify-content: center;
   }
-  
+
   .animation-button {
     padding: 8px 14px;
     font-size: 10px;

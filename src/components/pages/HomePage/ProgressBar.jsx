@@ -14,7 +14,7 @@ function createGrid(cols, rows) {
 function nextGrid(grid) {
   const rows = grid.length;
   const cols = grid[0].length;
-  const newGrid = grid.map(arr => arr.slice());
+  const newGrid = grid.map((arr) => arr.slice());
   for (let y = 0; y < rows; y++) {
     for (let x = 0; x < cols; x++) {
       let sum = 0;
@@ -47,7 +47,7 @@ export default function ProgressBar({ portalState, glyphState, onQuantumCollapse
   // Evolve CA every 100ms (slightly faster)
   useEffect(() => {
     const interval = setInterval(() => {
-      setCaGrid(g => nextGrid(g));
+      setCaGrid((g) => nextGrid(g));
     }, 100);
     return () => clearInterval(interval);
   }, []);
@@ -67,8 +67,8 @@ export default function ProgressBar({ portalState, glyphState, onQuantumCollapse
     const rect = e.target.getBoundingClientRect();
     const x = Math.floor(((e.clientX - rect.left) / rect.width) * caGrid[0].length);
     const y = Math.floor(((e.clientY - rect.top) / rect.height) * caGrid.length);
-    setCaGrid(g => {
-      const newG = g.map(row => row.slice());
+    setCaGrid((g) => {
+      const newG = g.map((row) => row.slice());
       for (let dy = -1; dy <= 1; dy++) {
         for (let dx = -1; dx <= 1; dx++) {
           const nx = (x + dx + newG[0].length) % newG[0].length;
@@ -98,30 +98,31 @@ export default function ProgressBar({ portalState, glyphState, onQuantumCollapse
       }),
       content: (
         <svg
-          width="100%" height="100%"
+          width="100%"
+          height="100%"
           style={{ position: 'absolute', left: 0, top: 0, zIndex: 0, cursor: 'none' }}
           onClick={handleCaClick}
         >
           <defs>
             {/* Portal-themed gradients for cells */}
             <linearGradient id="cell-grad-1" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stopColor={portalState.colors[0]} stopOpacity="0.9"/>
-              <stop offset="100%" stopColor={portalState.colors[1]} stopOpacity="0.6"/>
+              <stop offset="0%" stopColor={portalState.colors[0]} stopOpacity="0.9" />
+              <stop offset="100%" stopColor={portalState.colors[1]} stopOpacity="0.6" />
             </linearGradient>
             <linearGradient id="cell-grad-2" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stopColor={portalState.colors[1]} stopOpacity="0.8"/>
-              <stop offset="100%" stopColor={portalState.colors[2]} stopOpacity="0.5"/>
+              <stop offset="0%" stopColor={portalState.colors[1]} stopOpacity="0.8" />
+              <stop offset="100%" stopColor={portalState.colors[2]} stopOpacity="0.5" />
             </linearGradient>
             <linearGradient id="cell-grad-3" x1="100%" y1="0%" x2="0%" y2="100%">
-              <stop offset="0%" stopColor={portalState.colors[2]} stopOpacity="0.7"/>
-              <stop offset="100%" stopColor={portalState.colors[0]} stopOpacity="0.4"/>
+              <stop offset="0%" stopColor={portalState.colors[2]} stopOpacity="0.7" />
+              <stop offset="100%" stopColor={portalState.colors[0]} stopOpacity="0.4" />
             </linearGradient>
             {/* Glow filter for cells */}
             <filter id="cell-glow">
-              <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
+              <feGaussianBlur stdDeviation="2" result="coloredBlur" />
               <feMerge>
-                <feMergeNode in="coloredBlur"/>
-                <feMergeNode in="SourceGraphic"/>
+                <feMergeNode in="coloredBlur" />
+                <feMergeNode in="SourceGraphic" />
               </feMerge>
             </filter>
           </defs>
@@ -133,12 +134,12 @@ export default function ProgressBar({ portalState, glyphState, onQuantumCollapse
               const gradNum = (x + y) % 3;
               const gradId = `cell-grad-${gradNum + 1}`;
               const baseOpacity = 2.15 + 0.25 * Math.sin(anim + x * 0.2 + y * 0.3);
-              
+
               const cellX = (x / caGrid[0].length) * 100;
               const cellY = (y / caGrid.length) * 100;
               const cellWidth = (5 / caGrid[0].length) * 100;
               const cellHeight = (0.1 / caGrid.length) * 100;
-              
+
               return (
                 <rect
                   key={x + '-' + y}
@@ -174,7 +175,7 @@ export default function ProgressBar({ portalState, glyphState, onQuantumCollapse
       const windowH = window.innerHeight;
       let progress = 1 - Math.max(0, Math.min(1, rect.bottom / windowH));
       progress = Math.max(0, Math.min(1, progress));
-      const atBottom = (window.innerHeight + window.scrollY) >= (document.body.offsetHeight - 2);
+      const atBottom = window.innerHeight + window.scrollY >= document.body.offsetHeight - 2;
       setScrollState({ progress, atBottom });
     };
     window.addEventListener('scroll', handleScroll);
@@ -205,28 +206,29 @@ export default function ProgressBar({ portalState, glyphState, onQuantumCollapse
     : `translateY(${-40 * (1 - progress)}px) scale(${1 + progress * 0.7 + pulseNorm * 0.1}) skewY(${-6 * progress}deg)`;
 
   return (
-    <section style={{
-      marginTop: '120px',
-      marginBottom: '80px',
-      width: '100%',
-      display: 'flex',
-      flexDirection: 'column',
-      alignItems: 'center',
-      position: 'relative',
-      minHeight: '220px',
-      overflow: 'hidden',
-    }}>
+    <section
+      style={{
+        marginTop: '120px',
+        marginBottom: '80px',
+        width: '100%',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        position: 'relative',
+        minHeight: '220px',
+        overflow: 'hidden',
+      }}
+    >
       {/* Multi-layer parallax backgrounds */}
       {layers.map((layer, i) => (
-        <div
-          key={layer.className}
-          className={layer.className}
-          style={layer.style(progress)}
-        >
+        <div key={layer.className} className={layer.className} style={layer.style(progress)}>
           {layer.content}
         </div>
       ))}
-      <div className="progress-bar" style={{ marginBottom: '50px', width: 'auto', position: 'relative', zIndex: 3 }}>
+      <div
+        className="progress-bar"
+        style={{ marginBottom: '50px', width: 'auto', position: 'relative', zIndex: 3 }}
+      >
         <div
           ref={textRef}
           className="floating-code parallax-holo"
@@ -243,8 +245,7 @@ export default function ProgressBar({ portalState, glyphState, onQuantumCollapse
             mixBlendMode: atBottom ? 'normal' : 'screen',
             fontFamily: "'Orbitron', 'Rajdhani', monospace",
           }}
-        >
-        </div>
+        ></div>
       </div>
     </section>
   );

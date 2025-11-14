@@ -1,4 +1,4 @@
-import * as THREE from "three";
+import * as THREE from 'three';
 
 /**
  * Create a solid material for 3D objects
@@ -18,9 +18,7 @@ export function createSolidMaterial({
   // Use RGB part only for Three.js Color (strip alpha if present)
   const rgbColor = baseColor.slice(0, 7);
   const currentBaseColor = new THREE.Color(rgbColor);
-  const emissiveColor = new THREE.Color(rgbColor).multiplyScalar(
-    emissiveIntensity
-  );
+  const emissiveColor = new THREE.Color(rgbColor).multiplyScalar(emissiveIntensity);
 
   return new THREE.MeshStandardMaterial({
     color: currentBaseColor,
@@ -56,9 +54,7 @@ export function createWireframeMaterial({
   // Use RGB part only for Three.js Color (strip alpha if present)
   const rgbColor = baseColor.slice(0, 7);
   const currentBaseColor = new THREE.Color(rgbColor);
-  const emissiveColor = new THREE.Color(rgbColor).multiplyScalar(
-    emissiveIntensity
-  );
+  const emissiveColor = new THREE.Color(rgbColor).multiplyScalar(emissiveIntensity);
 
   return new THREE.MeshStandardMaterial({
     color: currentBaseColor,

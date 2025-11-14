@@ -14,7 +14,7 @@ function createGrid(cols, rows) {
 function nextGrid(grid) {
   const rows = grid.length;
   const cols = grid[0].length;
-  const newGrid = grid.map(arr => arr.slice());
+  const newGrid = grid.map((arr) => arr.slice());
   for (let y = 0; y < rows; y++) {
     for (let x = 0; x < cols; x++) {
       let sum = 0;
@@ -47,7 +47,7 @@ export default function ProgressBar({ portalState, glyphState, onQuantumCollapse
   // Evolve CA every 120ms
   useEffect(() => {
     const interval = setInterval(() => {
-      setCaGrid(g => nextGrid(g));
+      setCaGrid((g) => nextGrid(g));
     }, 120);
     return () => clearInterval(interval);
   }, []);
@@ -67,8 +67,8 @@ export default function ProgressBar({ portalState, glyphState, onQuantumCollapse
     const rect = e.target.getBoundingClientRect();
     const x = Math.floor(((e.clientX - rect.left) / rect.width) * caGrid[0].length);
     const y = Math.floor(((e.clientY - rect.top) / rect.height) * caGrid.length);
-    setCaGrid(g => {
-      const newG = g.map(row => row.slice());
+    setCaGrid((g) => {
+      const newG = g.map((row) => row.slice());
       for (let dy = -1; dy <= 1; dy++) {
         for (let dx = -1; dx <= 1; dx++) {
           const nx = (x + dx + newG[0].length) % newG[0].length;
@@ -98,7 +98,8 @@ export default function ProgressBar({ portalState, glyphState, onQuantumCollapse
       }),
       content: (
         <svg
-          width="100%" height="100%"
+          width="100%"
+          height="100%"
           style={{ position: 'absolute', left: 0, top: 0, zIndex: 0, cursor: 'pointer' }}
           onClick={handleCaClick}
         >
@@ -124,7 +125,7 @@ export default function ProgressBar({ portalState, glyphState, onQuantumCollapse
     {
       className: 'parallax-mid',
       style: (progress) => ({
-        transform: `translateY(${-progress * 120}px) scale(1.04) rotate(${anim*8}deg)`,
+        transform: `translateY(${-progress * 120}px) scale(1.04) rotate(${anim * 8}deg)`,
         opacity: 0.8,
         zIndex: 1,
         position: 'absolute',
@@ -136,12 +137,50 @@ export default function ProgressBar({ portalState, glyphState, onQuantumCollapse
         background: 'none',
       }),
       content: (
-        <svg width="100%" height="100%" style={{ position: 'absolute', left: 0, top: 0 }} onClick={onQuantumCollapse}>
+        <svg
+          width="100%"
+          height="100%"
+          style={{ position: 'absolute', left: 0, top: 0 }}
+          onClick={onQuantumCollapse}
+        >
           {/* Quantum glyphs/runes - collapse to new set on click */}
           <g opacity="0.18">
-            <text x="50%" y="40%" textAnchor="middle" fontSize="60" fill="#00fff7" fontFamily="monospace" letterSpacing="0.2em" style={{filter:'blur(0.5px)'}}>{glyphState[0]}</text>
-            <text x="50%" y="70%" textAnchor="middle" fontSize="38" fill="#ff00cc" fontFamily="monospace" letterSpacing="0.2em" style={{filter:'blur(0.7px)'}}>{glyphState[1]}</text>
-            <text x="50%" y="55%" textAnchor="middle" fontSize="28" fill="#ffff00" fontFamily="monospace" letterSpacing="0.2em" style={{filter:'blur(0.3px)'}}>{glyphState[2]}</text>
+            <text
+              x="50%"
+              y="40%"
+              textAnchor="middle"
+              fontSize="60"
+              fill="#00fff7"
+              fontFamily="monospace"
+              letterSpacing="0.2em"
+              style={{ filter: 'blur(0.5px)' }}
+            >
+              {glyphState[0]}
+            </text>
+            <text
+              x="50%"
+              y="70%"
+              textAnchor="middle"
+              fontSize="38"
+              fill="#ff00cc"
+              fontFamily="monospace"
+              letterSpacing="0.2em"
+              style={{ filter: 'blur(0.7px)' }}
+            >
+              {glyphState[1]}
+            </text>
+            <text
+              x="50%"
+              y="55%"
+              textAnchor="middle"
+              fontSize="28"
+              fill="#ffff00"
+              fontFamily="monospace"
+              letterSpacing="0.2em"
+              style={{ filter: 'blur(0.3px)' }}
+            >
+              {glyphState[2]}
+            </text>
           </g>
         </svg>
       ),
@@ -161,7 +200,12 @@ export default function ProgressBar({ portalState, glyphState, onQuantumCollapse
         background: 'none',
       }),
       content: (
-        <svg width="100%" height="100%" style={{ position: 'absolute', left: 0, top: 0 }} onClick={onQuantumCollapse}>
+        <svg
+          width="100%"
+          height="100%"
+          style={{ position: 'absolute', left: 0, top: 0 }}
+          onClick={onQuantumCollapse}
+        >
           <defs>
             {/* Portal edge glow */}
             <radialGradient id="portal-glow" cx="50%" cy="60%" r="30%">
@@ -177,8 +221,20 @@ export default function ProgressBar({ portalState, glyphState, onQuantumCollapse
             </radialGradient>
             {/* Edge distortion filter */}
             <filter id="portal-distort" x="-20%" y="-20%" width="140%" height="140%">
-              <feTurbulence type="turbulence" baseFrequency="0.08" numOctaves="2" seed="7" result="turb" />
-              <feDisplacementMap in2="turb" in="SourceGraphic" scale="18" xChannelSelector="R" yChannelSelector="G" />
+              <feTurbulence
+                type="turbulence"
+                baseFrequency="0.08"
+                numOctaves="2"
+                seed="7"
+                result="turb"
+              />
+              <feDisplacementMap
+                in2="turb"
+                in="SourceGraphic"
+                scale="18"
+                xChannelSelector="R"
+                yChannelSelector="G"
+              />
             </filter>
           </defs>
           {/* Portal: grows/rips open as you scroll, collapses to new world on click */}
@@ -210,8 +266,8 @@ export default function ProgressBar({ portalState, glyphState, onQuantumCollapse
             <ellipse
               cx="50%"
               cy="60%"
-              rx={6 + 6 * Math.abs(Math.sin(anim*2))}
-              ry={6 + 6 * Math.abs(Math.cos(anim*2))}
+              rx={6 + 6 * Math.abs(Math.sin(anim * 2))}
+              ry={6 + 6 * Math.abs(Math.cos(anim * 2))}
               fill="#fff"
               opacity="0.8"
               style={{ filter: 'blur(2px)' }}
@@ -230,7 +286,7 @@ export default function ProgressBar({ portalState, glyphState, onQuantumCollapse
       const windowH = window.innerHeight;
       let progress = 1 - Math.max(0, Math.min(1, rect.bottom / windowH));
       progress = Math.max(0, Math.min(1, progress));
-      const atBottom = (window.innerHeight + window.scrollY) >= (document.body.offsetHeight - 2);
+      const atBottom = window.innerHeight + window.scrollY >= document.body.offsetHeight - 2;
       setScrollState({ progress, atBottom });
     };
     window.addEventListener('scroll', handleScroll);
@@ -261,28 +317,29 @@ export default function ProgressBar({ portalState, glyphState, onQuantumCollapse
     : `translateY(${-40 * (1 - progress)}px) scale(${1 + progress * 0.7 + pulseNorm * 0.1}) skewY(${-6 * progress}deg)`;
 
   return (
-    <section style={{
-      marginTop: '120px',
-      marginBottom: '80px',
-      width: '100%',
-      display: 'flex',
-      flexDirection: 'column',
-      alignItems: 'center',
-      position: 'relative',
-      minHeight: '220px',
-      overflow: 'hidden',
-    }}>
+    <section
+      style={{
+        marginTop: '120px',
+        marginBottom: '80px',
+        width: '100%',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        position: 'relative',
+        minHeight: '220px',
+        overflow: 'hidden',
+      }}
+    >
       {/* Multi-layer parallax backgrounds */}
       {layers.map((layer, i) => (
-        <div
-          key={layer.className}
-          className={layer.className}
-          style={layer.style(progress)}
-        >
+        <div key={layer.className} className={layer.className} style={layer.style(progress)}>
           {layer.content}
         </div>
       ))}
-      <div className="progress-bar" style={{ marginBottom: '50px', width: 'auto', position: 'relative', zIndex: 3 }}>
+      <div
+        className="progress-bar"
+        style={{ marginBottom: '50px', width: 'auto', position: 'relative', zIndex: 3 }}
+      >
         <div
           ref={textRef}
           className="floating-code parallax-holo"
@@ -297,8 +354,7 @@ export default function ProgressBar({ portalState, glyphState, onQuantumCollapse
             willChange: 'transform, opacity, filter, color',
             mixBlendMode: atBottom ? 'normal' : 'screen',
           }}
-        >
-        </div>
+        ></div>
       </div>
     </section>
   );

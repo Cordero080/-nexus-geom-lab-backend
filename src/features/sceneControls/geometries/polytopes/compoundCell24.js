@@ -1,5 +1,5 @@
-import * as THREE from "three";
-import { mergeGeometries } from "three/examples/jsm/utils/BufferGeometryUtils";
+import * as THREE from 'three';
+import { mergeGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils';
 
 /**
  * Creates a compound 24-cell - two 24-cells merged at cross-axes
@@ -54,7 +54,7 @@ export function createCompound24Cell(options = {}) {
 
   // Mark as compound 24-cell
   mergedCompound24Cell.userData.isCompound24Cell = true;
-  mergedCompound24Cell.userData.baseType = "OctahedronGeometry";
+  mergedCompound24Cell.userData.baseType = 'OctahedronGeometry';
   mergedCompound24Cell.userData.layers = {
     outer: outerSize,
     layer1: layer1Size,
@@ -69,11 +69,10 @@ export function createCompound24Cell(options = {}) {
  * Metadata for the compound 24-cell geometry
  */
 export const metadata = {
-  name: "compound24cell",
-  displayName: "◆◆ Compound 24-Cell",
-  category: "polytopes",
-  description:
-    "Two self-dual 24-cells merged - 48 octahedral cells with perfect symmetry",
+  name: 'compound24cell',
+  displayName: '◆◆ Compound 24-Cell',
+  category: 'polytopes',
+  description: 'Two self-dual 24-cells merged - 48 octahedral cells with perfect symmetry',
   isCompound: true,
   defaultOptions: {},
 };

@@ -8,7 +8,7 @@ function LightingControls({
   directionalLightColor,
   onDirectionalLightColorChange,
   directionalLightIntensity,
-  onDirectionalLightIntensityChange
+  onDirectionalLightIntensityChange,
 }) {
   // Defensive: ensure all values are numbers before using toFixed
   const safeNumber = (val, digits = 1, fallback = '0') => {
@@ -19,44 +19,42 @@ function LightingControls({
   return (
     <div className="section-content lighting-open open">
       {/* Ambient Light Controls */}
-      <label>
-        Ambient Light Color:
-      </label>
-      <input 
-        type="color" 
+      <label>Ambient Light Color:</label>
+      <input
+        type="color"
         value={ambientLightColor}
         onChange={(event) => onAmbientLightColorChange(event.target.value)}
       />
 
       <label>
-        Ambient Light Intensity: <span className="value-display">{safeNumber(ambientLightIntensity, 2)}</span>
+        Ambient Light Intensity:{' '}
+        <span className="value-display">{safeNumber(ambientLightIntensity, 2)}</span>
       </label>
-      <input 
-        type="range" 
-        min="0" 
-        max="5" 
+      <input
+        type="range"
+        min="0"
+        max="5"
         step="0.1"
         value={ambientLightIntensity}
         onChange={(event) => onAmbientLightIntensityChange(parseFloat(event.target.value))}
       />
 
       {/* Directional Light Controls */}
-      <label>
-        Directional Light Color:
-      </label>
-      <input 
-        type="color" 
+      <label>Directional Light Color:</label>
+      <input
+        type="color"
         value={directionalLightColor}
         onChange={(event) => onDirectionalLightColorChange(event.target.value)}
       />
 
       <label>
-        Directional Light Intensity: <span className="value-display">{safeNumber(directionalLightIntensity, 1)}</span>
+        Directional Light Intensity:{' '}
+        <span className="value-display">{safeNumber(directionalLightIntensity, 1)}</span>
       </label>
-      <input 
-        type="range" 
-        min="0" 
-        max="40" 
+      <input
+        type="range"
+        min="0"
+        max="40"
         step="1"
         value={directionalLightIntensity}
         onChange={(event) => onDirectionalLightIntensityChange(parseFloat(event.target.value))}

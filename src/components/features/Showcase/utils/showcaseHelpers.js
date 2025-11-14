@@ -5,6 +5,6 @@ export function quantumCollapse(states) {
 }
 
 export function getCardPosition(index) {
-  const positions = ["center", "left", "right"];
+  const positions = ['center', 'left', 'right'];
   return positions[index % positions.length];
 }

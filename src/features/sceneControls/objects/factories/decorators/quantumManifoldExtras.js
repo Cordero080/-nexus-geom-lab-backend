@@ -8,7 +8,7 @@
  * - Entanglement threads connecting opposite parametric points
  */
 
-import * as THREE from "three";
+import * as THREE from 'three';
 
 /**
  * Creates decorative extras for Quantum Manifold geometry
@@ -21,10 +21,10 @@ export function createQuantumManifoldExtras(geometry) {
   const group = new THREE.Group();
 
   // Colors
-  const colGold = new THREE.Color("#FFD700");
-  const colCyan = new THREE.Color("#80FFFF");
-  const colDeepBlue = new THREE.Color("#0b3d91");
-  const colPurple = new THREE.Color("#6A0DAD");
+  const colGold = new THREE.Color('#FFD700');
+  const colCyan = new THREE.Color('#80FFFF');
+  const colDeepBlue = new THREE.Color('#0b3d91');
+  const colPurple = new THREE.Color('#6A0DAD');
 
   // Parametric Klein (matches geometryCreation.js)
   const scale = 0.65;
@@ -140,10 +140,7 @@ export function createQuantumManifoldExtras(geometry) {
 
       if (positions.length >= 6) {
         const buf = new THREE.BufferGeometry();
-        buf.setAttribute(
-          "position",
-          new THREE.Float32BufferAttribute(positions, 3)
-        );
+        buf.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
         const mat = new THREE.LineBasicMaterial({
           color: f === 0 ? colGold : f % 2 ? colDeepBlue : colPurple,
           transparent: true,
@@ -151,13 +148,7 @@ export function createQuantumManifoldExtras(geometry) {
         });
         const line = new THREE.Line(buf, mat);
         const phase = Math.random() * Math.PI * 2;
-        line.onBeforeRender = (
-          renderer,
-          scene,
-          camera,
-          geometry_,
-          material_
-        ) => {
+        line.onBeforeRender = (renderer, scene, camera, geometry_, material_) => {
           const t = performance.now() * 0.001 + phase;
           material_.opacity = (f === 0 ? 0.7 : 0.48) + Math.sin(t * 1.0) * 0.09;
         };
@@ -171,12 +162,10 @@ export function createQuantumManifoldExtras(geometry) {
   const createGoldenSpiralTube = (flowsGroup) => {
     if (!flowsGroup || flowsGroup.children.length === 0) return null;
     const seedLine = flowsGroup.children[0];
-    const posAttr = seedLine.geometry.getAttribute("position");
+    const posAttr = seedLine.geometry.getAttribute('position');
     const pts = [];
     for (let i = 0; i < posAttr.count; i++) {
-      pts.push(
-        new THREE.Vector3(posAttr.getX(i), posAttr.getY(i), posAttr.getZ(i))
-      );
+      pts.push(new THREE.Vector3(posAttr.getX(i), posAttr.getY(i), posAttr.getZ(i)));
     }
     if (pts.length < 8) return null;
     const curve = new THREE.CatmullRomCurve3(pts);
@@ -202,9 +191,7 @@ export function createQuantumManifoldExtras(geometry) {
           .copy(n)
           .multiplyScalar(Math.cos(ang))
           .add(new THREE.Vector3().copy(b).multiplyScalar(Math.sin(ang)));
-        const vertex = new THREE.Vector3()
-          .copy(point)
-          .add(normal.multiplyScalar(radius));
+        const vertex = new THREE.Vector3().copy(point).add(normal.multiplyScalar(radius));
         positions.push(vertex.x, vertex.y, vertex.z);
         normals.push(normal.x, normal.y, normal.z);
       }
@@ -220,11 +207,8 @@ export function createQuantumManifoldExtras(geometry) {
       }
     }
     const tube = new THREE.BufferGeometry();
-    tube.setAttribute(
-      "position",
-      new THREE.Float32BufferAttribute(positions, 3)
-    );
-    tube.setAttribute("normal", new THREE.Float32BufferAttribute(normals, 3));
+    tube.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
+    tube.setAttribute('normal', new THREE.Float32BufferAttribute(normals, 3));
     tube.setIndex(indices);
     const mat = new THREE.MeshStandardMaterial({
       color: colGold,
@@ -322,7 +306,7 @@ export function createQuantumManifoldExtras(geometry) {
     const pairs = 28;
     const twoPi = Math.PI * 2;
     const mat = new THREE.LineBasicMaterial({
-      color: new THREE.Color("#FFFFFF"),
+      color: new THREE.Color('#FFFFFF'),
       transparent: true,
       opacity: 0.5,
     });
@@ -333,11 +317,8 @@ export function createQuantumManifoldExtras(geometry) {
       const p2 = klein((u + Math.PI) % twoPi, (v + Math.PI) % twoPi);
       const geo = new THREE.BufferGeometry();
       geo.setAttribute(
-        "position",
-        new THREE.Float32BufferAttribute(
-          [p1.x, p1.y, p1.z, p2.x, p2.y, p2.z],
-          3
-        )
+        'position',
+        new THREE.Float32BufferAttribute([p1.x, p1.y, p1.z, p2.x, p2.y, p2.z], 3)
       );
       const line = new THREE.Line(geo, mat);
       const phase = Math.random() * Math.PI * 2;

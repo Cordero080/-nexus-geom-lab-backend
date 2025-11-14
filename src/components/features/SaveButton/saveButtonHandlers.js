@@ -23,7 +23,7 @@ export const createSaveHandler = ({
   token,
   saveScene,
   addUnlockedNoetechs, // Pass: context update function
-  navigate,// navigation to naviate to scenes page after save
+  navigate, // navigation to naviate to scenes page after save
   setIsSaving, // Pass: state setter for button
   sceneConfig, // Pass: scene data to save
   onSuccess,
@@ -33,8 +33,8 @@ export const createSaveHandler = ({
     // Users can only access GeomLab if authenticated
 
     // Prompt for scene name
-    const name = prompt("Name your masterpiece:");
-    if (!name || name.trim() === "") {
+    const name = prompt('Name your masterpiece:');
+    if (!name || name.trim() === '') {
       return;
     }
 
@@ -44,25 +44,25 @@ export const createSaveHandler = ({
     try {
       // Prepare scene data
       const sceneData = {
-        name: name.trim(), 
-        description: "",
+        name: name.trim(),
+        description: '',
         config: sceneConfig,
       };
 
       // CALLED: sceneApi.jsx saveScene function
-// ⬇️ RECEIVES: Response data from backend
+      // ⬇️ RECEIVES: Response data from backend
       const response = await saveScene(sceneData, token);
       // THIS line just finished executing
       // sceneApi.jsx returned the data object
       // response = OBJECT from backend
       // EXAMPLE
       //   {
-//     success: true,
-//     scene: { _id: '...', name: 'My Scene', ... },
-//     totalScenes: 1,
-//     unlockedNoetechs: ['icarus-x']
-//   }
-//  NOW check if noetechs unlocked
+      //     success: true,
+      //     scene: { _id: '...', name: 'My Scene', ... },
+      //     totalScenes: 1,
+      //     unlockedNoetechs: ['icarus-x']
+      //   }
+      //  NOW check if noetechs unlocked
       if (response.unlockedNoetechs && response.unlockedNoetechs.length > 0) {
         // response.unlockedNoetechs = ['icarus-x] (from backend)
         // .length > 0 = true (array has 1 item)
@@ -87,14 +87,14 @@ export const createSaveHandler = ({
         // Fallback to alert for backward compatibility
         let message = `"${name}" saved successfully!`;
         if (response.unlockedNoetechs && response.unlockedNoetechs.length > 0) {
-          message += `\n\nUnlocked: ${response.unlockedNoetechs.join(", ")}!`;
+          message += `\n\nUnlocked: ${response.unlockedNoetechs.join(', ')}!`;
         }
         alert(message);
       }
 
       // Navigate to scenes page with highlight
       const savedSceneId = response.scene?.id || response.id;
-      navigate("/scenes", { state: { highlightSceneId: savedSceneId } });
+      navigate('/scenes', { state: { highlightSceneId: savedSceneId } });
     } catch (error) {
       alert(`Failed to save scene: ${error.message}`);
     } finally {

@@ -1,5 +1,5 @@
-import { useEffect, useRef } from "react";
-import * as THREE from "three";
+import { useEffect, useRef } from 'react';
+import * as THREE from 'three';
 
 /**
  * VISUAL EFFECTS HOOK - Adds extra lights when metalness is high
@@ -40,7 +40,7 @@ export function useMetalnessLighting(sceneRef, metalness) {
       if (!rimLight1Ref.current) {
         // LEFT RIM LIGHT - lights up the left side
         // DirectionalLight(color, intensity) - intensity scales with metalness value
-        const rimLight1 = new THREE.DirectionalLight("#ffffff", metalness * 10); // EXTREME TEST
+        const rimLight1 = new THREE.DirectionalLight('#ffffff', metalness * 10); // EXTREME TEST
         rimLight1.position.set(-10, 5, 0); // position.set(x, y, z) - x: left(-)/right(+), y: down(-)/up(+), z: back(-)/forward(+)
         rimLight1Ref.current = rimLight1;
         scene.add(rimLight1);
@@ -57,7 +57,7 @@ export function useMetalnessLighting(sceneRef, metalness) {
       if (!rimLight2Ref.current) {
         // RIGHT RIM LIGHT - lights up the right side
         // DirectionalLight(color, intensity) - intensity scales with metalness value
-        const rimLight2 = new THREE.DirectionalLight("#ffffff", metalness * 3);
+        const rimLight2 = new THREE.DirectionalLight('#ffffff', metalness * 3);
         rimLight2.position.set(10, 5, 0); // position.set(x, y, z) - x: left(-)/right(+), y: down(-)/up(+), z: back(-)/forward(+)
         rimLight2Ref.current = rimLight2;
         scene.add(rimLight2);
@@ -74,10 +74,7 @@ export function useMetalnessLighting(sceneRef, metalness) {
       if (!backLightRef.current) {
         // BACK LIGHT - lights up the back side
         // DirectionalLight(color, intensity) - intensity scales with metalness value
-        const backLight = new THREE.DirectionalLight(
-          "#5fcdfcff",
-          metalness * 3
-        );
+        const backLight = new THREE.DirectionalLight('#5fcdfcff', metalness * 3);
         backLight.position.set(0, 5, -10); // position.set(x, y, z) - x: left(-)/right(+), y: down(-)/up(+), z: back(-)/forward(+)
         backLightRef.current = backLight;
         scene.add(backLight);
@@ -95,7 +92,7 @@ export function useMetalnessLighting(sceneRef, metalness) {
         // BOTTOM-RIGHT VOLUME LIGHT - soft light at appealing angle to show depth
         // DirectionalLight(color, intensity) - intensity scales with metalness value
         const volumeLight = new THREE.DirectionalLight(
-          "#ffffff",
+          '#ffffff',
           metalness * 2.5 // Lower multiplier = softer, more subtle light
         );
         volumeLight.position.set(8, -6, 12); // Bottom-right, angled upward | position.set(x, y, z) - x: left(-)/right(+), y: down(-)/up(+), z: back(-)/forward(+)
@@ -115,7 +112,7 @@ export function useMetalnessLighting(sceneRef, metalness) {
         // SOUTH LIGHT - at 8 o'clock position (low, front-right)
         // DirectionalLight(color, intensity) - intensity scales with metalness value
         const southLight = new THREE.DirectionalLight(
-          "#ffffff",
+          '#ffffff',
           metalness * 5 // Higher multiplier = stronger, brighter light (adjust to taste: try 2-7)
         );
         southLight.position.set(6, -8, 12); // South position, 8 o'clock angle | position.set(x, y, z) - x: left(-)/right(+), y: down(-)/up(+), z: back(-)/forward(+)
@@ -134,7 +131,7 @@ export function useMetalnessLighting(sceneRef, metalness) {
       if (!spotLightRef.current) {
         // FOCUSED SPOTLIGHT - shines directly down on the object with a focused beam
         const spotLight = new THREE.SpotLight(
-          "#f9e45dff",
+          '#f9e45dff',
           metalness * 9, // Higher intensity for visibility
           30, // distance
           Math.PI * 0.1, // narrow angle (cone)
@@ -158,7 +155,7 @@ export function useMetalnessLighting(sceneRef, metalness) {
       if (!reflectiveLightRef.current) {
         // BLUE BOTTOM LIGHT - bright blue light shining up from directly below
         const reflectiveLight = new THREE.SpotLight(
-          "#4A90E2", // Nice blue color - noticeable!
+          '#4A90E2', // Nice blue color - noticeable!
           metalness * 12, // Much stronger intensity so you can see it
           30, // closer distance for stronger effect
           Math.PI * 0.4, // wider angle to light up the whole bottom

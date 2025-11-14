@@ -1,5 +1,5 @@
-import * as THREE from "three";
-import { mergeGeometries } from "three/examples/jsm/utils/BufferGeometryUtils";
+import * as THREE from 'three';
+import { mergeGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils';
 
 /**
  * Creates a compound quantum manifold - two complete quantum manifolds merged
@@ -73,8 +73,8 @@ export function createCompoundQuantumManifold(options = {}) {
       }
     }
 
-    geom.setAttribute("position", new THREE.BufferAttribute(positions, 3));
-    geom.setAttribute("uv", new THREE.BufferAttribute(uvs, 2));
+    geom.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+    geom.setAttribute('uv', new THREE.BufferAttribute(uvs, 2));
     geom.setIndex(indices);
     geom.computeVertexNormals();
     return geom;
@@ -128,7 +128,7 @@ export function createCompoundQuantumManifold(options = {}) {
   // Mark as compound quantum manifold (THE ULTIMATE STRUCTURE)
   merged.userData.isCompound = true;
   merged.userData.isSuperCompound = true;
-  merged.userData.baseType = "ParametricKlein";
+  merged.userData.baseType = 'ParametricKlein';
   merged.userData.isQuantumManifold = true;
   merged.userData.isCompoundQuantumManifold = true;
   merged.userData.componentCount = 6; // 6 Klein bottles!
@@ -140,11 +140,10 @@ export function createCompoundQuantumManifold(options = {}) {
  * Metadata for the compound quantum manifold geometry
  */
 export const metadata = {
-  name: "compoundquantummanifold",
-  displayName: "🌌 Compound Quantum Manifold",
-  category: "manifolds",
-  description:
-    "Ultimate hyperdimensional structure - 6 Klein bottles merged at golden angle",
+  name: 'compoundquantummanifold',
+  displayName: '🌌 Compound Quantum Manifold',
+  category: 'manifolds',
+  description: 'Ultimate hyperdimensional structure - 6 Klein bottles merged at golden angle',
   isCompound: true,
   isSuperCompound: true,
   defaultOptions: {

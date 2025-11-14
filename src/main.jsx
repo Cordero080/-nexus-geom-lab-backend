@@ -1,16 +1,16 @@
-import React from 'react'
-import ReactDOM from 'react-dom/client'
-import { BrowserRouter } from 'react-router-dom'
-import App from './App.jsx'
-import './index.css'
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import { BrowserRouter } from 'react-router-dom';
+import App from './App.jsx';
+import './index.css';
 
 // Global portal color system
 const portalWorlds = [
-  { colors: ["#ff00cc", "#00fff7", "#1a003a"], label: "Fractal" },
-  { colors: ["#ffea00", "#7300ffff", "#003a2a"], label: "Nebula" },
-  { colors: ["#ff3300", "#cc00ff", "#0a0f1a"], label: "Inferno" },
-  { colors: ["#00ff33", "#00aaff", "#003a3a"], label: "Emerald" },
-  { colors: ["#ffffff", "#00fff7", "#0a0f1a"], label: "Singularity" },
+  { colors: ['#ff00cc', '#00fff7', '#1a003a'], label: 'Fractal' },
+  { colors: ['#ffea00', '#7300ffff', '#003a2a'], label: 'Nebula' },
+  { colors: ['#ff3300', '#cc00ff', '#0a0f1a'], label: 'Inferno' },
+  { colors: ['#00ff33', '#00aaff', '#003a3a'], label: 'Emerald' },
+  { colors: ['#ffffff', '#00fff7', '#0a0f1a'], label: 'Singularity' },
 ];
 
 function quantumCollapse(states) {
@@ -34,4 +34,4 @@ ReactDOM.createRoot(document.getElementById('root')).render(
   <BrowserRouter>
     <App />
   </BrowserRouter>
-)
+);

@@ -1,5 +1,5 @@
-import * as THREE from "three";
-import { mergeGeometries } from "three/examples/jsm/utils/BufferGeometryUtils";
+import * as THREE from 'three';
+import { mergeGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils';
 
 /**
  * Creates a harmonic sphere composition with nested icosahedra + golden ratio sizing + axis symmetry
@@ -104,11 +104,7 @@ export function createSphere(options = {}) {
   for (let i = 0; i < 6; i++) {
     const angle = (i / 6) * Math.PI * 2;
     const s = new THREE.SphereGeometry(steinerRadius, 16, 16);
-    s.translate(
-      Math.cos(angle) * steinerOrbitRadius,
-      0,
-      Math.sin(angle) * steinerOrbitRadius
-    );
+    s.translate(Math.cos(angle) * steinerOrbitRadius, 0, Math.sin(angle) * steinerOrbitRadius);
     spheres.push(s);
   }
 
@@ -121,11 +117,7 @@ export function createSphere(options = {}) {
   for (let i = 0; i < spheresPerRing; i++) {
     const angle = (i / spheresPerRing) * Math.PI * 2;
     const s = new THREE.SphereGeometry(ringRadius, 12, 12);
-    s.translate(
-      Math.cos(angle) * ringOrbitRadius,
-      Math.sin(angle) * ringOrbitRadius,
-      0
-    );
+    s.translate(Math.cos(angle) * ringOrbitRadius, Math.sin(angle) * ringOrbitRadius, 0);
     spheres.push(s);
   }
 
@@ -133,11 +125,7 @@ export function createSphere(options = {}) {
   for (let i = 0; i < spheresPerRing; i++) {
     const angle = (i / spheresPerRing) * Math.PI * 2;
     const s = new THREE.SphereGeometry(ringRadius, 12, 12);
-    s.translate(
-      0,
-      Math.cos(angle) * ringOrbitRadius,
-      Math.sin(angle) * ringOrbitRadius
-    );
+    s.translate(0, Math.cos(angle) * ringOrbitRadius, Math.sin(angle) * ringOrbitRadius);
     spheres.push(s);
   }
 
@@ -203,11 +191,7 @@ export function createSphere(options = {}) {
     const len = Math.sqrt(x * x + y * y + z * z);
     const sizeVar = 1 + Math.sin(i * 0.3) * 0.06;
     const s = new THREE.SphereGeometry(dodecaRadius * sizeVar, 12, 12);
-    s.translate(
-      (x / len) * dodecaScale,
-      (y / len) * dodecaScale,
-      (z / len) * dodecaScale
-    );
+    s.translate((x / len) * dodecaScale, (y / len) * dodecaScale, (z / len) * dodecaScale);
     spheres.push(s);
   });
 
@@ -259,11 +243,7 @@ export function createSphere(options = {}) {
       const len = Math.sqrt(x * x + y * y + z * z);
 
       const s = new THREE.SphereGeometry(geodesicRadius, 10, 10);
-      s.translate(
-        (x / len) * outerScale,
-        (y / len) * outerScale,
-        (z / len) * outerScale
-      );
+      s.translate((x / len) * outerScale, (y / len) * outerScale, (z / len) * outerScale);
       spheres.push(s);
     }
   });
@@ -274,7 +254,7 @@ export function createSphere(options = {}) {
 
   // Mark as compound for wireframe builders
   mergedSphere.userData.isCompound = true;
-  mergedSphere.userData.baseType = "SphereGeometry";
+  mergedSphere.userData.baseType = 'SphereGeometry';
   mergedSphere.userData.componentCount = spheres.length;
 
   return mergedSphere;
@@ -284,11 +264,10 @@ export function createSphere(options = {}) {
  * Metadata for the sphere geometry
  */
 export const metadata = {
-  name: "sphere",
-  displayName: "🌐 Harmonic Sphere",
-  category: "compound",
-  description:
-    "Nested icosahedra with golden ratio sizing and axis symmetry - ~143 spheres",
+  name: 'sphere',
+  displayName: '🌐 Harmonic Sphere',
+  category: 'compound',
+  description: 'Nested icosahedra with golden ratio sizing and axis symmetry - ~143 spheres',
   isCompound: true,
   defaultOptions: {},
 };

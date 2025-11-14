@@ -1,4 +1,4 @@
-import * as THREE from "three";
+import * as THREE from 'three';
 
 /**
  * Create hyperframe for simple compound hypercube - two complete hypercube hyperframes
@@ -16,7 +16,7 @@ export function createSimpleCompoundHypercubeHyperframe(
   hyperframeColor,
   hyperframeLineColor
 ) {
-  console.log("Creating simple compound hypercube hyperframe (2 hypercubes)");
+  console.log('Creating simple compound hypercube hyperframe (2 hypercubes)');
 
   const outerScale = geometry.userData.outerScale || 1.0;
   const innerScale = geometry.userData.innerScale || 0.5;
@@ -74,32 +74,20 @@ export function createSimpleCompoundHypercubeHyperframe(
   const allConnections = new THREE.Group();
 
   // Create hyperframe for all hypercubes in the compound
-  for (
-    let hypercubeIndex = 0;
-    hypercubeIndex < compoundCount;
-    hypercubeIndex++
-  ) {
+  for (let hypercubeIndex = 0; hypercubeIndex < compoundCount; hypercubeIndex++) {
     // Get rotation for this hypercube
     const rotation = rotations[hypercubeIndex] || new THREE.Euler(0, 0, 0);
 
     // Outer cube vertices (scaled and rotated)
     const outerVertices = cubeVertices.map((v) => {
-      const vec = new THREE.Vector3(
-        v[0] * outerScale,
-        v[1] * outerScale,
-        v[2] * outerScale
-      );
+      const vec = new THREE.Vector3(v[0] * outerScale, v[1] * outerScale, v[2] * outerScale);
       vec.applyEuler(rotation);
       return [vec.x, vec.y, vec.z];
     });
 
     // Inner cube vertices (scaled and rotated)
     const innerVertices = cubeVertices.map((v) => {
-      const vec = new THREE.Vector3(
-        v[0] * innerScale,
-        v[1] * innerScale,
-        v[2] * innerScale
-      );
+      const vec = new THREE.Vector3(v[0] * innerScale, v[1] * innerScale, v[2] * innerScale);
       vec.applyEuler(rotation);
       return [vec.x, vec.y, vec.z];
     });
@@ -110,12 +98,7 @@ export function createSimpleCompoundHypercubeHyperframe(
       const end = new THREE.Vector3(...innerVertices[j]);
       const distance = start.distanceTo(end);
 
-      const cylinderGeom = new THREE.CylinderGeometry(
-        0.004,
-        0.004,
-        distance,
-        8
-      );
+      const cylinderGeom = new THREE.CylinderGeometry(0.004, 0.004, distance, 8);
       const cylinderMesh = new THREE.Mesh(cylinderGeom, centerLinesMaterial);
 
       cylinderMesh.position.copy(start.clone().add(end).multiplyScalar(0.5));
@@ -135,11 +118,7 @@ export function createSimpleCompoundHypercubeHyperframe(
     for (let i = 0; i < vertexCount; i++) {
       const idx = i * 3;
       actualVertices.push(
-        new THREE.Vector3(
-          positions[idx],
-          positions[idx + 1],
-          positions[idx + 2]
-        )
+        new THREE.Vector3(positions[idx], positions[idx + 1], positions[idx + 2])
       );
     }
 
@@ -165,12 +144,7 @@ export function createSimpleCompoundHypercubeHyperframe(
       const end = new THREE.Vector3(...innerVertices[i]);
       const distance = start.distanceTo(end);
 
-      const cylinderGeom = new THREE.CylinderGeometry(
-        0.003,
-        0.003,
-        distance,
-        6
-      );
+      const cylinderGeom = new THREE.CylinderGeometry(0.003, 0.003, distance, 6);
       const cylinderMesh = new THREE.Mesh(cylinderGeom, curvedLinesMaterial);
 
       cylinderMesh.position.copy(start.clone().add(end).multiplyScalar(0.5));

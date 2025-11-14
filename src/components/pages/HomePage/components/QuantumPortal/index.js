@@ -1,1 +1,1 @@
-export { default } from "./QuantumPortal";
+export { default } from './QuantumPortal';

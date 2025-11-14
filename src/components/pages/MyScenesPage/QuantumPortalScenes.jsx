@@ -5,9 +5,9 @@ import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass';
 import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPass';
 import styles from './QuantumPortalScenes.module.scss';
 
-const QuantumPortalScenes = ({ 
+const QuantumPortalScenes = ({
   position = 'top',
-  sceneColors = { color1: '#00ffff', color2: '#ff00ff', color3: '#ffff00' } 
+  sceneColors = { color1: '#00ffff', color2: '#ff00ff', color3: '#ffff00' },
 }) => {
   const canvasRef = useRef(null);
   const sceneRef = useRef(null);
@@ -23,14 +23,14 @@ const QuantumPortalScenes = ({
       alpha: false,
       antialias: true,
     });
-    
+
     renderer.setClearColor(0x000000, 1);
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
     const composer = new EffectComposer(renderer);
     composer.addPass(new RenderPass(scene, camera));
-    
+
     const bloomPass = new UnrealBloomPass(
       new THREE.Vector2(window.innerWidth, window.innerHeight),
       0.5,
@@ -45,7 +45,7 @@ const QuantumPortalScenes = ({
       color1: { value: new THREE.Color(sceneColors.color1) },
       color2: { value: new THREE.Color(sceneColors.color2) },
       color3: { value: new THREE.Color(sceneColors.color3) },
-      intensity: { value: .5 },
+      intensity: { value: 0.5 },
       spiralSpeed: { value: 1.2 },
       vortexStrength: { value: 1.2 },
     };
@@ -162,7 +162,7 @@ const QuantumPortalScenes = ({
     const handleResize = () => {
       const width = window.innerWidth;
       const height = window.innerHeight;
-      
+
       renderer.setSize(width, height);
       composer.setSize(width, height);
       uniformsRef.current.resolution.value.set(width, height);
@@ -190,8 +190,11 @@ const QuantumPortalScenes = ({
     <canvas
       ref={canvasRef}
       className={`${styles.quantumCanvas} ${
-        position === 'bottom' ? styles.quantumCanvasBottom : 
-        position === 'middle' ? styles.quantumCanvasMiddle : ''
+        position === 'bottom'
+          ? styles.quantumCanvasBottom
+          : position === 'middle'
+            ? styles.quantumCanvasMiddle
+            : ''
       }`}
       aria-hidden="true"
     />

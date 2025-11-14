@@ -1,5 +1,5 @@
-import * as THREE from "three";
-import { mergeGeometries } from "three/examples/jsm/utils/BufferGeometryUtils";
+import * as THREE from 'three';
+import { mergeGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils';
 
 /**
  * Creates a floating city geometry with thin curves and negative space
@@ -49,12 +49,7 @@ export function createFloatingCity(options = {}) {
     const angle = (i / connectorCount) * Math.PI * 2;
     const offset = 0.8 * scale;
 
-    const connector = new THREE.TorusGeometry(
-      0.08 * scale,
-      0.015 * scale,
-      6,
-      24
-    );
+    const connector = new THREE.TorusGeometry(0.08 * scale, 0.015 * scale, 6, 24);
     connector.rotateX(Math.PI / 2);
     connector.translate(Math.cos(angle) * offset, 0, Math.sin(angle) * offset);
     parts.push(connector);
@@ -184,17 +179,8 @@ export function createFloatingCity(options = {}) {
 
     for (let ring = 0; ring < 3; ring++) {
       const ringRadius = (0.3 + ring * 0.15) * scale;
-      const spireRing = new THREE.TorusGeometry(
-        ringRadius,
-        0.012 * scale,
-        6,
-        20
-      );
-      spireRing.translate(
-        0,
-        yPos - ring * 0.2 * scale * (pole === 0 ? 1 : -1),
-        0
-      );
+      const spireRing = new THREE.TorusGeometry(ringRadius, 0.012 * scale, 6, 20);
+      spireRing.translate(0, yPos - ring * 0.2 * scale * (pole === 0 ? 1 : -1), 0);
       parts.push(spireRing);
 
       // Small spheres on spire rings
@@ -218,7 +204,7 @@ export function createFloatingCity(options = {}) {
 
   // Mark as floating city
   mergedCity.userData.isCompound = true;
-  mergedCity.userData.baseType = "SphereGeometry";
+  mergedCity.userData.baseType = 'SphereGeometry';
   mergedCity.userData.isFloatingCity = true;
   mergedCity.userData.componentCount = parts.length;
 
@@ -229,11 +215,10 @@ export function createFloatingCity(options = {}) {
  * Metadata for the floating city geometry
  */
 export const metadata = {
-  name: "floatingcity",
-  displayName: "🏙️ Floating City",
-  category: "curved",
-  description:
-    "Ethereal architectural structure with thin curves and massive negative space",
+  name: 'floatingcity',
+  displayName: '🏙️ Floating City',
+  category: 'curved',
+  description: 'Ethereal architectural structure with thin curves and massive negative space',
   isCompound: true,
   defaultOptions: {
     scale: 0.72,

@@ -12,27 +12,57 @@
 }
 
 @keyframes navScan {
-  0%, 100% { transform: translateX(-100%); opacity: 0; }
-  20%, 80% { opacity: 1; }
-  50% { transform: translateX(100%); }
+  0%,
+  100% {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+  20%,
+  80% {
+    opacity: 1;
+  }
+  50% {
+    transform: translateX(100%);
+  }
 }
 
 @keyframes glitchShift1 {
-  0%, 90%, 100% { transform: translate(0); }
-  91% { transform: translate(-2px, 1px); }
-  92% { transform: translate(2px, -1px); }
-  93% { transform: translate(-1px, 2px); }
+  0%,
+  90%,
+  100% {
+    transform: translate(0);
+  }
+  91% {
+    transform: translate(-2px, 1px);
+  }
+  92% {
+    transform: translate(2px, -1px);
+  }
+  93% {
+    transform: translate(-1px, 2px);
+  }
 }
 
 @keyframes glitchShift2 {
-  0%, 85%, 100% { transform: translate(0); }
-  86% { transform: translate(1px, -2px); }
-  87% { transform: translate(-2px, 1px); }
-  88% { transform: translate(2px, 2px); }
+  0%,
+  85%,
+  100% {
+    transform: translate(0);
+  }
+  86% {
+    transform: translate(1px, -2px);
+  }
+  87% {
+    transform: translate(-2px, 1px);
+  }
+  88% {
+    transform: translate(2px, 2px);
+  }
 }
 
 @keyframes titleFloat {
-  0%, 100% {
+  0%,
+  100% {
     transform: translateY(0px);
   }
   50% {
@@ -41,7 +71,8 @@
 }
 
 @keyframes titleFloatLayer1 {
-  0%, 100% {
+  0%,
+  100% {
     transform: translateY(0px) translateX(0px);
   }
   33% {
@@ -53,7 +84,8 @@
 }
 
 @keyframes titleFloatLayer2 {
-  0%, 100% {
+  0%,
+  100% {
     transform: translateY(0px) translateX(0px);
   }
   40% {
@@ -65,7 +97,8 @@
 }
 
 @keyframes titleFloatLayer3 {
-  0%, 100% {
+  0%,
+  100% {
     transform: translateY(0px) translateX(0px);
   }
   35% {
@@ -139,41 +172,116 @@
 }
 
 @keyframes quantumTitleGlitch {
-  0%, 100% { filter: none; }
-  2% { filter: brightness(2.2) hue-rotate(0deg); }
-  3% { filter: brightness(0.8) hue-rotate(-10deg); }
-  4% { filter: none; }
-  10% { filter: brightness(1.1) contrast(1.2); }
-  11% { filter: none; }
-  20% { filter: blur(0.5px); }
-  21% { filter: none; }
-  60% { filter: none; }
-  62% { filter: brightness(1.2) hue-rotate(-8deg); }
-  63% { filter: none; }
+  0%,
+  100% {
+    filter: none;
+  }
+  2% {
+    filter: brightness(2.2) hue-rotate(0deg);
+  }
+  3% {
+    filter: brightness(0.8) hue-rotate(-10deg);
+  }
+  4% {
+    filter: none;
+  }
+  10% {
+    filter: brightness(1.1) contrast(1.2);
+  }
+  11% {
+    filter: none;
+  }
+  20% {
+    filter: blur(0.5px);
+  }
+  21% {
+    filter: none;
+  }
+  60% {
+    filter: none;
+  }
+  62% {
+    filter: brightness(1.2) hue-rotate(-8deg);
+  }
+  63% {
+    filter: none;
+  }
 }
 
 @keyframes quantumTitleGlitchBefore {
-  0%, 100% { transform: translate(0,0) skewX(0deg); clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%); }
-  2% { transform: translate(-2px, 1px) skewX(-8deg); clip-path: polygon(0 0, 100% 0, 100% 60%, 0 70%); }
-  3% { transform: translate(2px, -1px) skewX(8deg); clip-path: polygon(0 30%, 100% 20%, 100% 100%, 0 100%); }
-  4% { transform: none; clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%); }
-  10% { transform: translate(-1px, 2px) skewX(-4deg); clip-path: polygon(0 0, 100% 0, 100% 80%, 0 90%); }
-  11% { transform: none; clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%); }
-  60% { transform: none; }
-  62% { transform: translate(2px, -2px) skewX(6deg); clip-path: polygon(0 10%, 100% 0, 100% 100%, 0 100%); }
-  63% { transform: none; }
+  0%,
+  100% {
+    transform: translate(0, 0) skewX(0deg);
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+  }
+  2% {
+    transform: translate(-2px, 1px) skewX(-8deg);
+    clip-path: polygon(0 0, 100% 0, 100% 60%, 0 70%);
+  }
+  3% {
+    transform: translate(2px, -1px) skewX(8deg);
+    clip-path: polygon(0 30%, 100% 20%, 100% 100%, 0 100%);
+  }
+  4% {
+    transform: none;
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+  }
+  10% {
+    transform: translate(-1px, 2px) skewX(-4deg);
+    clip-path: polygon(0 0, 100% 0, 100% 80%, 0 90%);
+  }
+  11% {
+    transform: none;
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+  }
+  60% {
+    transform: none;
+  }
+  62% {
+    transform: translate(2px, -2px) skewX(6deg);
+    clip-path: polygon(0 10%, 100% 0, 100% 100%, 0 100%);
+  }
+  63% {
+    transform: none;
+  }
 }
 
 @keyframes quantumTitleGlitchAfter {
-  0%, 100% { transform: translate(0,0) skewY(0deg); clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%); }
-  2% { transform: translate(2px, -1px) skewY(8deg); clip-path: polygon(0 0, 100% 0, 100% 60%, 0 70%); }
-  3% { transform: translate(-2px, 1px) skewY(-8deg); clip-path: polygon(0 30%, 100% 20%, 100% 100%, 0 100%); }
-  4% { transform: none; clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%); }
-  10% { transform: translate(1px, -2px) skewY(4deg); clip-path: polygon(0 0, 100% 0, 100% 80%, 0 90%); }
-  11% { transform: none; clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%); }
-  60% { transform: none; }
-  62% { transform: translate(-2px, 2px) skewY(-6deg); clip-path: polygon(0 10%, 100% 0, 100% 100%, 0 100%); }
-  63% { transform: none; }
+  0%,
+  100% {
+    transform: translate(0, 0) skewY(0deg);
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+  }
+  2% {
+    transform: translate(2px, -1px) skewY(8deg);
+    clip-path: polygon(0 0, 100% 0, 100% 60%, 0 70%);
+  }
+  3% {
+    transform: translate(-2px, 1px) skewY(-8deg);
+    clip-path: polygon(0 30%, 100% 20%, 100% 100%, 0 100%);
+  }
+  4% {
+    transform: none;
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+  }
+  10% {
+    transform: translate(1px, -2px) skewY(4deg);
+    clip-path: polygon(0 0, 100% 0, 100% 80%, 0 90%);
+  }
+  11% {
+    transform: none;
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+  }
+  60% {
+    transform: none;
+  }
+  62% {
+    transform: translate(-2px, 2px) skewY(-6deg);
+    clip-path: polygon(0 10%, 100% 0, 100% 100%, 0 100%);
+  }
+  63% {
+    transform: none;
+  }
 }
 
 @keyframes quantumTitleFloat {
@@ -204,24 +312,50 @@
 }
 
 @keyframes quantumFloat {
-  0%, 100% { transform: translateY(0px) rotateX(0deg); }
-  50% { transform: translateY(-20px) rotateX(5deg); }
+  0%,
+  100% {
+    transform: translateY(0px) rotateX(0deg);
+  }
+  50% {
+    transform: translateY(-20px) rotateX(5deg);
+  }
 }
 
 @keyframes gradientShift {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
 }
 
 @keyframes beam-bar-move {
-  0% { left: -50%; }
-  40% { left: 100%; }
-  100% { left: 100%; }
+  0% {
+    left: -50%;
+  }
+  40% {
+    left: 100%;
+  }
+  100% {
+    left: 100%;
+  }
 }
 
 @keyframes code-mask-bar {
-  0% { -webkit-mask-position: 0 0; mask-position: 0 0; }
-  40% { -webkit-mask-position: 100% 0; mask-position: 100% 0; }
-  100% { -webkit-mask-position: 100% 0; mask-position: 100% 0; }
+  0% {
+    -webkit-mask-position: 0 0;
+    mask-position: 0 0;
+  }
+  40% {
+    -webkit-mask-position: 100% 0;
+    mask-position: 100% 0;
+  }
+  100% {
+    -webkit-mask-position: 100% 0;
+    mask-position: 100% 0;
+  }
 }

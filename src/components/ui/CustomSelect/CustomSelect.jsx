@@ -23,18 +23,18 @@ const CustomSelect = ({ value, onChange, options, label }) => {
   // Handler for toggling dropdown - from utils
   const handleToggle = createToggleHandler(isOpen, setIsOpen);
 
-  const selectedOption = options.find(opt => opt.value === value);
+  const selectedOption = options.find((opt) => opt.value === value);
 
   return (
     <div className={styles.customSelect} ref={selectRef}>
-      <div 
+      <div
         className={`${styles.customSelect__trigger} ${isOpen ? styles.open : ''}`}
         onClick={handleToggle}
       >
         <span className={styles.customSelect__value}>{selectedOption?.label}</span>
         <span className={styles.customSelect__arrow}>{isOpen ? '▲' : '▼'}</span>
       </div>
-      
+
       {isOpen && (
         <div className={styles.customSelect__dropdown}>
           {options.map((option) => (

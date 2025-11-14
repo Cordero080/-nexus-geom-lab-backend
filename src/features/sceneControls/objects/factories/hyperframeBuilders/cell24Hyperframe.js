@@ -1,4 +1,4 @@
-import * as THREE from "three";
+import * as THREE from 'three';
 
 /**
  * Create hyperframe for 24-cell (4D polytope of 24 octahedra)
@@ -9,11 +9,7 @@ import * as THREE from "three";
  * @param {string} hyperframeLineColor - Color for vertex connections
  * @returns {Object} { centerLines, centerLinesMaterial, curvedLines, curvedLinesMaterial }
  */
-export function create24CellHyperframe(
-  geometry,
-  hyperframeColor,
-  hyperframeLineColor
-) {
+export function create24CellHyperframe(geometry, hyperframeColor, hyperframeLineColor) {
   // Get layer sizes from geometry metadata
   const layers = geometry.userData.layers || {
     outer: 1.0,
@@ -89,12 +85,7 @@ export function create24CellHyperframe(
       const end = new THREE.Vector3(...vertices[j]);
       const distance = start.distanceTo(end);
 
-      const cylinderGeom = new THREE.CylinderGeometry(
-        radius,
-        radius,
-        distance,
-        segments
-      );
+      const cylinderGeom = new THREE.CylinderGeometry(radius, radius, distance, segments);
       const cylinderMesh = new THREE.Mesh(cylinderGeom, centerLinesMaterial);
 
       cylinderMesh.position.copy(start.clone().add(end).multiplyScalar(0.5));
@@ -110,9 +101,7 @@ export function create24CellHyperframe(
   createLayerEdges(layer2Vertices, 0.0016, 6);
   createLayerEdges(innerVertices, 0.0012, 6);
 
-  console.log(
-    `Created 24-cell inner octahedra: 3 layers × 12 edges = 36 edges`
-  );
+  console.log(`Created 24-cell inner octahedra: 3 layers × 12 edges = 36 edges`);
 
   // ========================================
   // 2. CREATE VERTEX CONNECTIONS
@@ -132,9 +121,7 @@ export function create24CellHyperframe(
   const actualVertices = [];
   for (let i = 0; i < vertexCount; i++) {
     const idx = i * 3;
-    actualVertices.push(
-      new THREE.Vector3(positions[idx], positions[idx + 1], positions[idx + 2])
-    );
+    actualVertices.push(new THREE.Vector3(positions[idx], positions[idx + 1], positions[idx + 2]));
   }
 
   // Match canonical vertex to closest actual vertex
@@ -166,12 +153,7 @@ export function create24CellHyperframe(
     const end = new THREE.Vector3(...layer1Vertices[i]);
     const distance = start.distanceTo(end);
 
-    const cylinderGeom = new THREE.CylinderGeometry(
-      0.0025,
-      0.0025,
-      distance,
-      6
-    );
+    const cylinderGeom = new THREE.CylinderGeometry(0.0025, 0.0025, distance, 6);
     const cylinderMesh = new THREE.Mesh(cylinderGeom, curvedLinesMaterial);
 
     cylinderMesh.position.copy(start.clone().add(end).multiplyScalar(0.5));
@@ -203,12 +185,7 @@ export function create24CellHyperframe(
     const end = new THREE.Vector3(...innerVertices[i]);
     const distance = start.distanceTo(end);
 
-    const cylinderGeom = new THREE.CylinderGeometry(
-      0.0016,
-      0.0016,
-      distance,
-      6
-    );
+    const cylinderGeom = new THREE.CylinderGeometry(0.0016, 0.0016, distance, 6);
     const cylinderMesh = new THREE.Mesh(cylinderGeom, curvedLinesMaterial);
 
     cylinderMesh.position.copy(start.clone().add(end).multiplyScalar(0.5));
@@ -238,12 +215,7 @@ export function create24CellHyperframe(
       const v2 = new THREE.Vector3(...vertices[j]);
       const distance = v1.distanceTo(v2);
 
-      const cylinderGeom = new THREE.CylinderGeometry(
-        radius,
-        radius,
-        distance,
-        6
-      );
+      const cylinderGeom = new THREE.CylinderGeometry(radius, radius, distance, 6);
       const cylinderMesh = new THREE.Mesh(cylinderGeom, curvedLinesMaterial);
 
       cylinderMesh.position.copy(v1.clone().add(v2).multiplyScalar(0.5));

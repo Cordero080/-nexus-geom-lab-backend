@@ -1,12 +1,7 @@
-import * as THREE from "three";
-import { nearestVertexIndex } from "../../../utils/geometryHelpers";
+import * as THREE from 'three';
+import { nearestVertexIndex } from '../../../utils/geometryHelpers';
 
-
-export function createTetrahedronWireframe(
-  geometry,
-  wireframeMaterial,
-  radiusScale = 1.0
-) {
+export function createTetrahedronWireframe(geometry, wireframeMaterial, radiusScale = 1.0) {
   // Use EdgesGeometry to reliably get all edges (6 for simple, 12 for compound)
   const edgesGeometry = new THREE.EdgesGeometry(geometry);
   const edgeVertices = edgesGeometry.attributes.position.array;
@@ -14,16 +9,8 @@ export function createTetrahedronWireframe(
   const tetraEdgePairs = [];
 
   for (let j = 0; j < edgeVertices.length; j += 6) {
-    const start = new THREE.Vector3(
-      edgeVertices[j],
-      edgeVertices[j + 1],
-      edgeVertices[j + 2]
-    );
-    const end = new THREE.Vector3(
-      edgeVertices[j + 3],
-      edgeVertices[j + 4],
-      edgeVertices[j + 5]
-    );
+    const start = new THREE.Vector3(edgeVertices[j], edgeVertices[j + 1], edgeVertices[j + 2]);
+    const end = new THREE.Vector3(edgeVertices[j + 3], edgeVertices[j + 4], edgeVertices[j + 5]);
     const distance = start.distanceTo(end);
 
     // Create thick cylinder for tetrahedron edge with scaled radius
@@ -50,9 +37,9 @@ export function createTetrahedronWireframe(
   tetrahedronWireframeGroup.userData.edgePairs = tetraEdgePairs;
 
   console.log(
-    "Created thick wireframe for tetrahedron with",
+    'Created thick wireframe for tetrahedron with',
     edgeVertices.length / 6,
-    "cylinder edges"
+    'cylinder edges'
   );
 
   return tetrahedronWireframeGroup;
@@ -65,11 +52,7 @@ export function createTetrahedronWireframe(
  * @param {number} radiusScale - Scale factor for cylinder radius (default 1.0)
  * @returns {THREE.Group} The wireframe group with edge pairs in userData
  */
-export function createIcosahedronWireframe(
-  geometry,
-  wireframeMaterial,
-  radiusScale = 1.0
-) {
+export function createIcosahedronWireframe(geometry, wireframeMaterial, radiusScale = 1.0) {
   // Use EdgesGeometry to reliably get all 30 edges
   const edgesGeometry = new THREE.EdgesGeometry(geometry);
   const edgeVertices = edgesGeometry.attributes.position.array;
@@ -79,16 +62,8 @@ export function createIcosahedronWireframe(
   const __Q = new THREE.Quaternion();
 
   for (let j = 0; j < edgeVertices.length; j += 6) {
-    const start = new THREE.Vector3(
-      edgeVertices[j],
-      edgeVertices[j + 1],
-      edgeVertices[j + 2]
-    );
-    const end = new THREE.Vector3(
-      edgeVertices[j + 3],
-      edgeVertices[j + 4],
-      edgeVertices[j + 5]
-    );
+    const start = new THREE.Vector3(edgeVertices[j], edgeVertices[j + 1], edgeVertices[j + 2]);
+    const end = new THREE.Vector3(edgeVertices[j + 3], edgeVertices[j + 4], edgeVertices[j + 5]);
     const direction = end.clone().sub(start);
     const distance = direction.length();
 
@@ -119,9 +94,9 @@ export function createIcosahedronWireframe(
   icosahedronWireframeGroup.userData.edgePairs = icoEdgePairs;
 
   console.log(
-    "Created thick wireframe for icosahedron with",
+    'Created thick wireframe for icosahedron with',
     edgeVertices.length / 6,
-    "cylinder edges"
+    'cylinder edges'
   );
 
   return icosahedronWireframeGroup;
@@ -134,11 +109,7 @@ export function createIcosahedronWireframe(
  * @param {number} radiusScale - Scale factor for cylinder radius (default 1.0)
  * @returns {THREE.Group} The wireframe group with edge pairs in userData
  */
-export function createDodecahedronWireframe(
-  geometry,
-  wireframeMaterial,
-  radiusScale = 1.0
-) {
+export function createDodecahedronWireframe(geometry, wireframeMaterial, radiusScale = 1.0) {
   // Use EdgesGeometry to get all 30 edges (dodecahedron has 30 edges)
   const edgesGeometry = new THREE.EdgesGeometry(geometry);
   const edgeVertices = edgesGeometry.attributes.position.array;
@@ -148,16 +119,8 @@ export function createDodecahedronWireframe(
   const __Q = new THREE.Quaternion();
 
   for (let j = 0; j < edgeVertices.length; j += 6) {
-    const start = new THREE.Vector3(
-      edgeVertices[j],
-      edgeVertices[j + 1],
-      edgeVertices[j + 2]
-    );
-    const end = new THREE.Vector3(
-      edgeVertices[j + 3],
-      edgeVertices[j + 4],
-      edgeVertices[j + 5]
-    );
+    const start = new THREE.Vector3(edgeVertices[j], edgeVertices[j + 1], edgeVertices[j + 2]);
+    const end = new THREE.Vector3(edgeVertices[j + 3], edgeVertices[j + 4], edgeVertices[j + 5]);
     const direction = end.clone().sub(start);
     const distance = direction.length();
 
@@ -188,9 +151,9 @@ export function createDodecahedronWireframe(
   dodecahedronWireframeGroup.userData.edgePairs = dodecEdgePairs;
 
   console.log(
-    "Created thick wireframe for dodecahedron with",
+    'Created thick wireframe for dodecahedron with',
     edgeVertices.length / 6,
-    "cylinder edges"
+    'cylinder edges'
   );
 
   return dodecahedronWireframeGroup;

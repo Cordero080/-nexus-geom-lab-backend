@@ -1,5 +1,5 @@
-import * as THREE from "three";
-import { mergeGeometries } from "three/examples/jsm/utils/BufferGeometryUtils";
+import * as THREE from 'three';
+import { mergeGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils';
 
 /**
  * Creates a quantum manifold geometry with multiple Klein bottles
@@ -76,8 +76,8 @@ export function createQuantumManifold(options = {}) {
       }
     }
 
-    geom.setAttribute("position", new THREE.BufferAttribute(positions, 3));
-    geom.setAttribute("uv", new THREE.BufferAttribute(uvs, 2));
+    geom.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+    geom.setAttribute('uv', new THREE.BufferAttribute(uvs, 2));
     geom.setIndex(indices);
     geom.computeVertexNormals();
     return geom;
@@ -102,7 +102,7 @@ export function createQuantumManifold(options = {}) {
 
   // Mark as compound quantum manifold
   merged.userData.isCompound = true;
-  merged.userData.baseType = "ParametricKlein";
+  merged.userData.baseType = 'ParametricKlein';
   merged.userData.isQuantumManifold = true;
   merged.userData.componentCount = 3;
 
@@ -113,11 +113,11 @@ export function createQuantumManifold(options = {}) {
  * Metadata for the quantum manifold geometry
  */
 export const metadata = {
-  name: "quantummanifold",
-  displayName: "🌀 Quantum Manifold",
-  category: "manifolds",
+  name: 'quantummanifold',
+  displayName: '🌀 Quantum Manifold',
+  category: 'manifolds',
   description:
-    "Non-orientable Klein bottle topology - 3 Klein bottles merged for hyperdimensional structure",
+    'Non-orientable Klein bottle topology - 3 Klein bottles merged for hyperdimensional structure',
   isCompound: true,
   defaultOptions: {
     uSegments: 160,

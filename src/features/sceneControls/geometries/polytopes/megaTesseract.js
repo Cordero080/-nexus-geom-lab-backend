@@ -1,39 +1,37 @@
-import * as THREE from "three";
-import { mergeGeometries } from "three/examples/jsm/utils/BufferGeometryUtils";
+import * as THREE from 'three';
+import { mergeGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils';
 
 // Cache built geometries to avoid recomputing the expensive sweep on reselection.
 const geometryCache = new Map();
 
 function stableStringify(value) {
-  if (value === null) return "null";
+  if (value === null) return 'null';
   const type = typeof value;
-  if (type === "number" || type === "boolean") return JSON.stringify(value);
-  if (type === "string") return JSON.stringify(value);
-  if (type === "undefined") return '"__undefined__"';
-  if (type === "function") return '"__function__"';
+  if (type === 'number' || type === 'boolean') return JSON.stringify(value);
+  if (type === 'string') return JSON.stringify(value);
+  if (type === 'undefined') return '"__undefined__"';
+  if (type === 'function') return '"__function__"';
   if (Array.isArray(value)) {
-    return `[${value.map((item) => stableStringify(item)).join(",")}]`;
+    return `[${value.map((item) => stableStringify(item)).join(',')}]`;
   }
   if (value instanceof Date) {
     return JSON.stringify(value.toISOString());
   }
-  if (value && typeof value === "object") {
+  if (value && typeof value === 'object') {
     const keys = Object.keys(value).sort();
-    const entries = keys.map(
-      (key) => `${JSON.stringify(key)}:${stableStringify(value[key])}`
-    );
-    return `{${entries.join(",")}}`;
+    const entries = keys.map((key) => `${JSON.stringify(key)}:${stableStringify(value[key])}`);
+    return `{${entries.join(',')}}`;
   }
   return JSON.stringify(value);
 }
 
 function createCacheKey(options) {
-  if (!options || typeof options !== "object") return "default";
+  if (!options || typeof options !== 'object') return 'default';
   try {
     const signature = stableStringify(options);
-    return signature === "{}" ? "default" : `opts:${signature}`;
+    return signature === '{}' ? 'default' : `opts:${signature}`;
   } catch (error) {
-    console.warn("megaTesseract: failed to stringify options for cache", error);
+    console.warn('megaTesseract: failed to stringify options for cache', error);
     return null;
   }
 }
@@ -93,24 +91,14 @@ function createTesseractWithFaces(outerSize, innerSize, rotation = null) {
   geometries.push(topFrustum);
 
   // Bottom face frustum (Y-)
-  const bottomFrustum = new THREE.CylinderGeometry(
-    halfOuter,
-    halfInner,
-    depth,
-    4
-  );
+  const bottomFrustum = new THREE.CylinderGeometry(halfOuter, halfInner, depth, 4);
   bottomFrustum.rotateY(Math.PI / 4);
   bottomFrustum.translate(0, -(halfOuter + depth / 2), 0);
   if (rotation) bottomFrustum.rotateY(rotation);
   geometries.push(bottomFrustum);
 
   // Front face frustum (Z+)
-  const frontFrustum = new THREE.CylinderGeometry(
-    halfInner,
-    halfOuter,
-    depth,
-    4
-  );
+  const frontFrustum = new THREE.CylinderGeometry(halfInner, halfOuter, depth, 4);
   frontFrustum.rotateY(Math.PI / 4);
   frontFrustum.rotateX(Math.PI / 2);
   frontFrustum.translate(0, 0, halfOuter + depth / 2);
@@ -118,12 +106,7 @@ function createTesseractWithFaces(outerSize, innerSize, rotation = null) {
   geometries.push(frontFrustum);
 
   // Back face frustum (Z-)
-  const backFrustum = new THREE.CylinderGeometry(
-    halfOuter,
-    halfInner,
-    depth,
-    4
-  );
+  const backFrustum = new THREE.CylinderGeometry(halfOuter, halfInner, depth, 4);
   backFrustum.rotateY(Math.PI / 4);
   backFrustum.rotateX(Math.PI / 2);
   backFrustum.translate(0, 0, -(halfOuter + depth / 2));
@@ -131,12 +114,7 @@ function createTesseractWithFaces(outerSize, innerSize, rotation = null) {
   geometries.push(backFrustum);
 
   // Right face frustum (X+)
-  const rightFrustum = new THREE.CylinderGeometry(
-    halfInner,
-    halfOuter,
-    depth,
-    4
-  );
+  const rightFrustum = new THREE.CylinderGeometry(halfInner, halfOuter, depth, 4);
   rightFrustum.rotateY(Math.PI / 4);
   rightFrustum.rotateZ(Math.PI / 2);
   rightFrustum.translate(halfOuter + depth / 2, 0, 0);
@@ -144,12 +122,7 @@ function createTesseractWithFaces(outerSize, innerSize, rotation = null) {
   geometries.push(rightFrustum);
 
   // Left face frustum (X-)
-  const leftFrustum = new THREE.CylinderGeometry(
-    halfOuter,
-    halfInner,
-    depth,
-    4
-  );
+  const leftFrustum = new THREE.CylinderGeometry(halfOuter, halfInner, depth, 4);
   leftFrustum.rotateY(Math.PI / 4);
   leftFrustum.rotateZ(Math.PI / 2);
   leftFrustum.translate(-(halfOuter + depth / 2), 0, 0);
@@ -178,18 +151,11 @@ export function createMegaTesseract(options = {}) {
   const primaryTesseract = createTesseractWithFaces(2.0, 1.5, Math.PI / 8);
   primaryTesseract.translate(0, 0.01, 0);
 
-  const rotatedTesseract = createTesseractWithFaces(
-    2.0,
-    1.5,
-    Math.PI / 8 + Math.PI / 4
-  );
+  const rotatedTesseract = createTesseractWithFaces(2.0, 1.5, Math.PI / 8 + Math.PI / 4);
   rotatedTesseract.translate(0, 0.02, 0);
 
   // Merge only the two large tesseracts
-  const mergedMegaTesseract = mergeGeometries(
-    [primaryTesseract, rotatedTesseract],
-    false
-  );
+  const mergedMegaTesseract = mergeGeometries([primaryTesseract, rotatedTesseract], false);
 
   // Recompute normals for proper lighting
   mergedMegaTesseract.computeVertexNormals();
@@ -197,7 +163,7 @@ export function createMegaTesseract(options = {}) {
   // Mark it as mega tesseract for wireframe builders
   mergedMegaTesseract.userData.isCompound = true;
   mergedMegaTesseract.userData.isCpdTesseract = true;
-  mergedMegaTesseract.userData.baseType = "BoxGeometry";
+  mergedMegaTesseract.userData.baseType = 'BoxGeometry';
   mergedMegaTesseract.userData.isMegaTesseract = true;
   mergedMegaTesseract.userData.componentCount = 2;
 
@@ -210,11 +176,11 @@ export function createMegaTesseract(options = {}) {
  * Metadata for the mega tesseract geometry
  */
 export const metadata = {
-  name: "cpdtesseract",
-  displayName: "📦📦 Mega Tesseract",
-  category: "polytopes",
+  name: 'cpdtesseract',
+  displayName: '📦📦 Mega Tesseract',
+  category: 'polytopes',
   description:
-    "Dual large tesseracts merged at offset rotations—outer compound only (no inner pair)",
+    'Dual large tesseracts merged at offset rotations—outer compound only (no inner pair)',
   isCompound: true,
   isSuperCompound: true,
   defaultOptions: {},

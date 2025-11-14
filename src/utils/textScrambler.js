@@ -1,6 +1,6 @@
 // Text scrambling utilities for button effects
 
-const SCRAMBLE_CHARS = "!@#$%^&*()_+-={}[]|;:,.<>?/~`0123456789";
+const SCRAMBLE_CHARS = '!@#$%^&*()_+-={}[]|;:,.<>?/~`0123456789';
 
 /**
  * Scrambles text by replacing characters with random symbols
@@ -9,12 +9,12 @@ const SCRAMBLE_CHARS = "!@#$%^&*()_+-={}[]|;:,.<>?/~`0123456789";
  */
 export const scrambleText = (text) => {
   return text
-    .split("")
+    .split('')
     .map((char) => {
-      if (char === " ") return " ";
+      if (char === ' ') return ' ';
       return SCRAMBLE_CHARS[Math.floor(Math.random() * SCRAMBLE_CHARS.length)];
     })
-    .join("");
+    .join('');
 };
 
 /**
@@ -23,14 +23,14 @@ export const scrambleText = (text) => {
  */
 export const getScrambledText = () => {
   const codeSnippets = [
-    "func(x)",
-    "{id: 42}",
-    "x => y",
-    "[...arr]",
-    "async/await",
-    "0x1A2B",
-    "{ ...obj }",
-    "return π",
+    'func(x)',
+    '{id: 42}',
+    'x => y',
+    '[...arr]',
+    'async/await',
+    '0x1A2B',
+    '{ ...obj }',
+    'return π',
   ];
 
   return codeSnippets[Math.floor(Math.random() * codeSnippets.length)];

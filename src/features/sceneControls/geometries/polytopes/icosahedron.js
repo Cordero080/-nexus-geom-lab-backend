@@ -1,5 +1,5 @@
-import * as THREE from "three";
-import { mergeGeometries } from "three/examples/jsm/utils/BufferGeometryUtils";
+import * as THREE from 'three';
+import { mergeGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils';
 
 /**
  * Creates a compound icosahedron - two icosahedra merged together
@@ -25,7 +25,7 @@ export function createIcosahedron(options = {}) {
 
   // Mark it as compound for wireframe builders
   mergedIco.userData.isCompound = true;
-  mergedIco.userData.baseType = "IcosahedronGeometry";
+  mergedIco.userData.baseType = 'IcosahedronGeometry';
 
   return mergedIco;
 }
@@ -34,10 +34,10 @@ export function createIcosahedron(options = {}) {
  * Metadata for the icosahedron geometry
  */
 export const metadata = {
-  name: "icosahedron",
-  displayName: "⬡ Compound Icosahedron",
-  category: "polytopes",
-  description: "Two icosahedra merged with stella octangula effect (merkaba)",
+  name: 'icosahedron',
+  displayName: '⬡ Compound Icosahedron',
+  category: 'polytopes',
+  description: 'Two icosahedra merged with stella octangula effect (merkaba)',
   isCompound: true,
   defaultOptions: {},
 };

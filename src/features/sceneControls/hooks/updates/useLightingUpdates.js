@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect } from 'react';
 
 /**
  * PROPERTY UPDATE HOOK - Updates light properties when state changes
@@ -40,7 +40,7 @@ export function useLightingUpdates(refs, lightingProps) {
       const safeIntensity = Math.max(0, boostedIntensity);
 
       // Convert hex color to Three.js color number with validation
-      const colorString = ambientLightColor.replace("#", "");
+      const colorString = ambientLightColor.replace('#', '');
       const convertedColor = parseInt(colorString, 16);
       // Validate color conversion
       if (!isNaN(convertedColor)) {
@@ -65,7 +65,7 @@ export function useLightingUpdates(refs, lightingProps) {
       const safeY = clamp(directionalLightY, -50, 50);
       const safeZ = clamp(directionalLightZ, -50, 50);
       // Convert hex color to Three.js color number with validation
-      const colorString = directionalLightColor.replace("#", "");
+      const colorString = directionalLightColor.replace('#', '');
       const convertedColor = parseInt(colorString, 16);
       // Validate color conversion and apply
       if (!isNaN(convertedColor)) {

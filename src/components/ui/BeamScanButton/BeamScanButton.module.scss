@@ -26,7 +26,9 @@ $font-code: 'Roboto Mono', 'JetBrains Mono', monospace;
 }
 
 @mixin clip-transition {
-  transition: opacity 0.2s, clip-path 0.2s cubic-bezier(0.77, 0, 0.18, 1);
+  transition:
+    opacity 0.2s,
+    clip-path 0.2s cubic-bezier(0.77, 0, 0.18, 1);
 }
 
 // Main button
@@ -43,7 +45,7 @@ $font-code: 'Roboto Mono', 'JetBrains Mono', monospace;
   border-top: 2px solid rgba(255, 255, 255, 0.2);
   border-left: 2px solid rgba(255, 255, 255, 0.2);
   border-radius: 0 !important;
-  box-shadow: 
+  box-shadow:
     0 2px 16px $glow-color,
     0 0 30px rgba(0, 255, 255, 0.5),
     0 0 60px rgba(255, 0, 204, 0.3);
@@ -53,15 +55,19 @@ $font-code: 'Roboto Mono', 'JetBrains Mono', monospace;
   overflow: visible !important;
   z-index: 100;
   isolation: isolate;
-  transition: background 0.2s, box-shadow 0.2s, color 0.2s, cursor 0s;
-  
+  transition:
+    background 0.2s,
+    box-shadow 0.2s,
+    color 0.2s,
+    cursor 0s;
+
   // Quantum probability wave animation - fast and dramatic
   animation: quantumGlow 3s ease-in-out infinite;
-  
+
   // Force parent to allow overflow
   transform: translateZ(0);
   will-change: transform, filter;
-  
+
   // Angled corners clip-path (matching shared.css)
   clip-path: polygon(
     14px 0,
@@ -76,13 +82,15 @@ $font-code: 'Roboto Mono', 'JetBrains Mono', monospace;
   &:hover,
   &:focus {
     cursor: pointer !important; // Show pointer only when actually hovering
-    animation: quiver 0.03s ease-in-out infinite, quantumGlow 2s ease-in-out infinite;
-    box-shadow: 
+    animation:
+      quiver 0.03s ease-in-out infinite,
+      quantumGlow 2s ease-in-out infinite;
+    box-shadow:
       0 2px 20px rgba(0, 255, 255, 0.8),
       0 0 40px rgba(0, 255, 255, 0.6),
       0 0 80px rgba(255, 0, 204, 0.4),
       0 0 120px rgba(57, 255, 20, 0.3);
-    
+
     // Holographic shimmer overlay
     &::before {
       content: '';
@@ -103,7 +111,7 @@ $font-code: 'Roboto Mono', 'JetBrains Mono', monospace;
       pointer-events: none;
       z-index: 10;
     }
-    
+
     .beamScanLabel {
       clip-path: polygon(100% 0, 100% 0, 100% 100%, 100% 100%);
       opacity: 0;
@@ -121,7 +129,7 @@ $font-code: 'Roboto Mono', 'JetBrains Mono', monospace;
       animation-play-state: running;
     }
   }
-  
+
   // Click glitch effect
   &:active {
     animation: glitchFragment 0.2s ease-out;
@@ -131,7 +139,7 @@ $font-code: 'Roboto Mono', 'JetBrains Mono', monospace;
 // Quantum probability wave glow - dramatic color shifts AND background changes
 @keyframes quantumGlow {
   0% {
-    box-shadow: 
+    box-shadow:
       0 2px 20px rgba(0, 255, 255, 1),
       0 0 40px rgba(0, 255, 255, 0.8),
       0 0 80px rgba(0, 255, 255, 0.5);
@@ -140,7 +148,7 @@ $font-code: 'Roboto Mono', 'JetBrains Mono', monospace;
     text-shadow: 0 0 20px rgba(0, 255, 255, 1);
   }
   33% {
-    box-shadow: 
+    box-shadow:
       0 2px 20px rgba(255, 0, 204, 1),
       0 0 40px rgba(255, 0, 204, 0.8),
       0 0 80px rgba(255, 0, 204, 0.5);
@@ -149,7 +157,7 @@ $font-code: 'Roboto Mono', 'JetBrains Mono', monospace;
     text-shadow: 0 0 20px rgba(255, 0, 204, 1);
   }
   66% {
-    box-shadow: 
+    box-shadow:
       0 2px 20px rgba(57, 255, 20, 1),
       0 0 40px rgba(57, 255, 20, 0.8),
       0 0 80px rgba(57, 255, 20, 0.5);
@@ -158,7 +166,7 @@ $font-code: 'Roboto Mono', 'JetBrains Mono', monospace;
     text-shadow: 0 0 20px rgba(57, 255, 20, 1);
   }
   100% {
-    box-shadow: 
+    box-shadow:
       0 2px 20px rgba(0, 255, 255, 1),
       0 0 40px rgba(0, 255, 255, 0.8),
       0 0 80px rgba(0, 255, 255, 0.5);
@@ -208,13 +216,25 @@ $font-code: 'Roboto Mono', 'JetBrains Mono', monospace;
 // Holographic shimmer effect for text
 @keyframes holographicShimmer {
   0% {
-    background-position: 0% 50%, 50% 50%, 50% 50%, 0% 50%;
+    background-position:
+      0% 50%,
+      50% 50%,
+      50% 50%,
+      0% 50%;
   }
   50% {
-    background-position: 0% 50%, 100% 100%, 100% 100%, 100% 50%;
+    background-position:
+      0% 50%,
+      100% 100%,
+      100% 100%,
+      100% 50%;
   }
   100% {
-    background-position: 0% 50%, 50% 50%, 50% 50%, 0% 50%;
+    background-position:
+      0% 50%,
+      50% 50%,
+      50% 50%,
+      0% 50%;
   }
 }
 
@@ -257,7 +277,8 @@ $font-code: 'Roboto Mono', 'JetBrains Mono', monospace;
     left: -5%;
     opacity: 0;
     transform: translateY(-50%) scaleX(0.3) scaleY(0.5) rotate(0deg) skewX(0deg);
-    background: linear-gradient(90deg, 
+    background: linear-gradient(
+      90deg,
       transparent,
       rgba(0, 255, 255, 0.4) 10%,
       rgba(0, 255, 255, 1) 30%,
@@ -269,7 +290,8 @@ $font-code: 'Roboto Mono', 'JetBrains Mono', monospace;
   }
   8% {
     transform: translateY(-52%) scaleX(0.8) scaleY(2) rotate(1deg) skewX(-2deg);
-    background: linear-gradient(90deg, 
+    background: linear-gradient(
+      90deg,
       transparent,
       rgba(255, 0, 255, 0.4) 10%,
       rgba(255, 0, 255, 1) 30%,
@@ -282,7 +304,8 @@ $font-code: 'Roboto Mono', 'JetBrains Mono', monospace;
   16% {
     transform: translateY(-48%) scaleX(1) scaleY(1.5) rotate(-1deg) skewX(2deg);
     opacity: 0.6;
-    background: linear-gradient(90deg, 
+    background: linear-gradient(
+      90deg,
       transparent,
       rgba(57, 255, 20, 0.4) 10%,
       rgba(57, 255, 20, 1) 30%,
@@ -295,7 +318,8 @@ $font-code: 'Roboto Mono', 'JetBrains Mono', monospace;
   24% {
     opacity: 1;
     transform: translateY(-51%) scaleX(1.3) scaleY(2.5) rotate(1deg) skewX(-1deg);
-    background: linear-gradient(90deg, 
+    background: linear-gradient(
+      90deg,
       transparent,
       rgba(255, 255, 0, 0.4) 10%,
       rgba(255, 255, 0, 1) 30%,
@@ -307,7 +331,8 @@ $font-code: 'Roboto Mono', 'JetBrains Mono', monospace;
   }
   32% {
     transform: translateY(-49%) scaleX(1.5) scaleY(2) rotate(-1deg) skewX(2deg);
-    background: linear-gradient(90deg, 
+    background: linear-gradient(
+      90deg,
       transparent,
       rgba(0, 255, 255, 0.4) 10%,
       rgba(0, 255, 255, 1) 30%,
@@ -319,7 +344,8 @@ $font-code: 'Roboto Mono', 'JetBrains Mono', monospace;
   }
   40% {
     transform: translateY(-50%) scaleX(1.7) scaleY(3) rotate(1deg) skewX(-2deg);
-    background: linear-gradient(90deg, 
+    background: linear-gradient(
+      90deg,
       transparent,
       rgba(255, 0, 255, 0.4) 10%,
       rgba(255, 0, 255, 1) 30%,
@@ -332,7 +358,8 @@ $font-code: 'Roboto Mono', 'JetBrains Mono', monospace;
   48% {
     opacity: 1;
     transform: translateY(-51%) scaleX(2) scaleY(3.5) rotate(0deg) skewX(0deg);
-    background: linear-gradient(90deg, 
+    background: linear-gradient(
+      90deg,
       transparent,
       rgba(57, 255, 20, 0.4) 10%,
       rgba(57, 255, 20, 1) 30%,
@@ -349,7 +376,8 @@ $font-code: 'Roboto Mono', 'JetBrains Mono', monospace;
     transform: translateY(-50%) scaleX(0.3) scaleY(0.5) rotate(0deg) skewX(0deg);
   }
   // Hidden during "travel" to next button
-  50.1%, 99.9% {
+  50.1%,
+  99.9% {
     left: -200%;
     opacity: 0;
   }
@@ -362,7 +390,8 @@ $font-code: 'Roboto Mono', 'JetBrains Mono', monospace;
 // Delayed string animation for second button (continues from first)
 @keyframes stringSlideDelayed {
   // Hidden until transition from first button
-  0%, 49.9% {
+  0%,
+  49.9% {
     left: -200%;
     opacity: 0;
   }
@@ -371,7 +400,8 @@ $font-code: 'Roboto Mono', 'JetBrains Mono', monospace;
     left: -5%;
     opacity: 0;
     transform: translateY(-50%) scaleX(0.3) scaleY(0.5) rotate(0deg) skewX(0deg);
-    background: linear-gradient(90deg, 
+    background: linear-gradient(
+      90deg,
       transparent,
       rgba(57, 255, 20, 0.4) 10%,
       rgba(57, 255, 20, 1) 30%,
@@ -383,7 +413,8 @@ $font-code: 'Roboto Mono', 'JetBrains Mono', monospace;
   }
   58% {
     transform: translateY(-52%) scaleX(2) scaleY(2.5) rotate(-1deg) skewX(2deg);
-    background: linear-gradient(90deg, 
+    background: linear-gradient(
+      90deg,
       transparent,
       rgba(255, 255, 0, 0.4) 10%,
       rgba(255, 255, 0, 1) 30%,
@@ -395,7 +426,8 @@ $font-code: 'Roboto Mono', 'JetBrains Mono', monospace;
   }
   66% {
     transform: translateY(-48%) scaleX(1.7) scaleY(2) rotate(1deg) skewX(-2deg);
-    background: linear-gradient(90deg, 
+    background: linear-gradient(
+      90deg,
       transparent,
       rgba(255, 0, 255, 0.4) 10%,
       rgba(255, 0, 255, 1) 30%,
@@ -407,7 +439,8 @@ $font-code: 'Roboto Mono', 'JetBrains Mono', monospace;
   }
   74% {
     transform: translateY(-51%) scaleX(1.5) scaleY(3) rotate(-1deg) skewX(1deg);
-    background: linear-gradient(90deg, 
+    background: linear-gradient(
+      90deg,
       transparent,
       rgba(0, 255, 255, 0.4) 10%,
       rgba(0, 255, 255, 1) 30%,
@@ -420,7 +453,8 @@ $font-code: 'Roboto Mono', 'JetBrains Mono', monospace;
   82% {
     opacity: 1;
     transform: translateY(-49%) scaleX(1.3) scaleY(2) rotate(1deg) skewX(-1deg);
-    background: linear-gradient(90deg, 
+    background: linear-gradient(
+      90deg,
       transparent,
       rgba(255, 100, 255, 0.4) 10%,
       rgba(255, 100, 255, 1) 30%,
@@ -460,14 +494,14 @@ $font-code: 'Roboto Mono', 'JetBrains Mono', monospace;
 .beamScanLabel {
   z-index: 2;
   color: #ffffff;
-  text-shadow: 
+  text-shadow:
     0 0 10px rgba(255, 255, 255, 0.5),
     0 1px 2px rgba(0, 0, 0, 0.3);
   font-weight: 900;
   opacity: 1;
   clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
   @include clip-transition;
-  
+
   // Ensure nested spans inherit the styling
   span {
     color: inherit;
@@ -505,14 +539,14 @@ $font-code: 'Roboto Mono', 'JetBrains Mono', monospace;
   width: 4px;
   height: 100%;
   background: rgba(255, 255, 255, 1);
-  box-shadow: 
+  box-shadow:
     0 0 20px 8px rgba(255, 255, 255, 0.8),
     0 0 40px 16px rgba(0, 255, 247, 0.6);
   opacity: 0.6;
   z-index: 7;
   pointer-events: none;
-  animation: 
-    beamScan 5s linear infinite, 
+  animation:
+    beamScan 5s linear infinite,
     beamFlicker 0.05s steps(1, end) infinite,
     beamColorShift 3s linear infinite,
     beamPulse 1.5s ease-in-out infinite;
@@ -521,15 +555,16 @@ $font-code: 'Roboto Mono', 'JetBrains Mono', monospace;
 
 // Beam scan animation - smooth continuous loop with 3-second pause
 @keyframes beamScan {
-  0% { 
-    left: -60%; 
+  0% {
+    left: -60%;
     opacity: 0.6;
   }
-  30% { 
-    left: 100%; 
+  30% {
+    left: 100%;
     opacity: 0.6;
   }
-  30.1%, 100% {
+  30.1%,
+  100% {
     left: -60%;
     opacity: 0;
   }
@@ -537,42 +572,64 @@ $font-code: 'Roboto Mono', 'JetBrains Mono', monospace;
 
 // Static flicker effect
 @keyframes beamFlicker {
-  0% { opacity: 0.6; }
-  10% { opacity: 0.5; }
-  20% { opacity: 0.7; }
-  30% { opacity: 0.55; }
-  40% { opacity: 0.65; }
-  50% { opacity: 0.6; }
-  60% { opacity: 0.7; }
-  70% { opacity: 0.5; }
-  80% { opacity: 0.65; }
-  90% { opacity: 0.55; }
-  100% { opacity: 0.6; }
+  0% {
+    opacity: 0.6;
+  }
+  10% {
+    opacity: 0.5;
+  }
+  20% {
+    opacity: 0.7;
+  }
+  30% {
+    opacity: 0.55;
+  }
+  40% {
+    opacity: 0.65;
+  }
+  50% {
+    opacity: 0.6;
+  }
+  60% {
+    opacity: 0.7;
+  }
+  70% {
+    opacity: 0.5;
+  }
+  80% {
+    opacity: 0.65;
+  }
+  90% {
+    opacity: 0.55;
+  }
+  100% {
+    opacity: 0.6;
+  }
 }
 
 // Color shift animation - cyan → white → bright magenta
 @keyframes beamColorShift {
   0% {
     background: rgba(0, 255, 255, 1);
-    box-shadow: 
+    box-shadow:
       0 0 20px 8px rgba(0, 255, 255, 0.8),
       0 0 40px 16px rgba(0, 255, 247, 0.6);
   }
   33% {
     background: rgba(255, 255, 255, 1);
-    box-shadow: 
+    box-shadow:
       0 0 20px 8px rgba(255, 255, 255, 0.8),
       0 0 40px 16px rgba(255, 255, 255, 0.6);
   }
   66% {
     background: rgba(255, 180, 255, 1);
-    box-shadow: 
+    box-shadow:
       0 0 20px 8px rgba(255, 200, 255, 0.9),
       0 0 40px 16px rgba(255, 150, 255, 0.7);
   }
   100% {
     background: rgba(0, 255, 255, 1);
-    box-shadow: 
+    box-shadow:
       0 0 20px 8px rgba(0, 255, 255, 0.8),
       0 0 40px 16px rgba(0, 255, 247, 0.6);
   }
@@ -580,7 +637,8 @@ $font-code: 'Roboto Mono', 'JetBrains Mono', monospace;
 
 // Width pulse animation
 @keyframes beamPulse {
-  0%, 100% {
+  0%,
+  100% {
     width: 2px;
   }
   50% {

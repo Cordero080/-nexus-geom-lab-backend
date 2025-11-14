@@ -1,5 +1,5 @@
-import * as THREE from "three";
-import { mergeGeometries } from "three/examples/jsm/utils/BufferGeometryUtils";
+import * as THREE from 'three';
+import { mergeGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils';
 
 /**
  * Creates a compound capsule/spherocylinder geometry
@@ -29,12 +29,7 @@ export function createCapsule(options = {}) {
     const parts = [];
 
     // Central cylinder
-    const cylinder = new THREE.CylinderGeometry(
-      radius,
-      radius,
-      height,
-      segments
-    );
+    const cylinder = new THREE.CylinderGeometry(radius, radius, height, segments);
     parts.push(cylinder);
 
     // Top sphere cap
@@ -89,11 +84,7 @@ export function createCapsule(options = {}) {
     const miniCapsule = createCapsuleGeometry(0.12 / phi, 0.6 / phi, 12);
     miniCapsule.rotateZ(Math.PI / 6);
     miniCapsule.rotateY(angle + Math.PI / 6);
-    miniCapsule.translate(
-      Math.cos(angle) * 0.5,
-      Math.sin(angle) * 0.3,
-      Math.sin(angle) * 0.5
-    );
+    miniCapsule.translate(Math.cos(angle) * 0.5, Math.sin(angle) * 0.3, Math.sin(angle) * 0.5);
     capsules.push(miniCapsule);
   }
 
@@ -103,7 +94,7 @@ export function createCapsule(options = {}) {
 
   // Mark as compound capsule
   mergedCapsule.userData.isCompound = true;
-  mergedCapsule.userData.baseType = "CapsuleGeometry";
+  mergedCapsule.userData.baseType = 'CapsuleGeometry';
   mergedCapsule.userData.componentCount = capsules.length;
 
   return mergedCapsule;
@@ -113,11 +104,11 @@ export function createCapsule(options = {}) {
  * Metadata for the capsule geometry
  */
 export const metadata = {
-  name: "capsule",
-  displayName: "⬭ Compound Capsule",
-  category: "curved",
+  name: 'capsule',
+  displayName: '⬭ Compound Capsule',
+  category: 'curved',
   description:
-    "Smooth spherocylinders with perfect tangency - 16 capsules in flowing organic arrangement",
+    'Smooth spherocylinders with perfect tangency - 16 capsules in flowing organic arrangement',
   isCompound: true,
   defaultOptions: {},
 };

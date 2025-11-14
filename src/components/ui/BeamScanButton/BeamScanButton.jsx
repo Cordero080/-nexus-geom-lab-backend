@@ -11,7 +11,7 @@ const RAW_CODE = `function quantumLeap() {
 /**
  * BeamScanButton component creates an interactive button with code-reveal animation
  * The button transitions between a label and code snippet on hover/focus
- * 
+ *
  * @param {Object} props - Component props
  * @param {Function} props.onClick - Function to call when button is clicked
  * @param {string} props.label - Button label text (default: 'Enter Playground')
@@ -20,7 +20,14 @@ const RAW_CODE = `function quantumLeap() {
  * @param {string} props.className - Optional additional CSS classes
  * @param {boolean} props.delayedString - If true, uses delayed quantum string animation
  */
-export default function BeamScanButton({ onClick, label = 'Enter Playground', code = RAW_CODE, style, className = '', delayedString = false }) {
+export default function BeamScanButton({
+  onClick,
+  label = 'Enter Playground',
+  code = RAW_CODE,
+  style,
+  className = '',
+  delayedString = false,
+}) {
   const btnRef = useRef(null);
 
   useEffect(() => {

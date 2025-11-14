@@ -27,15 +27,14 @@ const ScrambleLink = ({ to, children, className = '' }) => {
   useEffect(() => {
     if (isHovering) {
       // Get text content from children (handles JSX)
-      const textContent = typeof children === 'string' 
-        ? children 
-        : linkRef.current?.textContent || '';
-      
+      const textContent =
+        typeof children === 'string' ? children : linkRef.current?.textContent || '';
+
       // Start scrambling effect
       scrambleInterval.current = setInterval(() => {
         setDisplayText(scrambleText(textContent));
       }, scrambleSpeed);
-      
+
       return () => {
         clearInterval(scrambleInterval.current);
       };
@@ -66,7 +65,7 @@ const ScrambleLink = ({ to, children, className = '' }) => {
       style={{
         display: 'inline-block',
         minWidth: originalWidth ? `${originalWidth}px` : 'auto',
-        textAlign: 'left'
+        textAlign: 'left',
       }}
     >
       {displayText}
