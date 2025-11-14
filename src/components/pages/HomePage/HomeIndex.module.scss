@@ -152,6 +152,7 @@
   align-items: center;
   overflow: hidden;
   z-index: 1;
+  margin-top: -5vh;
 
   &::before {
     content: '';
@@ -206,7 +207,7 @@
 
 /* Terminal header spacing */
 :global(.terminal-header) {
-  margin-top: 0;
+  margin-top: -53px;
   margin-bottom: 20px;
 }
 
@@ -845,7 +846,7 @@ input,
   :global(.button-wrapper-auth) {
     display: flex;
     justify-content: center;
-    margin-top: 48px;
+    margin-top: calc(10px + 1vh);
     margin-bottom: 24px;
     position: relative;
     z-index: 100;
@@ -857,7 +858,7 @@ input,
     display: flex;
     gap: 48px;
     justify-content: center;
-    margin-top: 32px;
+    margin-top: calc(10px + 1vh);
     position: relative;
     z-index: 100;
     pointer-events: auto;

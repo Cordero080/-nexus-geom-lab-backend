@@ -5,15 +5,15 @@
   min-height: 100vh;
   width: 100vw;
   display: flex;
-
   flex-direction: column;
   align-items: center;
   justify-content: center;
   background: transparent; /* Remove background to show clip-path scene background */
-  padding: 80px 20px 40px;
+  padding: 40px 20px 40px;
   position: relative;
   overflow: hidden;
   cursor: none;
+  margin-top: -10px;
 }
 
 .signup-page * {
@@ -137,6 +137,10 @@
     inset 0 1px 3px rgba(255, 255, 255, 0.2),
     inset 0 -1px 3px rgba(0, 0, 0, 0.5);
   backdrop-filter: blur(20px);
+
+  /* Scale entire card down by 50% then up by 20% = 0.6 total */
+  transform: scale(0.6);
+  transform-origin: center;
 
   /* Angled corners clip-path */
   clip-path: polygon(
