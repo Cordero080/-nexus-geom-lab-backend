@@ -9,11 +9,12 @@
   transform-style: preserve-3d;
   will-change: text-shadow, opacity;
   line-height: 2.5;
-  margin: 120px 0 32px 0;
+  margin: 120px auto 32px auto;
   padding: 24px 32px;
   border: none;
+  max-width: 800px;
 
-  font-size: 0.7rem;
+  font-size: 0.65rem;
   font-style: italic;
   font-family: 'Future Z', 'Orbitron', 'JetBrains Mono', monospace;
   font-weight: 800;
