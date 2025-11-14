@@ -1,7 +1,7 @@
 /* Global Reset Styles */
 
 html {
-  font-size: 11px; /* Scale down to match 67% zoom for consistent sizing */
+  font-size: 16px; /* Standard base font-size, viewport scaled to 67% */
 }
 
 body {
