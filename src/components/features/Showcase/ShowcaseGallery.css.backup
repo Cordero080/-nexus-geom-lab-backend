@@ -221,7 +221,7 @@
   /* Use shared pageSubtitle; override color for showcase theme */
   font-family: 'Orbitron', monospace !important;
   color: #7ffdff92;
-  font-size: 0.75em;
+  font-size: 1em;
   margin: 0;
   text-shadow: 0 0 20px rgba(0, 212, 255, 0.4);
 }
@@ -233,7 +233,7 @@
 
 .showcase-main-title {
   font-family: 'Future Z', 'Orbitron', 'Rajdhani', sans-serif !important;
-  font-size: 3.402rem;
+  font-size: 4.2rem;
   font-weight: normal;
   line-height: 1.2;
   margin: 0 0 14px 0;
@@ -322,7 +322,7 @@
   justify-content: center;
   gap: 8px;
   color: rgba(127, 230, 255, 0.85);
-  font-size: 0.55rem;
+  font-size: 0.75rem;
   letter-spacing: 2px;
   text-transform: uppercase;
 }
@@ -455,7 +455,7 @@
   justify-content: center;
   flex-direction: column;
   padding-top: 20px; /* Hero section provides headroom */
-  margin-top: -20px; /* Bring card up */
+  margin-top: -60px; /* Bring card up */
 }
 
 .parallax-scene-center .parallax-model-card {
@@ -494,12 +494,14 @@
 }
 
 .parallax-scene-right .parallax-info {
-  text-align: left;
+  text-align: right;
   max-width: 550px;
 }
 
 /* Model card styling */
 .parallax-model-card {
+  width: 500px;
+  height: 650px;
   border: 2px solid rgba(0, 255, 255, 0.3);
   border-radius: 20px;
   overflow: hidden;
@@ -704,22 +706,13 @@
 }
 
 /* Specific heights for all models - consistent sizing */
-.parallax-model-card-1 {
-  height: 580px;
-  width: 400px;
-}
-
+.parallax-model-card-1,
 .parallax-model-card-2,
-.parallax-model-card-3 {
-  height: 400px;
-  width: 400px;
-  flex-shrink: 0;
-}
-
+.parallax-model-card-3,
 .parallax-model-card-4,
 .parallax-model-card-5 {
   height: 580px;
-  width: 400px;
+  width: 600px;
 }
 
 /* Info panel styling */
@@ -733,12 +726,12 @@
 .parallax-title {
   position: relative;
   font-family: 'Future Z', 'Orbitron', 'Rajdhani', sans-serif !important;
-  font-size: 1.4rem;
+  font-size: 2rem;
   font-weight: normal;
   line-height: 1.2;
   margin: 0 0 6px 0;
   text-transform: uppercase;
-  letter-spacing: 4px;
+  letter-spacing: 6px; /* Reduced from 10px to prevent cutoff */
   /* Vibrant gradient like showcase main title */
   background: linear-gradient(135deg, #48f0d4 0%, #ff7fb4 55%, #5fbab4 75%, #ffd27f 100%);
   background-size: 200% 200%;
@@ -749,11 +742,10 @@
   filter: drop-shadow(0 6px 24px rgba(6, 21, 185, 0.32));
   transform: perspective(400px) rotateX(15deg);
   transform-origin: center bottom;
-  display: inline;
-  padding: 0;
+  display: inline-block; /* Changed from inline to inline-block */
+  padding: 12px 30px; /* Increased horizontal padding from 24px to 30px */
   isolation: isolate;
   overflow: visible; /* Ensure text isn't clipped */
-  white-space: nowrap;
 }
 
 .parallax-animation {
