@@ -1,4 +1,4 @@
-# Nexus-Geom-Lab 🌌
+# <img src="./public/assets/tesseract-icon.svg" width="32" height="32" alt="Tesseract" /> Nexus-Geom-Lab
 
 > Interactive 3D geometry platform with 24 hyperdimensional shapes, progressive character unlocks, and full-stack scene management
 

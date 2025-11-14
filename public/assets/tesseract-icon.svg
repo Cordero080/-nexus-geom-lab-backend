@@ -1,0 +1,13 @@
+<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Outer cube -->
+  <path d="M8 6 L24 6 L24 22 L8 22 Z" stroke="#00ffff" stroke-width="1.5" fill="none"/>
+  <!-- Inner cube -->
+  <path d="M12 10 L20 10 L20 18 L12 18 Z" stroke="#ff00ff" stroke-width="1.5" fill="none"/>
+  <!-- Connecting lines (4D projection) -->
+  <line x1="8" y1="6" x2="12" y2="10" stroke="#00ffff" stroke-width="1"/>
+  <line x1="24" y1="6" x2="20" y2="10" stroke="#00ffff" stroke-width="1"/>
+  <line x1="24" y1="22" x2="20" y2="18" stroke="#00ffff" stroke-width="1"/>
+  <line x1="8" y1="22" x2="12" y2="18" stroke="#00ffff" stroke-width="1"/>
+  <!-- Glow effect -->
+  <circle cx="16" cy="14" r="2" fill="#ffffff" opacity="0.6"/>
+</svg>
