@@ -300,9 +300,17 @@
   max-width: 1400px;
   margin: 0 auto; /* Removed top margin - spacing comes from controls margin */
   display: grid;
-  grid-template-columns: repeat(3, 1fr); /* Changed from 4 to 3 columns for larger cards */
-  gap: 40px; /* Increased gap from 32px to 40px for more breathing room */
+  grid-template-columns: repeat(5, 1fr); /* 5 columns instead of 4 */
+  gap: 15px; /* Reduced from 20px */
   animation: fadeIn 0.5s ease-in;
+}
+
+.my-scenes-page__grid > * {
+  transform: scale(0.85);
+}
+
+.my-scenes-page__grid > *:hover {
+  transform: scale(0.85) translateY(-4px) !important;
 }
 
 /* Create New Scene Card */
@@ -382,7 +390,7 @@
 }
 
 .create-scene-card:hover {
-  transform: translateY(-8px) scale(1.02);
+  transform: translateY(-8px) scale(0.85);
 }
 
 .create-scene-card:hover::after {
@@ -393,7 +401,7 @@
 .create-scene-card__icon {
   font-size: 72px;
   font-weight: 200;
-  margin-bottom: 24px; /* Increased from 16px to 24px */
+  margin-bottom: 24px;
   transition: all 0.3s ease;
   line-height: 1;
   position: relative;
@@ -408,7 +416,7 @@
   font-size: 1.25rem;
   font-family: 'Orbitron', monospace;
   font-weight: 600;
-  margin: 0 0 12px; /* Increased from 8px to 12px */
+  margin: 0 0 12px;
   transition: all 0.3s ease;
   position: relative;
   z-index: 2;
@@ -559,7 +567,7 @@
 /* Responsive */
 @media (max-width: 1200px) {
   .my-scenes-page__grid {
-    grid-template-columns: repeat(2, 1fr); /* Changed from 3 to 2 */
+    grid-template-columns: repeat(2, 1fr);
   }
 }
 

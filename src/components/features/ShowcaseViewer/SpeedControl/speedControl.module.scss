@@ -5,7 +5,8 @@
 .speed-control-container {
   position: fixed;
   bottom: -48px;
-  transform: translateY(-50%);
+  transform: translateY(-50%) scale(0.7);
+  transform-origin: bottom right;
   right: 28px;
   background: rgba(0, 0, 0, 0.236);
   backdrop-filter: blur(12px);
