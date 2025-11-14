@@ -44,7 +44,9 @@ function SaveControls({ sceneConfig }) {
     try {
       if (unlockAudioRef.current) {
         unlockAudioRef.current.currentTime = 0;
-        unlockAudioRef.current.play().catch((err) => console.log('Audio play failed:', err));
+        unlockAudioRef.current.play().catch((err) => {
+          console.log('Audio play failed:', err);
+        });
       }
     } catch (err) {
       console.log('Audio play error:', err);

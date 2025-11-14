@@ -15,7 +15,9 @@ export default function AnimationUnlockModal({
     if (isOpen) {
       const audio = new Audio('/soundEffects/unlock.wav');
       audio.volume = 0.5; // Set volume to 50%
-      audio.play().catch((err) => console.log('Audio play failed:', err));
+      audio.play().catch((err) => {
+        console.log('Audio play failed:', err);
+      });
     }
   }, [isOpen]);
 
