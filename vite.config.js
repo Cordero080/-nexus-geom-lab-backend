@@ -23,7 +23,7 @@ export default defineConfig({
     },
   },
   build: {
-    cssMinify: 'lightningcss',
+    cssMinify: 'esbuild',
     cssCodeSplit: true,
     rollupOptions: {
       output: {
