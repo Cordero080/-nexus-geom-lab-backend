@@ -7,6 +7,7 @@
 ![React](https://img.shields.io/badge/React-19.1-61DAFB?style=for-the-badge&logo=react)
 ![React Three Fiber](https://img.shields.io/badge/React_Three_Fiber-9.4-000000?style=for-the-badge&logo=three.js&logoColor=white)
 ![Three.js](https://img.shields.io/badge/Three.js-0.180-000000?style=for-the-badge&logo=three.js)
+![Blender](https://img.shields.io/badge/Blender-4.x-F5792A?style=for-the-badge&logo=blender&logoColor=white)
 ![Vite](https://img.shields.io/badge/Vite-7.1-646CFF?style=for-the-badge&logo=vite&logoColor=white)
 ![Node.js](https://img.shields.io/badge/Node.js-20+-339933?style=for-the-badge&logo=node.js)
 ![Express](https://img.shields.io/badge/Express-4.x-000000?style=for-the-badge&logo=express)
