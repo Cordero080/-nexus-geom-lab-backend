@@ -1,7 +1,7 @@
 /* Global Reset Styles */
 
 html {
-  font-size: 16px; /* Explicit base font-size for consistent rem units */
+  font-size: 11px; /* Scale down to match 67% zoom for consistent sizing */
 }
 
 body {
