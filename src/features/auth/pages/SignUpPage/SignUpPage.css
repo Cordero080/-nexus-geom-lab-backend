@@ -572,3 +572,9 @@
     padding: 14px 28px;
   }
 }
+
+/* Increase button size for signup page only */
+.signup-page button[class*="beamScanBtn"] {
+  font-size: 21.41px !important;
+  padding: 18.85px 113.80px !important;
+}

@@ -9,7 +9,7 @@
   transform-style: preserve-3d;
   will-change: text-shadow, opacity;
   line-height: 2.5;
-  margin: 120px auto 32px auto;
+  margin: 0 auto;
   padding: 24px 32px;
   border: none;
   max-width: 800px;
@@ -30,6 +30,8 @@
   opacity: 1;
   filter: none;
   -webkit-font-smoothing: antialiased;
+  display: inline-block;
+  max-width: 500px;
 }
 
 @keyframes gradientShift {

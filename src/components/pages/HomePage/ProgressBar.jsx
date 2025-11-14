@@ -208,14 +208,14 @@ export default function ProgressBar({ portalState, glyphState, onQuantumCollapse
   return (
     <section
       style={{
-        marginTop: '120px',
-        marginBottom: '80px',
+        marginTop: '60px',
+        marginBottom: '40px',
         width: '100%',
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
         position: 'relative',
-        minHeight: '220px',
+        minHeight: '120px',
         overflow: 'hidden',
       }}
     >
