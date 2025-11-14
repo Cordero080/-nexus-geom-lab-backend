@@ -1,7 +1,7 @@
-import { defineConfig } from "vite";
-import react from "@vitejs/plugin-react";
-import removeConsole from "vite-plugin-remove-console";
-import path from "path";
+import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react';
+import removeConsole from 'vite-plugin-remove-console';
+import path from 'path';
 
 // Root-level Vite config (used by the dev server)
 export default defineConfig({
@@ -31,8 +31,8 @@ export default defineConfig({
     strictPort: true,
     proxy: {
       // Forward API calls to the backend to avoid CORS in development
-      "/api": {
-        target: "http://localhost:3000",
+      '/api': {
+        target: 'http://localhost:3000',
         changeOrigin: true,
         ws: true,
       },

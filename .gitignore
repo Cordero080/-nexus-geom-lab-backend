@@ -17,6 +17,10 @@ docs/STUDY_PLAN.md
 docs/WEEKLY_PROGRESS_REPORT.md
 docs/STRETCH_GOALS.md
 
+# All study-related files
+**/*STUDY*.md
+**/*study*.md
+
 # Hide obvious collaboration/debug sessions
 docs/refactoring/controls-modularization/MODULARIZATION_DEBUG_SESSION.md
 **/DEBUG_SESSION*.md
