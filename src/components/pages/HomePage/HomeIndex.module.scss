@@ -1,12 +1,5 @@
 /* HomeIndex.module.scss */
 .portalContainer {
-  /* Local scope ensures no external CSS bleeds in */
-  all: initial;
-  * {
-    all: unset;
-    box-sizing: border-box;
-  }
-
   /* Establish new stacking context */
   isolation: isolate;
   position: relative;
@@ -14,6 +7,10 @@
   max-width: 100vw;
   overflow-x: hidden;
   overflow-y: hidden;
+  
+  * {
+    box-sizing: border-box;
+  }
 }
 
 /* Base Dark Layer (z-index: -4) */

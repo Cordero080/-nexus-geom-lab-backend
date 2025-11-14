@@ -14,6 +14,23 @@ export default defineConfig({
       excludes: ['error'],
     }),
   ],
+  css: {
+    devSourcemap: true,
+    preprocessorOptions: {
+      scss: {
+        additionalData: ``,
+      },
+    },
+  },
+  build: {
+    cssMinify: 'lightningcss',
+    cssCodeSplit: true,
+    rollupOptions: {
+      output: {
+        manualChunks: undefined,
+      },
+    },
+  },
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),
