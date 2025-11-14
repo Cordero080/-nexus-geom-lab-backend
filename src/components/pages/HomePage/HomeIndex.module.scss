@@ -785,33 +785,33 @@ input,
   }
 
   /* Reality scene section */
-  .reality-scene-section {
+  :global(.reality-scene-section) {
     position: relative;
     z-index: 1;
   }
 
   /* Scene bg-reality positioning */
-  .bg-reality-position {
+  :global(.bg-reality-position) {
     position: absolute;
     z-index: -1;
   }
 
   /* Scene content wrapper */
-  .scene-content-wrapper {
+  :global(.scene-content-wrapper) {
     position: relative;
     z-index: 10;
     pointer-events: auto;
   }
 
   /* Particles wrapper */
-  .particles-wrapper {
+  :global(.particles-wrapper) {
     position: relative;
     z-index: -1;
     pointer-events: none;
   }
 
   /* Title wrapper div */
-  .title-wrapper {
+  :global(.title-wrapper) {
     position: relative;
     z-index: 10;
     pointer-events: none;
@@ -826,13 +826,13 @@ input,
   }
 
   /* Title word span */
-  .title-word-span {
+  :global(.title-word-span) {
     position: relative;
     z-index: 10;
   }
 
   /* Stat value with dynamic colors */
-  .stat-value-dynamic {
+  :global(.stat-value-dynamic) {
     transition:
       color 1.2s,
       text-shadow 1.2s;
@@ -842,7 +842,7 @@ input,
   }
 
   /* Button wrapper authenticated */
-  .button-wrapper-auth {
+  :global(.button-wrapper-auth) {
     display: flex;
     justify-content: center;
     margin-top: 48px;
@@ -853,7 +853,7 @@ input,
   }
 
   /* Button wrapper not authenticated */
-  .button-wrapper-no-auth {
+  :global(.button-wrapper-no-auth) {
     display: flex;
     gap: 48px;
     justify-content: center;
@@ -864,18 +864,18 @@ input,
   }
 
   /* Inverted N span */
-  .inverted-n-span {
+  :global(.inverted-n-span) {
     display: inline-block;
     transform: scaleX(-1);
   }
 
   /* Entanglement scene content */
-  .entanglement-scene-content {
+  :global(.entanglement-scene-content) {
     transform: translateY(-50%);
   }
 
   /* Superposition scene div */
-  .superposition-scene-div {
+  :global(.superposition-scene-div) {
     transform: translateY(-80%);
   }
 
@@ -977,7 +977,7 @@ input,
   }
 
   /* Seamless scene fade effect */
-  .quantum-scene {
+  :global(.quantum-scene) {
     opacity: 1;
     pointer-events: none !important;
     transition: opacity 1.1s cubic-bezier(0.4, 0, 0.2, 1);
@@ -1391,11 +1391,11 @@ input,
   }
 
   /* Title should use quantum cursor */
-  .quantum-title {
+  :global(.quantum-title) {
     cursor: none !important;
   }
 
-  .scene-content {
+  :global(.scene-content) {
     position: relative;
     z-index: 10 !important;
     padding: 150px 40px 80px;
@@ -1437,7 +1437,7 @@ input,
     margin-top: 0;
   }
 
-  .scene-title {
+  :global(.scene-title) {
     font-size: 0.8em;
     font-family: 'Orbitron', 'JetBrains Mono', monospace;
     font-weight: 900;
@@ -1446,7 +1446,7 @@ input,
     margin: 40px 0 20px 0;
   }
 
-  .scene-description {
+  :global(.scene-description) {
     font-size: 0.85em;
     font-family: 'Orbitron', 'JetBrains Mono', monospace;
     font-weight: 500;
@@ -1505,7 +1505,7 @@ input,
     font-family: 'Orbitron', monospace;
   }
 
-  .home-enter-geom-lab-btn {
+  :global(.home-enter-geom-lab-btn) {
     font-size: 24px !important;
     padding: 24px 162px !important;
     letter-spacing: 0.05em !important;
