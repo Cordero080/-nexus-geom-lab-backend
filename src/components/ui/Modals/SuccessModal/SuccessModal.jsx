@@ -1,6 +1,6 @@
 import React from 'react';
 import styles from './SuccessModal.module.scss';
-import sharedStyles from '../../../styles/shared.module.scss';
+import sharedStyles from '../../../../styles/shared.module.scss';
 
 const SuccessModal = ({ isOpen, onClose, title, message, unlockedNoetechs = [] }) => {
   if (!isOpen) return null;

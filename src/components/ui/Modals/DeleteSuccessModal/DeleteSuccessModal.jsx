@@ -1,7 +1,7 @@
 import React from 'react';
 import styles from './DeleteSuccessModal.module.scss';
-import sharedStyles from '../../../styles/shared.module.scss';
-import ScrambleButton from '../ScrambleButton/ScrambleButton';
+import sharedStyles from '../../../../styles/shared.module.scss';
+import ScrambleButton from '../../ScrambleButton/ScrambleButton';
 
 const DeleteSuccessModal = ({ isOpen, onClose, sceneName }) => {
   if (!isOpen) return null;
