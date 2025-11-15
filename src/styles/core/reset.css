@@ -1,18 +1,11 @@
 /* Global Reset Styles */
 
-* {
-  box-sizing: border-box;
-}
-
 html {
   font-size: 16px;
-  overflow-x: hidden;
-  max-width: 100%;
 }
 
 body {
   min-height: 100vh;
-  max-width: 100vw;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -29,9 +22,15 @@ body {
 }
 
 #root {
-  width: 100%;
-  max-width: 100vw;
   overflow-x: hidden;
+  max-width: 100vw;
+  width: 100%;
+}
+
+/* Prevent canvas and 3D scenes from overflowing */
+canvas {
+  max-width: 100vw;
+  display: block;
 }
 
 /* Global Dynamic Portal Background */
