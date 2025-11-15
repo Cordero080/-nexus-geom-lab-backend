@@ -364,7 +364,7 @@ export default function MyScenesPage() {
             position: 'absolute',
             top: 0,
             left: 0,
-            width: '100vw',
+            width: '100%',
             height: '40vh',
             pointerEvents: 'none',
             background: `linear-gradient(120deg, ${portalState.colors[0]} 0%, ${portalState.colors[1]} 60%, ${portalState.colors[2]} 100%)`,
@@ -390,7 +390,7 @@ export default function MyScenesPage() {
             position: 'absolute',
             top: 0,
             left: 0,
-            width: '100vw',
+            width: '100%',
             height: '40vh',
             pointerEvents: 'none',
           }}

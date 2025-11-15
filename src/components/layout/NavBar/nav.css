@@ -3,10 +3,11 @@
 
 .quantum-nav {
   /* Background removed - controlled by inline styles with dynamic portal colors */
-  width: 100vw;
+  width: 100%;
   position: fixed;
   top: 0;
   left: 0;
+  right: 0;
   z-index: 10000;
   display: flex;
   align-items: center;
