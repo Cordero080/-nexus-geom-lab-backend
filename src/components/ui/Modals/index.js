@@ -1,2 +1,2 @@
-export { default as SuccessModal } from './SuccessModal';
-export { default as DeleteSuccessModal } from './DeleteSuccessModal';
+export { default as SuccessModal } from './SuccessModal/SuccessModal';
+export { default as DeleteSuccessModal } from './DeleteSuccessModal/DeleteSuccessModal';
