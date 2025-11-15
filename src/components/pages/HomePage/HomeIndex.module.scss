@@ -907,11 +907,7 @@ input,
     pointer-events: auto;
   }
 
-  /* Inverted N span */
-  :global(.inverted-n-span) {
-    display: inline-block;
-    transform: scaleX(-1);
-  }
+  /* Inverted letter styles moved to /components/ui/InvertedLetterText/invertedLetters.css */
 
   /* Entanglement scene content */
   :global(.entanglement-scene-content) {

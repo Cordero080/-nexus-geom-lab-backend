@@ -1,0 +1,57 @@
+/* ============================================
+   Inverted Letter Utility Classes
+   
+   Used across the app to flip specific letters
+   for stylistic effect (V becomes A, N flips)
+   ============================================ */
+
+/* Title variant - Large inverted V (used in page titles) */
+.title-inverted-v {
+  display: inline-block;
+  position: relative;
+  transform: scaleY(-1.1) translateY(0em);
+  transform-origin: center;
+  font-family: 'Future Z', 'Orbitron', 'Rajdhani', sans-serif !important;
+  line-height: 1;
+  background: inherit;
+  color: inherit;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  letter-spacing: inherit;
+  margin: 0;
+  isolation: isolate;
+  overflow: visible;
+}
+
+/* Nav/Logo variant - Standard inverted V (used in navigation) */
+.nav-inverted-v {
+  display: inline-block;
+  transform: scaleY(-1) translateY(0.05em);
+  transform-origin: center;
+  line-height: 1;
+  background: inherit;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: inherit;
+}
+
+/* Logo-specific variant (slight offset adjustment) */
+.logo-text .nav-inverted-v {
+  transform: scaleY(-1) translateY(-0.02em) !important;
+}
+
+/* Inverted N - Horizontal flip */
+.inverted-n-span {
+  display: inline-block;
+  transform: scaleX(-1);
+}
+
+/* BeamScanButton label variant */
+.beamScanLabel .nav-inverted-v {
+  background: inherit;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}

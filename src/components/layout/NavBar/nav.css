@@ -65,27 +65,7 @@
   display: inline-block; /* Ensure padding applies properly */
 }
 
-.logo-text .nav-inverted-v {
-  display: inline-block !important;
-  transform: scaleY(-1) translateY(-0.02em) !important;
-  transform-origin: center !important;
-  line-height: 1 !important;
-  font-family: inherit !important;
-  -webkit-background-clip: text !important;
-  background-clip: text !important;
-  -webkit-text-fill-color: transparent !important;
-  background: inherit !important;
-}
-
-/* Nav link variant - inverted V styling */
-.nav-link .nav-inverted-v {
-  background: inherit;
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-  color: inherit;
-  transform: scaleY(-1) translateY(0.05em) !important;
-}
+/* Inverted letter styles moved to /components/ui/InvertedLetterText/invertedLetters.css */
 
 .nav-links {
   display: flex;
