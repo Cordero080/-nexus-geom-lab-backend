@@ -1,5 +1,5 @@
 import React from 'react';
-import './ErrorBoundary.css';
+import styles from './ErrorBoundary.module.scss';
 
 class ErrorBoundary extends React.Component {
   constructor(props) {
@@ -32,37 +32,45 @@ class ErrorBoundary extends React.Component {
   render() {
     if (this.state.hasError) {
       return (
-        <div className="error-boundary">
-          <div className="error-boundary__content">
-            <h1 className="error-boundary__title">⚠️ Something Went Wrong</h1>
-            <p className="error-boundary__message">
-              The application encountered an unexpected error.
-            </p>
-
-            <div className="error-boundary__actions">
-              <button
-                onClick={this.handleReset}
-                className="error-boundary__button error-boundary__button--primary"
-              >
-                Try Again
-              </button>
-              <button
-                onClick={() => (window.location.href = '/')}
-                className="error-boundary__button error-boundary__button--secondary"
-              >
-                Go Home
-              </button>
+        <div className={styles.errorBackdrop}>
+          <div className={styles.errorContainer}>
+            <div className={styles.errorHeader}>
+              <h1 className={styles.errorTitle}>⚠️ SYSTEM ERROR</h1>
+              <div className={styles.errorIcon}>!</div>
             </div>
 
-            {import.meta.env.DEV && this.state.error && (
-              <details className="error-boundary__details">
-                <summary>Error Details (Development Only)</summary>
-                <pre className="error-boundary__stack">
-                  {this.state.error.toString()}
-                  {this.state.errorInfo?.componentStack}
-                </pre>
-              </details>
-            )}
+            <div className={styles.errorContent}>
+              <p className={styles.errorMessage}>
+                The quantum state collapsed unexpectedly.
+              </p>
+              <p className={styles.errorSubMessage}>
+                Don't worry - your data is safe. Try reloading or return home.
+              </p>
+
+              <div className={styles.errorActions}>
+                <button onClick={this.handleReset} className={styles.primaryButton}>
+                  Try Again
+                </button>
+                <button
+                  onClick={() => (window.location.href = '/')}
+                  className={styles.secondaryButton}
+                >
+                  Go Home
+                </button>
+              </div>
+
+              {import.meta.env.DEV && this.state.error && (
+                <details className={styles.errorDetails}>
+                  <summary className={styles.detailsSummary}>
+                    Error Details (Development Only)
+                  </summary>
+                  <pre className={styles.errorStack}>
+                    {this.state.error.toString()}
+                    {this.state.errorInfo?.componentStack}
+                  </pre>
+                </details>
+              )}
+            </div>
           </div>
         </div>
       );
