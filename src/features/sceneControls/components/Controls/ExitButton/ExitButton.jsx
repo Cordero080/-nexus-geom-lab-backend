@@ -1,4 +1,4 @@
-import ScrambleButton from '../../../ui/ScrambleButton/ScrambleButton';
+import ScrambleButton from '@/components/ui/ScrambleButton/ScrambleButton';
 import styles from './ExitButton.module.scss';
 
 function ExitButton({ onClick }) {

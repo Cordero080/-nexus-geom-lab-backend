@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { Routes, Route, useNavigate, Navigate, useLocation } from 'react-router-dom';
 import ThreeScene from '@/features/sceneControls/ThreeScene';
-import Controls from '@/components/features/Controls/Controls';
-import SaveControls from '@/components/features/SaveButton/SaveControls';
-import ExitButton from '@/components/features/Controls/ExitButton/ExitButton';
+import Controls from '@/features/sceneControls/components/Controls/Controls';
+import SaveControls from '@/features/sceneControls/components/SaveButton/SaveControls';
+import ExitButton from '@/features/sceneControls/components/Controls/ExitButton/ExitButton';
 import ScrambleButton from '@/components/ui/ScrambleButton/ScrambleButton';
 import HomePage from '@/components/pages/HomePage/HomePage';
 import NavBar from '@/components/layout/NavBar/NavBar';
-import ShowcaseGallery from '@/components/features/Showcase/ShowcaseGallery';
+import ShowcaseGallery from '@/components/pages/Showcase/ShowcaseGallery';
 import MyScenesPage from '@/components/pages/MyScenesPage/MyScenesPage';
 import SignUpPage from '@/features/auth/pages/SignUpPage/SignUpPage';
 import LoginPage from '@/features/auth/pages/LoginPage/LoginPage';

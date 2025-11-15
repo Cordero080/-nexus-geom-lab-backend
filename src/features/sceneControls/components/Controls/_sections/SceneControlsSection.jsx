@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import styles from '../Controls.module.scss';
-import CustomSelect from '../../../ui/CustomSelect/CustomSelect';
+import CustomSelect from '@/components/ui/CustomSelect/CustomSelect';
 
 /**
  * SceneControlsSection Component

@@ -1,5 +1,5 @@
-import ScrambleButton from '../../ui/ScrambleButton/ScrambleButton';
-import sharedStyles from '../../../styles/shared.module.scss';
+import ScrambleButton from '@/components/ui/ScrambleButton/ScrambleButton';
+import sharedStyles from '@/styles/shared.module.scss';
 
 export default function SaveModal({
   isOpen,

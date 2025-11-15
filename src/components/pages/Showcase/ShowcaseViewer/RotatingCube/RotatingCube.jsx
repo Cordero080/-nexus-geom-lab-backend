@@ -1,7 +1,7 @@
 import React, { useRef, useState } from 'react';
 import { useFrame, useThree } from '@react-three/fiber';
 import * as THREE from 'three';
-import FBXModel from '../../Showcase/models/FBXModel';
+import FBXModel from '../../models/FBXModel';
 import HolographicCube from './components/HolographicCube';
 import TesseractGeometry from './components/TesseractGeometry';
 import NexusCube from '../characters/Nexus/NexusCube';

@@ -3,7 +3,7 @@ import styles from './Controls.module.scss';
 import LightingControls from './LightingControls';
 import MaterialPropertiesSection from './_sections/MaterialPropertiesSection';
 import SceneControlsSection from './_sections/SceneControlsSection';
-import CustomSelect from '../../ui/CustomSelect/CustomSelect';
+import CustomSelect from '@/components/ui/CustomSelect/CustomSelect';
 import {
   createMetalnessHandler,
   createScaleHandler,

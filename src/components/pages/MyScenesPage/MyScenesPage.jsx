@@ -10,7 +10,7 @@ import BeamScanButton from '../../ui/BeamScanButton/BeamScanButton';
 import { DeleteSuccessModal } from '../../ui/Modals';
 import QuantumNav from '../HomePage/components/QuantumNav';
 import HomeBackground from '../../shared/HomeBackground/HomeBackground';
-import QuantumPortalShowcase from '../../features/Showcase/QuantumPortalShowcase';
+import QuantumPortalShowcase from '../Showcase/QuantumPortalShowcase';
 import { quantumCollapse } from '../../../utils/coreHelpers';
 import './MyScenesPage.css';
 import styles from './MyScenesPage.module.scss';

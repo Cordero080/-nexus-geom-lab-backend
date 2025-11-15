@@ -57,6 +57,134 @@ const animationStyles = {
     applyUserRotation(meshes, objectId, interactionFns);
   },
 
+  // New: Rotate + Pulse combo
+  rotatePulse: (objData, t, index, interactionFns = null, speed = 1.0) => {
+    const {
+      solidMesh,
+      wireframeMesh,
+      centerLines,
+      curvedLines,
+      geometry,
+      originalPositions,
+      originalPosition,
+      phase = 0,
+    } = objData;
+
+    // Reset vertices
+    if (geometry && originalPositions && solidMesh) {
+      const positions = geometry.attributes.position.array;
+      for (let i = 0; i < positions.length; i++) {
+        positions[i] = originalPositions[i];
+      }
+      geometry.attributes.position.needsUpdate = true;
+    }
+
+    const objectId = objData.objectId || (solidMesh && solidMesh.uuid);
+    const meshes = [solidMesh, wireframeMesh, centerLines, curvedLines].filter(Boolean);
+
+    // Rotation
+    meshes.forEach((mesh) => {
+      mesh.rotation.x += 0.005 * speed;
+      mesh.rotation.y += 0.01 * speed;
+      if (originalPosition) {
+        mesh.position.set(originalPosition.x, originalPosition.y, originalPosition.z);
+      }
+
+      // Pulsing scale
+      const baseScale = mesh.userData.baseScale || 1;
+      const pulseSpeed = 2 + index * 0.3;
+      const pulse = Math.sin(t * pulseSpeed + phase) * 0.15;
+      mesh.scale.setScalar(baseScale * (1 + pulse));
+    });
+
+    applyUserRotation(meshes, objectId, interactionFns);
+  },
+
+  // New: Float + Rotate combo
+  floatRotate: (objData, t, index, interactionFns = null, speed = 1.0) => {
+    const {
+      solidMesh,
+      wireframeMesh,
+      centerLines,
+      curvedLines,
+      geometry,
+      originalPositions,
+      originalPosition,
+      phase = 0,
+    } = objData;
+
+    // Reset vertices
+    if (geometry && originalPositions && solidMesh) {
+      const positions = geometry.attributes.position.array;
+      for (let i = 0; i < positions.length; i++) {
+        positions[i] = originalPositions[i];
+      }
+      geometry.attributes.position.needsUpdate = true;
+    }
+
+    const floatY = Math.sin(t * 0.5 + phase) * 0.5;
+    const floatX = Math.cos(t * 0.3 + phase) * 0.3;
+    const floatZ = Math.sin(t * 0.4 + phase) * 0.3;
+
+    const meshes = [solidMesh, wireframeMesh, centerLines, curvedLines].filter(Boolean);
+    meshes.forEach((mesh) => {
+      if (originalPosition) {
+        mesh.position.set(
+          originalPosition.x + floatX,
+          originalPosition.y + floatY,
+          originalPosition.z + floatZ
+        );
+      }
+
+      // Rotation on all axes
+      mesh.rotation.x += 0.005 * speed;
+      mesh.rotation.y += 0.01 * speed;
+      mesh.rotation.z += 0.003 * speed;
+    });
+
+    const objectId = objData.objectId || (solidMesh && solidMesh.uuid);
+    applyUserRotation(meshes, objectId, interactionFns);
+  },
+
+  // New: Wobble (rotation with varying speeds creating organic motion)
+  wobble: (objData, t, index, interactionFns = null, speed = 1.0) => {
+    const {
+      solidMesh,
+      wireframeMesh,
+      centerLines,
+      curvedLines,
+      geometry,
+      originalPositions,
+      originalPosition,
+      phase = 0,
+    } = objData;
+
+    // Reset vertices
+    if (geometry && originalPositions && solidMesh) {
+      const positions = geometry.attributes.position.array;
+      for (let i = 0; i < positions.length; i++) {
+        positions[i] = originalPositions[i];
+      }
+      geometry.attributes.position.needsUpdate = true;
+    }
+
+    const objectId = objData.objectId || (solidMesh && solidMesh.uuid);
+    const meshes = [solidMesh, wireframeMesh, centerLines, curvedLines].filter(Boolean);
+
+    meshes.forEach((mesh) => {
+      if (originalPosition) {
+        mesh.position.set(originalPosition.x, originalPosition.y, originalPosition.z);
+      }
+
+      // Varying rotation speeds create wobble effect
+      mesh.rotation.x += (0.005 + Math.sin(t * 0.5 + phase) * 0.004) * speed;
+      mesh.rotation.y += (0.01 + Math.cos(t * 0.3 + phase) * 0.008) * speed;
+      mesh.rotation.z += Math.sin(t * 0.7 + phase) * 0.006 * speed;
+    });
+
+    applyUserRotation(meshes, objectId, interactionFns);
+  },
+
   float: (objData, t, index, interactionFns = null, speed = 1.0) => {
     const {
       solidMesh,

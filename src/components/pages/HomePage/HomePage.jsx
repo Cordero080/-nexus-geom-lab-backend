@@ -15,7 +15,7 @@ import styles from './HomeIndex.module.scss';
 
 // Utilities
 import quantumCollapse from './utils/quantumCollapse';
-import { portalWorlds, glyphSets } from './utils/portalWorlds';
+import { portalWorlds, glyphSets } from '../../../data/portalWorlds';
 
 // Custom Hooks
 import useQuantumState from './hooks/useQuantumState';

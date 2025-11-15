@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import styles from '../Controls.module.scss';
-import CustomSelect from '../../../ui/CustomSelect/CustomSelect';
+import CustomSelect from '@/components/ui/CustomSelect/CustomSelect';
 
 /**
  * MaterialPropertiesSection Component
@@ -210,9 +210,12 @@ function MaterialPropertiesSection({
             value={animationStyle}
             onChange={handleAnimationStyleChange}
             options={[
-              { value: 'rotate', label: 'Simple Rotation' },
-              { value: 'float', label: 'Floating Dance' },
-              { value: 'omniIntel', label: 'Omni-Intel' },
+              { value: 'rotate', label: '🔄 Simple Rotation' },
+              { value: 'rotatePulse', label: '💫 Rotate + Pulse' },
+              { value: 'floatRotate', label: '🎈 Float + Rotate' },
+              { value: 'wobble', label: '🌊 Wobble' },
+              { value: 'float', label: '☁️ Floating Dance' },
+              { value: 'omniIntel', label: '🧠 Omni-Intel' },
             ]}
           />
 

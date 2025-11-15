@@ -616,6 +616,12 @@ Free to use, modify, and distribute. Attribution appreciated but not required.
 - **AI Scene Generation**: "Create a quantum tesseract with purple aurora lighting"
 - **Export Options**: 4K images, video recordings, JSON scene data
 
+#### Audio Enhancement
+
+- **Audio File Upload**: Play music files directly instead of microphone-only input
+- **Advanced Audio Reactivity**: Beat detection, FFT with 16+ frequency bands
+- **Waveform Recording**: Capture and replay audio-reactive patterns
+
 📖 **[Full Stretch Goals Document →](./docs/STRETCH_GOALS.md)**
 
 ---

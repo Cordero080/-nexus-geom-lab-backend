@@ -66,6 +66,11 @@ export default function NavBar({ portalColors = null, glyphs = null, navScrolled
       className={`quantum-nav${shouldUseClearNav ? ' showcase-viewer-navbar' : ''}`}
       style={quantumStyle}
     >
+      <div className="nav-logo">
+        <Link to="/" className="logo-text" data-text="N3XUS_GEOM">
+          N3XUS_GEOM
+        </Link>
+      </div>
       <div className="nav-links">
         {/* ALWAYS show these - public links (hide if on current page) */}
         {location.pathname !== '/' && (

@@ -1,9 +1,9 @@
 import { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../../../features/auth/context/AuthContext';
-import { useScene } from '../../../context/SceneContext';
-import { saveScene, updateScene } from '../../../services/sceneApi';
-import ScrambleButton from '../../ui/ScrambleButton/ScrambleButton';
+import { useAuth } from '@/features/auth/context/AuthContext';
+import { useScene } from '@/context/SceneContext';
+import { saveScene, updateScene } from '@/services/sceneApi';
+import ScrambleButton from '@/components/ui/ScrambleButton/ScrambleButton';
 import SaveModal from './SaveModal';
 import UnlockModal from './UnlockModal';
 import AnimationUnlockModal from './AnimationUnlockModal';

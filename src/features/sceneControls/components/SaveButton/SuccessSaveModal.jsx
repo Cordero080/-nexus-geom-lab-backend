@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import ScrambleButton from '../../ui/ScrambleButton/ScrambleButton';
+import ScrambleButton from '@/components/ui/ScrambleButton/ScrambleButton';
 
 export default function SuccessSaveModal({ isOpen, onClose, savedSceneName, savedSceneId }) {
   const navigate = useNavigate();

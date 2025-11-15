@@ -142,8 +142,8 @@ export function useAudioReactive(
     const { bass, mids } = audioData;
 
     // Apply higher thresholds to filter out subtle ambient noise (crickets, etc.)
-    const bassThreshold = 0.55;
-    const midsThreshold = 0.4; // Lowered from 0.5 to be more sensitive
+    const bassThreshold = 0.45; // Lowered from 0.55 for more sensitivity
+    const midsThreshold = 0.35; // Lowered from 0.4 for more sensitivity
 
     const activeBass = bass > bassThreshold ? bass - bassThreshold : 0;
     const activeMids = mids > midsThreshold ? mids - midsThreshold : 0;
