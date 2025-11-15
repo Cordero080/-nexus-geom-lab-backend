@@ -304,14 +304,68 @@ nexus-geom-3D/
 │   ├── App.jsx                      # Main application component
 │   ├── main.jsx                     # React 19.1 entry point
 │   ├── index.css                    # Global styles
-│   ├── 📁 components/my object is reacing to quickly to loew noise
-│   │   ├── 📁 features/             # Feature-specific components
-│   │   │   └── 📁 SaveButton/       # Scene save with unlock modals
+│   ├── 📁 components/
 │   │   ├── 📁 layout/               # App structure (Header, Footer, etc.)
 │   │   ├── 📁 pages/                # Route-level page components
+│   │   │   ├── 📁 HomePage/
+│   │   │   │   ├── HomePage.jsx
+│   │   │   │   ├── HomeIndex.module.scss
+│   │   │   │   └── 📁 components/
+│   │   │   │       ├── BackgroundLayers/
+│   │   │   │       ├── HeroSection/
+│   │   │   │       └── QuantumNav/
+│   │   │   ├── 📁 MyScenesPage/
+│   │   │   │   ├── MyScenesPage.jsx
+│   │   │   │   ├── MyScenesPage.module.scss
+│   │   │   │   ├── MyScenesPage-styles.module.scss
+│   │   │   │   └── 📁 components/
+│   │   │   │       ├── 📁 SceneCard/
+│   │   │   │       │   ├── SceneCard.jsx
+│   │   │   │       │   ├── SceneCard.module.scss
+│   │   │   │       │   └── index.js
+│   │   │   │       └── 📁 QuantumPortalScenes/
+│   │   │   │           ├── QuantumPortalScenes.jsx
+│   │   │   │           ├── QuantumPortalScenes.module.scss
+│   │   │   │           └── index.js
+│   │   │   └── 📁 Showcase/
+│   │   │       ├── ShowcaseGallery.jsx
+│   │   │       ├── ShowcaseGallery.module.scss
+│   │   │       ├── 📁 components/
+│   │   │       │   ├── 📁 ShowcaseViewer/
+│   │   │       │   │   ├── ShowcaseViewer.jsx
+│   │   │       │   │   ├── ShowcaseViewer.module.scss
+│   │   │       │   │   ├── ShowcaseViewer-styles.module.scss
+│   │   │       │   │   ├── index.js
+│   │   │       │   │   ├── 📁 RotatingCube/
+│   │   │       │   │   ├── 📁 SpeedControl/
+│   │   │       │   │   ├── 📁 characters/
+│   │   │       │   │   └── 📁 environments/
+│   │   │       │   ├── 📁 QuantumPortalShowcase/
+│   │   │       │   │   ├── QuantumPortalShowcase.jsx
+│   │   │       │   │   ├── QuantumPortalShowcase.module.scss
+│   │   │       │   │   └── index.js
+│   │   │       │   └── 📁 backgrounds/
+│   │   │       │       ├── AnimatedBackground.jsx
+│   │   │       │       ├── BackgroundCanvas.jsx
+│   │   │       │       ├── BackgroundCanvas.module.scss
+│   │   │       │       └── index.js
+│   │   │       ├── 📁 data/
+│   │   │       │   └── noetechAnima.js
+│   │   │       ├── 📁 models/
+│   │   │       │   └── FBXModel.jsx
+│   │   │       └── 📁 utils/
+│   │   │           └── showcaseHelpers.js
 │   │   ├── 📁 shared/               # Reusable UI components
 │   │   └── 📁 ui/
-│   │       └── 📁 ScrambleButton/   # Text animation effects
+│   │       ├── 📁 ScrambleButton/   # Text animation effects
+│   │       ├── 📁 BeamScanButton/
+│   │       ├── 📁 CustomSelect/
+│   │       ├── 📁 Effects/
+│   │       │   ├── 📁 CustomCursor/
+│   │       │   └── 📁 QuantumCursor/
+│   │       └── 📁 Modals/
+│   │           ├── 📁 SuccessModal/
+│   │           └── 📁 DeleteSuccessModal/
 │   ├── 📁 context/
 │   │   └── SceneContext.jsx         # 3D scene state management
 │   ├── 📁 data/
