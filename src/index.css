@@ -19,7 +19,7 @@
 
 /* Shared UI Elements */
 @import './styles/shared/buttons.css';
-@import './components/ui/InvertedLetterText/invertedLetters.css';
+@import './components/ui/InvertedLetterText/invertedLetters.scss';
 
 /* Page-Specific Components */
 @import './components/pages/HomePage/styles/homepage.css';
