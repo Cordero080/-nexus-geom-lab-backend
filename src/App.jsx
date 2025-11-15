@@ -386,77 +386,34 @@ function GeomLab() {
           </div>
         </div>
       )}
-      // App.jsx says to ThreeScene: Hey kid, here are 21 props I want you to know about. But u know
-      what ain't one.
-      <ThreeScene
-        scale={scale}
-        objectSpeed={objectSpeed}
-        orbSpeed={orbSpeed}
-        metalness={metalness}
-        emissiveIntensity={emissiveIntensity}
-        baseColor={baseColor}
-        wireframeIntensity={wireframeIntensity}
-        hyperframeColor={hyperframeColor}
-        hyperframeLineColor={hyperframeLineColor}
-        cameraView={cameraView}
-        environment={environment}
-        environmentHue={environmentHue}
-        objectCount={objectCount}
-        animationStyle={animationStyle}
-        objectType={objectType}
-        ambientLightColor={ambientLightColor}
-        ambientLightIntensity={ambientLightIntensity}
-        directionalLightColor={directionalLightColor}
-        directionalLightIntensity={directionalLightIntensity}
-        directionalLightX={directionalLightX}
-        directionalLightY={directionalLightY}
-        directionalLightZ={directionalLightZ}
-      />
-      <Controls
-        scale={scale}
-        onScaleChange={setScale}
-        metalness={metalness}
-        onMetalnessChange={setMetalness}
-        emissiveIntensity={emissiveIntensity}
-        onEmissiveIntensityChange={setEmissiveIntensity}
-        baseColor={baseColor}
-        onBaseColorChange={setBaseColor}
-        wireframeIntensity={wireframeIntensity}
-        onWireframeIntensityChange={setWireframeIntensity}
-        hyperframeColor={hyperframeColor}
-        onHyperframeColorChange={setHyperframeColor}
-        hyperframeLineColor={hyperframeLineColor}
-        onHyperframeLineColorChange={setHyperframeLineColor}
-        cameraView={cameraView}
-        onCameraViewChange={setCameraView}
-        environment={environment}
-        onEnvironmentChange={setEnvironment}
-        environmentHue={environmentHue}
-        onEnvironmentHueChange={setEnvironmentHue}
-        objectCount={objectCount}
-        onObjectCountChange={setObjectCount}
-        animationStyle={animationStyle}
-        onAnimationStyleChange={setAnimationStyle}
-        objectType={objectType}
-        onObjectTypeChange={setObjectType}
-        ambientLightColor={ambientLightColor}
-        onAmbientLightColorChange={setAmbientLightColor}
-        ambientLightIntensity={ambientLightIntensity}
-        onAmbientLightIntensityChange={setAmbientLightIntensity}
-        directionalLightColor={directionalLightColor}
-        onDirectionalLightColorChange={setDirectionalLightColor}
-        directionalLightIntensity={directionalLightIntensity}
-        onDirectionalLightIntensityChange={setDirectionalLightIntensity}
-        directionalLightX={directionalLightX}
-        onDirectionalLightXChange={setDirectionalLightX}
-        directionalLightY={directionalLightY}
-        onDirectionalLightYChange={setDirectionalLightY}
-        directionalLightZ={directionalLightZ}
-        onDirectionalLightZChange={setDirectionalLightZ}
-        objectSpeed={objectSpeed}
-        onObjectSpeedChange={setObjectSpeed}
-        orbSpeed={orbSpeed}
-        onOrbSpeedChange={setOrbSpeed}
+      
+      <ThreeScene config={sceneConfig} />
+      <Controls 
+        config={sceneConfig}
+        onChange={{
+          setScale,
+          setMetalness,
+          setEmissiveIntensity,
+          setBaseColor,
+          setWireframeIntensity,
+          setHyperframeColor,
+          setHyperframeLineColor,
+          setCameraView,
+          setEnvironment,
+          setEnvironmentHue,
+          setObjectCount,
+          setAnimationStyle,
+          setObjectType,
+          setAmbientLightColor,
+          setAmbientLightIntensity,
+          setDirectionalLightColor,
+          setDirectionalLightIntensity,
+          setDirectionalLightX,
+          setDirectionalLightY,
+          setDirectionalLightZ,
+          setObjectSpeed,
+          setOrbSpeed,
+        }}
       />
     </>
   );

@@ -36,35 +36,37 @@ import { useAudioAnalyzer } from '../audio/hooks/useAudioAnalyzer';
 import { useAudioReactive } from '../audio/hooks/useAudioReactive';
 import AudioToggle from '../audio/components/AudioToggle';
 
-// ThreeScene: 3D renderer that receives props from App.jsx
-function ThreeScene({
-  // Material props
-  scale,
-  objectSpeed,
-  orbSpeed,
-  metalness,
-  emissiveIntensity,
-  baseColor,
-  wireframeIntensity,
-  // Hyperframe props
-  hyperframeColor,
-  hyperframeLineColor,
-  // Scene behavior props
-  cameraView,
-  environment,
-  environmentHue,
-  objectCount,
-  animationStyle,
-  objectType,
-  // Lighting props
-  ambientLightColor,
-  ambientLightIntensity,
-  directionalLightColor,
-  directionalLightIntensity,
-  directionalLightX,
-  directionalLightY,
-  directionalLightZ,
-}) {
+// ThreeScene: 3D renderer that receives a config object from App.jsx
+function ThreeScene({ config }) {
+  // Destructure all configuration values from the single config object
+  const {
+    // Material props
+    scale,
+    objectSpeed,
+    orbSpeed,
+    metalness,
+    emissiveIntensity,
+    baseColor,
+    wireframeIntensity,
+    // Hyperframe props
+    hyperframeColor,
+    hyperframeLineColor,
+    // Scene behavior props
+    cameraView,
+    environment,
+    environmentHue,
+    objectCount,
+    animationStyle,
+    objectType,
+    // Lighting props
+    ambientLightColor,
+    ambientLightIntensity,
+    directionalLightColor,
+    directionalLightIntensity,
+    directionalLightX,
+    directionalLightY,
+    directionalLightZ,
+  } = config;
   // Three.js object references
   const mountRef = useRef(null);
   const sceneRef = useRef(null);

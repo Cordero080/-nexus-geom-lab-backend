@@ -472,6 +472,35 @@ nexus-geom-3D/
 
 ## 🏗️ Architecture Highlights
 
+### Props Consolidation Pattern
+
+Refactored from massive props drilling to clean object-based API:
+
+**Before:** 42 individual props (21 values + 21 setters)
+```jsx
+<Controls
+  scale={scale}
+  onScaleChange={setScale}
+  metalness={metalness}
+  onMetalnessChange={setMetalness}
+  // ... 38 more props
+/>
+```
+
+**After:** 2 object props
+```jsx
+<Controls 
+  config={sceneConfig}
+  onChange={{ setScale, setMetalness, /* ... */ }}
+/>
+```
+
+**Benefits:**
+- 70% reduction in JSX code (~100 lines → ~30 lines)
+- Easier to extend - add new config in one place
+- Type-safe ready for TypeScript interfaces
+- Cleaner component APIs
+
 ### Custom Hooks System
 
 Refactored monolithic 2,700-line component into modular architecture:
@@ -481,6 +510,7 @@ Refactored monolithic 2,700-line component into modular architecture:
 - `useMaterialUpdates` - Real-time material property changes
 - `useLightingUpdates` - Dynamic lighting control
 - `useAnimationLoop` - 60fps animation orchestration
+- `useSceneState` - Centralized scene state management
 
 ### Advanced Wireframe System
 
@@ -595,6 +625,8 @@ Scene 4+ → Unlock additional animations
 ### Key Achievements
 
 - **60fps 3D rendering** with complex multi-component objects
+- **70% JSX reduction** through props consolidation (~100 lines → ~30 lines)
+- **Object-based props API** replacing 42 individual props with 2 objects
 - **Transform-based + vertex-deformation** animation systems
 - **Contextual UI** that adapts based on scene state
 - **Navigation blocking** to prevent data loss
@@ -604,6 +636,7 @@ Scene 4+ → Unlock additional animations
 - **Advanced lighting system** with ambient/directional controls
 - **Sound effect integration** with unlock progression feedback
 - **Responsive design** optimized for desktop and mobile
+- **Unified architecture** with consistent folder patterns across pages
 
 ---
 

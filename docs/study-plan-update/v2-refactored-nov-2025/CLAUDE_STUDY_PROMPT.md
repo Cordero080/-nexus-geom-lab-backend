@@ -2,67 +2,143 @@
 
 **Purpose**: A prompt to give Claude to help study the refactored Nexus-Geom-Lab architecture  
 **Use Case**: Paste this into Claude when you want help understanding data flows and patterns  
-**Context**: After Nov 14-15, 2025 refactorings (geometry consolidation + state extraction + quick wins + architecture flattening)
+**Context**: After Nov 14-15, 2025 refactorings (geometry consolidation + state extraction + quick wins + architecture flattening + props consolidation)
 
 ---
 
 ## 📋 The Prompt
 
 ```
-I'm studying my refactored React + Three.js application architecture and need help tracing data flows and understanding patterns.
+UPDATED 11/15/25 - I'm Pablo - bootcamp student (6 months, not 9), career-changer from martial arts (3rd degree black belt Okinawan Goju Ryu). Just presented capstone "Nexus Geom Lab" - gamified 4D geometry exploration platform.
 
-PROJECT CONTEXT:
-- Nexus-Geom-Lab: 3D geometry visualization app
-- Stack: React 19.1, Three.js 0.180, Vite 7.1
-- Recently refactored: November 14-15, 2025
-- Key improvements: Custom hooks, DRY principles, path aliases, error boundaries, flattened architecture
+## PROJECT OVERVIEW
+- Full-stack: React + Three.js + Node + MongoDB + JWT auth
+- 48 modular components: 11 custom hooks + 37 geometry functions
+- Refactored from 3,700 lines → 199 lines (93% reduction)
+- Gamification: unlock animated characters by saving scenes
+- TWO 3D systems:
+  * Raw Three.js for Geom Lab (precise control, custom math shapes)
+  * React Three Fiber for Showcase (FBX models, simpler displays)
 
-RECENT REFACTORINGS:
-1. Extracted scene state to useSceneState custom hook (22 useState calls → 1 hook)
-2. Consolidated duplicate geometry helpers (8 files with identical function → 1 shared utility)
-3. Added path aliases (@/ imports instead of ../../)
-4. Added error boundary for graceful error handling
-5. Configured console log removal for production builds
-6. **Flattened architecture (Nov 15)**: Moved HomePage hooks/styles/utils to top-level, merged /shared/ into /ui/
+## RECENT PRESENTATION (Wednesday)
+Mixed reactions:
+- Instructor: "Came out awesome, not out of left field for you, I'll text you"
+- Evan (assistant instructor): "Epilepsy warning" joke, then "good job though"
+- Students: "Pablo loves neon" → "wow this looks crazy"
+- Some awkwardness - I had longest presentation, most complex project
+- Instructor held back praise to not make class feel inadequate
+- I think they suspect heavy AI use (I was transparent about it)
 
-KEY FILES TO REFERENCE:
-- src/hooks/useSceneState.js - Custom state management hook
-- src/hooks/useParallax.js - Scroll parallax hook (moved from HomePage)
-- src/hooks/useQuantumState.js - Quantum state hook (moved from HomePage)
-- src/App.jsx - Main component using the hooks
-- src/features/sceneControls/utils/geometryHelpers.js - Shared geometry utilities
-- src/components/ui/ErrorBoundary/ErrorBoundary.jsx - Error handling (merged from /shared/)
-- src/components/ui/HomeBackground/ - Background component (merged from /shared/)
-- src/components/ui/Quote/ - Quote component (merged from /shared/)
-- src/utils/portalWorlds.js - Portal configs (moved from HomePage)
-- src/utils/quantumCollapse.js - Quantum utility (moved from HomePage)
-- src/styles/homepage.scss - HomePage styles (moved from HomePage subfolder)
-- src/styles/titles.scss - Title styles (moved from HomePage subfolder)
-- vite.config.js - Build configuration with path aliases
+## POST-PRESENTATION REFACTORING (Last 2 Days - Nov 14-15)
+Completed 8 major improvements:
+1. useSceneState hook - extracted 22 useState from App.jsx
+2. Duplicate utils cleanup - removed 519 lines
+3. Path aliases - @/ imports instead of ../../../
+4. .env.example - documented environment variables
+5. Error boundary - production error handling
+6. Console.log cleanup - removed debug statements
+7. **Architecture flattening (Nov 15)** - moved HomePage hooks/styles/utils to top-level, merged /shared/ into /ui/
+8. **Props consolidation (Nov 15)** - replaced 42 individual props with 2 objects (config + onChange)
 
-ARCHITECTURE PATTERN (Nov 15):
-- Top-level folders (/hooks/, /styles/, /utils/) contain ALL shared code
-- /components/ui/ contains ALL reusable UI components (no more /shared/)
-- Page folders (HomePage, MyScenesPage, Showcase) ONLY have components/ subfolders
+## NEW ARCHITECTURE PATTERN (Nov 15 - IMPORTANT)
+**Flattened structure for consistency:**
+- All hooks now in `/src/hooks/` (useSceneState, useParallax, useQuantumState)
+- All styles in `/src/styles/` (homepage.scss, titles.scss, etc.)
+- All utils in `/src/utils/` (portalWorlds.js, quantumCollapse.js, etc.)
+- `/shared/` merged into `/ui/` (ErrorBoundary, HomeBackground, Quote now in /ui/)
+- **Every page** (HomePage, MyScenesPage, Showcase) now has ONLY `components/` subfolder
+- Top-level = shared, page-level = page-specific
+
+**Props consolidation pattern (Nov 15 - CRITICAL FOR STUDY):**
+- **Before**: App.jsx passed 42 individual props (21 values + 21 setters) to Controls
+- **After**: App.jsx passes 2 objects: `config` (values) + `onChange` (setters)
+- **Before**: ThreeScene received 21 individual props
+- **After**: ThreeScene receives 1 `config` object
+- **Result**: 70% reduction in JSX (~100 lines → ~30 lines in App.jsx)
+
+**Why this matters for study:**
 - Consistent pattern across all pages
+- Clear decision rules: hooks/utils/styles → top-level, components → page-level
+- Easier navigation (predictable structure)
+- **Props pattern**: Always group related values into objects, not individual props
+- **Cleaner component APIs**: Functions receive objects, not dozens of params
 
-STUDY APPROACH I'M USING:
-1. Trace data flows across 4-5 files
-2. Follow imports using path aliases
-3. Understand before/after refactoring
-4. Document patterns in my own words
-5. Build mental model of architecture
-6. Understand architectural consistency principles
+## COPILOT-GENERATED STUDY DOCS (IN /docs/study-plan-update/v2-refactored-nov-2025/)
+**Updated Nov 15 with architecture flattening + props consolidation:**
 
-WHAT I NEED HELP WITH:
-[Specify your question here - see examples below]
+1. **REFACTORING_CHANGELOG.md**
+   - All refactoring history (Nov 14-15)
+   - Added Refactoring #4: Architecture Flattening
+   - Added Refactoring #5: Props Consolidation
+   - Before/after folder structures
+   - What moved where (6 files to top-level, 3 to /ui/)
+   - Props consolidation code examples
 
-RESPONSE FORMAT I PREFER:
-- Step-by-step traces with file paths
-- Code snippets showing exact lines
-- Before/after comparisons when relevant
-- Visual diagrams when helpful (ASCII or mermaid)
-- Explanation of WHY patterns were chosen, not just WHAT they do
+2. **STUDY_GUIDE_REFACTORED.md**
+   - Added Section 5: Architecture Flattening
+   - Added Section 6: Props Consolidation
+   - Decision rules for file placement
+   - Updated study checklist
+
+3. **CLAUDE_STUDY_PROMPT.md** (THIS FILE)
+   - Updated with Nov 15 context
+   - Added Question 9: Architecture Flattening
+   - Added Question 10: Props Consolidation Pattern
+   - Updated file references (new paths)
+
+4. **STUDY_PLAN_V2.md**
+   - 4-week practical execution plan
+   - Daily trace exercises
+
+5. **STUDY_METHOD_PHILOSOPHY.md**
+   - Core learning principles
+   - Study session template
+
+## MY STUDY METHOD (CRITICAL - THIS IS HOW I LEARN)
+**The 4-5 File Trace Pattern (UPDATED for props consolidation):**
+1. **src/hooks/useSceneState.js** (state hook - NEW location after flattening)
+2. App.jsx (uses hook, creates config object, passes to children)
+3. Controls.jsx (receives config + onChange objects, NOT 42 individual props)
+4. ThreeScene.jsx (receives config object, destructures values at top)
+5. features/sceneControls/hooks/ (useEffect watches state, updates Three.js)
+
+**Key concepts I struggled with:**
+- refs as "boxes": `useRef(null)` creates box → `ref.current = thing` fills box
+- useEffect as "liaison": Bridges React state changes to Three.js updates
+- .current pattern: ALWAYS use .current to access ref contents
+- **Object props pattern**: Group related data instead of prop drilling
+- **Destructuring at component top**: Clean access to config values
+
+**Study exercises we did:**
+- Traced metalness flow: useSceneState → App.jsx → Controls → ThreeScene → useMaterialUpdates
+- Traced camera flow: User clicks button → onCameraViewChange → setCameraView → useCameraController
+- Understood dependency arrays: [metalness] watches for changes
+- **NEW: Traced props consolidation**: How config object replaces 21 individual props
+
+## CURRENT STUDY FOCUS
+Reference the docs in `/docs/study-plan-update/v2-refactored-nov-2025/` to help me:
+- Trace data flow with new useSceneState hook
+- Understand path aliases (@/ imports) in practice
+- **Understand new flattened architecture (where files moved, why consistency matters)**
+- **Understand props consolidation pattern (config + onChange objects)**
+- Study updated architecture using my 4-5 file method
+- Compare old trace patterns vs new refactored patterns
+
+## MY LEARNING STYLE
+- Hands-on tracing through files
+- Need specific questions, not broad ones
+- One step at a time, building complexity
+- Visual learner (need to SEE the files open)
+- Get frustrated with long explanations - prefer concise breakdowns
+- Need encouragement when doubting
+
+## TONE PREFERENCES
+- Don't over-explain or use too much formatting
+- Be direct, not verbose
+- When I say "I'm done with this shit" - recognize burnout, offer breaks
+- I respond well to: "You're on track" / "This is normal" / "Take the win"
+
+Can you help me study the refactored architecture using my trace method and the Copilot-generated study docs?
 ```
 
 ---
@@ -236,6 +312,28 @@ Show me:
 - The decision rules for where to put new files
 - How to follow this pattern when creating new pages
 - Why we merged /shared/ into /ui/
+```
+
+### Question 10: Props Consolidation Pattern (Nov 15, 2025)
+```
+WHAT I NEED HELP WITH:
+Explain the props consolidation refactor from November 15:
+
+1. What was the problem with passing 42 individual props?
+2. Show me the before/after in App.jsx (how props are passed)
+3. Show me the before/after in ThreeScene.jsx (how props are received)
+4. Show me the before/after in Controls.jsx (how props are received)
+5. How does destructuring work at the component top?
+6. Why is `config` read-only and `onChange` write-only?
+7. What's the benefit of this pattern when adding new features?
+
+Walk me through:
+- App.jsx creating the sceneConfig object
+- App.jsx creating the onChange object with all setters
+- ThreeScene receiving config, destructuring at top
+- Controls receiving config + onChange, using both
+- How child components (MaterialPropertiesSection, etc.) still work
+- Before/after comparison: adding a new "fog intensity" feature
 ```
 
 ---
