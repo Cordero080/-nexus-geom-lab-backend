@@ -9,7 +9,7 @@ import ScrambleButton from '../../ui/ScrambleButton/ScrambleButton';
 import BeamScanButton from '../../ui/BeamScanButton/BeamScanButton';
 import { DeleteSuccessModal } from '../../ui/Modals';
 import QuantumNav from '../HomePage/components/QuantumNav';
-import HomeBackground from '../../shared/HomeBackground/HomeBackground';
+import HomeBackground from '../../ui/HomeBackground/HomeBackground';
 import QuantumPortalShowcase from '../Showcase/components/QuantumPortalShowcase';
 import { quantumCollapse } from '../../../utils/coreHelpers';
 import '../../../styles/quantumTitles.css';

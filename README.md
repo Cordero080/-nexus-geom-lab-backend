@@ -305,15 +305,22 @@ nexus-geom-3D/
 │   ├── main.jsx                     # React 19.1 entry point
 │   ├── index.css                    # Global styles
 │   ├── 📁 components/
-│   │   ├── 📁 layout/               # App structure (Header, Footer, etc.)
+│   │   ├── 📁 layout/               # App structure (NavBar, etc.)
 │   │   ├── 📁 pages/                # Route-level page components
 │   │   │   ├── 📁 HomePage/
 │   │   │   │   ├── HomePage.jsx
 │   │   │   │   ├── HomeIndex.module.scss
 │   │   │   │   └── 📁 components/
-│   │   │   │       ├── BackgroundLayers/
+│   │   │   │       ├── BackgroundLayers.jsx
+│   │   │   │       ├── Footer/
 │   │   │   │       ├── HeroSection/
-│   │   │   │       └── QuantumNav/
+│   │   │   │       ├── HessianPolychoronAnimation.jsx
+│   │   │   │       ├── ProgressBar.jsx
+│   │   │   │       ├── QuantumManifoldAnimation.jsx
+│   │   │   │       ├── QuantumNav.jsx
+│   │   │   │       ├── QuantumPortal/
+│   │   │   │       ├── Scene.jsx
+│   │   │   │       └── ScrambleOnHover.jsx
 │   │   │   ├── 📁 MyScenesPage/
 │   │   │   │   ├── MyScenesPage.jsx
 │   │   │   │   ├── MyScenesPage.module.scss
@@ -355,17 +362,20 @@ nexus-geom-3D/
 │   │   │       │   └── FBXModel.jsx
 │   │   │       └── 📁 utils/
 │   │   │           └── showcaseHelpers.js
-│   │   ├── 📁 shared/               # Reusable UI components
-│   │   └── 📁 ui/
-│   │       ├── 📁 ScrambleButton/   # Text animation effects
+│   │   └── 📁 ui/                   # Reusable UI components
 │   │       ├── 📁 BeamScanButton/
 │   │       ├── 📁 CustomSelect/
-│   │       ├── 📁 Effects/
-│   │       │   ├── 📁 CustomCursor/
-│   │       │   └── 📁 QuantumCursor/
-│   │       └── 📁 Modals/
-│   │           ├── 📁 SuccessModal/
-│   │           └── 📁 DeleteSuccessModal/
+│   │       ├── 📁 DeleteSuccessModal/
+│   │       ├── 📁 ErrorBoundary/
+│   │       ├── 📁 HomeBackground/
+│   │       ├── 📁 InvertedLetterText/
+│   │       ├── 📁 Quote/
+│   │       ├── 📁 ScrambleButton/   # Text animation effects
+│   │       ├── 📁 ScrambleLink/
+│   │       ├── 📁 SuccessModal/
+│   │       └── 📁 Effects/
+│   │           ├── 📁 CustomCursor/
+│   │           └── 📁 QuantumCursor/
 │   ├── 📁 context/
 │   │   └── SceneContext.jsx         # 3D scene state management
 │   ├── 📁 data/
@@ -405,9 +415,15 @@ nexus-geom-3D/
 │   │       │   ├── geometryCreation.js
 │   │       │   └── spectralOrbs.js
 │   │       └── 📁 utils/                    # Scene utilities
+│   ├── 📁 hooks/
+│   │   ├── useParallax.js                   # Scroll parallax effects
+│   │   ├── useQuantumState.js               # Quantum state management
+│   │   └── useSceneState.js                 # Scene state hooks
 │   ├── 📁 services/
 │   │   └── sceneApi.jsx                     # Scene CRUD API
 │   ├── 📁 styles/
+│   │   ├── homepage.scss                    # HomePage styles
+│   │   ├── titles.scss                      # Title animations
 │   │   ├── 📁 components/                   # Component-specific styles
 │   │   ├── 📁 core/                         # Core style system
 │   │   ├── 📁 layout/                       # Layout styles
@@ -416,9 +432,10 @@ nexus-geom-3D/
 │   │   ├── quantumBackground.css
 │   │   └── quantumTitles.css
 │   └── 📁 utils/
-│       ├── 📁 handlers/                     # Event handlers
 │       ├── coreHelpers.js
 │       ├── geometryHelpers.js               # 3D math utilities
+│       ├── portalWorlds.js                  # Portal world configs
+│       ├── quantumCollapse.js               # Quantum collapse utility
 │       ├── textScrambler.js                 # Code symbol effects
 │       ├── textScrambler.jsx                # Katakana effects
 │       └── threeConstants.js                # Three.js config

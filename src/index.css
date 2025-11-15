@@ -22,5 +22,5 @@
 @import './components/ui/InvertedLetterText/invertedLetters.scss';
 
 /* Page-Specific Components */
-@import './components/pages/HomePage/styles/homepage.scss';
-@import './components/pages/HomePage/styles/titles.scss';
+@import './styles/homepage.scss';
+@import './styles/titles.scss';

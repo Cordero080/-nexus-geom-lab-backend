@@ -1,5 +1,5 @@
 import { jest } from '@jest/globals';
-import quantumCollapse from '../components/pages/HomePage/utils/quantumCollapse';
+import quantumCollapse from './quantumCollapse';
 
 describe('quantumCollapse', () => {
   it('should return a random element from the array', () => {

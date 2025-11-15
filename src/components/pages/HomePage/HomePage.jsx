@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 
 // Components
-import Quote from '../../shared/Quote/Quote';
+import Quote from '../../ui/Quote/Quote';
 import ProgressBar from './components/ProgressBar';
 import Scene from './components/Scene';
 import ScrambleOnHover from './components/ScrambleOnHover';
@@ -14,12 +14,12 @@ import QuantumManifoldAnimation from './components/QuantumManifoldAnimation';
 import styles from './HomeIndex.module.scss';
 
 // Utilities
-import quantumCollapse from './utils/quantumCollapse';
+import quantumCollapse from '@/utils/quantumCollapse';
 import { portalWorlds, glyphSets } from '../../../data/portalWorlds';
 
 // Custom Hooks
-import useQuantumState from './hooks/useQuantumState';
-import useParallax from './hooks/useParallax';
+import useQuantumState from '@/hooks/useQuantumState';
+import useParallax from '@/hooks/useParallax';
 
 // External
 import BeamScanButton from '../../ui/BeamScanButton/BeamScanButton';

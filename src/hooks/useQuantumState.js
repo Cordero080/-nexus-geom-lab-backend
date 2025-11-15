@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import quantumCollapse from '../utils/quantumCollapse';
-import { portalWorlds, glyphSets } from '../../../../data/portalWorlds';
+import { portalWorlds, glyphSets } from '../data/portalWorlds';
 
 /**
  * Custom hook for managing quantum state (portal colors and glyphs)
