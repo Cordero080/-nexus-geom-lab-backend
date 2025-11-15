@@ -1,0 +1,19 @@
+/**
+ * She-Tech Environment Styles
+ * Cyberpunk fantasy horizon background
+ */
+
+.sheTechBackground {
+  /* Cyberpunk gradient - glowing horizon effect */
+  background: radial-gradient(
+    ellipse at bottom,
+    #ad0266 0%,
+    #00ffff 15%,
+    #8a2be2 30%,
+    #ff1493 45%,
+    #4b0082 60%,
+    #3d0052 75%,
+    #1b0028 90%,
+    #0a0014 100%
+  );
+}

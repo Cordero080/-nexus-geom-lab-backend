@@ -1,7 +1,7 @@
 .cursor {
   position: fixed;
-  width: 24px;
-  height: 24px;
+  width: 20px;
+  height: 20px;
   border-radius: 50%;
   pointer-events: none !important;
   z-index: 99999;
@@ -12,8 +12,8 @@
 /* Global style for cursor ID to ensure it works with JavaScript selection */
 :global(#cursor) {
   position: fixed;
-  width: 24px;
-  height: 24px;
+  width: 20px;
+  height: 20px;
   border-radius: 50%;
   pointer-events: none !important;
   z-index: 99999;
@@ -23,8 +23,8 @@
 
 .gravityField {
   position: fixed;
-  width: 180px;
-  height: 180px;
+  width: 153px;
+  height: 153px;
   border-radius: 50%;
   pointer-events: none;
   z-index: 99998;
@@ -35,8 +35,8 @@
 
 :global(#gravity-field) {
   position: fixed;
-  width: 180px;
-  height: 180px;
+  width: 153px;
+  height: 153px;
   border-radius: 50%;
   pointer-events: none;
   z-index: 99998;

@@ -277,7 +277,6 @@
   font-family: 'Orbitron', monospace;
   opacity: 0.9;
   transition: opacity 0.3s ease;
-  text-shadow: 0 0 20px rgba(0, 212, 255, 0.3);
 }
 
 .my-scenes-page__empty p {
@@ -387,7 +386,7 @@
 }
 
 .create-scene-card:hover {
-  transform: scale(0.8) translateY(-8px);
+  transform: scale(0.8) translateY(-4px);
 }
 
 .create-scene-card:hover::after {

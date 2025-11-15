@@ -6,7 +6,7 @@ import { useAuth } from '../../../features/auth/context/AuthContext';
 import RotatingCube from './ShowcaseViewer/RotatingCube/RotatingCube';
 import ShowcaseViewer from './ShowcaseViewer/ShowcaseViewer';
 import QuantumPortalShowcase from './QuantumPortalShowcase';
-import { mockAnimations } from './data/mockAnimations';
+import { noetechAnima } from './data/noetechAnima';
 import { portalWorlds, glyphSets } from '../../../data/portalWorlds';
 import { quantumCollapse, getCardPosition } from './utils/showcaseHelpers';
 import './ShowcaseGallery.css';
@@ -294,12 +294,12 @@ export default function ShowcaseGallery() {
   }, []);
 
   // Preload first 3D model immediately to avoid blank card on initial load
-  // Only preloads mockAnimations[0] initially - others load on-demand - tweak to preload more models by editing firstModel selection
+  // Only preloads noetechAnima[0] initially - others load on-demand - tweak to preload more models by editing firstModel selection
   useEffect(() => {
     let isMounted = true;
     const loader = new FBXLoader();
     // Only preload the first model to avoid initial freeze
-    const firstModel = mockAnimations[0];
+    const firstModel = noetechAnima[0];
 
     if (firstModel) {
       loader.load(
@@ -327,7 +327,7 @@ export default function ShowcaseGallery() {
     }
 
     setLoadingModels((prev) => new Set(prev).add(animationId));
-    const animation = mockAnimations.find((a) => a.id === animationId);
+    const animation = noetechAnima.find((a) => a.id === animationId);
 
     if (!animation) return;
 
@@ -497,7 +497,7 @@ export default function ShowcaseGallery() {
         </header>
 
         {/* Parallax Scenes - Only show default animations in gallery */}
-        {mockAnimations
+        {noetechAnima
           .filter((animation) => animation.isDefaultAnimation)
           .map((animation, index) => {
             const position = getCardPosition(index);

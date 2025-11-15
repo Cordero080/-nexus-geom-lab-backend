@@ -5,9 +5,10 @@ import RotatingCube from './RotatingCube/RotatingCube';
 import ScrambleButton from '../../../ui/ScrambleButton/ScrambleButton';
 import SpeedControl from './SpeedControl/SpeedControl';
 import { useAuth } from '../../../../features/auth/context/AuthContext';
-import { mockAnimations } from '../data/mockAnimations';
+import { noetechAnima } from '../data/noetechAnima';
 import IcarusEnvironment from './characters/Icarus/IcarusEnvironment';
 import NexusEnvironment from './characters/Nexus/NexusEnvironment';
+import SheTechEnvironment from './environments/SheTechEnvironment';
 import styles from './ShowcaseViewer.module.scss';
 import sharedStyles from '@/styles/shared.module.scss';
 
@@ -55,7 +56,7 @@ function ShowcaseViewer({ animation, onClose }) {
   const isNoetechUnlocked = user?.unlockedNoetechs?.includes(currentAnimation.noetechKey);
 
   // Get all animations for this Noetech that are unlocked
-  const availableAnimations = mockAnimations.filter((anim) => {
+  const availableAnimations = noetechAnima.filter((anim) => {
     if (anim.noetechKey !== currentAnimation.noetechKey) return false;
 
     // Default animation is available if Noetech is unlocked
@@ -69,7 +70,7 @@ function ShowcaseViewer({ animation, onClose }) {
   const showAnimationSwitcher = availableAnimations.length > 1;
 
   // CHARACTER NAVIGATION: Get all unlocked characters (Noetechs)
-  const allUnlockedCharacters = mockAnimations.filter((anim) => {
+  const allUnlockedCharacters = noetechAnima.filter((anim) => {
     if (!anim.isDefaultAnimation) return false;
     return user?.unlockedNoetechs?.includes(anim.noetechKey);
   });
@@ -207,6 +208,13 @@ function ShowcaseViewer({ animation, onClose }) {
               {currentAnimation?.id === 3 && (
                 <Suspense fallback={null}>
                   <NexusEnvironment />
+                </Suspense>
+              )}
+
+              {/* Render She-Tech cyberpunk fantasy horizon background */}
+              {currentAnimation?.id === 5 && (
+                <Suspense fallback={null}>
+                  <SheTechEnvironment />
                 </Suspense>
               )}
 

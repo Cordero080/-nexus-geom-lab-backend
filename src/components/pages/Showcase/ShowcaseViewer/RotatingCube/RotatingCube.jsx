@@ -6,6 +6,7 @@ import HolographicCube from './components/HolographicCube';
 import TesseractGeometry from './components/TesseractGeometry';
 import NexusCube from '../characters/Nexus/NexusCube';
 import CompoundTesseractGeometry from '../characters/Vectra/CompoundTesseractGeometry';
+import SheTechCube from '../characters/SheTech/SheTechCube';
 import FloatingOrbs from './components/FloatingOrbs';
 import HolographicPanels from './components/HolographicPanels';
 import GlitchBurst from '../characters/Icarus/GlitchBurst';
@@ -165,8 +166,8 @@ export default function RotatingCube({
               : 1.0
       }
     >
-      {/* Holographic Cube Layers */}
-      <HolographicCube size={size} />
+      {/* Holographic Cube Layers - NOT for She-Tech */}
+      {animationId !== 5 && <HolographicCube size={size} />}
 
       {/* Basic Tesseract - For Icarus only */}
       {(animationId === 1 || animationId === 4) && <TesseractGeometry size={size} />}
@@ -176,6 +177,9 @@ export default function RotatingCube({
 
       {/* Compound Tesseract - Only for Vectra */}
       {animationId === 2 && <CompoundTesseractGeometry size={size} />}
+
+      {/* SheTechCube - Wide rectangular container for She-Tech */}
+      {animationId === 5 && <SheTechCube size={size} />}
 
       {/* Holographic Panels */}
       <HolographicPanels size={size} />
