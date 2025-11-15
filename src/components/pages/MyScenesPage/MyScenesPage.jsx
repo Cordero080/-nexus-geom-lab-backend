@@ -15,7 +15,7 @@ import { quantumCollapse } from '../../../utils/coreHelpers';
 import './MyScenesPage.css';
 import styles from './MyScenesPage.module.scss';
 import sharedStyles from '../../../styles/shared.module.scss';
-import '../../layout/NavBar/nav.css';
+import '../../layout/NavBar/nav.scss';
 import { GEOM_LAB_LINK_TEXT, SHOWCASE_LINK_TEXT } from '../../layout/NavBar/navLabels';
 import homeStyles from '../HomePage/HomeIndex.module.scss';
 

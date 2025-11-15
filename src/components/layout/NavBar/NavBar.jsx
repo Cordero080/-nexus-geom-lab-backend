@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import './nav.css';
+import './nav.scss';
 import sharedStyles from '../../../styles/shared.module.scss';
 import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../../../features/auth/context/AuthContext';

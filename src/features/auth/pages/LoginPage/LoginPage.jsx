@@ -4,7 +4,7 @@ import { useAuth } from '../../context/AuthContext';
 import BeamScanButton from '../../../../components/ui/BeamScanButton/BeamScanButton';
 import { quantumCollapse } from '../../../../utils/coreHelpers';
 import './LoginPage.css';
-import '../../../../components/layout/NavBar/nav.css';
+import '../../../../components/layout/NavBar/nav.scss';
 import homeStyles from '../../../../components/pages/HomePage/HomeIndex.module.scss';
 
 // Portal worlds system (matching MyScenesPage/Showcase)
