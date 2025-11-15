@@ -9,9 +9,9 @@
 // ⬇️ WAITING: For backend to process and respond
 // ⬇️ RECEIVES: Response from backend
 
-const API_BASE_URL = import.meta.env.DEV
-  ? ''
-  : import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000';
+// In development: use empty string (Vite proxy forwards /api to backend)
+// In production: MUST set VITE_API_BASE_URL environment variable in Vercel
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || '';
 // import.meta.env.VITE_API_BASE_URL = URL from .env file in production
 // this is where the frontend knows where to send requests
 

@@ -1,9 +1,9 @@
 // Authentication API service
 // Handles user authentication operations: signup, login, and fetching current user
 
-const API_BASE_URL = import.meta.env.DEV
-  ? ''
-  : import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000';
+// In development: use empty string (Vite proxy forwards /api to backend)
+// In production: MUST set VITE_API_BASE_URL environment variable in Vercel
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || '';
 
 /**
  * Sign up a new user
