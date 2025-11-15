@@ -3,7 +3,7 @@ import { useNavigate, Link, useLocation } from 'react-router-dom';
 import { useScene } from '../../../context/SceneContext';
 import { useAuth } from '../../../features/auth/context/AuthContext';
 import { getMyScenes } from '../../../services/sceneApi'; // Import API function
-import SceneCard from './SceneCard.jsx';
+import SceneCard from './components/SceneCard';
 import CustomSelect from '../../ui/CustomSelect/CustomSelect';
 import ScrambleButton from '../../ui/ScrambleButton/ScrambleButton';
 import BeamScanButton from '../../ui/BeamScanButton/BeamScanButton';
@@ -12,7 +12,7 @@ import QuantumNav from '../HomePage/components/QuantumNav';
 import HomeBackground from '../../shared/HomeBackground/HomeBackground';
 import QuantumPortalShowcase from '../Showcase/QuantumPortalShowcase';
 import { quantumCollapse } from '../../../utils/coreHelpers';
-import './MyScenesPage.css';
+import './MyScenesPage-styles.module.scss';
 import styles from './MyScenesPage.module.scss';
 import sharedStyles from '../../../styles/shared.module.scss';
 import '../../layout/NavBar/nav.scss';
