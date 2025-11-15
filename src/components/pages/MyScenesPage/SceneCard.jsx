@@ -240,8 +240,8 @@ export default function SceneCard({
 
           {/* Delete Button */}
           {showDeleteButton && (
-            <ScrambleButton variant="danger" onClick={() => onDelete?.(scene)}>
-              Delete
+            <ScrambleButton variant="danger" onClick={() => onDelete?.(scene)} className="delete-btn">
+              X
             </ScrambleButton>
           )}
         </div>

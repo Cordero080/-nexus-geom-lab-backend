@@ -568,7 +568,11 @@ export default function MyScenesPage() {
         {/* Back to Lab Button - Below Scene Cards */}
         {!loading && sortedScenes.length > 0 && (
           <div className={styles.backToLabButtonWrapper}>
-            <BeamScanButton onClick={() => navigate('/geom-lab')} label="BACK TO LAB" />
+            <BeamScanButton 
+              onClick={() => navigate('/geom-lab')} 
+              label="BACK TO LAB"
+              className="enter-geom-lab-hero-btn"
+            />
           </div>
         )}
 
