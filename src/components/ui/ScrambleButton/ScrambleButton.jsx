@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { getScrambledText, scrambleText } from '../../../utils/textScrambler';
+import { getScrambledText, scrambleText } from '../ScrambleLink/textScrambler';
 import {
   createMouseMoveHandler,
   createClickHandler,

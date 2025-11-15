@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import ScrambleLink from '../../../ui/ScrambleLink/ScrambleLink';
 import { GEOM_LAB_LINK_TEXT, SHOWCASE_LINK_TEXT } from '../../../layout/NavBar/navLabels';
 
 /**
@@ -59,24 +60,24 @@ export default function QuantumNav({
         {isAuthenticated && (
           <>
             {currentPage !== 'home' && (
-              <Link to="/" className="nav-link nav-link--home" data-dimension="0">
+              <ScrambleLink to="/" className="nav-link nav-link--home" data-dimension="0">
                 // HOME
-              </Link>
+              </ScrambleLink>
             )}
             {currentPage !== 'scenes' && (
-              <Link to="/scenes" className="nav-link" data-dimension="1">
+              <ScrambleLink to="/scenes" className="nav-link" data-dimension="1">
                 // SCENES
-              </Link>
+              </ScrambleLink>
             )}
             {currentPage !== 'showcase' && (
-              <Link to="/showcase" className="nav-link" data-dimension="2">
+              <ScrambleLink to="/showcase" className="nav-link" data-dimension="2">
                 {SHOWCASE_LINK_TEXT}
-              </Link>
+              </ScrambleLink>
             )}
             {currentPage !== 'geom-lab' && (
-              <Link to="/geom-lab" className="nav-link" data-dimension="3">
+              <ScrambleLink to="/geom-lab" className="nav-link" data-dimension="3">
                 {GEOM_LAB_LINK_TEXT}
-              </Link>
+              </ScrambleLink>
             )}
             <div className="nav-terminal">
               <button onClick={logout} className="terminal-cursor">

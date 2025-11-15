@@ -1,4 +1,25 @@
-/* HomeIndex.module.scss */
+/* ============================================
+   HomePage Module Styles
+   
+   This file contains ALL HomePage-specific styles:
+   - CSS Modules (scoped): Background layers, parallax, scene elements
+   - Global styles (in :global blocks): Navigation, animations, quantum effects
+   
+   Structure:
+   1. MODULE-SCOPED CLASSES (lines 15-450)
+   2. ANIMATIONS (lines 450-545)  
+   3. GLOBAL: Title animations (lines 545-642)
+   4. GLOBAL: Navigation & UI components (lines 642-end)
+   
+   Note: Global styles are in :global{} to avoid CSS Modules hashing
+   while keeping load order guarantees with the component.
+   ============================================ */
+
+/* ===================================
+   SECTION 1: MODULE-SCOPED CLASSES
+   Used via: styles.className in components
+   =================================== */
+
 .portalContainer {
   /* Establish new stacking context */
   isolation: isolate;
@@ -13,7 +34,8 @@
   }
 }
 
-/* Base Dark Layer (z-index: -4) */
+/* --- Background Layers (z-indexed, fixed positioning) --- */
+
 .baseDark {
   position: fixed;
   inset: 0;
@@ -73,7 +95,8 @@
   pointer-events: none;
 }
 
-/* Scene Backgrounds (behind content) - CLEAN clip paths that scroll */
+/* --- Scene Backgrounds (clip-path variations) --- */
+
 .sceneBackground {
   position: absolute;
   inset: 0;
@@ -103,7 +126,7 @@
   );
 }
 
-/* Scene-specific clip paths create "windows" to see portal colors */
+/* Scene-specific clip paths */
 .bgReality {
   @extend .sceneBackground;
   clip-path: polygon(0 0, 100% 0, 100% 80%, 60% 100%, 0 80%);
@@ -124,7 +147,8 @@
   clip-path: polygon(0 0, 100% 0, 100% 100%, 20% 90%, 0 100%);
 }
 
-/* Dark top veil - ensures dark atmosphere at top */
+/* --- Layout & Positioning --- */
+
 .darkTopVeil {
   position: fixed;
   inset: 0;
@@ -334,6 +358,8 @@
   }
 }
 
+/* --- Parallax Layers --- */
+
 /* Parallax Layers */
 .parallaxBgLayer,
 .parallaxFgLayer {
@@ -383,6 +409,8 @@
   pointer-events: none !important;
   z-index: 1;
 }
+
+/* --- Unused Module Classes (candidates for removal) --- */
 
 /* Floating Code */
 .floatingCode {
@@ -449,6 +477,11 @@
   padding: 24px 180px !important;
   letter-spacing: 0.05em !important;
 }
+
+/* ===================================
+   SECTION 2: ANIMATIONS
+   Keyframes used by module classes
+   =================================== */
 
 /* HomePage Title Entrance Animations */
 @keyframes particleArrivalTopLeft {
@@ -540,6 +573,11 @@
     transform: translateY(-3px) translateX(-1.5px);
   }
 }
+
+/* ===================================
+   SECTION 3: GLOBAL STYLES - Title Animations
+   Applied to .title-word elements in HomePage
+   =================================== */
 
 /* HomePage-specific title word animations */
 :global {
@@ -636,6 +674,11 @@ input,
   pointer-events: none !important;
   z-index: 99999;
 }
+
+/* ===================================
+   SECTION 4: GLOBAL STYLES - HomePage Components
+   Navigation, scenes, UI elements, effects
+   =================================== */
 
 /* ===== GLOBAL STYLES FROM Home.css AND home.css ===== */
 
@@ -1669,3 +1712,21 @@ input,
     }
   }
 }
+
+/* ===================================
+   END OF FILE - 1715 lines
+   
+   Module Classes Actually Used (10):
+   - parallaxContainer, bgReality, quantumTitle
+   - baseDark, quantumPortalLayer, quantumVeil, darkTopVeil
+   - parallaxBgLayer, parallaxFgLayer
+   
+   Unused Module Classes (can be removed):
+   - portalContainer, sceneBackground, bgProbability, bgEntanglement
+   - bgSuperposition, pageTop, sceneContent, sceneTitle, sceneDescription
+   - parallaxHolo, scrambleTitle, quantumScene, floatingCode
+   - quantumConsole, consoleLine, homeEnterGeomLabBtn, scrambleButton
+   - quantum-title (duplicate), dimensionalRift
+   
+   Total: ~23 unused module classes + their styles
+   =================================== */
