@@ -48,7 +48,7 @@
 
 /* Parallax showcase container with 3D support */
 .parallax-showcase-container {
-  width: 100vw;
+  width: 100%;
   height: 100vh;
   overflow-x: hidden; /* Prevent horizontal scrollbar */
   overflow-y: scroll;
@@ -96,7 +96,7 @@
   position: fixed;
   top: 0;
   left: 0;
-  width: 100vw;
+  width: 100%;
   height: 40vh;
   z-index: -1;
   pointer-events: none;
@@ -120,7 +120,7 @@
   position: fixed;
   top: 0;
   left: 0;
-  width: 100vw;
+  width: 100%;
   height: 100vh;
   min-height: 100vh;
   pointer-events: none;
@@ -142,7 +142,7 @@
   position: absolute;
   top: 0;
   left: 0;
-  width: 100vw;
+  width: 100%;
   height: 100%;
   z-index: 0;
   pointer-events: none;
@@ -416,7 +416,7 @@
 }
 
 .parallax-scene {
-  width: 100vw;
+  width: 100%;
   max-width: 100%; /* Prevent content from exceeding viewport */
   height: 100vh;
   display: flex;
@@ -705,7 +705,7 @@
 
 /* Specific heights for all models - consistent sizing */
 .parallax-model-card-1 {
-  height: 580px;
+  height: 400px;
   width: 400px;
 }
 
@@ -718,7 +718,7 @@
 
 .parallax-model-card-4,
 .parallax-model-card-5 {
-  height: 580px;
+  height: 400px;
   width: 400px;
 }
 

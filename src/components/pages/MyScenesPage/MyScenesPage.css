@@ -4,7 +4,7 @@
 
 .my-scenes-page {
   min-height: 100vh;
-  width: 100vw;
+  width: 100%;
   max-width: 100%;
   padding: 140px 60px 60px; /* Increased horizontal padding from 24px to 60px, bottom from 40px to 60px */
   background: transparent; /* Remove background to show clip-path scene background */
