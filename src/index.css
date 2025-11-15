@@ -18,8 +18,8 @@
 @import './styles/layout/navigation.css';
 
 /* Shared UI Elements */
-@import './styles/shared/titles.css';
 @import './styles/shared/buttons.css';
 
 /* Page-Specific Components */
-@import './styles/components/homepage.css';
+@import './components/pages/HomePage/styles/homepage.css';
+@import './components/pages/HomePage/styles/titles.css';

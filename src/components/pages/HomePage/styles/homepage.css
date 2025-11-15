@@ -4,7 +4,7 @@
 
 /* Subtitle and Coordinates */
 .quantum-subtitle {
-  font-size: 12px;
+  font-size: 11px;
   color: #00ffff;
   margin-bottom: calc(40px - 3vh);
   margin-top: -25px;
@@ -19,7 +19,7 @@
   font-family: 'JetBrains Mono', monospace;
   letter-spacing: 1px;
   opacity: 0.6;
-  margin-bottom: 10px;
+  margin-bottom: 1px;
   margin-top: -10px;
   display: inline-block;
   transform: translateY(15x);

@@ -129,11 +129,9 @@ export default function HomePage() {
             </div>
             <div className="terminal-header">
               <span className="coordinates">φ-SPACE_MANIFOLD: 1.618033988749</span>
-
               {/* φ (Phi): The golden ratio constant (1.618...)
 SPACE: Mathematical/geometric term for a set of points with structure
 MANIFOLD: A mathematical surface or multi-dimensional space that can be curved or complex (like tesseracts constructed in Geom Lab - they're 4D manifolds projected into 3D) In plain English: "A dimension where everything follows the golden ratio's harmonic proportions" */}
-
               <span className="timestamp" id="timestamp"></span>
             </div>
             <div className="title-wrapper">
