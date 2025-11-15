@@ -35,15 +35,15 @@ $font-code: 'Roboto Mono', 'JetBrains Mono', monospace;
 .beamScanBtn {
   position: relative;
   display: inline-block;
-  padding: 12.39px 74.83px;
+  padding: 12.39px 52.38px; /* Reduced from 74.83px by 30% */
   font-size: 14.08px;
   font-weight: 700;
   color: $text-color;
   background: $primary-gradient;
-  border-right: none;
-  border-bottom: 8px solid rgba(0, 0, 0, 0.6);
+  border-left: none;
   border-top: 2px solid rgba(255, 255, 255, 0.2);
-  border-left: 2px solid rgba(255, 255, 255, 0.2);
+  border-right: 3px solid rgba(0, 0, 0, 0.6); /* Right side depth - reduced */
+  border-bottom: 6px solid rgba(0, 0, 0, 0.6); /* Bottom depth */
   border-radius: 0 !important;
   box-shadow:
     0 2px 16px $glow-color,

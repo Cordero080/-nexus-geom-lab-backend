@@ -128,7 +128,7 @@ export default function HomePage() {
               <div className="particle"></div>
             </div>
             <div className="terminal-header">
-              <span className="coordinates">φ-SPACE_MANIFOLD: 1.618033988749</span>
+              <span className="manifold-label">φ-SPACE_MANIFOLD: 1.618033988749</span>
               {/* φ (Phi): The golden ratio constant (1.618...)
 SPACE: Mathematical/geometric term for a set of points with structure
 MANIFOLD: A mathematical surface or multi-dimensional space that can be curved or complex (like tesseracts constructed in Geom Lab - they're 4D manifolds projected into 3D) In plain English: "A dimension where everything follows the golden ratio's harmonic proportions" */}
@@ -189,10 +189,10 @@ MANIFOLD: A mathematical surface or multi-dimensional space that can be curved o
                   }}
                   label={
                     <>
-                      ENTER GE0M L<span className="nav-inverted-v">V</span>B
+                      ENTER GE0M L<span style={{display: 'inline-block', transform: 'scaleY(-1)', verticalAlign: 'baseline'}}>V</span>B
                     </>
                   }
-                  className="home-enter-geom-lab-btn"
+                  className="enter-geom-lab-hero-btn"
                 />
               </div>
             ) : (

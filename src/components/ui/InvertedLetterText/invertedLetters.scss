@@ -47,11 +47,3 @@
   display: inline-block;
   transform: scaleX(-1);
 }
-
-/* BeamScanButton label variant */
-.beamScanLabel .nav-inverted-v {
-  background: inherit;
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-}

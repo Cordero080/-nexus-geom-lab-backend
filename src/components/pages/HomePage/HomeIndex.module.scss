@@ -471,11 +471,12 @@
   letter-spacing: 0.05em;
 }
 
-/* Enter Geom Lab button */
-.homeEnterGeomLabBtn {
-  font-size: 24px !important;
-  padding: 24px 180px !important;
+/* Enter Geom Lab Hero button - larger primary CTA */
+:global(.enter-geom-lab-hero-btn) {
+  font-size: 11px !important;
+  padding: 13px 70px !important;
   letter-spacing: 0.05em !important;
+  white-space: nowrap !important;
 }
 
 /* ===================================
@@ -899,7 +900,7 @@ input,
   /* Button wrapper not authenticated */
   :global(.button-wrapper-no-auth) {
     display: flex;
-    gap: 48px;
+    gap: 32px; /* Reduced from 48px for tighter spacing */
     justify-content: center;
     margin-top: calc(10px + 1vh);
     position: relative;
@@ -1547,7 +1548,7 @@ input,
 
   :global(.home-enter-geom-lab-btn) {
     font-size: 12px !important;
-    padding: 13.629px 82.313px !important;
+    padding: 13.629px 57.62px !important; /* Reduced from 82.313px by 30% */
     white-space: nowrap !important;
   }
 
@@ -1705,6 +1706,52 @@ input,
     }
     100% {
       background-position: 0% 50%;
+    }
+  }
+}
+
+/* ====================================
+   RESPONSIVE BREAKPOINTS - HomePage
+   ==================================== */
+
+:global {
+  /* Tablet: 768px - 1024px */
+  @media (max-width: 1024px) {
+    .button-wrapper-auth,
+    .button-wrapper-no-auth {
+      margin-top: calc(8px + 0.8vh);
+      margin-bottom: 20px;
+    }
+
+    .button-wrapper-no-auth {
+      gap: 36px;
+    }
+  }
+
+  /* Mobile Landscape: 481px - 767px */
+  @media (max-width: 767px) {
+    .button-wrapper-auth,
+    .button-wrapper-no-auth {
+      margin-top: calc(6px + 0.6vh);
+      margin-bottom: 16px;
+    }
+
+    .button-wrapper-no-auth {
+      gap: 24px;
+      flex-wrap: wrap;
+    }
+  }
+
+  /* Mobile Portrait: < 480px */
+  @media (max-width: 480px) {
+    .button-wrapper-auth,
+    .button-wrapper-no-auth {
+      margin-top: calc(4px + 0.4vh);
+      margin-bottom: 12px;
+    }
+
+    .button-wrapper-no-auth {
+      gap: 16px;
     }
   }
 }
