@@ -96,11 +96,11 @@ _UI/UX design and user flow planning_
 
 ## Overview
 
-Nexus-Geom 3D is a full-stack MERN application that transforms complex 4D mathematical concepts into an interactive, gamified 3D experience. The project is experimental and combines Three.js, React, and a custom geometry engine to let users explore, manipulate, and save hyperdimensional shapes while progressively unlocking animated characters.
+**A gamified 4D geometry exploration platform.** Discover hyperdimensional shapes, save configurations you find beautiful, and unlock animated characters through progression. It combines mathematical visualization with game mechanics to make abstract concepts engaging.
 
-**The Vision**: With a background in art and motion graphics, I wanted to build a tool that makes compound polytopes and 4D structures intuitive through interaction. I designed the spatial logic, user flow, UI aesthetic, and overall architecture, and used AI tools to assist with heavy mathematical implementation and complex Three.js scaffolding.
+Built with React, Three.js, and MongoDB, Nexus-Geom Lab lets you explore 24 advanced geometries—from tesseracts to quantum manifolds—customize materials, animations, and lighting, then save your favorite scenes. Each save contributes to unlocking original 3D characters (Nexus Prime, Icarus-X, Vectra), creating a feedback loop that rewards curiosity.
 
-This project represents a fusion of artistic direction, engineering architecture, and mathematical visualization.
+**The concept**: Make 4D geometry *fun* to explore, not just educational. Unlike traditional geometry viewers, this creates an engagement loop—exploration → discovery → saving → unlocks → more exploration.
 
 ---
 
