@@ -3,13 +3,14 @@ import { useNavigate, Link, useLocation } from 'react-router-dom';
 import { useScene } from '../../../context/SceneContext';
 import { useAuth } from '../../../features/auth/context/AuthContext';
 import { getMyScenes } from '../../../services/sceneApi'; // Import API function
-import SceneCard from '../../features/Scenes/SceneCard'; // Corrected import path to Scenes
+import SceneCard from './SceneCard.jsx';
 import CustomSelect from '../../ui/CustomSelect/CustomSelect';
 import ScrambleButton from '../../ui/ScrambleButton/ScrambleButton';
 import BeamScanButton from '../../ui/BeamScanButton/BeamScanButton';
 import { DeleteSuccessModal } from '../../ui/Modals';
 import QuantumNav from '../HomePage/components/QuantumNav';
 import HomeBackground from '../../shared/HomeBackground/HomeBackground';
+import QuantumPortalShowcase from '../../features/Showcase/QuantumPortalShowcase';
 import { quantumCollapse } from '../../../utils/coreHelpers';
 import './MyScenesPage.css';
 import styles from './MyScenesPage.module.scss';
@@ -18,69 +19,33 @@ import '../../layout/NavBar/nav.css';
 import { GEOM_LAB_LINK_TEXT, SHOWCASE_LINK_TEXT } from '../../layout/NavBar/navLabels';
 import homeStyles from '../HomePage/HomeIndex.module.scss';
 
-// quantumCollapse now imported from utils/coreHelpers.js
-
 /**
  * PORTAL WORLDS SYSTEM
- *
- * Five distinct quantum dimensions, each with unique color palettes representing different
- * cosmic environments. These worlds dynamically shift the entire UI theme, creating an
- * immersive experience where users feel like they're navigating through parallel dimensions.
- *
- * Each portal world contains:
- * - colors[0]: Primary color (used in gradients, backgrounds)
- * - colors[1]: Secondary color (used in glows, accents)
- * - colors[2]: Accent color (used in highlights, borders)
- * - label: Thematic name representing the dimensional space
  */
 const portalWorlds = [
-  { colors: ['#ff00cc', '#00fff7', '#1a003a'], label: 'Fractal' }, // 🌀 Cyberpunk pink/cyan
-  { colors: ['#ffea00', '#7300ffff', '#003a2a'], label: 'Nebula' }, // ☄️ Cosmic yellow/purple
-  { colors: ['#ff3300', '#cc00ff', '#0a0f1a'], label: 'Being' }, // 🔥 Volcanic red/magenta
-  { colors: ['#00ff33', '#00aaff', '#003a3a'], label: '' }, // 💎 Crystalline green/blue
-  { colors: ['#cfccbeff', '#056864ff', '#210205ff'], label: 'Singularity' }, // ⭐ Stellar white/cyan
+  { colors: ['#ff00cc', '#00fff7', '#1a003a'], label: 'Fractal' },
+  { colors: ['#ffea00', '#7300ffff', '#003a2a'], label: 'Nebula' },
+  { colors: ['#ff3300', '#cc00ff', '#0a0f1a'], label: 'Being' },
+  { colors: ['#00ff33', '#00aaff', '#003a3a'], label: '' },
+  { colors: ['#cfccbeff', '#056864ff', '#210205ff'], label: 'Singularity' },
 ];
 
-/**
- * QUANTUM GLYPH SETS
- *
- * Greek mathematical symbols that change alongside portal worlds, representing different
- * quantum states and mathematical concepts. These glyphs appear in the navigation bar
- * as subtle indicators of the current dimensional frequency.
- */
 const glyphSets = [
-  ['ψ', 'Ω', 'Σ'], // Psi (wave function), Omega (frequency), Sigma (summation)
-  ['λ', 'Φ', 'Ξ'], // Lambda (wavelength), Phi (golden ratio), Xi (cascade)
-  ['π', 'Δ', 'Γ'], // Pi (circular constant), Delta (change), Gamma (transformation)
-  ['μ', 'θ', 'ζ'], // Mu (micro scale), Theta (angle), Zeta (riemann)
-  ['τ', 'β', 'η'], // Tau (time constant), Beta (velocity), Eta (efficiency)
+  ['ψ', 'Ω', 'Σ'],
+  ['λ', 'Φ', 'Ξ'],
+  ['π', 'Δ', 'Γ'],
+  ['μ', 'θ', 'ζ'],
+  ['τ', 'β', 'η'],
 ];
 
-/**
- * GALLERY PAGE - USER'S SCENE COLLECTION
- *
- * Interactive quantum-themed gallery showcasing user-created 3D geometric scenes.
- * Features dynamic Portal Worlds theming system that transforms the entire interface
- * based on quantum collapse events triggered by user interaction.
- *
- * Key Features:
- * - Responsive grid layout (3/2/1 columns)
- * - Real-time quantum theming system
- * - Parallax geometric backgrounds
- * - Interactive scene cards with Load/Edit/Delete actions
- * - Quantum navigation with portal-reactive colors
- * - Dynamic glyph system representing mathematical concepts
- */
 export default function MyScenesPage() {
   const navigate = useNavigate();
   const location = useLocation();
   const { loadScene, deleteScene } = useScene();
-  const { isAuthenticated, logout, user, token } = useAuth(); // Get user and token from auth
+  const { isAuthenticated, logout, user, token } = useAuth();
 
-  // Get highlighted scene ID from navigation state
   const highlightSceneId = location.state?.highlightSceneId;
 
-  // Scene management state
   const [scenes, setScenes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [sortBy, setSortBy] = useState('newest');
@@ -89,20 +54,64 @@ export default function MyScenesPage() {
   const [showDeleteSuccessModal, setShowDeleteSuccessModal] = useState(false);
   const [deletedSceneName, setDeletedSceneName] = useState('');
 
-  /**
-   * QUANTUM STATE MANAGEMENT
-   *
-   * Current portal dimension and glyph set - these determine the active color scheme
-   * and mathematical symbols throughout the interface. Initial state is randomly
-   * collapsed from the available quantum superposition.
-   */
   const [portalState, setPortalState] = useState(() => quantumCollapse(portalWorlds));
   const [glyphState, setGlyphState] = useState(() => quantumCollapse(glyphSets));
   const [navScrolled, setNavScrolled] = useState(false);
+  
+  // Smooth color interpolation
+  const [currentColors, setCurrentColors] = useState(portalState.colors);
+  const [targetColors, setTargetColors] = useState(portalState.colors);
+  const animationRef = useRef(null);
 
-  // Parallax layer refs (like Showcase)
   const bgRef = useRef(null);
   const fgRef = useRef(null);
+
+  // Smooth color interpolation
+  useEffect(() => {
+    setTargetColors(portalState.colors);
+    
+    const startTime = Date.now();
+    const duration = 800;
+    const startColors = [...currentColors];
+    
+    const animate = () => {
+      const elapsed = Date.now() - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+      
+      const eased = progress < 0.5 
+        ? 2 * progress * progress 
+        : -1 + (4 - 2 * progress) * progress;
+      
+      const interpolated = startColors.map((start, i) => {
+        const target = portalState.colors[i];
+        const startRGB = hexToRgb(start);
+        const targetRGB = hexToRgb(target);
+        
+        const r = Math.round(startRGB.r + (targetRGB.r - startRGB.r) * eased);
+        const g = Math.round(startRGB.g + (targetRGB.g - startRGB.g) * eased);
+        const b = Math.round(startRGB.b + (targetRGB.b - startRGB.b) * eased);
+        
+        return rgbToHex(r, g, b);
+      });
+      
+      setCurrentColors(interpolated);
+      
+      if (progress < 1) {
+        animationRef.current = requestAnimationFrame(animate);
+      }
+    };
+    
+    if (animationRef.current) {
+      cancelAnimationFrame(animationRef.current);
+    }
+    animationRef.current = requestAnimationFrame(animate);
+    
+    return () => {
+      if (animationRef.current) {
+        cancelAnimationFrame(animationRef.current);
+      }
+    };
+  }, [portalState.colors]);
 
   // Parallax effect (matching Showcase)
   useEffect(() => {
@@ -312,79 +321,35 @@ export default function MyScenesPage() {
 
   return (
     <>
-      {/* Base Dark Layer */}
-      <div className={homeStyles.baseDark}></div>
-
-      {/* Quantum Portal Background Layer */}
-      <div
-        className={homeStyles.quantumPortalLayer}
-        style={{
-          background: `
-            radial-gradient(circle at 30% 120%, 
-              ${portalState.colors[0]} 0%, 
-              ${portalState.colors[1]} 30%, 
-              ${portalState.colors[2]} 60%, 
-              transparent 80%
-            ),
-            radial-gradient(circle at 70% 130%, 
-              ${portalState.colors[1]} 0%, 
-              ${portalState.colors[2]} 40%, 
-              ${portalState.colors[0]} 70%,
-              transparent 90%
-            )
-          `,
+      {/* Three.js Quantum Portal Effect - Top */}
+      <QuantumPortalShowcase
+        position="top"
+        sceneColors={{
+          color1: currentColors[0],
+          color2: currentColors[1],
+          color3: currentColors[2],
         }}
       />
 
-      {/* Inverted veil to cover quantum colors at top */}
-      <div className={homeStyles.quantumVeil}></div>
-
-      {/* Dark Top Veil */}
-      <div className={homeStyles.darkTopVeil}></div>
-
-      {/* Dynamic Portal Background */}
-      <div
-        style={{
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          width: '100vw',
-          height: '100vh',
-          zIndex: -3,
-          pointerEvents: 'none',
+      {/* Three.js Quantum Portal Effect - Bottom */}
+      <QuantumPortalShowcase
+        position="bottom"
+        sceneColors={{
+          color1: currentColors[0],
+          color2: currentColors[1],
+          color3: currentColors[2],
         }}
-        aria-hidden="true"
-      >
-        <svg
-          width="100%"
-          height="100%"
-          viewBox="0 0 1920 1080"
-          style={{
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            width: '100vw',
-            height: '100vh',
-            pointerEvents: 'none',
-            background: `linear-gradient(120deg, 
-            ${portalState.colors[0]} 0%, 
-            ${portalState.colors[1]} 60%, 
-            ${portalState.colors[2]} 100%
-          )`,
-            transition: 'background 1.2s cubic-bezier(0.4,0,0.2,1)',
-            filter: 'brightness(1.3) saturate(1.8)',
-          }}
-        >
-          <defs>
-            <linearGradient id="myscenes-portal-glow" x1="0" y1="0" x2="1" y2="1">
-              <stop offset="0%" stopColor={portalState.colors[0]} stopOpacity="0.6" />
-              <stop offset="50%" stopColor={portalState.colors[1]} stopOpacity="0.4" />
-              <stop offset="100%" stopColor={portalState.colors[2]} stopOpacity="0.6" />
-            </linearGradient>
-          </defs>
-          <rect x="0" y="0" width="1920" height="1080" fill="url(#myscenes-portal-glow)" />
-        </svg>
-      </div>
+      />
+
+      {/* Three.js Quantum Portal Effect - Middle */}
+      <QuantumPortalShowcase
+        position="middle"
+        sceneColors={{
+          color1: currentColors[0],
+          color2: currentColors[1],
+          color3: currentColors[2],
+        }}
+      />
 
       {/* Clip-path background layer (matching HomePage) */}
       <div className="bg-gallery-layer bg-gallery-reality" aria-hidden="true"></div>
@@ -647,4 +612,17 @@ export default function MyScenesPage() {
       </div>
     </>
   );
+}
+
+function hexToRgb(hex) {
+  const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+  return result ? {
+    r: parseInt(result[1], 16),
+    g: parseInt(result[2], 16),
+    b: parseInt(result[3], 16)
+  } : { r: 0, g: 0, b: 0 };
+}
+
+function rgbToHex(r, g, b) {
+  return "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
 }

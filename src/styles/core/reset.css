@@ -34,7 +34,7 @@ body::before {
   background: linear-gradient(
     120deg,
     var(--portal-color-0, #ff00cc) 0%,
-    var(--portal-color-1, #00fff7) 60%,
+    var(--portal-color-1, #00fff75a) 60%,
     var(--portal-color-2, #1a003a) 100%
   );
   transition: background 3s cubic-bezier(0.4, 0, 0.2, 1);

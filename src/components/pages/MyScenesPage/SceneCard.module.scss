@@ -53,7 +53,7 @@
   border: 1px solid rgba(0, 212, 255, 0.3) !important;
   border-radius: 16px;
   overflow: hidden;
-  transition: all 0.3s ease;
+  transition: all 0.1s ease;
   cursor: pointer;
   height: 100%;
   display: flex;
@@ -63,12 +63,22 @@
     inset 0 1px 3px rgba(255, 255, 255, 0.2),
     inset 0 -1px 3px rgba(0, 0, 0, 0.5) !important;
   animation: darkHolographicShimmer 3s ease infinite !important;
+  
+  /* ===============================================================
+     ADJUST THIS FIRST FOR SCENE CARD RESIZE
+     Change scale(0.8) to resize cards evenly
+     0.8 = 80% | 1.0 = 100% | 0.6 = 60%
+     =============================================================== */
+  transform: scale(0.8);
 }
 
 .sceneCard:hover {
-  transform: translateY(-4px);
-  border-color: rgba(0, 255, 255, 0.3);
-  box-shadow: 0 8px 32px rgba(0, 255, 255, 0.15);
+  transform: scale(0.8) translateY(-4px);
+  border: 2px solid rgba(0, 255, 255, 1) !important;
+  box-shadow:
+    0 4px 8px rgba(0, 0, 0, 0.8),
+    inset 0 1px 3px rgba(255, 255, 255, 0.2),
+    inset 0 -1px 3px rgba(0, 0, 0, 0.5) !important;
 }
 
 /* Highlighted state for newly saved scenes */
@@ -110,7 +120,12 @@
 .sceneCardThumbnail {
   position: relative;
   width: 100%;
-  padding-top: 56.25%; /* 16:9 aspect ratio (was 66.67% for 3:2) */
+  /* ===============================================================
+     SCROLL - NEXT ADJUSTMENT: THUMBNAIL HEIGHT
+     Change padding-top % to adjust image area height
+     56.25% = 16:9 | 75% = 4:3 | 100% = square
+     =============================================================== */
+  padding-top: 70.25%;
   overflow: hidden;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
 }
@@ -189,16 +204,22 @@
 
 /* Info Section */
 .sceneCardInfo {
+  /* ===============================================================
+     SCROLL - NEXT ADJUSTMENT: CONTENT AREA SIZE
+     padding: spacing around text
+     gap: spacing between elements
+     min-height: minimum vertical space
+     =============================================================== */
   padding: 20px;
   display: flex;
   flex-direction: column;
   gap: 16px;
   flex: 1;
-  min-height: 180px; /* Ensure minimum height for content */
+  min-height: 120px;
 }
 
 .sceneCardTitle {
-  font-size: 1.125rem;
+  font-size: 1.25rem;
   font-weight: 700;
   font-family: 'Orbitron', monospace;
   letter-spacing: 0.09em;
@@ -251,12 +272,12 @@
 /* Actions */
 .sceneCardActions {
   display: flex;
-  gap: 16px; /* Increased from 12px to 16px */
+  gap: 16px;
   margin-top: auto;
-  padding-top: 20px; /* Increased from 16px to 20px */
+  padding-top: 20px;
   border-top: 1px solid rgba(255, 255, 255, 0.1);
   flex-wrap: nowrap; /* Keep buttons inline, no wrapping */
-  min-height: 52px; /* Increased from 48px to 52px for better button size */
+  min-height: 52px;
 
   /* Override ScrambleButton font to use Orbitron */
   button {
