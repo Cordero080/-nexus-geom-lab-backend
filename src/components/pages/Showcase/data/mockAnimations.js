@@ -101,4 +101,27 @@ export const mockAnimations = [
     viewerBackground:
       'linear-gradient(135deg, #001a0d 0%, #003d1a 20%, #228b22 40%, #00ff7f 50%, #32cd32 60%, #006400 80%, #001a0d 100%)',
   },
+  {
+    id: 5,
+    noetechKey: 'she-tech',
+    animationId: 'cyber-dance',
+    name: 'She-Tech #004',
+    animation: 'Cyber Dance',
+    variant: 'Neon Mystic',
+    description: 'Digital Sorceress channeling pure energy...Dancing through datastreams',
+    fbxUrl: '/models/she-tech.fbx',
+    scale: 0.025,
+    galleryScale: 0.018,
+    rotation: [0, 0, 0],
+    positionY: -2.3,
+    galleryPositionY: -1.5,
+    offsetX: 0,
+    offsetZ: 0,
+    allowNaturalYMovement: true,
+    isDefaultAnimation: true,
+    background:
+      'linear-gradient(180deg, rgba(138, 43, 226, 0.5) 0%, rgba(75, 0, 130, 0.7) 30%, rgba(138, 43, 226, 0.6) 70%, rgba(186, 85, 211, 0.5) 100%)',
+    viewerBackground:
+      'linear-gradient(135deg, #4b0082 0%, #8a2be2 25%, #9370db 50%, #ba55d3 75%, #4b0082 100%)',
+  },
 ];
