@@ -6,6 +6,7 @@
   font-style: normal;
 }
 
+:global {
 /* Loader spinner for card */
 .loader-spinner {
   width: 48px;
@@ -835,3 +836,5 @@
     font-size: 0.9rem;
   }
 }
+
+} /* End :global */

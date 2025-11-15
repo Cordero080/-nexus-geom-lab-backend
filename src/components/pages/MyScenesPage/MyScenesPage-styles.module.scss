@@ -1,7 +1,6 @@
 /* My Scenes Page Styles - Uses shared quantum styles */
-@import '../../../styles/quantumBackground.css';
-@import '../../../styles/quantumTitles.css';
 
+:global {
 .my-scenes-page {
   min-height: 100vh;
   width: 100%;
@@ -24,7 +23,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 12px; /* Increased from 8px to 12px */
+  gap: 4px; /* Reduced from 12px to 4px */
   padding: 20px 20px 40px; /* Reduced top padding from 40px to 20px */
   margin-top: -40px; /* Move header up */
 }
@@ -33,19 +32,20 @@
 .my-scenes-page .quantum-page-title {
   font-size: 3rem !important; /* Reduced from 4.2rem to 3rem */
   letter-spacing: 6px !important; /* Reduced from 10px to 6px */
-  margin-bottom: 12px !important;
+  margin-bottom: 0px !important;
 }
 
 /* MyScenesPage-specific subtitle - smaller than Showcase */
 .my-scenes-page .quantum-page-subtitle {
-  font-size: 0.85rem !important;
+  font-size: 0.7rem !important;
   letter-spacing: 3px !important;
+  margin-top: -8px !important;
 }
 
 /* Controls */
 .my-scenes-page__controls {
   max-width: 1400px;
-  margin: -40px auto 64px; /* Moved up with negative top margin */
+  margin: -60px auto 90px; /* Moved up with negative top margin, increased bottom margin */
   display: flex;
   gap: 32px; /* Increased gap from 24px to 32px */
   align-items: center;
@@ -69,7 +69,7 @@
 }
 
 .my-scenes-page__select {
-  padding: 6px 12px;
+  padding: 4px 10px;
   border-radius: 8px;
   /* Holographic cosmic black style */
   background:
@@ -97,7 +97,7 @@
   backdrop-filter: blur(10px);
   color: #ffffff;
   font-family: 'Orbitron', 'JetBrains Mono', monospace;
-  font-size: 0.8rem;
+  font-size: 0.7rem;
   font-weight: 500;
   cursor: pointer;
   transition: all 0.2s ease;
@@ -301,7 +301,7 @@
 /* Scene Grid */
 .my-scenes-page__grid {
   max-width: 1400px;
-  margin: -60px auto 0; /* Moved up with negative top margin */
+  margin: -50px auto 0; /* Moved up with negative top margin */
   display: grid;
   grid-template-columns: repeat(4, 1fr); /* 4 columns for desktop */
   gap: 12px;
@@ -602,3 +602,5 @@
     width: 100%;
   }
 }
+
+} /* End :global */

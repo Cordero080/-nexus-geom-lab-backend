@@ -1,6 +1,6 @@
 import React, { useRef, useEffect } from 'react';
 import * as THREE from 'three';
-import { createQuantumManifold } from '../../../features/sceneControls/geometries/manifolds/quantumManifold';
+import { createQuantumManifold } from '../../../../features/sceneControls/geometries/manifolds/quantumManifold';
 
 export default function QuantumManifoldAnimation({ isActive = false }) {
   const containerRef = useRef();

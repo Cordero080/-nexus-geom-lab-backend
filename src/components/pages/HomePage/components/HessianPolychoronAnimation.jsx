@@ -1,6 +1,6 @@
 import React, { useRef, useEffect } from 'react';
 import * as THREE from 'three';
-import { createHessianPolychoron } from '../../../features/sceneControls/geometries/polytopes/hessianPolychoron';
+import { createHessianPolychoron } from '../../../../features/sceneControls/geometries/polytopes/hessianPolychoron';
 
 export default function HessianPolychoronAnimation({ isActive = false }) {
   const containerRef = useRef();

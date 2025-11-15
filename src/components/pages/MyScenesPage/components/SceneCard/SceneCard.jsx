@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
-import ScrambleButton from '../../ui/ScrambleButton/ScrambleButton';
-import styles from './SceneCard.module.scss';
-import { formatDate, getPlaceholderGradient } from '../../../utils/coreHelpers';
+import React, { useState } from "react";
+import ScrambleButton from "../../../../ui/ScrambleButton/ScrambleButton";
+import styles from "./SceneCard.module.scss";
+import { formatDate, getPlaceholderGradient } from "../../../../../utils/coreHelpers";
 
 /**
  * SceneCard - Reusable card component for scene galleries

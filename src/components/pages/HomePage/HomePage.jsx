@@ -2,13 +2,13 @@ import React, { useEffect, useRef, useState } from 'react';
 
 // Components
 import Quote from '../../shared/Quote/Quote';
-import ProgressBar from './ProgressBar';
-import Scene from './Scene';
+import ProgressBar from './components/ProgressBar';
+import Scene from './components/Scene';
 import ScrambleOnHover from './components/ScrambleOnHover';
 import QuantumNav from './components/QuantumNav';
 import BackgroundLayers from './components/BackgroundLayers';
-import HessianPolychoronAnimation from './HessianPolychoronAnimation';
-import QuantumManifoldAnimation from './QuantumManifoldAnimation';
+import HessianPolychoronAnimation from './components/HessianPolychoronAnimation';
+import QuantumManifoldAnimation from './components/QuantumManifoldAnimation';
 
 // Styles
 import styles from './HomeIndex.module.scss';

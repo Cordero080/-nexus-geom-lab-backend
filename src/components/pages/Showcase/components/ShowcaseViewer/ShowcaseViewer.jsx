@@ -2,14 +2,15 @@ import React, { useState, Suspense, memo, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import RotatingCube from './RotatingCube/RotatingCube';
-import ScrambleButton from '../../../ui/ScrambleButton/ScrambleButton';
+import ScrambleButton from '../../../../ui/ScrambleButton/ScrambleButton';
 import SpeedControl from './SpeedControl/SpeedControl';
-import { useAuth } from '../../../../features/auth/context/AuthContext';
-import { noetechAnima } from '../data/noetechAnima';
+import { useAuth } from '../../../../../features/auth/context/AuthContext';
+import { noetechAnima } from '../../data/noetechAnima';
 import IcarusEnvironment from './characters/Icarus/IcarusEnvironment';
 import NexusEnvironment from './characters/Nexus/NexusEnvironment';
 import SheTechEnvironment from './environments/SheTechEnvironment';
 import styles from './ShowcaseViewer.module.scss';
+import './ShowcaseViewer-styles.module.scss';
 import sharedStyles from '@/styles/shared.module.scss';
 
 // Custom camera control component - just auto-rotate camera, no user interaction
@@ -183,13 +184,6 @@ function ShowcaseViewer({ animation, onClose }) {
             </div>
           </div>
         )}
-
-        <button
-          className={`${styles['viewer-close']} ${sharedStyles.angledCorners}`}
-          onClick={onClose}
-        >
-          ✕
-        </button>
 
         <div className={styles['viewer-canvas-container']}>
           {canvasReady && (

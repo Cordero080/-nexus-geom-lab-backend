@@ -12,10 +12,10 @@ import MyScenesPage from '@/components/pages/MyScenesPage/MyScenesPage';
 import SignUpPage from '@/features/auth/pages/SignUpPage/SignUpPage';
 import LoginPage from '@/features/auth/pages/LoginPage/LoginPage';
 import { SceneProvider, useScene } from '@/context/SceneContext';
-import { AuthProvider, useAuth } from '@/features/auth/context/AuthContext';
-import { QuantumCursor } from '@/components/ui/Effects';
-import Footer from '@/components/pages/HomePage/Footer/Footer';
-import useSceneState from '@/hooks/useSceneState';
+import { AuthProvider, useAuth } from "@/features/auth/context/AuthContext";
+import { QuantumCursor } from "@/components/ui/Effects";
+import Footer from "@/components/pages/HomePage/components/Footer/Footer";
+import useSceneState from "@/hooks/useSceneState";
 import './cursor-override.module.scss';
 import sharedStyles from '@/styles/shared.module.scss';
 

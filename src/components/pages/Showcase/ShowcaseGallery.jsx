@@ -3,13 +3,15 @@ import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader';
 import { Canvas } from '@react-three/fiber';
 import { useLocation } from 'react-router-dom';
 import { useAuth } from '../../../features/auth/context/AuthContext';
-import RotatingCube from './ShowcaseViewer/RotatingCube/RotatingCube';
-import ShowcaseViewer from './ShowcaseViewer/ShowcaseViewer';
-import QuantumPortalShowcase from './QuantumPortalShowcase';
+import RotatingCube from './components/ShowcaseViewer/RotatingCube/RotatingCube';
+import ShowcaseViewer from './components/ShowcaseViewer';
+import QuantumPortalShowcase from './components/QuantumPortalShowcase';
 import { noetechAnima } from './data/noetechAnima';
 import { portalWorlds, glyphSets } from '../../../data/portalWorlds';
 import { quantumCollapse, getCardPosition } from './utils/showcaseHelpers';
-import './ShowcaseGallery.css';
+import '../../../styles/quantumTitles.css';
+import '../../../styles/quantumBackground.css';
+import styles from './ShowcaseGallery.module.scss';
 import sharedStyles from '../../../styles/shared.module.scss';
 
 const HERO_TAGLINES = [

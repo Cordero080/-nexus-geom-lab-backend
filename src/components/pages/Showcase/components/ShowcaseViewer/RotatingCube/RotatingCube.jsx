@@ -1,9 +1,9 @@
 import React, { useRef, useState } from 'react';
-import { useFrame, useThree } from '@react-three/fiber';
-import * as THREE from 'three';
-import FBXModel from '../../models/FBXModel';
-import HolographicCube from './components/HolographicCube';
-import TesseractGeometry from './components/TesseractGeometry';
+import { useFrame, useThree } from "@react-three/fiber";
+import * as THREE from "three";
+import FBXModel from "../../../models/FBXModel";
+import HolographicCube from "./components/HolographicCube";
+import TesseractGeometry from "./components/TesseractGeometry";
 import NexusCube from '../characters/Nexus/NexusCube';
 import CompoundTesseractGeometry from '../characters/Vectra/CompoundTesseractGeometry';
 import SheTechCube from '../characters/SheTech/SheTechCube';
