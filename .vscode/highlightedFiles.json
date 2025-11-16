@@ -1,0 +1,444 @@
+{
+  "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls/components/Controls": {
+    "parent": "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls"
+  },
+  "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls/components/Controls/.DS_Store": {
+    "parent": "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls"
+  },
+  "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls/components/Controls/Controls.jsx": {
+    "parent": "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls"
+  },
+  "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls/components/Controls/Controls.module.scss": {
+    "parent": "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls"
+  },
+  "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls/components/Controls/ExitButton": {
+    "parent": "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls"
+  },
+  "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls/components/Controls/ExitButton/ExitButton.jsx": {
+    "parent": "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls"
+  },
+  "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls/components/Controls/ExitButton/ExitButton.module.scss": {
+    "parent": "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls"
+  },
+  "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls/components/Controls/LightingControls.jsx": {
+    "parent": "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls"
+  },
+  "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls/components/Controls/_sections": {
+    "parent": "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls"
+  },
+  "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls/components/Controls/_sections/MaterialPropertiesSection.jsx": {
+    "parent": "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls"
+  },
+  "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls/components/Controls/_sections/SceneControlsSection.jsx": {
+    "parent": "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls"
+  },
+  "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls/components/Controls/controlsHandlers.js": {
+    "parent": "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls"
+  },
+  "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls/components/Controls/controlsHandlers.test.js": {
+    "parent": "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls"
+  },
+  "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/App.jsx": {
+    "color": "gold",
+    "badge": "○"
+  },
+  "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls": {
+    "color": "blue",
+    "badge": "●"
+  },
+  "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls/.DS_Store": {
+    "parent": "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls"
+  },
+  "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls/ThreeScene.css": {
+    "parent": "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls"
+  },
+  "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls/ThreeScene.jsx": {
+    "parent": "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls"
+  },
+  "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls/animation": {
+    "parent": "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls"
+  },
+  "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls/animation/animationLoop.js": {
+    "parent": "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls"
+  },
+  "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls/components": {
+    "parent": "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls"
+  },
+  "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls/components/.DS_Store": {
+    "parent": "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls"
+  },
+  "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls/components/LightingControls": {
+    "parent": "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls"
+  },
+  "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls/components/LightingControls/LightingControls.jsx": {
+    "parent": "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls"
+  },
+  "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls/components/SaveButton": {
+    "parent": "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls"
+  },
+  "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls/components/SaveButton/AnimationUnlockModal.jsx": {
+    "parent": "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls"
+  },
+  "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls/components/SaveButton/SaveButton.jsx": {
+    "parent": "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls"
+  },
+  "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls/components/SaveButton/SaveButton.module.scss": {
+    "parent": "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls"
+  },
+  "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls/components/SaveButton/SaveControls.jsx": {
+    "parent": "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls"
+  },
+  "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls/components/SaveButton/SaveModal.jsx": {
+    "parent": "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls"
+  },
+  "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls/components/SaveButton/SuccessSaveModal.jsx": {
+    "parent": "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls"
+  },
+  "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls/components/SaveButton/UnlockModal.jsx": {
+    "parent": "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls"
+  },
+  "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls/components/SaveButton/saveButtonHandlers.js": {
+    "parent": "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls"
+  },
+  "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls/geometries": {
+    "parent": "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls"
+  },
+  "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls/geometries/.DS_Store": {
+    "parent": "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls"
+  },
+  "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls/geometries/compound": {
+    "parent": "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls"
+  },
+  "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls/geometries/compound/compoundSphere.js": {
+    "parent": "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls"
+  },
+  "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls/geometries/compound/compoundTorus.js": {
+    "parent": "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls"
+  },
+  "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls/geometries/compound/index.js": {
+    "parent": "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls"
+  },
+  "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls/geometries/compound/sphere.js": {
+    "parent": "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls"
+  },
+  "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls/geometries/curved": {
+    "parent": "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls"
+  },
+  "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls/geometries/curved/capsule.js": {
+    "parent": "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls"
+  },
+  "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls/geometries/curved/compoundFloatingCity.js": {
+    "parent": "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls"
+  },
+  "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls/geometries/curved/floatingCity.js": {
+    "parent": "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls"
+  },
+  "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls/geometries/curved/index.js": {
+    "parent": "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls"
+  },
+  "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls/geometries/curved/torus.js": {
+    "parent": "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls"
+  },
+  "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls/geometries/manifolds": {
+    "parent": "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls"
+  },
+  "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls/geometries/manifolds/compoundQuantumManifold.js": {
+    "parent": "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls"
+  },
+  "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls/geometries/manifolds/index.js": {
+    "parent": "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls"
+  },
+  "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls/geometries/manifolds/mobiusSphere.js": {
+    "parent": "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls"
+  },
+  "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls/geometries/manifolds/quantumManifold.js": {
+    "parent": "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls"
+  },
+  "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls/geometries/polytopes": {
+    "parent": "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls"
+  },
+  "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls/geometries/polytopes/cell120.js": {
+    "parent": "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls"
+  },
+  "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls/geometries/polytopes/cell16.js": {
+    "parent": "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls"
+  },
+  "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls/geometries/polytopes/cell24.js": {
+    "parent": "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls"
+  },
+  "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls/geometries/polytopes/cell600.js": {
+    "parent": "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls"
+  },
+  "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls/geometries/polytopes/compoundCell120.js": {
+    "parent": "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls"
+  },
+  "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls/geometries/polytopes/compoundCell24.js": {
+    "parent": "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls"
+  },
+  "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls/geometries/polytopes/compoundCell600.js": {
+    "parent": "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls"
+  },
+  "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls/geometries/polytopes/compoundHypercube.js": {
+    "parent": "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls"
+  },
+  "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls/geometries/polytopes/compoundMegaTesseract.js": {
+    "parent": "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls"
+  },
+  "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls/geometries/polytopes/compoundMegaTesseract2.js": {
+    "parent": "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls"
+  },
+  "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls/geometries/polytopes/compoundMegaTesseract3.js": {
+    "parent": "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls"
+  },
+  "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls/geometries/polytopes/compoundMegaTesseract4.js": {
+    "parent": "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls"
+  },
+  "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls/geometries/polytopes/compoundMegaTesseract5.js": {
+    "parent": "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls"
+  },
+  "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls/geometries/polytopes/compoundTesseract.js": {
+    "parent": "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls"
+  },
+  "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls/geometries/polytopes/greatDodecahemidodecahedron.js": {
+    "parent": "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls"
+  },
+  "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls/geometries/polytopes/hessianPolychoron.js": {
+    "parent": "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls"
+  },
+  "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls/geometries/polytopes/hypercube.js": {
+    "parent": "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls"
+  },
+  "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls/geometries/polytopes/icosahedron.js": {
+    "parent": "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls"
+  },
+  "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls/geometries/polytopes/index.js": {
+    "parent": "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls"
+  },
+  "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls/geometries/polytopes/megaTesseract.js": {
+    "parent": "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls"
+  },
+  "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls/geometries/polytopes/nineCompoundHypercube.js": {
+    "parent": "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls"
+  },
+  "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls/geometries/polytopes/octahedron.js": {
+    "parent": "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls"
+  },
+  "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls/geometries/polytopes/simpleCompoundHypercube.js": {
+    "parent": "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls"
+  },
+  "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls/geometries/polytopes/tetrahedron.js": {
+    "parent": "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls"
+  },
+  "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls/hooks": {
+    "parent": "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls"
+  },
+  "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls/hooks/.DS_Store": {
+    "parent": "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls"
+  },
+  "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls/hooks/core": {
+    "parent": "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls"
+  },
+  "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls/hooks/core/useObjectManager.js": {
+    "parent": "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls"
+  },
+  "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls/hooks/core/useSceneInitialization.js": {
+    "parent": "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls"
+  },
+  "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls/hooks/effects": {
+    "parent": "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls"
+  },
+  "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls/hooks/effects/useMetalnessLighting.js": {
+    "parent": "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls"
+  },
+  "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls/hooks/effects/useNebulaParticles.js": {
+    "parent": "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls"
+  },
+  "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls/hooks/effects/useSceneEffects.js": {
+    "parent": "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls"
+  },
+  "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls/hooks/interaction": {
+    "parent": "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls"
+  },
+  "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls/hooks/interaction/useAnimationLoop.js": {
+    "parent": "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls"
+  },
+  "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls/hooks/interaction/useObjectInteraction.js": {
+    "parent": "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls"
+  },
+  "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls/hooks/updates": {
+    "parent": "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls"
+  },
+  "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls/hooks/updates/useCameraController.js": {
+    "parent": "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls"
+  },
+  "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls/hooks/updates/useLightingUpdates.js": {
+    "parent": "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls"
+  },
+  "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls/hooks/updates/useMaterialUpdates.js": {
+    "parent": "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls"
+  },
+  "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls/objects": {
+    "parent": "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls"
+  },
+  "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls/objects/.DS_Store": {
+    "parent": "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls"
+  },
+  "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls/objects/factories": {
+    "parent": "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls"
+  },
+  "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls/objects/factories/.DS_Store": {
+    "parent": "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls"
+  },
+  "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls/objects/factories/decorators": {
+    "parent": "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls"
+  },
+  "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls/objects/factories/decorators/compoundSphereExtras.js": {
+    "parent": "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls"
+  },
+  "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls/objects/factories/decorators/quantumManifoldExtras.js": {
+    "parent": "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls"
+  },
+  "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls/objects/factories/hyperframeAssembler.js": {
+    "parent": "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls"
+  },
+  "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls/objects/factories/hyperframeBuilders": {
+    "parent": "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls"
+  },
+  "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls/objects/factories/hyperframeBuilders/boxHyperframe.js": {
+    "parent": "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls"
+  },
+  "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls/objects/factories/hyperframeBuilders/cell120Hyperframe.js": {
+    "parent": "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls"
+  },
+  "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls/objects/factories/hyperframeBuilders/cell16Hyperframe.js": {
+    "parent": "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls"
+  },
+  "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls/objects/factories/hyperframeBuilders/cell24Hyperframe.js": {
+    "parent": "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls"
+  },
+  "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls/objects/factories/hyperframeBuilders/cell600Hyperframe.js": {
+    "parent": "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls"
+  },
+  "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls/objects/factories/hyperframeBuilders/compoundCell120Hyperframe.js": {
+    "parent": "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls"
+  },
+  "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls/objects/factories/hyperframeBuilders/compoundCell24Hyperframe.js": {
+    "parent": "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls"
+  },
+  "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls/objects/factories/hyperframeBuilders/compoundCell600Hyperframe.js": {
+    "parent": "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls"
+  },
+  "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls/objects/factories/hyperframeBuilders/compoundHypercubeHyperframe.js": {
+    "parent": "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls"
+  },
+  "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls/objects/factories/hyperframeBuilders/cpdTesseractCenterline.js": {
+    "parent": "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls"
+  },
+  "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls/objects/factories/hyperframeBuilders/hessianPolychoronCenterline.js": {
+    "parent": "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls"
+  },
+  "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls/objects/factories/hyperframeBuilders/hypercubeHyperframe.js": {
+    "parent": "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls"
+  },
+  "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls/objects/factories/hyperframeBuilders/icosahedronHyperframe.js": {
+    "parent": "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls"
+  },
+  "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls/objects/factories/hyperframeBuilders/megaTesseractCenterline.js": {
+    "parent": "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls"
+  },
+  "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls/objects/factories/hyperframeBuilders/octahedronHyperframe.js": {
+    "parent": "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls"
+  },
+  "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls/objects/factories/hyperframeBuilders/simpleCompoundHypercubeHyperframe.js": {
+    "parent": "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls"
+  },
+  "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls/objects/factories/hyperframeBuilders/tetrahedronHyperframe.js": {
+    "parent": "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls"
+  },
+  "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls/objects/factories/intricateWireframeBuilders": {
+    "parent": "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls"
+  },
+  "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls/objects/factories/intricateWireframeBuilders/boxIntricate.js": {
+    "parent": "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls"
+  },
+  "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls/objects/factories/intricateWireframeBuilders/tetrahedronIntricate.js": {
+    "parent": "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls"
+  },
+  "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls/objects/factories/materialCache.js": {
+    "parent": "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls"
+  },
+  "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls/objects/factories/materialFactory.js": {
+    "parent": "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls"
+  },
+  "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls/objects/factories/materialFactory.test.js": {
+    "parent": "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls"
+  },
+  "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls/objects/factories/objectFactory.js": {
+    "parent": "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls"
+  },
+  "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls/objects/factories/wireframeAssembler.js": {
+    "parent": "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls"
+  },
+  "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls/objects/factories/wireframeBuilders": {
+    "parent": "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls"
+  },
+  "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls/objects/factories/wireframeBuilders/boxWireframe.js": {
+    "parent": "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls"
+  },
+  "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls/objects/factories/wireframeBuilders/commonWireframe.js": {
+    "parent": "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls"
+  },
+  "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls/objects/factories/wireframeBuilders/cpdTesseractWireframe.js": {
+    "parent": "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls"
+  },
+  "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls/objects/factories/wireframeBuilders/hypercubeWireframe.js": {
+    "parent": "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls"
+  },
+  "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls/objects/factories/wireframeBuilders/octahedronWireframe.js": {
+    "parent": "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls"
+  },
+  "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls/objects/factories/wireframeBuilders/sphereWireframe.js": {
+    "parent": "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls"
+  },
+  "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls/objects/geometryCreation.js": {
+    "parent": "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls"
+  },
+  "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls/objects/spectralOrbs.js": {
+    "parent": "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls"
+  },
+  "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls/threeSetup": {
+    "parent": "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls"
+  },
+  "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls/threeSetup/environmentSetup.js": {
+    "parent": "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls"
+  },
+  "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls/threeSetup/lightingSetup.js": {
+    "parent": "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls"
+  },
+  "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls/threeSetup/sceneSetup.js": {
+    "parent": "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls"
+  },
+  "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls/utils": {
+    "parent": "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls"
+  },
+  "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls/utils/geometryHelpers.js": {
+    "parent": "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls"
+  },
+  "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls/utils/threeConstants.js": {
+    "parent": "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls"
+  },
+  "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/hooks": {
+    "color": "blue",
+    "badge": "○"
+  },
+  "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/hooks/useParallax.js": {
+    "parent": "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/hooks"
+  },
+  "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/hooks/useQuantumState.js": {
+    "parent": "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/hooks"
+  },
+  "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/hooks/useSceneState.js": {
+    "color": "indigo",
+    "badge": "●"
+  }
+}
