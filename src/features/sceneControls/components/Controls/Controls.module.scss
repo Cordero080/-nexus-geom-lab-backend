@@ -8,9 +8,9 @@
 .controls {
   position: absolute;
   top: 100px; /* Increased from 20px */
-  left: -10px; /* Reduced from 5px */
+  left: -30px; /* Moved further left for more space */
   width: 260px; /* Increased for better readability */
-  max-height: 75vh;
+  max-height: 108vh; /* Control the maximum height - adjust this value to your preference */
   background: rgba(0, 0, 0, 0.25); /* Slightly darker to compensate for less blur */
   color: rgba(255, 255, 255, 0.9);
   padding: 18px 16px; /* Reduced from 24px 20px */
@@ -35,6 +35,8 @@
   will-change: scroll-position;
   transform: translateZ(0) scale(0.7);
   transform-origin: top center;
+  /* Allow content to overflow for dropdowns */
+  contain: layout style; /* Instead of contain: strict which clips overflow */
 }
 
 .controls:hover {
@@ -414,7 +416,6 @@
 }
 
 .sectionContent {
-  overflow: hidden;
   transition:
     max-height 0.3s ease,
     opacity 0.3s ease,
@@ -427,12 +428,14 @@
   opacity: 1;
   padding-top: 8px;
   padding-bottom: 8px;
+  overflow: visible; /* Allow dropdowns to overflow when open */
 }
 
 .sectionContentClosed {
   opacity: 0;
   padding-top: 0;
   padding-bottom: 0;
+  overflow: hidden; /* Hide content during collapse animation */
 }
 
 /* Section-specific max-heights */
@@ -441,17 +444,17 @@
    Solution: Set max-height high enough for all nested controls to be visible
    Material Properties: Contains many subsections (Color, Wireframe, Vertices, etc.)
    Camera/Scene: Contains Animation Style dropdown + Orb Speed + Object Speed sliders
-   Both set to 1200px to ensure all controls visible when expanded - panel itself scrolls via overflow-y: auto */
+   Increased values to accommodate expanded dropdowns - panel itself scrolls via overflow-y: auto */
 .sectionContentMaterialOpen {
-  max-height: 1200px;
+  max-height: 1800px; /* Increased from 1200px for dropdown space */
 }
 
 .sectionContentSceneOpen {
-  max-height: 1200px;
+  max-height: 1800px; /* Increased from 1200px for dropdown space */
 }
 
 .sectionContentLightingOpen {
-  max-height: 800px;
+  max-height: 1200px; /* Increased from 800px for dropdown space */
 }
 
 .sectionContentClosed {
@@ -496,7 +499,6 @@
 
 /* Subsection Content */
 .subSectionContent {
-  overflow: hidden;
   transition:
     max-height 0.3s ease,
     opacity 0.3s ease,
@@ -505,10 +507,11 @@
 }
 
 .subSectionContentOpen {
-  max-height: 600px;
+  max-height: 900px; /* Increased from 600px for dropdown space */
   opacity: 1;
   padding-top: 4px;
   padding-bottom: 8px;
+  overflow: visible; /* Allow dropdowns to overflow when open */
 }
 
 .subSectionContentClosed {
@@ -516,6 +519,7 @@
   opacity: 0;
   padding-top: 0;
   padding-bottom: 0;
+  overflow: hidden; /* Hide content during collapse animation */
 }
 
 /* Select dropdown styling - now using CustomSelect component */
@@ -735,11 +739,11 @@
 
   .sectionContentMaterialOpen,
   .sectionContentSceneOpen {
-    max-height: 1000px;
+    max-height: 1500px; /* Increased for dropdown space */
   }
 
   .subSectionContentOpen {
-    max-height: 500px;
+    max-height: 700px; /* Increased for dropdown space */
   }
 }
 
@@ -778,11 +782,11 @@
 
   .sectionContentMaterialOpen,
   .sectionContentSceneOpen {
-    max-height: 800px;
+    max-height: 1200px; /* Increased for dropdown space */
   }
 
   .subSectionContentOpen {
-    max-height: 400px;
+    max-height: 600px; /* Increased for dropdown space */
   }
 
   /* Make control rows stack vertically on very small screens */
