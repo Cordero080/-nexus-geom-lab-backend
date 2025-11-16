@@ -41,12 +41,19 @@ function GeomLab() {
   // SCENE STATE - extracted to custom hook
   const {
     // Material properties
-    metalness,
+    // NOTE: It's NOT a Static Object. This line runs EVERY TIME App.jsx renders.
+    // The ENTIRE config object is recreated every render.**
+    // Where do they change?**
+    // In the hook (useSceneState.js). Then App.jsx creates a NEW config object with the NEW values.**
+    // NOTE: ** The ENTIRE config object is recreated every render.**
+
+    metalness,   
     setMetalness,
     emissiveIntensity,
     setEmissiveIntensity,
-    baseColor,
-    setBaseColor,
+    baseColor,     // ie; Before state change: '#4a0e78'
+    setBaseColor,  // After user picks red and state updates: This is NOW '#ff0000'
+      // ThreeScene gets { baseColor: '#ff0000' }
     wireframeIntensity,
     setWireframeIntensity,
     // Hyperframe

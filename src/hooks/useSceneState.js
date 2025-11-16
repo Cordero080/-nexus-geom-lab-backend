@@ -1,9 +1,9 @@
 import { useState } from 'react';
 
-/** (WHERE STATE LIVES AFTER REFACTORING-----PREVENTS PROP DRILLING HELL)
+/** (WHERE STATE LIVES AFTER REFACTORING- ---->PREVENTS PROP DRILLING HELL)
+  * Extracts 20+ state variables from App.jsx for better organization
  * Custom hook to manage all scene state in one place
- * Extracts 20+ state variables from App.jsx for better organization
- *
+ 
  * @returns {Object} { sceneState, sceneActions }
  */
 export function useSceneState() {
