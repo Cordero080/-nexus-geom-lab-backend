@@ -3,7 +3,7 @@ import styles from '../Controls.module.scss';
 import CustomSelect from '@/components/ui/CustomSelect/CustomSelect';
 
 /**
- * MaterialPropertiesSection Component
+ * MaterialPropertiesSection Component ( UI: OBJECT MATERIAL SECTION)
  *
  * Handles all material-related controls including:
  * - Surface properties (base color, emissive intensity, metalness)
@@ -77,8 +77,8 @@ function MaterialPropertiesSection({
           <label>Base Color:</label>
           <input
             type="color"
-            value={baseColor ? baseColor.slice(0, 7) : '#000000'}
-            onChange={handleBaseColorChange}
+            value={baseColor ? baseColor.slice(0, 7) : '#000000'}// Shows current color: '#4a0e78'
+            onChange={handleBaseColorChange}   // When user picks new color, call this
             onMouseDown={(e) => e.stopPropagation()}
             onMouseMove={(e) => e.stopPropagation()} // stop propagation to prevent unwanted side effects like color picker closing
           />

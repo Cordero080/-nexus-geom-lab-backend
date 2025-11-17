@@ -1,6 +1,10 @@
 import { useState } from 'react';
 
 /** (WHERE STATE LIVES AFTER REFACTORING- ---->PREVENTS PROP DRILLING HELL)
+ * useSceneState.js = Toolbox full of tools
+                   (22 states + 22 setters)
+                   App.jsx = Worker who USES the toolbox
+                   (calls the hook, gets the tools)
   * Extracts 20+ state variables from App.jsx for better organization
  * Custom hook to manage all scene state in one place
  

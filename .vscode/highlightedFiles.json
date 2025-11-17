@@ -6,7 +6,8 @@
     "parent": "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls"
   },
   "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls/components/Controls/Controls.jsx": {
-    "parent": "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls"
+    "color": "indigo",
+    "badge": "●"
   },
   "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls/components/Controls/Controls.module.scss": {
     "parent": "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls"
@@ -27,13 +28,15 @@
     "parent": "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls"
   },
   "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls/components/Controls/_sections/MaterialPropertiesSection.jsx": {
-    "parent": "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls"
+    "color": "purple",
+    "badge": "✶"
   },
   "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls/components/Controls/_sections/SceneControlsSection.jsx": {
     "parent": "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls"
   },
   "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls/components/Controls/controlsHandlers.js": {
-    "parent": "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls"
+    "color": "pink",
+    "badge": "○"
   },
   "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls/components/Controls/controlsHandlers.test.js": {
     "parent": "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls"
@@ -53,7 +56,8 @@
     "parent": "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls"
   },
   "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls/ThreeScene.jsx": {
-    "parent": "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls"
+    "color": "indigo",
+    "badge": "●"
   },
   "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls/animation": {
     "parent": "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls"

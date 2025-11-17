@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Routes, Route, useNavigate, Navigate, useLocation } from 'react-router-dom';
+import useSceneState from "@/hooks/useSceneState";
 import ThreeScene from '@/features/sceneControls/ThreeScene';
 import Controls from '@/features/sceneControls/components/Controls/Controls';
 import SaveControls from '@/features/sceneControls/components/SaveButton/SaveControls';
@@ -15,14 +16,8 @@ import { SceneProvider, useScene } from '@/context/SceneContext';
 import { AuthProvider, useAuth } from "@/features/auth/context/AuthContext";
 import { QuantumCursor } from "@/components/ui/Effects";
 import Footer from "@/components/pages/HomePage/components/Footer/Footer";
-import useSceneState from "@/hooks/useSceneState";
 import './cursor-override.module.scss';
 import sharedStyles from '@/styles/shared.module.scss';
-
-// Updated default colors for psychedelic theme and used in geom-lab state = these are the initial colors when user starts a new scene
-const defaultBaseColor = '#4a0e78'; // Deep purple
-const defaultHyperframeColor = '#00d9ff'; // Bright cyan
-const defaultHyperframeLineColor = '#00ff41'; // Electric lime green
 
 function GeomLab() {
   const { loadedConfig, resetScene } = useScene(); // CUSTOM HOOK: Get loaded config from context
@@ -271,7 +266,7 @@ function GeomLab() {
 
   // Handle exit button click
   // these are 20 states passed down to ThreeScene as props
-  // Create sceneConfig object for SaveButton
+  // Create sceneConfig object for SaveButton (VALUES ONLY)
   const sceneConfig = {
     metalness,
     emissiveIntensity,
@@ -394,11 +389,12 @@ function GeomLab() {
         </div>
       )}
       
-      <ThreeScene config={sceneConfig} />
+      <ThreeScene config={sceneConfig} />  
+      {/* ONLY NEEDS VALUE from state to call hook and update Three.js ui value */}
       <Controls 
-        config={sceneConfig}
+        config={sceneConfig} //Needs all VALUES from State
         onChange={{
-          setScale,
+          setScale,   // Need all SETTERS from State
           setMetalness,
           setEmissiveIntensity,
           setBaseColor,
