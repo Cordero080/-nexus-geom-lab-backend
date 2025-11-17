@@ -35,6 +35,7 @@ import {
  */
 
 // PROPS RECEIVED FROM App.jsx - config object and onChange object with all setters
+// only Values are brought into Controls to be receptors of the value change, while the onChange are taken into a sort of factory to prepare them to change the value"
 function Controls({ config, onChange }) {
   // Destructure all current values from config
   const {
@@ -71,6 +72,7 @@ function Controls({ config, onChange }) {
   /*
   // EVENT HANDLER FUNCTIONS
    * These functions bridge between user interactions and App.jsx state updates
+   imported from handlers/controlHandlers.js
    * 
    * PATTERN FOR EACH HANDLER:
    * 1. USER INTERACTION triggers onChange event on UI element
@@ -79,12 +81,6 @@ function Controls({ config, onChange }) {
    * 4. Handler calls the setter function passed from App.jsx
    * 5. Setter function updates App.jsx state
    * 6. Updated state flows to ThreeScene.jsx
-   */
-
-  /*
-  // EVENT HANDLER FUNCTIONS
-   * These functions are now imported from handlers/controlHandlers.js
-   * Each handler is a higher-order function that takes a setter function and returns an event handler
    */
 
   // Create handler functions using factories from controlsHandlers.js

@@ -39,7 +39,8 @@ function GeomLab() {
     // NOTE: It's NOT a Static Object. This line runs EVERY TIME App.jsx renders.
     // The ENTIRE config object is recreated every render.**
     // Where do they change?**
-    // In the hook (useSceneState.js). Then App.jsx creates a NEW config object with the NEW values.**
+    // In the hook (useSceneState.js). 
+    // Then App.jsx creates a NEW config object with the NEW values.**
     // NOTE: ** The ENTIRE config object is recreated every render.**
 
     metalness,   
