@@ -23,7 +23,7 @@ export function useObjectManager(refs, objectProps) {
   const { sceneRef, objectsRef, materialRef } = refs;
   const {
     objectCount,
-    objectType,
+    objectType,  // <----------- geometry creation
     baseColor,
     metalness,
     emissiveIntensity,
@@ -54,17 +54,18 @@ export function useObjectManager(refs, objectProps) {
       // Remove solid and wireframe meshes
       if (obj.solidMesh) scene.remove(obj.solidMesh);
       if (obj.wireframeMesh) scene.remove(obj.wireframeMesh);
-      // Remove hyperframe elements
+      // Remove hyperframe elements ... REMOVE ALL GEOMETRY FROM SCENE
       if (obj.centerLines) scene.remove(obj.centerLines);
       if (obj.curvedLines) scene.remove(obj.curvedLines);
       // Handle legacy single mesh objects
       if (obj.mesh) scene.remove(obj.mesh);
     });
-    objectsRef.current = [];
+    objectsRef.current = [];  // CLEAR THE ARRAY
 
     // CREATE NEW OBJECTS using current prop values
     const resolvedBaseColor = baseColorRef.current;
-
+    
+// STEP 2: CREATE NEW OBJECTS
     for (let i = 0; i < objectCount; i++) {
       // Create object using factory
       const objectData = createSceneObject({

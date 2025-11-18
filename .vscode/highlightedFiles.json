@@ -233,53 +233,16 @@
   "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls/geometries/polytopes/tetrahedron.js": {
     "parent": "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls"
   },
-  "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls/hooks": {
-    "parent": "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls"
-  },
-  "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls/hooks/.DS_Store": {
-    "parent": "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls"
-  },
   "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls/hooks/core": {
-    "parent": "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls"
+    "color": "green",
+    "badge": "▲"
   },
   "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls/hooks/core/useObjectManager.js": {
-    "parent": "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls"
+    "color": "green",
+    "badge": "▲"
   },
   "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls/hooks/core/useSceneInitialization.js": {
-    "parent": "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls"
-  },
-  "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls/hooks/effects": {
-    "parent": "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls"
-  },
-  "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls/hooks/effects/useMetalnessLighting.js": {
-    "parent": "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls"
-  },
-  "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls/hooks/effects/useNebulaParticles.js": {
-    "parent": "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls"
-  },
-  "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls/hooks/effects/useSceneEffects.js": {
-    "parent": "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls"
-  },
-  "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls/hooks/interaction": {
-    "parent": "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls"
-  },
-  "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls/hooks/interaction/useAnimationLoop.js": {
-    "parent": "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls"
-  },
-  "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls/hooks/interaction/useObjectInteraction.js": {
-    "parent": "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls"
-  },
-  "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls/hooks/updates": {
-    "parent": "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls"
-  },
-  "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls/hooks/updates/useCameraController.js": {
-    "parent": "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls"
-  },
-  "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls/hooks/updates/useLightingUpdates.js": {
-    "parent": "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls"
-  },
-  "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls/hooks/updates/useMaterialUpdates.js": {
-    "parent": "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls"
+    "parent": "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls/hooks"
   },
   "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls/objects": {
     "parent": "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls"
@@ -378,7 +341,8 @@
     "parent": "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls"
   },
   "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls/objects/factories/objectFactory.js": {
-    "parent": "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls"
+    "color": "green",
+    "badge": "▲"
   },
   "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls/objects/factories/wireframeAssembler.js": {
     "parent": "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls"
@@ -444,5 +408,45 @@
   "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/hooks/useSceneState.js": {
     "color": "indigo",
     "badge": "●"
+  },
+  "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls/hooks": {
+    "color": "white",
+    "badge": "▲"
+  },
+  "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls/hooks/.DS_Store": {
+    "parent": "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls/hooks"
+  },
+  "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls/hooks/effects": {
+    "parent": "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls/hooks"
+  },
+  "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls/hooks/effects/useMetalnessLighting.js": {
+    "parent": "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls/hooks"
+  },
+  "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls/hooks/effects/useNebulaParticles.js": {
+    "parent": "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls/hooks"
+  },
+  "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls/hooks/effects/useSceneEffects.js": {
+    "parent": "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls/hooks"
+  },
+  "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls/hooks/interaction": {
+    "parent": "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls/hooks"
+  },
+  "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls/hooks/interaction/useAnimationLoop.js": {
+    "parent": "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls/hooks"
+  },
+  "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls/hooks/interaction/useObjectInteraction.js": {
+    "parent": "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls/hooks"
+  },
+  "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls/hooks/updates": {
+    "parent": "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls/hooks"
+  },
+  "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls/hooks/updates/useCameraController.js": {
+    "parent": "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls/hooks"
+  },
+  "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls/hooks/updates/useLightingUpdates.js": {
+    "parent": "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls/hooks"
+  },
+  "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls/hooks/updates/useMaterialUpdates.js": {
+    "parent": "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls/hooks"
   }
 }

@@ -46,11 +46,6 @@ export function createSceneObject(config) {
     wireframeIntensity,
     hyperframeColor,
     hyperframeLineColor,
-    // Optional geometry-specific overrides
-    cpdTK_p,
-    cpdTK_q,
-    cpdTK_tubeRadius,
-    cpdTK_gap,
   } = config;
 
   // ========================================
