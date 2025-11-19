@@ -213,7 +213,8 @@
     "parent": "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls"
   },
   "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls/geometries/polytopes/icosahedron.js": {
-    "parent": "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls"
+    "color": "teal",
+    "badge": "◆"
   },
   "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls/geometries/polytopes/index.js": {
     "parent": "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls"

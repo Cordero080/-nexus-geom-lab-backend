@@ -22,7 +22,7 @@ export default class QuantumCursorUniverse {
     this.trailParticles = []; // New: Dedicated trail particles
     this.energyWaves = [];
     this.maxParticles = 10;
-    this.maxTrailParticles = 500; // Much larger pool to prevent cutoff
+    this.maxTrailParticles = 200; // REDUCED from 500 for better performance
     this.maxEnergyWaves = 3; // Hexagon formation
 
     this.isMouseMoving = false;
@@ -137,9 +137,9 @@ export default class QuantumCursorUniverse {
 
       this.energyWaves.push({
         element: wave,
-        angle: (40 / this.maxEnergyWaves) * i,
-        distance: 20,
-        speed: Math.random() * 2.5 + 0.8,
+        angle: (360 / this.maxEnergyWaves) * i, // Evenly distributed (120° apart for 3 waves)
+        distance: 15, // Fixed closer distance
+        speed: 1.5, // Uniform speed for symmetrical rotation
       });
     }
   }
@@ -171,11 +171,11 @@ export default class QuantumCursorUniverse {
   spawnTrailParticles() {
     this.frameCount++;
 
-    // Spawn more particles when moving faster
-    const spawnRate = Math.min(Math.floor(this.velocity / 1.5), 5); // More particles
+    // PERFORMANCE: Reduced spawn rate and increased threshold
+    const spawnRate = Math.min(Math.floor(this.velocity / 2), 3); // Reduced from 5 to 3
 
-    if (this.frameCount % 1 === 0 && this.velocity > 0.5) {
-      // Every frame, lower threshold
+    if (this.frameCount % 2 === 0 && this.velocity > 1) {
+      // Every 2 frames instead of every frame, higher threshold
       for (let i = 0; i < spawnRate; i++) {
         const particle = this.trailParticles.find((p) => !p.active);
         if (particle) {
@@ -253,17 +253,17 @@ export default class QuantumCursorUniverse {
   }
 
   updatePhysics() {
-    this.targetX += (this.mouseX - this.targetX) * 0.15;
-    this.targetY += (this.mouseY - this.targetY) * 0.15;
+    // FASTER SMOOTHING: Increased from 0.15 to 0.25 for more responsive cursor
+    this.targetX += (this.mouseX - this.targetX) * 0.25;
+    this.targetY += (this.mouseY - this.targetY) * 0.25;
 
     if (this.cursor) {
-      this.cursor.style.left = this.targetX + 'px';
-      this.cursor.style.top = this.targetY + 'px';
+      // Use transform instead of left/top for better performance
+      this.cursor.style.transform = `translate(${this.targetX}px, ${this.targetY}px) translate(-50%, -50%) scale(${0.7 + Math.sin(this.quantumState * 3) * 0.15})`; // Reduced pulse from 0.2 to 0.15
 
       // Electric blues to vibrant magenta - full cyberpunk spectrum (220-300 hue range)
       const baseHue = 220 + ((this.quantumState * 100) % 80); // Cycles through 220-300 (deep blue to magenta)
-      const pulseScale = 0.7 + Math.sin(this.quantumState * 3) * 0.2; // Smaller base size
-      const ringPulse = 1 + Math.sin(this.quantumState * 2) * 0.15;
+      const ringPulse = 1 + Math.sin(this.quantumState * 2) * 0.1; // Reduced from 0.15 to 0.1
 
       // Multiple layered box-shadows to create concentric color rings (smaller)
       this.cursor.style.boxShadow = `
@@ -283,9 +283,8 @@ export default class QuantumCursorUniverse {
         )
       `;
 
-      this.cursor.style.transform = `translate(-50%, -50%) scale(${pulseScale * ringPulse})`;
-      this.cursor.style.width = '24px'; // Decreased by 15% from 28px
-      this.cursor.style.height = '24px';
+      this.cursor.style.width = '20px'; // Reduced from 24px
+      this.cursor.style.height = '20px';
     }
 
     // Adjust gravity field visibility
@@ -350,12 +349,12 @@ export default class QuantumCursorUniverse {
     this.energyWaves.forEach((wave, index) => {
       wave.angle += wave.speed * 0.8;
       const radians = (wave.angle * Math.PI) / 180;
-      const dynamicDistance = wave.distance + Math.sin(this.quantumState + index) * 10;
-      const waveX = this.mouseX + Math.cos(radians) * dynamicDistance;
-      const waveY = this.mouseY + Math.sin(radians) * dynamicDistance;
+      const dynamicDistance = 15 + Math.sin(this.quantumState + index) * 3; // Closer orbit, less variation
+      const waveX = this.targetX + Math.cos(radians) * dynamicDistance; // Use targetX/Y for smooth following
+      const waveY = this.targetY + Math.sin(radians) * dynamicDistance;
 
       wave.element.style.left = waveX + 'px';
-      wave.element.style.top = waveY - 30 + 'px';
+      wave.element.style.top = waveY + 'px';
       wave.element.style.transform = `rotate(${wave.angle}deg) scale(${
         0.8 + Math.sin(this.quantumState * 2) * 0.3
       })`;
