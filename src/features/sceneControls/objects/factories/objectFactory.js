@@ -37,7 +37,7 @@ import {
  */
 export function createSceneObject(config) {
   const {
-    objectType,
+    objectType, // <----------- THIS
     objectCount,
     objectIndex,
     baseColor,

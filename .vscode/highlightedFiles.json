@@ -369,7 +369,8 @@
     "parent": "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls"
   },
   "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls/objects/geometryCreation.js": {
-    "parent": "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls"
+    "color": "lime",
+    "badge": "▲"
   },
   "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls/objects/spectralOrbs.js": {
     "parent": "/Users/pablodcordero/code/my-stuff/nexus-geom-lab/src/features/sceneControls"
