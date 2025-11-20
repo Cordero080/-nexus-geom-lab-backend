@@ -258,8 +258,10 @@ export default class QuantumCursorUniverse {
     this.targetY += (this.mouseY - this.targetY) * 0.25;
 
     if (this.cursor) {
-      // Use transform instead of left/top for better performance
-      this.cursor.style.transform = `translate(${this.targetX}px, ${this.targetY}px) translate(-50%, -50%) scale(${0.7 + Math.sin(this.quantumState * 3) * 0.15})`; // Reduced pulse from 0.2 to 0.15
+      // Set position with left/top, then center with transform
+      this.cursor.style.left = `${this.targetX}px`;
+      this.cursor.style.top = `${this.targetY}px`;
+      this.cursor.style.transform = `translate(-50%, -50%) scale(${0.7 + Math.sin(this.quantumState * 3) * 0.15})`;
 
       // Electric blues to vibrant magenta - full cyberpunk spectrum (220-300 hue range)
       const baseHue = 220 + ((this.quantumState * 100) % 80); // Cycles through 220-300 (deep blue to magenta)
