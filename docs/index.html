@@ -14,21 +14,23 @@
     />
     <!-- Start Single Page Apps for GitHub Pages -->
     <script type="text/javascript">
-      (function(l) {
-        if (l.search[1] === '/' ) {
-          var decoded = l.search.slice(1).split('&').map(function(s) { 
-            return s.replace(/~and~/g, '&')
-          }).join('?');
+      (function (l) {
+        if (l.search[1] === '/') {
+          var decoded = l.search
+            .slice(1)
+            .split('&')
+            .map(function (s) {
+              return s.replace(/~and~/g, '&');
+            })
+            .join('?');
           var basePath = '/nexus-geom-lab';
-          window.history.replaceState(null, null,
-              basePath + '/' + decoded + l.hash
-          );
+          window.history.replaceState(null, null, basePath + '/' + decoded + l.hash);
         }
-      }(window.location))
+      })(window.location);
     </script>
     <!-- End Single Page Apps for GitHub Pages -->
-    <script type="module" crossorigin src="/nexus-geom-lab/assets/index-C4-G8epe.js"></script>
-    <link rel="stylesheet" crossorigin href="/nexus-geom-lab/assets/index-DyNbgzVl.css">
+    <script type="module" crossorigin src="/nexus-geom-lab/assets/index-BrJRd3_u.js"></script>
+    <link rel="stylesheet" crossorigin href="/nexus-geom-lab/assets/index-Bn1fJqaq.css">
   </head>
   <body>
     <div id="root"></div>

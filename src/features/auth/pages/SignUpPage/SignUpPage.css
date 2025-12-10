@@ -183,11 +183,15 @@
 
 .title-word-left {
   position: relative;
+  display: inline;
+  white-space: nowrap;
   animation: slideInFromLeft 1.5s cubic-bezier(0.22, 1, 0.36, 1) !important;
 }
 
 .title-word-right {
   position: relative;
+  display: inline;
+  white-space: nowrap;
   animation: slideInFromRight 1.5s cubic-bezier(0.22, 1, 0.36, 1) !important;
 }
 
@@ -271,6 +275,7 @@
 }
 
 .signup-title .title-inverted-v {
+  display: inline-block;
   transform: scaleY(-1.02) translateY(0.06em);
 }
 
