@@ -189,7 +189,7 @@ MANIFOLD: A mathematical surface or multi-dimensional space that can be curved o
                   }}
                   label={
                     <>
-                      ENTER GE0M L<span style={{display: 'inline-block', transform: 'scaleY(-1)', verticalAlign: 'baseline'}}>V</span>B
+                      ENTER L<span style={{display: 'inline-block', transform: 'scaleY(-1)', verticalAlign: 'baseline'}}>V</span>B
                     </>
                   }
                   className="enter-geom-lab-hero-btn"
