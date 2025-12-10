@@ -2,6 +2,16 @@
 
 > Interactive 3D geometry platform with 24 hyperdimensional shapes, progressive character unlocks, and full-stack scene management
 
+---
+
+⚠️ **COPYRIGHT NOTICE** ⚠️
+
+© 2025 Pablo Cordero. All Rights Reserved.
+
+This project is **NOT open source**. You may view the code for personal learning only. Copying, modifying, distributing, or using this code in your own projects is strictly prohibited without explicit written permission. See [LICENSE](./LICENSE) for details.
+
+---
+
 <div align="center">
 
 ![React](https://img.shields.io/badge/React-19.1-61DAFB?style=for-the-badge&logo=react)
