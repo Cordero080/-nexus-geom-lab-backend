@@ -10,6 +10,12 @@ html {
   max-width: 100%;
   margin: 0;
   padding: 0;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE/Edge */
+}
+
+html::-webkit-scrollbar {
+  display: none; /* Chrome/Safari/Opera */
 }
 
 body {
@@ -29,6 +35,12 @@ body {
   cursor: none;
   animation: mysteriousFadeIn 3s ease-out forwards;
   opacity: 0;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+body::-webkit-scrollbar {
+  display: none;
 }
 
 #root {
