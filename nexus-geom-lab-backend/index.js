@@ -44,8 +44,13 @@ app.use(
         return callback(null, true);
       }
 
-      // Allow production frontend URL
-      if (origin === process.env.FRONTEND_URL) {
+      // Allow GitHub Pages (with or without trailing path)
+      if (origin.startsWith("https://cordero080.github.io")) {
+        return callback(null, true);
+      }
+
+      // Allow production frontend URL from env
+      if (process.env.FRONTEND_URL && origin === process.env.FRONTEND_URL) {
         return callback(null, true);
       }
 
