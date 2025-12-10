@@ -5,6 +5,9 @@ import path from 'path';
 
 // Root-level Vite config (used by the dev server)
 export default defineConfig({
+  // GitHub Pages deploys to https://username.github.io/repo-name/
+  // Change 'nexus-geom-lab' to your actual repo name
+  base: '/nexus-geom-lab/',
   plugins: [
     react(),
     removeConsole({

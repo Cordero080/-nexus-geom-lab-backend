@@ -1,3 +1,6 @@
+
+
+
 ## Performance & Optimization
 
 This project demonstrates comprehensive optimization strategies:
