@@ -2,8 +2,8 @@
 // Handles user authentication operations: signup, login, and fetching current user
 
 // In development: use empty string (Vite proxy forwards /api to backend)
-// In production: MUST set VITE_API_BASE_URL environment variable in Vercel
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || '';
+// In production: Use Render backend URL
+const API_BASE_URL = import.meta.env.PROD ? 'https://nexus-geom-lab-backend-sn7k.onrender.com' : '';
 
 /**
  * Sign up a new user
