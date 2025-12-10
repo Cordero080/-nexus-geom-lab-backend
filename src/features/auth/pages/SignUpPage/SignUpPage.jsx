@@ -478,9 +478,9 @@ export default function SignUpPage() {
             </div>
 
             <div className="form-footer">
-              <p className="footer-text">
+              <p className="footer-text" style={{ fontSize: '18px' }}>
                 Already have an account?{' '}
-                <button type="button" onClick={() => navigate('/login')} className="link-button">
+                <button type="button" onClick={() => navigate('/login')} className="link-button" style={{ fontSize: '18px' }}>
                   Login here
                 </button>
               </p>

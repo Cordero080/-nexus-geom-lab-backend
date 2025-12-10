@@ -432,9 +432,9 @@ const LoginPage = () => {
             </div>
 
             <div className="form-footer">
-              <p className="footer-text">
+              <p className="footer-text" style={{ fontSize: '18px' }}>
                 Don't have an account?{' '}
-                <Link to="/signup" className="footer-link">
+                <Link to="/signup" className="footer-link" style={{ fontSize: '18px' }}>
                   Sign Up
                 </Link>
               </p>
