@@ -1485,6 +1485,18 @@ input,
     letter-spacing: 0.15em;
     color: #fbfafe9c;
     margin: 40px 0 20px 0;
+
+    @media (max-width: 768px) {
+      font-size: 0.5em;
+      letter-spacing: 0.08em;
+      margin: 25px 0 12px 0;
+    }
+
+    @media (max-width: 480px) {
+      font-size: 0.4em;
+      letter-spacing: 0.05em;
+      margin: 15px 0 8px 0;
+    }
   }
 
   :global(.scene-description) {
@@ -1492,21 +1504,35 @@ input,
     font-family: 'Orbitron', 'JetBrains Mono', monospace;
     font-weight: 500;
     letter-spacing: 0.08em;
-    color: #00fff7dd;
+    color: #00fff766;
     text-shadow:
-      0 0 8px #00fff744,
-      0 0 16px #00fff722;
+      0 0 8px #00fff722,
+      0 0 16px #00fff711;
     margin-bottom: 30px;
     max-width: 900px;
     margin-left: auto;
     margin-right: auto;
     line-height: 1.6;
     transition:
-      transform 0.8s cubic-bezier(0.4, 0, 0.2, 1),
       background 0.8s cubic-bezier(0.4, 0, 0.2, 1),
       -webkit-background-clip 0.8s cubic-bezier(0.4, 0, 0.2, 1),
       text-shadow 0.8s cubic-bezier(0.4, 0, 0.2, 1);
     transform-style: preserve-3d;
+
+    @media (max-width: 768px) {
+      font-size: 0.55em;
+      letter-spacing: 0.04em;
+      max-width: 85%;
+      line-height: 1.4;
+      margin-bottom: 15px;
+    }
+
+    @media (max-width: 480px) {
+      font-size: 0.42em;
+      letter-spacing: 0.02em;
+      line-height: 1.3;
+      margin-bottom: 10px;
+    }
   }
 
   :global(.scene-description.flipped) {

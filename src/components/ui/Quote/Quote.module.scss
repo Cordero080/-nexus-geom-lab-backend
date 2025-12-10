@@ -32,6 +32,22 @@
   -webkit-font-smoothing: antialiased;
   display: inline-block;
   max-width: 500px;
+
+  /* Mobile responsive - smaller text on small screens */
+  @media (max-width: 768px) {
+    font-size: 0.38rem;
+    line-height: 1.8;
+    padding: 10px 16px;
+    max-width: 70%;
+    letter-spacing: -0.01em;
+  }
+
+  @media (max-width: 480px) {
+    font-size: 0.32rem;
+    line-height: 1.7;
+    padding: 8px 12px;
+    max-width: 65%;
+  }
 }
 
 @keyframes gradientShift {

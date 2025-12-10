@@ -6,6 +6,7 @@ export default function HessianPolychoronAnimation({ isActive = false }) {
   const containerRef = useRef();
   const sceneRef = useRef();
   const rendererRef = useRef();
+  const cameraRef = useRef();
   const meshRef = useRef();
   const frameIdRef = useRef();
   const nodesRef = useRef();
@@ -29,6 +30,7 @@ export default function HessianPolychoronAnimation({ isActive = false }) {
       10
     );
     camera.position.z = 3;
+    cameraRef.current = camera;
 
     // Renderer
     const renderer = new THREE.WebGLRenderer({
@@ -39,6 +41,17 @@ export default function HessianPolychoronAnimation({ isActive = false }) {
     renderer.setClearColor(0x0000, 0);
     containerRef.current.appendChild(renderer.domElement);
     rendererRef.current = renderer;
+
+    // Handle window resize
+    const handleResize = () => {
+      if (!containerRef.current) return;
+      const width = containerRef.current.clientWidth;
+      const height = containerRef.current.clientHeight;
+      camera.aspect = width / height;
+      camera.updateProjectionMatrix();
+      renderer.setSize(width, height);
+    };
+    window.addEventListener('resize', handleResize);
 
     // Create Hessian Polychoron geometry
     const geometry = createHessianPolychoron();
@@ -500,6 +513,7 @@ export default function HessianPolychoronAnimation({ isActive = false }) {
 
     // Cleanup
     return () => {
+      window.removeEventListener('resize', handleResize);
       if (frameIdRef.current) {
         cancelAnimationFrame(frameIdRef.current);
       }
@@ -541,7 +555,8 @@ export default function HessianPolychoronAnimation({ isActive = false }) {
         height: '100%',
         position: 'absolute',
         top: '-5%',
-        left: 0,
+        left: '50%',
+        transform: 'translateX(-50%)',
         zIndex: 1,
         pointerEvents: 'none',
       }}

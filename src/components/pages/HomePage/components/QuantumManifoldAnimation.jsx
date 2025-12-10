@@ -6,6 +6,7 @@ export default function QuantumManifoldAnimation({ isActive = false }) {
   const containerRef = useRef();
   const sceneRef = useRef();
   const rendererRef = useRef();
+  const cameraRef = useRef();
   const meshRef = useRef();
   const innerMeshRef = useRef();
   const frameIdRef = useRef();
@@ -18,14 +19,15 @@ export default function QuantumManifoldAnimation({ isActive = false }) {
     const scene = new THREE.Scene();
     sceneRef.current = scene;
 
-    // Camera
+    // Camera - wider FOV to make it appear smaller (similar style to Polychoron but ~80-85% size)
     const camera = new THREE.PerspectiveCamera(
-      55,
+      65,
       containerRef.current.clientWidth / containerRef.current.clientHeight,
       0.1,
       1000
     );
-    camera.position.z = 3.3;
+    camera.position.z = 4;
+    cameraRef.current = camera;
 
     // Renderer
     const renderer = new THREE.WebGLRenderer({
@@ -36,6 +38,17 @@ export default function QuantumManifoldAnimation({ isActive = false }) {
     renderer.setClearColor(0x000000, 0);
     containerRef.current.appendChild(renderer.domElement);
     rendererRef.current = renderer;
+
+    // Handle window resize
+    const handleResize = () => {
+      if (!containerRef.current) return;
+      const width = containerRef.current.clientWidth;
+      const height = containerRef.current.clientHeight;
+      camera.aspect = width / height;
+      camera.updateProjectionMatrix();
+      renderer.setSize(width, height);
+    };
+    window.addEventListener('resize', handleResize);
 
     // Create outer Quantum Manifold geometry with color gradient shader
     const geometry = createQuantumManifold();
@@ -183,6 +196,7 @@ export default function QuantumManifoldAnimation({ isActive = false }) {
 
     // Cleanup
     return () => {
+      window.removeEventListener('resize', handleResize);
       if (frameIdRef.current) {
         cancelAnimationFrame(frameIdRef.current);
       }
@@ -222,7 +236,8 @@ export default function QuantumManifoldAnimation({ isActive = false }) {
         height: '100%',
         position: 'absolute',
         top: -80,
-        left: 0,
+        left: '50%',
+        transform: 'translateX(-50%)',
         zIndex: 1,
         pointerEvents: 'none',
       }}
