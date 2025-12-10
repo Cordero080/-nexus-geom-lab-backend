@@ -26,6 +26,7 @@ export default defineConfig({
     },
   },
   build: {
+    outDir: 'docs',
     cssMinify: 'esbuild',
     cssCodeSplit: true,
     rollupOptions: {
