@@ -6,16 +6,19 @@
 
 html {
   font-size: 16px;
-  overflow-x: hidden;
   max-width: 100%;
   margin: 0;
   padding: 0;
-  scrollbar-width: none; /* Firefox */
-  -ms-overflow-style: none; /* IE/Edge */
+  overflow-x: hidden;
+  overflow-y: scroll;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
 }
 
 html::-webkit-scrollbar {
-  display: none; /* Chrome/Safari/Opera */
+  display: none;
+  width: 0;
+  background: transparent;
 }
 
 body {
@@ -41,6 +44,8 @@ body {
 
 body::-webkit-scrollbar {
   display: none;
+  width: 0;
+  background: transparent;
 }
 
 #root {
