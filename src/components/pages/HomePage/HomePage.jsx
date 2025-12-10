@@ -23,12 +23,13 @@ import useParallax from '@/hooks/useParallax';
 
 // External
 import BeamScanButton from '../../ui/BeamScanButton/BeamScanButton';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { GEOM_LAB_LINK_TEXT, SHOWCASE_LINK_TEXT } from '../../layout/NavBar/navLabels';
 import { useAuth } from '../../../features/auth/context/AuthContext';
 
 export default function HomePage() {
   const { isAuthenticated, logout } = useAuth();
+  const navigate = useNavigate();
 
   // Custom Hooks
   const { portalState, glyphState, handleQuantumCollapse } = useQuantumState();
@@ -185,7 +186,7 @@ MANIFOLD: A mathematical surface or multi-dimensional space that can be curved o
               <div className="button-wrapper-auth">
                 <BeamScanButton
                   onClick={(e) => {
-                    window.location.href = '/geom-lab';
+                    navigate('/geom-lab');
                   }}
                   label={
                     <>
@@ -199,7 +200,7 @@ MANIFOLD: A mathematical surface or multi-dimensional space that can be curved o
               <div className="button-wrapper-no-auth">
                 <BeamScanButton
                   onClick={(e) => {
-                    window.location.href = '/login';
+                    navigate('/login');
                   }}
                   label={
                     <>
@@ -209,7 +210,7 @@ MANIFOLD: A mathematical surface or multi-dimensional space that can be curved o
                 />
                 <BeamScanButton
                   onClick={(e) => {
-                    window.location.href = '/signup';
+                    navigate('/signup');
                   }}
                   label="SIGN UP"
                   delayedString={true}

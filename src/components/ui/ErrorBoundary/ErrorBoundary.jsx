@@ -52,7 +52,7 @@ class ErrorBoundary extends React.Component {
                   Try Again
                 </button>
                 <button
-                  onClick={() => (window.location.href = '/')}
+                  onClick={() => (window.location.href = import.meta.env.BASE_URL || '/')}
                   className={styles.secondaryButton}
                 >
                   Go Home

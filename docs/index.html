@@ -19,14 +19,15 @@
           var decoded = l.search.slice(1).split('&').map(function(s) { 
             return s.replace(/~and~/g, '&')
           }).join('?');
+          var basePath = '/nexus-geom-lab';
           window.history.replaceState(null, null,
-              l.pathname.slice(0, -1) + decoded + l.hash
+              basePath + '/' + decoded + l.hash
           );
         }
       }(window.location))
     </script>
     <!-- End Single Page Apps for GitHub Pages -->
-    <script type="module" crossorigin src="/nexus-geom-lab/assets/index-sqsfUIvB.js"></script>
+    <script type="module" crossorigin src="/nexus-geom-lab/assets/index-BM2W3Clg.js"></script>
     <link rel="stylesheet" crossorigin href="/nexus-geom-lab/assets/index-BMi2hJcO.css">
   </head>
   <body>
