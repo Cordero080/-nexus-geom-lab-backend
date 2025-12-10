@@ -213,26 +213,46 @@ Built with React, Three.js, and MongoDB, Nexus-Geom Lab lets you explore 24 adva
 
 ## 🚀 Quick Start
 
+### Local Development
+
 ```bash
 # Clone repository
-git clone https://github.com/pablocordero/nexus-geom-3D.git
-cd nexus-geom-3D
+git clone https://github.com/Cordero080/nexus-geom-lab.git
+cd nexus-geom-lab
 
 # Frontend setup
 npm install
 npm run dev
+# Opens http://localhost:5173
 
 # Backend setup (separate terminal)
-cd backend
+cd nexus-geom-lab-backend
 npm install
 cp .env.example .env  # Add your MongoDB URI and JWT secret
 npm run dev
+# Runs on http://localhost:3000
+```
 
-# Run tests
+### Deployment
+
+**Frontend** is hosted on GitHub Pages, **Backend** on Render.
+
+```bash
+# Deploy to GitHub Pages (from main branch)
+npm run build    # Outputs to /docs folder
+git add -A && git commit -m "deploy" && git push
+# GitHub Pages serves from /docs on main branch
+```
+
+**Live URLs:**
+- Frontend: https://cordero080.github.io/nexus-geom-lab/
+- Backend: https://nexus-geom-lab-backend-sn7k.onrender.com
+
+### Run Tests
+
+```bash
 npm test                    # Run all tests once
-npm test -- --watch         # Run tests in watch mode (auto-runs on file changes)
-
-# Open http://localhost:5173
+npm test -- --watch         # Run tests in watch mode
 ```
 
 ---
