@@ -55,7 +55,7 @@ const corsOptions = {
 app.use(cors(corsOptions));
 
 // Handle preflight requests explicitly
-app.options('*', cors(corsOptions));
+// Preflight handled by cors() middleware automatically
 
 // Security headers (after CORS)
 app.use(helmet());
