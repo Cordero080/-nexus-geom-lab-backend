@@ -10,7 +10,6 @@ import IcarusEnvironment from './characters/Icarus/IcarusEnvironment';
 import NexusEnvironment from './characters/Nexus/NexusEnvironment';
 import SheTechEnvironment from './environments/SheTechEnvironment';
 import styles from './ShowcaseViewer.module.scss';
-import './ShowcaseViewer-styles.module.scss';
 import sharedStyles from '@/styles/shared.module.scss';
 
 // Custom camera control component - just auto-rotate camera, no user interaction
@@ -303,14 +302,7 @@ function ShowcaseViewer({ animation, onClose }) {
         <SpeedControl speed={speed} onSpeedChange={setSpeed} />
 
         <div className="viewer-info">
-          <h2 className="viewer-title">{currentAnimation?.name || 'Cosmic Entity #001'}</h2>
-          <p className="viewer-description">
-            {currentAnimation?.description || 'A consciousness evolving inside a geometric vessel'}
-          </p>
-          <div className="viewer-meta">
-            <span className="meta-tag">Animation: {currentAnimation?.animation || 'Idle'}</span>
-            <span className="meta-tag">Variant: {currentAnimation?.variant || 'Cosmic Blue'}</span>
-          </div>
+          <h2 className="viewer-title">{currentAnimation?.name || 'Cosmic Entity'}</h2>
         </div>
       </div>
     </>

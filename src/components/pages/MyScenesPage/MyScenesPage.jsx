@@ -415,6 +415,7 @@ export default function MyScenesPage() {
           navScrolled={navScrolled}
           isAuthenticated={isAuthenticated}
           logout={logout}
+          user={user}
           currentPage="scenes"
         />
 

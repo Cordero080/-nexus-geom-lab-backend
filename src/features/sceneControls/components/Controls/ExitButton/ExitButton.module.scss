@@ -3,12 +3,12 @@
 .exitButtonContainer {
   /* Position - Fixed to bottom left of viewport */
   position: fixed;
-  bottom: 50px;
+  bottom: 30px;
   left: 30px;
   z-index: 1000;
 
   /* Fade out by default */
-  opacity: 0.6;
+  opacity: 0.4;
   transition: opacity 0.3s ease;
 
   &:hover {
@@ -18,8 +18,9 @@
   /* Override ScrambleButton font to use Orbitron */
   button {
     font-family: 'Orbitron', monospace !important;
-    min-width: 130px;
+    min-width: 100px;
     letter-spacing: 0.1em;
+    padding: 8px 20px;
 
     span {
       font-family: 'Orbitron', monospace !important;

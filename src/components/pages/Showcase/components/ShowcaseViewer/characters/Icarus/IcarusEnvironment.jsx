@@ -3,77 +3,11 @@ import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 
 /**
- * IcarusEnvironment - Code Breaker Theme
- * Creates a layered 3D environment with depth for Icarus-X character background
- * Features:
- * - Floating geometric particles (cubes, octahedrons, tetrahedrons)
- * - Layered depth with 3 distance planes
- * - Pulsing grid floor
- * - Animated wireframe structures
- * - Cyan/orange/blue color scheme
+ * IcarusEnvironment - Code Breaker Theme (Simplified)
+ * Clean, minimal background with only floating geometric particles
  */
 export default function IcarusEnvironment() {
   const particlesRef = useRef();
-  const gridRef = useRef();
-  const ringRefs = useRef([]);
-
-  // Create nebula gradient texture once
-  const nebulaTexture = useMemo(() => {
-    const canvas = document.createElement('canvas');
-    canvas.width = 2048;
-    canvas.height = 1024;
-    const ctx = canvas.getContext('2d');
-
-    // Fill with base gradient that goes horizontally (wraps better on sphere)
-    const gradient = ctx.createLinearGradient(0, 0, canvas.width, 0);
-    gradient.addColorStop(0, '#1a0f2e');
-    gradient.addColorStop(0.25, '#2b1a4a');
-    gradient.addColorStop(0.5, '#1a0f2e');
-    gradient.addColorStop(0.75, '#2b1a4a');
-    gradient.addColorStop(1, '#1a0f2e');
-
-    ctx.fillStyle = gradient;
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-    // Add vertical gradient overlay for depth
-    const vertGradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
-    vertGradient.addColorStop(0, 'rgba(11, 19, 43, 0.8)');
-    vertGradient.addColorStop(0.5, 'rgba(45, 25, 75, 0.6)');
-    vertGradient.addColorStop(1, 'rgba(11, 19, 43, 0.8)');
-
-    ctx.fillStyle = vertGradient;
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-    // Add nebula clouds with blur
-    ctx.filter = 'blur(40px)';
-    ctx.globalAlpha = 0.4;
-
-    for (let i = 0; i < 150; i++) {
-      const x = Math.random() * canvas.width;
-      const y = Math.random() * canvas.height;
-      const radius = 50 + Math.random() * 150;
-      const nebulaGrad = ctx.createRadialGradient(x, y, 0, x, y, radius);
-
-      // Alternate between purple and blue tones
-      const colors = [
-        ['#aa1c5cff', '#9b22dcff'],
-        ['#3a5fbf', '#1a2f5f'],
-        ['#aa1c7a', '#6a0e4a'],
-      ];
-      const colorSet = colors[i % colors.length];
-
-      nebulaGrad.addColorStop(0, colorSet[0]);
-      nebulaGrad.addColorStop(1, 'transparent');
-      ctx.fillStyle = nebulaGrad;
-      ctx.fillRect(x - radius, y - radius, radius * 2, radius * 2);
-    }
-
-    const texture = new THREE.CanvasTexture(canvas);
-    texture.wrapS = THREE.RepeatWrapping;
-    texture.wrapT = THREE.ClampToEdgeWrapping;
-
-    return texture;
-  }, []);
 
   // Create floating particles at different depths
   const particles = useMemo(() => {
@@ -84,7 +18,7 @@ export default function IcarusEnvironment() {
       new THREE.TetrahedronGeometry(0.25),
     ];
 
-    for (let i = 0; i < 150; i++) {
+    for (let i = 0; i < 100; i++) {
       const geometry = geometries[i % geometries.length];
 
       // Distribute particles in 3 depth layers
@@ -148,21 +82,10 @@ export default function IcarusEnvironment() {
       const opacity = 0.3 + Math.sin(time + i * 0.1) * 0.2;
       mesh.material.opacity = opacity;
     });
-
-    // Pulse grid
-    if (gridRef.current) {
-      gridRef.current.material.opacity = 0.15 + Math.sin(time * 2) * 0.001;
-    }
   });
 
   return (
     <group>
-      {/* Nebula Gradient Background Sphere */}
-      <mesh position={[0, 0, 0]} scale={[-1, 1, 1]}>
-        <sphereGeometry args={[50, 64, 64]} />
-        <meshBasicMaterial map={nebulaTexture} side={THREE.BackSide} transparent opacity={0.8} />
-      </mesh>
-
       {/* Ambient particles */}
       <group ref={particlesRef}>
         {particles.map((particle, i) => (
@@ -183,32 +106,6 @@ export default function IcarusEnvironment() {
           </mesh>
         ))}
       </group>
-
-      {/* Grid floor - creates depth perception */}
-      <mesh ref={gridRef} rotation={[-Math.PI / 2, 0, 0]} position={[0, -5, -8]}>
-        <planeGeometry args={[50, 50, 25, 25]} />
-        <meshBasicMaterial
-          color="#4ecdc4"
-          wireframe
-          transparent
-          opacity={0.1}
-          side={THREE.DoubleSide}
-        />
-      </mesh>
-
-      {/* Large background wireframe sphere - creates boundary */}
-      <mesh position={[0, 0, -25]}>
-        <sphereGeometry args={[15, 32, 32]} />
-        <meshBasicMaterial color="#4ecdc4" wireframe transparent opacity={0.08} />
-      </mesh>
-
-      {/* Glowing point lights matching Icarus colors */}
-      <pointLight position={[-10, 5, -5]} intensity={1.5} color="#4ecdc4" distance={20} />
-      <pointLight position={[10, -3, -8]} intensity={1.2} color="#0008ffff" distance={15} />
-      <pointLight position={[0, 8, -12]} intensity={1} color="#88c5e9" distance={18} />
-
-      {/* Ambient fog for depth */}
-      <fog attach="fog" args={['#0a0a0a', 10, 40]} />
     </group>
   );
 }

@@ -255,8 +255,10 @@ function GeomLab() {
   // Handle exit without saving from modal
   const handleExitWithoutSaving = () => {
     setShowSavePrompt(false);
-    setAllowNavigation(true);
     setHasUnsavedChanges(false);
+    // Navigate to home - nextPath should already be set by handleExit
+    navigate(nextPath || '/');
+    setNextPath(null);
   };
 
   // Handle cancel exit from modal
@@ -519,6 +521,9 @@ function AppContent() {
         {/* PUBLIC AUTH ROUTES - anyone can access */}
         <Route path="/signup" element={<SignUpPage />} />
         <Route path="/login" element={<LoginPage />} />
+
+        {/* CATCH-ALL - redirect unmatched routes to home */}
+        <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </SceneProvider>
   );

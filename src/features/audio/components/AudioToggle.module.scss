@@ -12,10 +12,10 @@
 .toggleButton {
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 0.5rem 1.25rem;
+  justify-content: center;
+  padding: 8px 12px;
   font-family: 'Orbitron', monospace;
-  font-size: 0.9rem;
+  font-size: 14px;
   font-weight: 600;
   border: none;
   background: rgba(0, 0, 0, 0.15);
@@ -23,26 +23,14 @@
   color: rgba(255, 255, 255, 0.9);
   cursor: pointer;
   transition: all 0.3s ease;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
   line-height: 1;
-  min-width: 130px;
+  min-width: 36px;
   box-shadow:
     0 0 0 2px rgba(0, 255, 255, 0.3),
     0 8px 32px rgba(0, 255, 255, 0.15),
     0 0 60px rgba(255, 0, 255, 0.1),
     inset 0 1px 0 rgba(255, 255, 255, 0.1);
-  /* Angled corners clip-path matching controls button */
-  clip-path: polygon(
-    14px 0,
-    100% 0,
-    100% calc(100% - 14px),
-    calc(100% - 14px) 100%,
-    0 100%,
-    0 14px
-  );
-  border-radius: 0;
-  transform: scale(0.9);
+  border-radius: 4px;
 }
 
 .toggleButton:hover {
@@ -51,7 +39,7 @@
     0 12px 48px rgba(0, 255, 255, 0.25),
     0 0 80px rgba(255, 0, 255, 0.2),
     inset 0 1px 0 rgba(255, 255, 255, 0.15);
-  transform: scale(0.9) translateX(-2px);
+  transform: scale(1.05);
   color: #00ffff;
 }
 

@@ -613,8 +613,6 @@ export default function ShowcaseGallery() {
                   <h2 className="parallax-title" data-text={animation.name}>
                     {animation.name}
                   </h2>
-                  <p className="parallax-animation">{animation.animation}</p>
-                  <p className="parallax-description">{animation.description}</p>
                 </div>
               </div>
             );

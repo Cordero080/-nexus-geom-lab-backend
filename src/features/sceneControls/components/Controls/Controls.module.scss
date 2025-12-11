@@ -60,14 +60,14 @@
   top: 100px;
   background: rgba(0, 0, 0, 0.15);
   backdrop-filter: blur(12px);
-  border: none; /* Removed border to prevent artifacts with clip-path */
+  border: none;
   color: rgba(255, 255, 255, 0.9);
-  font-size: 0.9rem;
-  padding: 0.5rem 1.25rem;
+  font-size: 14px;
+  padding: 8px 12px;
   cursor: pointer;
   z-index: 1001;
   box-shadow:
-    0 0 0 2px rgba(0, 255, 255, 0.3), /* Border effect via box-shadow */
+    0 0 0 2px rgba(0, 255, 255, 0.3),
     0 8px 32px rgba(0, 255, 255, 0.15),
     0 0 60px rgba(255, 0, 255, 0.1),
     inset 0 1px 0 rgba(255, 255, 255, 0.1);
@@ -77,45 +77,30 @@
   line-height: 1;
   display: flex;
   align-items: center;
-  gap: 8px;
-  min-width: 130px;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  /* Angled corners clip-path matching Save/Edit buttons */
-  clip-path: polygon(
-    14px 0,
-    100% 0,
-    100% calc(100% - 14px),
-    calc(100% - 14px) 100%,
-    0 100%,
-    0 14px
-  );
-  border-radius: 0;
-  transform: scale(0.9);
+  justify-content: center;
+  min-width: 36px;
+  border-radius: 4px;
 }
 
 .controlsToggleBtn:hover {
   box-shadow:
-    0 0 0 2px rgba(0, 255, 255, 0.6), /* Brighter border on hover */
+    0 0 0 2px rgba(0, 255, 255, 0.6),
     0 12px 48px rgba(0, 255, 255, 0.25),
     0 0 80px rgba(255, 0, 255, 0.2),
     inset 0 1px 0 rgba(255, 255, 255, 0.15);
-  transform: scale(0.9) translateX(2px);
+  transform: scale(1.05);
 }
 
-/* Hide button (inside panel, left side) */
+/* Hide button (inside panel, top area) */
 .controlsToggleBtnHide {
   position: absolute;
-  top: 4px;
-  left: 40px;
+  top: 12px;
+  left: 30px;
   padding: 6px 10px;
-  font-size: 16px;
+  font-size: 12px;
   background: rgba(0, 0, 0, 0.2);
   border: 1px solid rgba(255, 255, 255, 0.1);
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  border-radius: 4px;
+  min-width: 30px;
 }
 
 .controlsToggleText {
@@ -130,17 +115,11 @@
   border-color: rgba(255, 0, 100, 0.4);
   color: #ff3366;
   text-shadow: 0 0 8px rgba(255, 0, 100, 0.6);
-  transform: translateX(0);
 }
 
 /* Show button (floating on left side when hidden) */
 .controlsToggleBtnShow {
-  left: 20px;
-  border-radius: 4px;
-}
-
-.controlsToggleBtnShow:hover {
-  transform: translateX(4px);
+  left: 10px;
 }
 
 .controls label,

@@ -28,7 +28,7 @@ import { GEOM_LAB_LINK_TEXT, SHOWCASE_LINK_TEXT } from '../../layout/NavBar/navL
 import { useAuth } from '../../../features/auth/context/AuthContext';
 
 export default function HomePage() {
-  const { isAuthenticated, logout } = useAuth();
+  const { isAuthenticated, logout, user } = useAuth();
   const navigate = useNavigate();
 
   // Custom Hooks
@@ -103,6 +103,7 @@ export default function HomePage() {
         navScrolled={navScrolled}
         isAuthenticated={isAuthenticated}
         logout={logout}
+        user={user}
         currentPage="home"
       />
 

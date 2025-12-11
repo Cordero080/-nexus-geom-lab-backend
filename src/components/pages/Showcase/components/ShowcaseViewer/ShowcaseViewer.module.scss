@@ -27,9 +27,12 @@
 
 /* Animation 1 - Icarus-X #001 (Code Breaker Geometry Matrix) */
 :global(.viewer-overlay-1) {
-  /* Three.js environment replaces CSS gradient - make transparent */
-  background: transparent;
-  background-color: #0a0a0a; /* Subtle base color for depth */
+  background:
+    radial-gradient(ellipse at 55% 25%, rgba(255, 217, 0, 0.2) 0%, transparent 40%),
+    radial-gradient(ellipse at 75% 75%, #00ffff26 0%, transparent 35%),
+    radial-gradient(ellipse at 60% 20%, rgba(255, 140, 0, 0.18) 0%, transparent 45%),
+    linear-gradient(235deg, #0a0a0a 0%, #2d1810 25%, #370fe7 50%, #2d1810 75%, #0a0a0a 100%);
+  animation: cosmicGlow 6s ease-in-out infinite;
 }
 
 @keyframes cosmicGlow {
@@ -383,7 +386,7 @@
 /* Base viewer-info - structural only, colors are character-specific */
 :global(.viewer-info) {
   flex-shrink: 0;
-  padding: 20px 30px;
+  padding: 16px 30px;
   text-align: center;
   position: relative;
   z-index: 10;
@@ -557,10 +560,10 @@
   font-family: 'Future Z', 'Orbitron', 'Rajdhani', sans-serif !important;
   font-size: 1.4rem;
   font-weight: 700;
-  margin: 0 0 8px 0;
+  margin: 0 0 16px 0 !important;
   text-transform: uppercase;
   letter-spacing: 2px;
-  display: inline;
+  display: block;
 }
 
 :global(.viewer-description) {

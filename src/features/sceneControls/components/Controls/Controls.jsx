@@ -191,8 +191,7 @@ function Controls({ config, onChange }) {
           onClick={() => setIsHidden(false)}
           title="Show Controls"
         >
-          <span>◀</span>
-          <span className={styles.controlsToggleText}>Controls</span>
+          <span>▶</span>
         </button>
       )}
 
@@ -203,8 +202,7 @@ function Controls({ config, onChange }) {
           onClick={() => setIsHidden(true)}
           title="Hide Controls"
         >
-          <span>▶</span>
-          <span className={styles.controlsToggleText}>Hide</span>
+          <span>◀</span>
         </button>
 
         {/*

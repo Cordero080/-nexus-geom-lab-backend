@@ -40,9 +40,6 @@ function AudioToggle({ isActive, onToggle, audioData }) {
             </>
           )}
         </svg>
-        <span className={styles.label}>
-          {isActive ? (hasAudio ? 'DETECTING' : 'LISTENING') : 'AUDIO OFF'}
-        </span>
       </button>
 
       {/* Vertical Equalizer (only when active) */}

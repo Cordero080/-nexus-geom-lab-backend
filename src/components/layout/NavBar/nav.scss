@@ -130,23 +130,40 @@
   font-family: 'Orbitron', monospace;
 }
 
+/* Username display */
+.nav-username {
+  font-family: 'Orbitron', monospace;
+  font-size: 11px;
+  color: rgba(0, 255, 255, 0.6);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
 /* Default logout/button style shared across pages */
 .nav-terminal .terminal-cursor {
   background: none;
   border: none;
   cursor: pointer;
-  font-family: 'Orbitron', monospace;
-  font-size: 14px;
-  color: #00ffff;
-  letter-spacing: 1px;
-  padding: 0;
+  padding: 4px;
   line-height: 1;
-  text-shadow: 0 0 10px rgba(0, 255, 255, 0.35);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
 }
 
-.nav-terminal .terminal-cursor:hover {
+.nav-terminal .terminal-cursor svg {
+  color: rgba(0, 255, 255, 0.5);
+  transition: all 0.3s ease;
+  width: 16px;
+  height: 16px;
+}
+
+.nav-terminal .terminal-cursor:hover svg {
   color: #ff00cc;
-  text-shadow: 0 0 12px rgba(255, 0, 204, 0.6);
+  filter: drop-shadow(0 0 8px rgba(255, 0, 204, 0.6));
+  width: 20px;
+  height: 20px;
 }
 
 .nav-quantum-field {

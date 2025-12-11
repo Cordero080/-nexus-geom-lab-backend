@@ -10,6 +10,7 @@ import { GEOM_LAB_LINK_TEXT, SHOWCASE_LINK_TEXT } from '../../../layout/NavBar/n
  * @param {boolean} navScrolled - Whether nav is in scrolled state
  * @param {boolean} isAuthenticated - User authentication status
  * @param {Function} logout - Logout handler
+ * @param {Object} user - Current user object
  * @param {string} currentPage - Current page to hide from nav (optional)
  */
 export default function QuantumNav({
@@ -18,6 +19,7 @@ export default function QuantumNav({
   navScrolled,
   isAuthenticated,
   logout,
+  user,
   currentPage,
 }) {
   return (
@@ -36,12 +38,12 @@ export default function QuantumNav({
       <div className="nav-logo">
         <span
           className="logo-text"
-          data-text="N3XUS_GEOM"
+          data-text={user?.username || 'N3XUS_GEOM'}
           style={{
             '--logo-filter': `drop-shadow(0 0 4px ${portalState.colors[1]}66)`,
           }}
         >
-          N3XUS_GEOM
+          {user?.username || 'N3XUS_GEOM'}
         </span>
         {/* Subtle quantum glyphs in navbar */}
         <span
@@ -80,8 +82,21 @@ export default function QuantumNav({
               </ScrambleLink>
             )}
             <div className="nav-terminal">
-              <button onClick={logout} className="terminal-cursor">
-                [L0GOUT]
+              <button onClick={logout} className="terminal-cursor" title="Logout">
+                <svg 
+                  width="16" 
+                  height="16" 
+                  viewBox="0 0 24 24" 
+                  fill="none" 
+                  stroke="currentColor" 
+                  strokeWidth="2" 
+                  strokeLinecap="round" 
+                  strokeLinejoin="round"
+                >
+                  <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                  <polyline points="16 17 21 12 16 7" />
+                  <line x1="21" y1="12" x2="9" y2="12" />
+                </svg>
               </button>
             </div>
           </>

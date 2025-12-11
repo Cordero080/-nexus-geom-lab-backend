@@ -466,7 +466,7 @@
 .parallax-scene-center .parallax-info {
   text-align: center;
   max-width: 620px;
-  margin: 24px auto 0;
+  margin: 8px auto 0;
 }
 
 /* Left position - second model */
@@ -726,7 +726,7 @@
 /* Info panel styling */
 .parallax-info {
   color: white;
-  padding: 20px;
+  padding: 0 20px 20px 20px;
   z-index: 2; /* Above transition overlays */
   position: relative;
 }

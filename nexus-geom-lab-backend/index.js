@@ -37,7 +37,7 @@ app.use(
   cors({
     origin: function (origin, callback) {
       console.log('CORS check - Origin:', origin);
-      
+
       // Allow requests with no origin (like mobile apps or curl requests)
       if (!origin) return callback(null, true);
 

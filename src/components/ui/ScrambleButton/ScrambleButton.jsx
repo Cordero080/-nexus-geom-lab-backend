@@ -1,12 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { getScrambledText, scrambleText } from '../ScrambleLink/textScrambler';
+import { scrambleText } from '../ScrambleLink/textScrambler';
 import {
   createMouseMoveHandler,
   createClickHandler,
   createHoverHandlers,
 } from './scrambleButtonHandlers';
 import styles from './ScrambleButton.module.scss';
-import sharedStyles from '../../../styles/shared.module.scss';
 
 const ScrambleButton = ({
   children,
@@ -21,8 +20,7 @@ const ScrambleButton = ({
   const originalText = useRef(children);
   const scrambleInterval = useRef(null);
   const buttonRef = useRef(null);
-  const scrambleSpeed = 50; // ms between scramble updates
-  const codeDisplayTime = 1500; // ms to display code snippet
+  const scrambleSpeed = 30; // ms between scramble updates
 
   // Get handlers from local handlers file
   const handleMouseMove = createMouseMoveHandler(buttonRef);
@@ -32,34 +30,34 @@ const ScrambleButton = ({
   // Handle hover state
   useEffect(() => {
     if (isHovering) {
-      // Start scrambling effect
+      // Scramble effect that cycles: scramble -> original -> scramble -> original
       let scrambleCount = 0;
-      let showingCode = false;
-      let codeTimer = null;
+      let showingOriginal = false;
+      const scrambleDuration = 8; // Number of scramble iterations before showing original
+      const originalDisplayTime = 1200; // ms to display original text
 
       scrambleInterval.current = setInterval(() => {
         scrambleCount++;
 
-        // After a few scrambles, show a code snippet
-        if (scrambleCount > 5 && !showingCode) {
-          const codeSnippet = getScrambledText();
-          setDisplayText(codeSnippet);
-          showingCode = true;
+        // After some scrambles, show the original text
+        if (scrambleCount >= scrambleDuration && !showingOriginal) {
+          setDisplayText(originalText.current);
+          showingOriginal = true;
+          scrambleCount = 0;
 
           // Set a timer to start scrambling again
-          codeTimer = setTimeout(() => {
-            showingCode = false;
-          }, codeDisplayTime);
+          setTimeout(() => {
+            showingOriginal = false;
+          }, originalDisplayTime);
         }
-        // If we're not showing a code snippet, scramble the text
-        else if (!showingCode) {
+        // If we're not showing original, scramble the text
+        else if (!showingOriginal) {
           setDisplayText(scrambleText(originalText.current.toString()));
         }
       }, scrambleSpeed);
 
       return () => {
         clearInterval(scrambleInterval.current);
-        if (codeTimer) clearTimeout(codeTimer);
       };
     } else {
       // Restore original text when not hovering

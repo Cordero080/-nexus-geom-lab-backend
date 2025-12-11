@@ -5,18 +5,19 @@ import { scrambleText } from './textScrambler';
 const ScrambleLink = ({ to, children, className = '' }) => {
   const [isHovering, setIsHovering] = useState(false);
   const [displayText, setDisplayText] = useState(children);
+  const [isScrambling, setIsScrambling] = useState(false);
   const originalText = useRef(children);
   const scrambleInterval = useRef(null);
   const scrambleTimeout = useRef(null);
-  const scrambleSpeed = 50; // ms between scramble updates
-  const scrambleDuration = 2000; // Stop scrambling after 2 seconds
+  const scrambleSpeed = 30; // ms between scramble updates
+  const scrambleDuration = 300; // Scramble duration before showing original (faster)
+  const originalDisplayTime = 800; // ms to show original text
   const linkRef = useRef(null);
   const [originalWidth, setOriginalWidth] = useState(null);
 
   // Capture original width after render
   useEffect(() => {
     if (linkRef.current && originalWidth === null) {
-      // Wait a frame to ensure text is rendered
       requestAnimationFrame(() => {
         if (linkRef.current) {
           setOriginalWidth(linkRef.current.offsetWidth);
@@ -25,24 +26,44 @@ const ScrambleLink = ({ to, children, className = '' }) => {
     }
   }, [originalWidth]);
 
-  // Handle hover state
+  // Handle hover state with cycling scramble effect
   useEffect(() => {
     if (isHovering) {
-      // Get text content from children (handles JSX)
       const textContent =
         typeof children === 'string' ? children : linkRef.current?.textContent || '';
 
-      // Start scrambling effect
-      scrambleInterval.current = setInterval(() => {
-        setDisplayText(scrambleText(textContent));
-      }, scrambleSpeed);
+      let iterationCount = 0;
+      const scrambleIterations = Math.floor(scrambleDuration / scrambleSpeed);
 
-      // Stop scrambling after duration and show original text
-      scrambleTimeout.current = setTimeout(() => {
-        clearInterval(scrambleInterval.current);
-        scrambleInterval.current = null;
-        setDisplayText(originalText.current);
-      }, scrambleDuration);
+      const runScrambleCycle = () => {
+        setIsScrambling(true);
+        iterationCount = 0;
+
+        // Start scrambling
+        scrambleInterval.current = setInterval(() => {
+          iterationCount++;
+          
+          if (iterationCount >= scrambleIterations) {
+            // Stop scrambling and show original
+            clearInterval(scrambleInterval.current);
+            scrambleInterval.current = null;
+            setDisplayText(originalText.current);
+            setIsScrambling(false);
+
+            // After showing original, start scrambling again if still hovering
+            scrambleTimeout.current = setTimeout(() => {
+              if (isHovering) {
+                runScrambleCycle();
+              }
+            }, originalDisplayTime);
+          } else {
+            // Continue scrambling
+            setDisplayText(scrambleText(textContent));
+          }
+        }, scrambleSpeed);
+      };
+
+      runScrambleCycle();
     } else {
       // Cleanup and restore original when not hovering
       if (scrambleInterval.current) {
@@ -53,6 +74,7 @@ const ScrambleLink = ({ to, children, className = '' }) => {
         clearTimeout(scrambleTimeout.current);
         scrambleTimeout.current = null;
       }
+      setIsScrambling(false);
       setDisplayText(originalText.current);
     }
 
@@ -64,7 +86,7 @@ const ScrambleLink = ({ to, children, className = '' }) => {
         clearTimeout(scrambleTimeout.current);
       }
     };
-  }, [isHovering]);
+  }, [isHovering, children]);
 
   // Update the ref if children changes
   useEffect(() => {
