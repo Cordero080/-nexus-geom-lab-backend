@@ -18,11 +18,50 @@ const app = express(); // Create Express application instance
 // Connect to MongoDB database
 connectDB(); // Establishes connection to MongoDB using URI from .env
 
-// Middleware
-app.use(helmet()); // Add security headers to all responses
+// CORS MUST come before helmet and other middleware
+const corsOptions = {
+  origin: function (origin, callback) {
+    console.log('CORS check - Origin:', origin);
+    
+    // Allow requests with no origin (like mobile apps or curl requests)
+    if (!origin) return callback(null, true);
+    
+    // Allow all localhost origins in development
+    if (origin.startsWith('http://localhost:')) {
+      return callback(null, true);
+    }
+
+    // Allow GitHub Pages (with or without trailing path)
+    if (origin.startsWith('https://cordero080.github.io')) {
+      console.log('CORS allowed for GitHub Pages');
+      return callback(null, true);
+    }
+
+    // Allow production frontend URL from env
+    if (process.env.FRONTEND_URL && origin === process.env.FRONTEND_URL) {
+      return callback(null, true);
+    }
+
+    console.log('CORS rejected for origin:', origin);
+    // Reject other origins (return false instead of error to avoid 500)
+    callback(null, false);
+  },
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true,
+};
+
+// Apply CORS FIRST - before any other middleware
+app.use(cors(corsOptions));
+
+// Handle preflight requests explicitly
+app.options('*', cors(corsOptions));
+
+// Security headers (after CORS)
+app.use(helmet());
 
 // Request logging
-app.use(morgan(process.env.NODE_ENV === 'production' ? 'combined' : 'dev')); // Log requests (detailed in dev, minimal in production)
+app.use(morgan(process.env.NODE_ENV === 'production' ? 'combined' : 'dev'));
 
 // Global rate limit
 const globalLimiter = rateLimit({
@@ -33,54 +72,18 @@ const globalLimiter = rateLimit({
 });
 app.use(globalLimiter); // Apply to all routes
 
-app.use(
-  cors({
-    origin: function (origin, callback) {
-      console.log('CORS check - Origin:', origin);
-      
-      // Allow requests with no origin (like mobile apps or curl requests)
-      if (!origin) return callback(null, true);
-
-      // Allow all localhost origins in development
-      if (origin.startsWith('http://localhost:')) {
-        return callback(null, true);
-      }
-
-      // Allow GitHub Pages (with or without trailing path)
-      if (origin.startsWith('https://cordero080.github.io')) {
-        console.log('CORS allowed for GitHub Pages');
-        return callback(null, true);
-      }
-
-      // Allow production frontend URL from env
-      if (process.env.FRONTEND_URL && origin === process.env.FRONTEND_URL) {
-        return callback(null, true);
-      }
-
-      console.log('CORS rejected for origin:', origin);
-      // Reject other origins (return false instead of error to avoid 500)
-      callback(null, false);
-    },
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization'],
-    credentials: true,
-  })
-);
-
 app.use(express.json()); // Parse JSON request bodies automatically
 app.use(express.urlencoded({ extended: true })); // Parse URL-encoded bodies (form data)
-
-// Log all incoming requests
-app.use((req, res, next) => {
-  // Simple middleware that just continues
-  next(); // Continue to next middleware
-});
 
 // Routes
 // Tighter rate limit for auth endpoints
 const authLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 20, // Only 20 requests per 15 min (stricter than global limit)
+  max: 20, // Only 20 auth attempts per 15 minutes
+  message: {
+    success: false,
+    message: 'Too many auth attempts, please try again later',
+  },
   standardHeaders: true,
   legacyHeaders: false,
 });
@@ -93,6 +96,11 @@ app.get('/health', (req, res) => {
   res.json({ ok: true, uptime: process.uptime() }); // Shows server is running
 });
 
+app.get('/healthz', (req, res) => {
+  // Alternative health check endpoint (Render uses this)
+  res.json({ ok: true, uptime: process.uptime() });
+});
+
 app.get('/', (req, res) => {
   // Root endpoint
   res.json({
@@ -102,7 +110,7 @@ app.get('/', (req, res) => {
   });
 });
 
-// 404 handler for undefined routes
+// 404 handler
 app.use((req, res) => {
   res.status(404).json({
     success: false,
@@ -125,6 +133,6 @@ const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`🚀 Server running on port ${PORT}`);
   if (process.env.NODE_ENV !== 'production') {
-    console.log(`📍 Health check: http://localhost:${PORT}/health`);
+    console.log(`�� Health check: http://localhost:${PORT}/health`);
   }
 });
