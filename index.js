@@ -33,20 +33,7 @@ if (process.env.FRONTEND_URL) {
 
 // CORS configuration - MUST come before helmet
 const corsOptions = {
-  origin: function (origin, callback) {
-    // Allow requests with no origin (like mobile apps or curl requests)
-    if (!origin) {
-      return callback(null, true);
-    }
-
-    // Check if origin is in allowed list or starts with localhost
-    if (allowedOrigins.includes(origin) || origin.startsWith('http://localhost:')) {
-      return callback(null, true);
-    }
-
-    // Reject other origins (return false instead of error to avoid 500)
-    callback(null, false);
-  },
+  origin: allowedOrigins,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true,
@@ -55,8 +42,10 @@ const corsOptions = {
 // Apply CORS FIRST - before any other middleware
 app.use(cors(corsOptions));
 
-// Security headers (after CORS)
-app.use(helmet());
+// Security headers (after CORS) - disable crossOriginResourcePolicy for CORS
+app.use(helmet({
+  crossOriginResourcePolicy: false,
+}));
 
 // Request logging
 app.use(morgan(process.env.NODE_ENV === 'production' ? 'combined' : 'dev'));
