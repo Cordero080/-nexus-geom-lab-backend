@@ -42,10 +42,10 @@ const corsOptions = {
 // Apply CORS FIRST - before any other middleware
 app.use(cors(corsOptions));
 
-// Security headers (after CORS) - disable crossOriginResourcePolicy for CORS
-app.use(helmet({
-  crossOriginResourcePolicy: false,
-}));
+// Security headers (after CORS) - completely disabled for testing
+// app.use(helmet({
+//   crossOriginResourcePolicy: false,
+// }));
 
 // Request logging
 app.use(morgan(process.env.NODE_ENV === 'production' ? 'combined' : 'dev'));
