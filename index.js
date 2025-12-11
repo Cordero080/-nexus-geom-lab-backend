@@ -18,31 +18,33 @@ const app = express();
 // Connect to MongoDB database
 connectDB();
 
+// Allowed origins for CORS
+const allowedOrigins = [
+  'http://localhost:5173',
+  'http://localhost:3000',
+  'http://localhost:4173',
+  'https://cordero080.github.io',
+];
+
+// Add FRONTEND_URL from env if set
+if (process.env.FRONTEND_URL) {
+  allowedOrigins.push(process.env.FRONTEND_URL);
+}
+
 // CORS configuration - MUST come before helmet
 const corsOptions = {
   origin: function (origin, callback) {
-    console.log('CORS check - Origin:', origin);
-    
     // Allow requests with no origin (like mobile apps or curl requests)
-    if (!origin) return callback(null, true);
-    
-    // Allow all localhost origins in development
-    if (origin.startsWith('http://localhost:')) {
+    if (!origin) {
       return callback(null, true);
     }
 
-    // Allow GitHub Pages
-    if (origin.startsWith('https://cordero080.github.io')) {
-      console.log('CORS allowed for GitHub Pages');
+    // Check if origin is in allowed list or starts with localhost
+    if (allowedOrigins.includes(origin) || origin.startsWith('http://localhost:')) {
       return callback(null, true);
     }
 
-    // Allow production frontend URL from env
-    if (process.env.FRONTEND_URL && origin === process.env.FRONTEND_URL) {
-      return callback(null, true);
-    }
-
-    console.log('CORS rejected for origin:', origin);
+    // Reject other origins (return false instead of error to avoid 500)
     callback(null, false);
   },
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
@@ -123,5 +125,5 @@ app.use((err, req, res, next) => {
 // Start server
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-  console.log(`🚀 Server running on port ${PORT}`);
+  console.log(`Server running on port ${PORT}`);
 });
