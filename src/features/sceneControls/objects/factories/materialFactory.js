@@ -16,7 +16,9 @@ export function createSolidMaterial({
   wireframeIntensity,
 }) {
   // Use RGB part only for Three.js Color (strip alpha if present)
-  const rgbColor = baseColor.slice(0, 7);
+  // Fallback to deep purple if baseColor is missing/invalid
+  const safeBaseColor = baseColor && baseColor.length >= 7 ? baseColor : '#4a0e78ff';
+  const rgbColor = safeBaseColor.slice(0, 7);
   const currentBaseColor = new THREE.Color(rgbColor);
   const emissiveColor = new THREE.Color(rgbColor).multiplyScalar(emissiveIntensity);
 
@@ -52,7 +54,9 @@ export function createWireframeMaterial({
   isStandardWireframe = false,
 }) {
   // Use RGB part only for Three.js Color (strip alpha if present)
-  const rgbColor = baseColor.slice(0, 7);
+  // Fallback to deep purple if baseColor is missing/invalid
+  const safeBaseColor = baseColor && baseColor.length >= 7 ? baseColor : '#4a0e78ff';
+  const rgbColor = safeBaseColor.slice(0, 7);
   const currentBaseColor = new THREE.Color(rgbColor);
   const emissiveColor = new THREE.Color(rgbColor).multiplyScalar(emissiveIntensity);
 

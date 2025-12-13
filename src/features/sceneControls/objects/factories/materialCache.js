@@ -21,7 +21,9 @@ function ensureSolidMaterialConfig(material, config) {
   if (!material) return null;
   const { baseColor, metalness, emissiveIntensity, wireframeIntensity } = config;
   // Use RGB part only for Three.js Color (strip alpha if present)
-  const rgbColor = baseColor.slice(0, 7);
+  // Fallback to deep purple if baseColor is missing/invalid
+  const safeBaseColor = baseColor && baseColor.length >= 7 ? baseColor : '#4a0e78ff';
+  const rgbColor = safeBaseColor.slice(0, 7);
   const color = new THREE.Color(rgbColor);
   material.color.copy(color);
   material.metalness = metalness;
@@ -42,7 +44,9 @@ function ensureWireframeMaterialConfig(material, config) {
   if (!material) return null;
   const { baseColor, metalness, emissiveIntensity, wireframeIntensity } = config;
   // Use RGB part only for Three.js Color (strip alpha if present)
-  const rgbColor = baseColor.slice(0, 7);
+  // Fallback to deep purple if baseColor is missing/invalid
+  const safeBaseColor = baseColor && baseColor.length >= 7 ? baseColor : '#4a0e78ff';
+  const rgbColor = safeBaseColor.slice(0, 7);
   const color = new THREE.Color(rgbColor);
   material.color.copy(color);
   material.metalness = metalness;
