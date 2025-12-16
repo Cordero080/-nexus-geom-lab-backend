@@ -668,6 +668,21 @@ Scene 4+ → Unlock additional animations
 - **Responsive design** optimized for desktop and mobile
 - **Unified architecture** with consistent folder patterns across pages
 
+### Performance Optimizations
+
+**Architecture:** Client-side WebGL rendering — all 3D computation is offloaded to each user's GPU, enabling horizontal scalability without server-side rendering bottlenecks.
+
+| Technique | Implementation | Benefit |
+|-----------|----------------|---------|
+| **Geometry Merging** | `mergeGeometries()` across 15+ geometry files | Reduces draw calls |
+| **Instanced Meshes** | `THREE.InstancedMesh` for vertex nodes | Single draw call for repeated objects |
+| **Resource Disposal** | `geometry.dispose()`, `material.dispose()` on cleanup | Prevents GPU memory leaks |
+| **Animation Cleanup** | `cancelAnimationFrame` on unmount | Stops orphaned render loops |
+| **Shared Materials** | Reused materials across hyperframe builders | Reduces material compilation |
+| **Ref Persistence** | `useRef` for Three.js objects | Avoids recreation on re-renders |
+| **Stable Callbacks** | `useCallback` for event handlers | Prevents unnecessary effect triggers |
+| **Build Optimization** | Vite + `removeConsole` plugin | Smaller production bundles |
+
 ---
 
 ## 🚀 Deployment
