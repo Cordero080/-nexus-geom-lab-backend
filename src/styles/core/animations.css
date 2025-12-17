@@ -66,7 +66,8 @@
     transform: translateY(0px);
   }
   50% {
-    transform: translateY(-15px);
+    /* Reduce float amplitude for subtler hover/idle motion */
+    transform: translateY(-8px);
   }
 }
 
@@ -76,10 +77,10 @@
     transform: translateY(0px) translateX(0px);
   }
   33% {
-    transform: translateY(-5px) translateX(1px);
+    transform: translateY(-3px) translateX(1px);
   }
   66% {
-    transform: translateY(-3px) translateX(-1px);
+    transform: translateY(-2px) translateX(-1px);
   }
 }
 
@@ -89,10 +90,10 @@
     transform: translateY(0px) translateX(0px);
   }
   40% {
-    transform: translateY(-7px) translateX(-1.5px);
+    transform: translateY(-4px) translateX(-1.5px);
   }
   70% {
-    transform: translateY(-4px) translateX(1px);
+    transform: translateY(-2px) translateX(1px);
   }
 }
 
@@ -102,10 +103,10 @@
     transform: translateY(0px) translateX(0px);
   }
   35% {
-    transform: translateY(-6px) translateX(1px);
+    transform: translateY(-4px) translateX(1px);
   }
   65% {
-    transform: translateY(-3px) translateX(-1.5px);
+    transform: translateY(-2px) translateX(-1.5px);
   }
 }
 

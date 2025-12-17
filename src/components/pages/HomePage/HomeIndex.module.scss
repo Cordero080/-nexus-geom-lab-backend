@@ -605,6 +605,26 @@
       titleFloatLayer3 6.5s ease-in-out infinite;
     animation-delay: 0s, 0.6s, 2.6s;
   }
+
+  /* Home-only: remove pseudo duplicate letters for N3XUS and GE0M only.
+     Do NOT remove or change any pseudo layers for LVB (the V). */
+  .title-word[data-word='N3XUS']::before,
+  .title-word[data-word='N3XUS']::after,
+  .title-word[data-word='GE0M']::before,
+  .title-word[data-word='GE0M']::after {
+    display: none !important;
+    content: none !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
+  }
+  /* Home-only: for LVB, replace pseudo content so only V is duplicated (hide L and B) */
+  .title-word[data-word='LVB']::before,
+  .title-word[data-word='LVB']::after {
+    content: 'V' !important;
+    display: block !important;
+    visibility: visible !important;
+    pointer-events: none !important;
+  }
 }
 
 /* Animations */
@@ -860,6 +880,8 @@ input,
     position: relative;
     z-index: 10;
     pointer-events: none;
+    /* Nudge the title slightly lower for improved visual balance */
+    margin-top: 32px;
   }
 
   /* Quantum title h1 */
@@ -867,7 +889,8 @@ input,
     position: relative;
     z-index: 10;
     pointer-events: auto;
-    margin-bottom: -10px;
+    /* Reduce overlap and move body content a touch further down */
+    margin-bottom: 6px;
   }
 
   /* Title word span */
@@ -1782,20 +1805,3 @@ input,
   }
 }
 
-/* ===================================
-   END OF FILE - 1715 lines
-   
-   Module Classes Actually Used (10):
-   - parallaxContainer, bgReality, quantumTitle
-   - baseDark, quantumPortalLayer, quantumVeil, darkTopVeil
-   - parallaxBgLayer, parallaxFgLayer
-   
-   Unused Module Classes (can be removed):
-   - portalContainer, sceneBackground, bgProbability, bgEntanglement
-   - bgSuperposition, pageTop, sceneContent, sceneTitle, sceneDescription
-   - parallaxHolo, scrambleTitle, quantumScene, floatingCode
-   - quantumConsole, consoleLine, homeEnterGeomLabBtn, scrambleButton
-   - quantum-title (duplicate), dimensionalRift
-   
-   Total: ~23 unused module classes + their styles
-   =================================== */
