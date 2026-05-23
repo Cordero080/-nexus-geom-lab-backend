@@ -1,0 +1,31 @@
+{
+  "name": "nexus-geom-lab-backend",
+  "version": "1.0.0",
+  "description": "Backend API for Nexus Geom Lab - 3D geometry platform with scene management",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js",
+    "seed": "node seedDevUser.js",
+    "reset": "node resetDevUser.js",
+    "users": "node showUsers.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bcryptjs": "^3.0.2",
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.3",
+    "express": "^5.1.0",
+    "express-rate-limit": "^7.4.0",
+    "express-validator": "^7.2.1",
+    "helmet": "^8.0.0",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.19.2",
+    "morgan": "^1.10.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.10"
+  }
+}
