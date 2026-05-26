@@ -1,9 +1,9 @@
-const express = require("express"); // Web framework
+const express = require('express'); // Web framework
 const router = express.Router(); // Create router instance
-const jwt = require("jsonwebtoken"); // For creating JWT tokens
-const { body, validationResult } = require("express-validator"); // Input validation
-const User = require("../models/User"); // User database model
-const authMiddleware = require("../middleware/auth"); // JWT verification middleware
+const jwt = require('jsonwebtoken'); // For creating JWT tokens
+const { body, validationResult } = require('express-validator'); // Input validation
+const User = require('../models/User'); // User database model
+const authMiddleware = require('../middleware/auth'); // JWT verification middleware
 
 /**
  * SIGNUP ROUTE
@@ -12,12 +12,12 @@ const authMiddleware = require("../middleware/auth"); // JWT verification middle
  * Public (no auth required)
  */
 router.post(
-  "/signup", // POST /api/auth/signup endpoint
+  '/signup', // POST /api/auth/signup endpoint
   [
     // Validation rules - check input before processing
-    body("username").trim().isLength({ min: 3, max: 30 }), // Username: 3-30 chars
-    body("email").trim().isEmail().normalizeEmail(), // Valid email format
-    body("password").isLength({ min: 6 }), // Password: min 6 chars
+    body('username').trim().isLength({ min: 3, max: 30 }), // Username: 3-30 chars
+    body('email').trim().isEmail().normalizeEmail(), // Valid email format
+    body('password').isLength({ min: 6 }), // Password: min 6 chars
   ],
   async (req, res) => {
     // Route handler function
@@ -30,7 +30,7 @@ router.post(
           // Send 400 Bad Request
           success: false,
           errors: errors.array(), // Array of validation errors
-          message: "Validation failed",
+          message: 'Validation failed',
         });
       }
 
@@ -49,9 +49,7 @@ router.post(
           // Send 400 Bad Request
           success: false,
           message:
-            existingUser.email === email
-              ? "Email already registered"
-              : "Username already taken", // Specific error message
+            existingUser.email === email ? 'Email already registered' : 'Username already taken', // Specific error message
         });
       }
 
@@ -72,20 +70,21 @@ router.post(
         // Create signed token
         { userId: user._id }, // Payload (what's inside token)
         process.env.JWT_SECRET, // Secret key from .env
-        { expiresIn: "7d" } // Token valid for 7 days
+        { expiresIn: '7d' } // Token valid for 7 days
       );
 
       // Send success response with token and user data
       res.status(201).json({
         // Send 201 Created
         success: true,
-        message: "Account created successfully",
+        message: 'Account created successfully',
         token, // Frontend stores this in localStorage
         user: {
           id: user._id,
           username: user.username,
           email: user.email,
-          unlockedNoetechs: user.unlockedNoetechs, // Empty array initially
+          unlockedNoetechs: user.unlockedNoetechs,
+          unlockedAnimations: user.unlockedAnimations,
         },
       });
     } catch (error) {
@@ -93,7 +92,7 @@ router.post(
       res.status(500).json({
         // Send 500 Server Error
         success: false,
-        message: "Error creating account",
+        message: 'Error creating account',
         error: error.message,
       });
     }
@@ -107,11 +106,11 @@ router.post(
  * Public (no auth required)
  */
 router.post(
-  "/login", // POST /api/auth/login endpoint
+  '/login', // POST /api/auth/login endpoint
   [
     // Validation rules
-    body("email").trim().isEmail().normalizeEmail(), // Valid email, normalized (lowercase, no dots in Gmail)
-    body("password").notEmpty(), // Password required
+    body('email').trim().isEmail().normalizeEmail(), // Valid email, normalized (lowercase, no dots in Gmail)
+    body('password').notEmpty(), // Password required
   ],
   async (req, res) => {
     // Route handler function
@@ -138,7 +137,7 @@ router.post(
         return res.status(401).json({
           // Send 401 Unauthorized
           success: false,
-          message: "Invalid email or password", // Don't reveal if email exists (security)
+          message: 'Invalid email or password', // Don't reveal if email exists (security)
         });
       }
 
@@ -151,26 +150,27 @@ router.post(
         return res.status(401).json({
           // Send 401 Unauthorized
           success: false,
-          message: "Invalid email or password", // Same message as above (security)
+          message: 'Invalid email or password', // Same message as above (security)
         });
       }
 
       // Password correct! Generate JWT token
       const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
         // Create signed token
-        expiresIn: "7d", // Valid for 7 days
+        expiresIn: '7d', // Valid for 7 days
       });
 
       // Send token and user data back
       res.json({
         // Send 200 OK
         success: true,
-        message: "Login successful",
+        message: 'Login successful',
         token, // Frontend stores this in localStorage
         user: {
           id: user._id,
           username: user.username,
-          unlockedNoetechs: user.unlockedNoetechs, // Shows what they've unlocked
+          unlockedNoetechs: user.unlockedNoetechs,
+          unlockedAnimations: user.unlockedAnimations,
         },
       });
     } catch (error) {
@@ -178,7 +178,7 @@ router.post(
       res.status(500).json({
         // Send 500 Server Error
         success: false,
-        message: "Error logging in",
+        message: 'Error logging in',
         error: error.message,
       });
     }
@@ -191,7 +191,7 @@ router.post(
  * Gets current logged-in user's profile
  * Private (requires valid JWT token in header)
  */
-router.get("/me", authMiddleware, async (req, res) => {
+router.get('/me', authMiddleware, async (req, res) => {
   // GET /api/auth/me with auth middleware
   try {
     // authMiddleware already verified token and attached user to req.user
@@ -202,8 +202,9 @@ router.get("/me", authMiddleware, async (req, res) => {
         id: req.user._id,
         username: req.user.username,
         email: req.user.email,
-        unlockedNoetechs: req.user.unlockedNoetechs, // What they've unlocked
-        createdAt: req.user.createdAt, // Account creation date
+        unlockedNoetechs: req.user.unlockedNoetechs,
+        unlockedAnimations: req.user.unlockedAnimations,
+        createdAt: req.user.createdAt,
       },
     });
   } catch (error) {
@@ -211,7 +212,7 @@ router.get("/me", authMiddleware, async (req, res) => {
     res.status(500).json({
       // Send 500 Server Error
       success: false,
-      message: "Error fetching profile",
+      message: 'Error fetching profile',
     });
   }
 });

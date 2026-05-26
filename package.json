@@ -8,7 +8,7 @@
     "dev": "nodemon index.js",
     "seed": "node seedDevUser.js",
     "reset": "node resetDevUser.js",
-    "users": "node showUsers.js"
+    "users": "node -e \"const mongoose=require('mongoose');require('dotenv').config();mongoose.connect(process.env.MONGODB_URI).then(()=>require('./models/User').find({},{username:1,email:1,scenesSaved:1})).then(u=>{u.forEach(x=>console.log(x.username,x.email,'scenes:',x.scenesSaved));process.exit()})\""
   },
   "keywords": [],
   "author": "",
